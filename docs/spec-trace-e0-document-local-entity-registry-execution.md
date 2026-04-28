@@ -25,13 +25,13 @@ Approved outcome: Execute `SRC-1` by producing a local, read-only prototype that
 
 Execution approach: Build the prototype through `WP-1` fixture and registry setup, `WP-2` first end-to-end valid-fixture proof, `WP-3` negative validation rules, `WP-4` determinism and local-safety proof, and `WP-5` evidence capture for decision review.
 
-Entry condition: PR #1 or equivalent source-document cleanup is available in the implementation branch, and the decision owner confirms the E0 scope remains local-only.
+Entry condition: Merged PR #1 source-document cleanup is available in the implementation branch, and the decision owner confirms the E0 scope remains local-only.
 
 Top risks or unknowns:
 
-- RISK-1: Markdown scanning may be too brittle for realistic execution-spec prose.
-- RISK-2: Registry maintenance effort may exceed the value of detected reference failures.
-- RISK-3: The fixture family may under-represent collision behavior needed for later Linear or Jira projection decisions.
+- RISK-1: Registry maintenance effort may exceed the value of detected reference failures.
+- RISK-2: Markdown scanning may be too brittle for realistic execution-spec prose.
+- RISK-3: Collision handling may be over-designed before cross-system projections are in scope.
 
 Section status: Complete
 
@@ -43,7 +43,7 @@ Section status: Complete
 | --- | --- | --- | --- |
 | SRC-1 | `docs/spec-trace-r0-document-local-entity-registry.md` | Approved R0 design document | Defines the prototype scope, requirements, constraints, validation categories, risks, and continue/pivot/stop criteria. |
 | SRC-2 | Consensus review verdict on the R0 design | Three-reviewer consensus approval | Confirms duplicate canonical ID coverage and fixture-family scope are review-acceptable for R0. |
-| SRC-3 | PR #1 `[codex] Address design review observations` | Draft PR cleanup of non-blocking review observations | Provides clarified acceptance coverage and external-reference wording that implementation shall follow if merged or present in the execution branch. |
+| SRC-3 | PR #1 `[codex] Address design review observations` | Merged PR cleanup of non-blocking review observations | Provides clarified acceptance coverage and external-reference wording that implementation shall follow. |
 
 In scope: Local fixture Markdown, document-local YAML registry, parser/scanner sufficient for the R0 fixture family, in-memory entity graph, deterministic validation report, local CLI or script harness, tests or fixture runs for `VAL-1` through `VAL-7`, and evidence capture.
 
@@ -97,8 +97,8 @@ Section status: Complete
 | CON-2 | Constraint | The fixture set is one fixture family derived from one source execution spec and one document-local registry, with local variants or generated mutations. | Prototype implementer | No | Validate through `VAL-2`, `VAL-3`, and fixture inventory review. |
 | CON-3 | Constraint | Canonical entity IDs use dotted lowercase syntax; display labels remain separate. | Prototype implementer | No | Validate through `VAL-1`, `VAL-2`, and `VAL-3`. |
 | ASM-1 | Assumption | A Python 3 local CLI or script harness is sufficient for the E0 prototype. | Prototype implementer | No | Re-estimate if implementation requires a service, daemon, or compiled package. |
-| ASM-2 | Assumption | The fixture-family Markdown scanner can be simple and deterministic without full GFM support. | Prototype implementer | No | Retire through `VAL-2`, `VAL-3`, and `RISK-1` evidence. |
-| DEP-1 | Dependency | PR #1 cleanup must be merged or included before prototype implementation begins. | Prototype implementer | Yes | Confirm branch source in the entry gate; equivalent wording in the implementation branch is acceptable. |
+| ASM-2 | Assumption | The fixture-family Markdown scanner can be simple and deterministic without full GFM support. | Prototype implementer | No | Retire through `VAL-2`, `VAL-3`, and `RISK-2` evidence. |
+| DEP-1 | Dependency | Merged PR #1 cleanup must be present before prototype implementation begins. | Prototype implementer | Yes | Confirm branch source in the entry gate; equivalent wording in the implementation branch is acceptable. |
 
 Section status: Complete
 
@@ -124,9 +124,9 @@ Primary risks and unknowns:
 
 | ID | Risk or unknown | Why it matters | Owner | Evidence required to retire | Decision gate |
 | --- | --- | --- | --- | --- | --- |
-| RISK-1 | Markdown scanner misses realistic references or over-matches prose. | Scanner brittleness could invalidate the model or require parser investment. | Prototype implementer | `VAL-2`, `VAL-3`, and examples of scanner hits/misses in `EVD-2` and `EVD-3`. | `MS-2` |
-| RISK-2 | Registry upkeep costs more than detected failure value. | If maintenance effort is higher than detected errors, the R0 model should stop or pivot. | Prototype implementer | Edit-count and finding-count comparison in `EVD-7`. | `MS-3` |
-| RISK-3 | Collision behavior is under-proven without live Linear or Jira data. | Future projection work could fail if issue-key handling is too narrow. | Prototype implementer | `VAL-4` collision fixture and documented deferred scope in `EVD-5`. | `MS-2` |
+| RISK-1 | Registry upkeep costs more than detected failure value. | If maintenance effort is higher than detected errors, the R0 model should stop or pivot. | Prototype implementer | Edit-count and finding-count comparison in `EVD-7`. | `MS-3` |
+| RISK-2 | Markdown scanner misses realistic references or over-matches prose. | Scanner brittleness could invalidate the model or require parser investment. | Prototype implementer | `VAL-2`, `VAL-3`, and examples of scanner hits/misses in `EVD-2` and `EVD-3`. | `MS-2` |
+| RISK-3 | Collision handling is over-scoped before live Linear or Jira projection is in scope. | Prototype effort could drift into projection policy before document-local behavior is proven. | Prototype implementer | `VAL-4` collision fixture and documented deferred scope in `EVD-5`. | `MS-2` |
 
 Section status: Complete
 
@@ -150,10 +150,10 @@ Decomposition mission: Keep registry loading, Markdown scanning, graph validatio
 
 | ID | Unit | Ladder level | Mission | Observable value enabled | Risk retired | Public interface | Validation command | Promotion blockers |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PKG-1 | Registry model and loader | 2 | Load and validate document-local YAML registry declarations. | Enables canonical ID and label reconciliation. | RISK-2 | `load_registry(path)`, registry dataclasses or typed records. | `pytest tests/test_registry.py` | Schema is experimental and tied to R0 fixture evidence. |
-| PKG-2 | Markdown fixture scanner | 2 | Extract definitions, label references, bounded ranges, and ignored issue-key candidates from fixture Markdown. | Enables document-to-registry comparison. | RISK-1 | `scan_markdown(path, registry)` returning deterministic scan facts. | `pytest tests/test_markdown_scanner.py` | Scanner is fixture-family scoped and not parser-substrate neutral. |
-| PKG-3 | Entity graph validator | 2 | Resolve registry and scan facts into deterministic findings. | Enables pass/fail validation for required failure categories. | RISK-1, RISK-3 | `validate(registry, scan_facts)` returning ordered findings. | `pytest tests/test_validation.py` | Rule set is R0-only until broader fixtures exist. |
-| PKG-4 | CLI, report writer, and fixture harness | 2 | Run local validation and emit stable evidence artifacts. | Enables operator workflow and milestone evidence. | RISK-2, RISK-3 | `main(argv)`, `write_report(result)`. | `pytest tests/test_cli.py` | CLI contract is not stable for external consumers. |
+| PKG-1 | Registry model and loader | 2 | Load and validate document-local YAML registry declarations. | Enables canonical ID and label reconciliation. | RISK-1 | `load_registry(path)`, registry dataclasses or typed records. | `pytest tests/test_registry.py` | Schema is experimental and tied to R0 fixture evidence. |
+| PKG-2 | Markdown fixture scanner | 2 | Extract definitions, label references, bounded ranges, and ignored issue-key candidates from fixture Markdown. | Enables document-to-registry comparison. | RISK-2 | `scan_markdown(path, registry)` returning deterministic scan facts. | `pytest tests/test_markdown_scanner.py` | Scanner is fixture-family scoped and not parser-substrate neutral. |
+| PKG-3 | Entity graph validator | 2 | Resolve registry and scan facts into deterministic findings. | Enables pass/fail validation for required failure categories. | RISK-2, RISK-3 | `validate(registry, scan_facts)` returning ordered findings. | `pytest tests/test_validation.py` | Rule set is R0-only until broader fixtures exist. |
+| PKG-4 | CLI, report writer, and fixture harness | 2 | Run local validation and emit stable evidence artifacts. | Enables operator workflow and milestone evidence. | RISK-1, RISK-3 | `main(argv)`, `write_report(result)`. | `pytest tests/test_cli.py` | CLI contract is not stable for external consumers. |
 
 ### Package Boundary Card: PKG-1
 
@@ -163,7 +163,7 @@ Mission: Own registry schema loading, canonical ID validation, display-label sep
 
 Value / risk trace:
 - Observable value enabled: The validator can distinguish identity from labels before scanning Markdown.
-- Risk retired: RISK-2 through explicit registry maintenance surface.
+- Risk retired: RISK-1 through explicit registry maintenance surface.
 - Validation evidence: `VAL-1`, `VAL-2`, `VAL-3`, `EVD-1`, `EVD-3`.
 - Blocking unknowns: None.
 
@@ -215,7 +215,7 @@ Mission: Own deterministic extraction of fixture Markdown definitions, reference
 
 Value / risk trace:
 - Observable value enabled: Markdown text can be compared against registered entities.
-- Risk retired: RISK-1.
+- Risk retired: RISK-2.
 - Validation evidence: `VAL-2`, `VAL-3`, `VAL-4`, `EVD-2`, `EVD-5`.
 - Blocking unknowns: None.
 
@@ -267,7 +267,7 @@ Mission: Own graph resolution, validation findings, failure categories, and dete
 
 Value / risk trace:
 - Observable value enabled: Required valid and broken fixture variants produce decision-grade pass/fail evidence.
-- Risk retired: RISK-1 and RISK-3.
+- Risk retired: RISK-2 and RISK-3.
 - Validation evidence: `VAL-3`, `VAL-4`, `VAL-5`, `EVD-3`, `EVD-4`, `EVD-5`.
 - Blocking unknowns: None.
 
@@ -319,8 +319,8 @@ Mission: Own local command execution, deterministic report writing, fixture harn
 
 Value / risk trace:
 - Observable value enabled: Local operator can run validation and inspect evidence.
-- Risk retired: RISK-2 and RISK-3.
-- Validation evidence: `VAL-5`, `VAL-6`, `VAL-7`, `EVD-4`, `EVD-6`, `EVD-7`.
+- Risk retired: RISK-1 and RISK-3.
+- Validation evidence: `VAL-4`, `VAL-5`, `VAL-6`, `VAL-7`, `EVD-4`, `EVD-5`, `EVD-6`, `EVD-7`.
 - Blocking unknowns: None.
 
 Owns:
@@ -355,7 +355,7 @@ State boundary:
 - Persistence responsibility: none beyond committed evidence artifacts
 
 Agent ownership boundary:
-- Agent editable paths: `src/spectrace/cli.py`, `src/spectrace/reporting/**`, `tests/test_cli.py`, evidence docs
+- Agent editable paths: `src/spectrace/cli.py`, `src/spectrace/reporting/**`, `tests/test_cli.py`, `docs/evidence/**`
 - Agent read-only paths: `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `src/spectrace/validation/**`
 - Required coordination before editing: report schema or CLI exit-code changes
 
@@ -409,11 +409,11 @@ Deferred completeness: Parser generalization, package polish, external projectio
 
 | ID | Objective | Owner | Package boundary | Editable paths | Read-only paths | Inputs | Outputs | Dependencies | Observable value enabled | Risk retired | Milestone gate | Validation checkpoint | Completion criteria |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-1 | Create the fixture family, YAML registry shape, and test scaffolding. | Prototype implementer | PKG-1, PKG-4 | `fixtures/**`, `tests/fixtures/**`, registry schema tests | `docs/spec-trace-r0-document-local-entity-registry.md` | `SRC-1`, `SRC-3` | Valid fixture, registry, broken-variant inventory | DEP-1 | Establishes source-controlled inputs for the prototype. | RISK-2 | MS-1 | VAL-1 | Fixture inventory and schema inspection pass. |
-| WP-2 | Implement first valid end-to-end validation path. | Prototype implementer | PKG-1, PKG-2, PKG-3, PKG-4 | `src/spectrace/**`, valid-path tests | `docs/**`, `fixtures/**` | WP-1 outputs | Passing local validation report for valid fixture | WP-1 | Proves operator can run a deterministic local validation path. | RISK-1 | MS-1 | VAL-2 | Valid fixture exits success with 0 findings and stable summary. |
-| WP-3 | Implement required negative validation categories. | Prototype implementer | PKG-1, PKG-2, PKG-3 | `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `src/spectrace/validation/**`, negative tests | `src/spectrace/cli.py`, `docs/**` | WP-2 output | Findings for duplicate canonical ID, duplicate label, missing reference, missing edge target, and incomplete range | WP-2 | Proves central registry-integrity failure detection. | RISK-1 | MS-2 | VAL-3 | Each negative fixture variant fails with expected category. |
-| WP-4 | Prove collision behavior, determinism, and no-network/local safety. | Prototype implementer | PKG-2, PKG-3, PKG-4 | `src/spectrace/markdown/**`, `src/spectrace/validation/**`, `src/spectrace/cli.py`, `src/spectrace/reporting/**`, collision/determinism tests, report harness | `src/spectrace/registry/**`, `docs/**`, fixtures from WP-1 | WP-3 output | Collision fixture result, 3-run deterministic evidence, no-network/manual safety record | WP-3 | Proves safe local operation and issue-key behavior. | RISK-3 | MS-2 | VAL-4, VAL-5, VAL-6 | Collision, repeat-output, and local-safety checks pass. |
-| WP-5 | Capture maintenance signal and decision evidence. | Prototype implementer | PKG-4 | `docs/**`, evidence artifacts, README usage notes | `src/spectrace/**`, `tests/**`, `fixtures/**` | WP-1 through WP-4 outputs | Prototype review packet and continue/pivot/stop recommendation | WP-4 | Produces decision-grade R0 evidence. | RISK-2 | MS-3 | VAL-7 | Evidence compares registry edits against detected failures and records recommendation. |
+| WP-1 | Create the fixture family, YAML registry shape, and test scaffolding. | Prototype implementer | PKG-1, PKG-4 | `fixtures/**`, `tests/fixtures/**`, registry schema tests | `docs/spec-trace-r0-document-local-entity-registry.md` | `SRC-1`, `SRC-3` | Valid fixture, registry, broken-variant inventory | DEP-1 | Establishes source-controlled inputs for the prototype. | RISK-1 | MS-1 | VAL-1 | Fixture inventory and schema inspection pass. |
+| WP-2 | Implement first valid end-to-end validation path. | Prototype implementer | PKG-1, PKG-2, PKG-3, PKG-4 | `src/spectrace/**`, valid-path tests | `docs/**`, `fixtures/**` | WP-1 outputs | Passing local validation report for valid fixture | WP-1 | Proves operator can run a deterministic local validation path. | RISK-2 | MS-1 | VAL-2 | Valid fixture exits success with 0 findings and stable summary. |
+| WP-3 | Implement required negative validation categories. | Prototype implementer | PKG-1, PKG-2, PKG-3 | `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `src/spectrace/validation/**`, negative tests | `src/spectrace/cli.py`, `docs/**` | WP-2 output | Findings for duplicate canonical ID, duplicate label, missing reference, missing edge target, and incomplete range | WP-2 | Proves central registry-integrity failure detection. | RISK-2 | MS-2 | VAL-3 | Each negative fixture variant fails with expected category. |
+| WP-4 | Prove collision behavior, determinism, and no-network/local safety. | Prototype implementer | PKG-2, PKG-3, PKG-4 | `src/spectrace/markdown/**`, `src/spectrace/validation/**`, `src/spectrace/cli.py`, `src/spectrace/reporting/**`, `docs/evidence/determinism-repeat-report.md`, `docs/evidence/issue-key-collision-report.md`, `docs/evidence/local-safety-report.md`, collision/determinism tests, report harness | `src/spectrace/registry/**`, `docs/spec-trace-r0-document-local-entity-registry.md`, `docs/spec-trace-e0-document-local-entity-registry-execution.md`, fixtures from WP-1 | WP-3 output | Collision fixture result, 3-run deterministic evidence, no-network/manual safety record | WP-3 | Proves safe local operation and issue-key behavior. | RISK-3 | MS-2 | VAL-4, VAL-5, VAL-6 | Collision, repeat-output, and local-safety checks pass. |
+| WP-5 | Capture maintenance signal and decision evidence. | Prototype implementer | PKG-4 | `docs/**`, evidence artifacts, README usage notes | `src/spectrace/**`, `tests/**`, `fixtures/**` | WP-1 through WP-4 outputs | Prototype review packet and continue/pivot/stop recommendation | WP-4 | Produces decision-grade R0 evidence. | RISK-1 | MS-3 | VAL-7 | Evidence compares registry edits against detected failures and records recommendation. |
 
 Execution sequence:
 
@@ -557,9 +557,9 @@ Risks:
 
 | ID | Risk | Impact | Likelihood | Owner | Mitigation | Validation |
 | --- | --- | --- | --- | --- | --- | --- |
-| RISK-1 | Markdown scanner brittleness. | Prototype may overstate feasibility or require parser pivot. | Medium | Prototype implementer | Keep scanner fixture-family scoped and record misses/false positives. | VAL-2, VAL-3 |
-| RISK-2 | Registry upkeep exceeds detected validation value. | Prototype should stop or pivot instead of expanding. | Medium | Prototype implementer | Capture maintenance signal before completion. | VAL-7 |
-| RISK-3 | Issue-key collision behavior is under-proven. | Later Linear or Jira projection could need different rules. | Low | Prototype implementer | Keep external projection out of scope and validate local issue-key behavior. | VAL-4 |
+| RISK-1 | Registry upkeep exceeds detected validation value. | Prototype should stop or pivot instead of expanding. | Medium | Prototype implementer | Capture maintenance signal before completion. | VAL-7 |
+| RISK-2 | Markdown scanner brittleness. | Prototype may overstate feasibility or require parser pivot. | Medium | Prototype implementer | Keep scanner fixture-family scoped and record misses/false positives. | VAL-2, VAL-3 |
+| RISK-3 | Issue-key collision handling is over-scoped before cross-system projection is in scope. | Later Linear or Jira projection concerns could distract from document-local proof. | Low | Prototype implementer | Keep external projection out of scope and validate local issue-key behavior. | VAL-4 |
 
 Open questions:
 
@@ -594,15 +594,15 @@ Section status: Complete
 | OBJ-3 / Collision behavior | SURF-2, SURF-3, SURF-5 | PKG-2, PKG-3 | WP-4 | MS-2 | CTRL-1, CTRL-2 | VAL-4 | REV-2 | REL-1, OBS-2 | EVD-5 |
 | OBJ-4 / Maintenance signal | SURF-6 | PKG-4 | WP-5 | MS-3 | CTRL-4 | VAL-7 | REV-3 | REL-2, OBS-4 | EVD-7 |
 | Optional tool config / SURF-7 | SURF-7 | PKG-4 | WP-1, WP-2, WP-3, WP-4 | MS-1, MS-2 | CTRL-3 | VAL-2, VAL-3, VAL-4, VAL-5, VAL-6 | REV-1, REV-2 | REL-1 | EVD-2, EVD-3, EVD-4, EVD-5, EVD-6 |
-| RISK-1 | SURF-2, SURF-3, SURF-5 | PKG-2, PKG-3 | WP-2, WP-3 | MS-1, MS-2 | CTRL-2, CTRL-5 | VAL-2, VAL-3 | REV-1, REV-2 | REL-1 | EVD-2, EVD-3 |
-| RISK-2 | SURF-1, SURF-6 | PKG-1, PKG-4 | WP-1, WP-5 | MS-3 | CTRL-3 | VAL-1, VAL-7 | REV-3 | REL-2, OBS-4 | EVD-1, EVD-7 |
+| RISK-1 | SURF-1, SURF-6 | PKG-1, PKG-4 | WP-1, WP-5 | MS-3 | CTRL-3 | VAL-1, VAL-7 | REV-3 | REL-2, OBS-4 | EVD-1, EVD-7 |
+| RISK-2 | SURF-2, SURF-3, SURF-5 | PKG-2, PKG-3 | WP-2, WP-3 | MS-1, MS-2 | CTRL-2, CTRL-5 | VAL-2, VAL-3 | REV-1, REV-2 | REL-1 | EVD-2, EVD-3 |
 | RISK-3 | SURF-2, SURF-3, SURF-5 | PKG-2, PKG-3 | WP-4 | MS-2 | CTRL-1 | VAL-4, VAL-6 | REV-2 | REL-1, OBS-2 | EVD-5, EVD-6 |
 
 Section status: Complete
 
 ## 18. Final Execution Gate
 
-Entry gate: Ready when this execution spec is approved, PR #1 or equivalent source cleanup is available in the implementation branch, and no new blocking source-design finding is open.
+Entry gate: Ready when this execution spec is approved, merged PR #1 source cleanup is available in the implementation branch, and no new blocking source-design finding is open.
 
 Milestone approval gate: `MS-1`, `MS-2`, and `MS-3` require named approval from Jason Belmonti at their due points with the evidence artifacts listed in section 9.
 
