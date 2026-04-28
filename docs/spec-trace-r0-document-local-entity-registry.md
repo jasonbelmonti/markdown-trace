@@ -42,7 +42,7 @@ Problem declaration: Agents and document maintainers are unable to preserve stab
 
 Affected actors or systems: Agent authors, human reviewers, execution-spec maintainers, downstream project-management projection workflows, and future SpecTrace tooling.
 
-Current-state baseline: Estimated from 1 directly observed Linear issue pattern, BEL-858, containing at least 8 execution identifier families: `WP-*`, `MS-*`, `PKG-*`, `SURF-*`, `CON-*`, `VAL-*`, `RISK-*`, `EVD-*`, and `REV-*`.
+Current-state baseline: Estimated from 1 directly observed Linear issue pattern, BEL-858, containing at least 9 execution identifier families: `WP-*`, `MS-*`, `PKG-*`, `SURF-*`, `CON-*`, `VAL-*`, `RISK-*`, `EVD-*`, and `REV-*`.
 
 Evidence or source: Direct observation from the user-provided BEL-858 excerpt and subsequent Linear read during planning on 2026-04-28; current prototype repository is empty and has no existing validator.
 
@@ -88,7 +88,7 @@ Section status: Complete
 | CON-2 | Constraint | The registry format is YAML. | User selected YAML registry during planning. | Validate through `VAL-1`. |
 | CON-3 | Invariant | Canonical entity IDs use dotted lowercase syntax such as `exec.wp.1`; human display labels may use `WP-1`. | Reduces collision with project-management keys while preserving readable labels. | Validate through `VAL-1`, `VAL-2`, and `VAL-4`. |
 | CON-4 | Constraint | The prototype performs no network calls and no live project-management mutation. | Keeps the `R0` experiment reversible and local. | Validate through `VAL-6`. |
-| CON-5 | Invariant | Jira-like or Linear-like keys such as `BEL-858` are external issue keys unless explicitly registered as entities. | Prevents accidental collision between document entity labels and project-management identifiers. | Validate through `VAL-4`. |
+| CON-5 | Invariant | Jira-like or Linear-like keys such as `BEL-858` are external issue keys unless explicitly registered as external references. | Prevents accidental collision between document entity labels and project-management identifiers. | Validate through `VAL-4`. |
 | ASM-1 | Assumption | A sidecar registry can be maintained by an agent with lower total effort than manual reference cleanup. | The value is plausible from the BEL-858 pattern but unproven. | Resolve at prototype review using the success measures in section 6 by 2026-05-05. |
 | ASM-2 | Assumption | A simple Markdown scanner is sufficient for the `R0` fixture family because the prototype does not need full GFM semantics. | The experiment validates entity modeling, not parser completeness. | Resolve through fixture results in `VAL-2` and `VAL-3` by 2026-05-05. |
 
@@ -177,10 +177,12 @@ External service expectations: Local prototype only; no availability or latency 
 | ACC-1 | Validate a fixture with registered `exec.wp.1` labeled `WP-1` and matching document definition. | Report exits with success and 0 findings. | REQ-1, REQ-2, FUNC-1 |
 | ACC-2 | Validate a fixture variant with two registry entries using the same canonical ID. | Report exits with failure and a duplicate-canonical-id finding. | REQ-3, FUNC-2 |
 | ACC-3 | Validate a fixture variant with two entities using the same display label. | Report exits with failure and a duplicate-label finding. | REQ-2, REQ-3, FUNC-2 |
-| ACC-4 | Validate a fixture variant referencing `CON-3 through CON-6` while `CON-5` is absent. | Report exits with failure and an incomplete-range finding. | REQ-3, FUNC-2 |
-| ACC-5 | Validate a fixture containing `BEL-858` without registering it as an entity. | Report does not classify `BEL-858` as a SpecTrace entity. | REQ-4, FUNC-3 |
-| ACC-6 | Run validation 3 times on the same fixture variant and registry. | Ordered findings and summary are identical across all runs. | REQ-5, FUNC-2 |
-| ACC-7 | Run validation while network access is unavailable. | Validation completes using local files only. | REQ-6, FUNC-4 |
+| ACC-4 | Validate a fixture variant that references an unregistered entity label. | Report exits with failure and a missing-reference finding. | REQ-3, FUNC-2 |
+| ACC-5 | Validate a fixture variant whose registry edge points to an absent canonical ID. | Report exits with failure and a missing-edge-target finding. | REQ-3, FUNC-2 |
+| ACC-6 | Validate a fixture variant referencing `CON-3 through CON-6` while `CON-5` is absent. | Report exits with failure and an incomplete-range finding. | REQ-3, FUNC-2 |
+| ACC-7 | Validate a fixture containing `BEL-858` without registering it as an external reference. | Report does not classify `BEL-858` as a SpecTrace entity. | REQ-4, FUNC-3 |
+| ACC-8 | Run validation 3 times on the same fixture variant and registry. | Ordered findings and summary are identical across all runs. | REQ-5, FUNC-2 |
+| ACC-9 | Run validation while network access is unavailable. | Validation completes using local files only. | REQ-6, FUNC-4 |
 
 Section status: Complete
 
@@ -190,10 +192,10 @@ Section status: Complete
 | --- | --- | --- | --- |
 | REQ-1 | FLOW-1, FUNC-1 | ACC-1 | Registry-to-document integrity. |
 | REQ-2 | FLOW-1, FUNC-1 | ACC-1, ACC-3 | Canonical ID and display label separation. |
-| REQ-3 | FLOW-2, FUNC-2 | ACC-2, ACC-3, ACC-4 | Failure-mode detection. |
-| REQ-4 | FLOW-3, FUNC-3 | ACC-5 | Collision behavior. |
-| REQ-5 | FLOW-1, FLOW-2, FLOW-3, FUNC-2 | ACC-6 | Deterministic output. |
-| REQ-6 | FLOW-1, FLOW-2, FLOW-3, FUNC-4 | ACC-7 | Local read-only operation. |
+| REQ-3 | FLOW-2, FUNC-2 | ACC-2, ACC-3, ACC-4, ACC-5, ACC-6 | Failure-mode detection. |
+| REQ-4 | FLOW-3, FUNC-3 | ACC-7 | Collision behavior. |
+| REQ-5 | FLOW-1, FLOW-2, FLOW-3, FUNC-2 | ACC-8 | Deterministic output. |
+| REQ-6 | FLOW-1, FLOW-2, FLOW-3, FUNC-4 | ACC-9 | Local read-only operation. |
 
 Section status: Complete
 
@@ -256,7 +258,7 @@ externalRefs:
 | --- | --- | --- | --- | --- |
 | Document-local registry schema | Config | Internal prototype only; no external consumer compatibility commitment. | Reversible | Treat schema as experimental and version it only inside fixture evidence. |
 | Validation report shape | Data | Internal prototype only; report categories may change before implementation approval. | Reversible | Keep fixture snapshots tied to the `R0` experiment only. |
-| Optional `externalRefs` section | Config | Internal prototype only; does not integrate with live Linear or Jira. | Reversible | Validate that external refs are not treated as document entities by default. |
+| Optional `externalRefs` section | Config | Internal prototype only; does not integrate with live Linear or Jira. | Reversible | Validate that external references are not treated as document entities by default. |
 
 Section status: Complete
 
@@ -300,10 +302,10 @@ Section status: Complete
 
 | ID | Verification method | What is verified | Related IDs |
 | --- | --- | --- | --- |
-| VAL-1 | Inspection | Registry schema separates canonical IDs, labels, entity types, definition expectations, edges, and external refs. | REQ-1, REQ-2, TECH-1 |
+| VAL-1 | Inspection | Registry schema separates canonical IDs, labels, entity types, definition expectations, edges, and external references. | REQ-1, REQ-2, TECH-1 |
 | VAL-2 | Test | Valid fixture produces a passing report with registered definitions resolved. | REQ-1, REQ-2, FUNC-1, TECH-1, TECH-2, TECH-3 |
 | VAL-3 | Test | Negative fixture variants fail for duplicate canonical IDs, duplicate labels, missing references, missing edge targets, and incomplete bounded ranges. | REQ-3, FUNC-2, TECH-3, TECH-4 |
-| VAL-4 | Test | Project-management issue keys are ignored unless explicitly registered as external refs. | REQ-4, FUNC-3, TECH-2, TECH-3 |
+| VAL-4 | Test | Project-management issue keys are ignored unless explicitly registered as external references. | REQ-4, FUNC-3, TECH-2, TECH-3 |
 | VAL-5 | Test | Three consecutive runs over identical inputs produce the same ordered validation result. | REQ-5, FUNC-2, TECH-4, TECH-5 |
 | VAL-6 | Manual | Validation completes with network unavailable and without live external-system mutation. | REQ-6, FUNC-4, TECH-5 |
 | VAL-7 | Inspection | Prototype results are compared against section 6 continue, pivot, and stop criteria. | OBJ-1, OBJ-2, OBJ-3, RISK-1, RISK-2, RISK-3 |
@@ -380,7 +382,7 @@ Section status: Complete
 | Traceability result | Pass |
 | Verdict | Approve for experiment |
 | Open findings | none |
-| Resolved findings verified in this decision | ST-1, ST-2, SM-1, TR-1, TR-2 |
+| Resolved findings verified in this decision | ST-1, ST-2, SM-1, TR-1, TR-2, NB-1, NB-2, NB-3 |
 | Reviewed waivers | none |
 | Required heightened controls | none |
 | Approval conditions | none |
@@ -396,6 +398,9 @@ Section status: Complete
 | SM-1 | Major | Resolved | 6 | Initial draft did not include a disconfirming maintenance-cost kill criterion. | Added the maintenance signal stop criterion. |
 | TR-1 | Major | Resolved | 17 | Initial draft did not map local read-only operation through behavior, mechanism, and verification. | Added FUNC-4, TECH-5, VAL-6, and traceability coverage for REQ-6. |
 | TR-2 | Major | Resolved | 6, 10, 17 | Consensus review found that duplicate canonical ID detection was required but not materially verified. | Added duplicate canonical ID coverage to the success threshold, acceptance cases, requirements traceability, and VAL-3. |
+| NB-1 | Minor | Resolved | 1 | Consensus review noted that the baseline counted at least 8 identifier families while listing 9. | Corrected the baseline count to 9 identifier families. |
+| NB-2 | Minor | Resolved | 4, 5, 17 | Consensus review noted inconsistent wording between entities and external references for project-management keys. | Aligned the wording to external references across the constraint, acceptance case, compatibility note, and validation rows. |
+| NB-3 | Minor | Resolved | 10, 11 | Consensus review noted that missing-reference and missing-edge-target coverage was present in `VAL-3` but not explicit in acceptance cases. | Added explicit acceptance cases and updated requirements-to-behavior traceability for both finding categories. |
 
 ### Semantic Scores
 
