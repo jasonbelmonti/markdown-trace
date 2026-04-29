@@ -140,7 +140,7 @@ Section status: Complete
 | SURF-4 | `src/spectrace/cli.py`, `src/spectrace/reporting/**` | Code | Prototype implementer | Write local command entry point and deterministic report output. | Review output stability and local-only operation. |
 | SURF-5 | `fixtures/**`, `tests/**` | Test | Prototype implementer | Write valid fixture, fixture variants, and automated tests. | Review coverage of all `VAL-*` checks. |
 | SURF-6 | `docs/**`, `README.md` | Docs | Prototype implementer | Write evidence notes and usage instructions. | Review decision evidence and handoff clarity. |
-| SURF-7 | `pyproject.toml` or equivalent local tool config | Config | Prototype implementer | Write only if needed for local test execution. | Review dependency footprint and reversibility. |
+| SURF-7 | `pyproject.toml` or equivalent local tool config | Config | Prototype implementer | Write only if needed for local test execution or a YAML parser dependency. | Review dependency footprint and reversibility. |
 
 Section status: Complete
 
@@ -183,7 +183,7 @@ Public interface:
 - CLI/API surface: none
 
 Allowed dependencies:
-- May import: standard library, local shared typing utilities
+- May import: standard library, local shared typing utilities, and a repository-declared YAML parser dependency if introduced through `SURF-7`
 - May call: filesystem read APIs for explicit local paths
 - May read configuration from: explicit function arguments only
 
@@ -588,8 +588,8 @@ Section status: Complete
 | Source, objective, or evidence-led claim | Change surfaces | Package boundaries | Work packages | Milestones | Controls | Validation | Review | Release or ops | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | SRC-1 / OBJ-1 / Critical path | SURF-1, SURF-2, SURF-3, SURF-4, SURF-5 | PKG-1, PKG-2, PKG-3, PKG-4 | WP-1, WP-2 | MS-1 | CTRL-2, CTRL-3 | VAL-1, VAL-2 | REV-1 | REL-1, OBS-1 | EVD-1, EVD-2 |
-| SRC-2 / Consensus review authority | SURF-6 | PKG-4 | WP-5 | MS-3 | CTRL-5 | VAL-7 | REV-3 | REL-2, OBS-4 | EVD-7 |
-| SRC-3 / PR #1 cleanup authority | SURF-6 | PKG-4 | WP-1, WP-5 | MS-1, MS-3 | CTRL-3 | VAL-1, VAL-7 | REV-1, REV-3 | REL-1, REL-2 | EVD-1, EVD-7 |
+| SRC-2 / Consensus review authority | SURF-1, SURF-5, SURF-6 | PKG-1, PKG-3, PKG-4 | WP-1, WP-3, WP-5 | MS-1, MS-2, MS-3 | CTRL-3, CTRL-5 | VAL-1, VAL-3, VAL-7 | REV-1, REV-2, REV-3 | REL-1, REL-2, OBS-2, OBS-4 | EVD-1, EVD-3, EVD-7 |
+| SRC-3 / PR #1 cleanup authority | SURF-1, SURF-2, SURF-3, SURF-5, SURF-6 | PKG-1, PKG-2, PKG-3, PKG-4 | WP-1, WP-3, WP-4, WP-5 | MS-1, MS-2, MS-3 | CTRL-3, CTRL-5 | VAL-1, VAL-3, VAL-4, VAL-7 | REV-1, REV-2, REV-3 | REL-1, REL-2, OBS-2, OBS-4 | EVD-1, EVD-3, EVD-5, EVD-7 |
 | OBJ-2 / First proving slice expansion | SURF-1, SURF-2, SURF-3, SURF-5 | PKG-1, PKG-2, PKG-3 | WP-3 | MS-2 | CTRL-3, CTRL-5 | VAL-3 | REV-2 | REL-1, OBS-2 | EVD-3 |
 | OBJ-3 / Collision behavior | SURF-2, SURF-3, SURF-5 | PKG-2, PKG-3 | WP-4 | MS-2 | CTRL-1, CTRL-2 | VAL-4 | REV-2 | REL-1, OBS-2 | EVD-5 |
 | OBJ-4 / Maintenance signal | SURF-6 | PKG-4 | WP-5 | MS-3 | CTRL-4 | VAL-7 | REV-3 | REL-2, OBS-4 | EVD-7 |
@@ -597,6 +597,7 @@ Section status: Complete
 | RISK-1 | SURF-1, SURF-6 | PKG-1, PKG-4 | WP-1, WP-5 | MS-3 | CTRL-3 | VAL-1, VAL-7 | REV-3 | REL-2, OBS-4 | EVD-1, EVD-7 |
 | RISK-2 | SURF-2, SURF-3, SURF-5 | PKG-2, PKG-3 | WP-2, WP-3 | MS-1, MS-2 | CTRL-2, CTRL-5 | VAL-2, VAL-3 | REV-1, REV-2 | REL-1 | EVD-2, EVD-3 |
 | RISK-3 | SURF-2, SURF-3, SURF-5 | PKG-2, PKG-3 | WP-4 | MS-2 | CTRL-1 | VAL-4, VAL-6 | REV-2 | REL-1, OBS-2 | EVD-5, EVD-6 |
+| Determinism / OBS-3 | SURF-3, SURF-4, SURF-5 | PKG-3, PKG-4 | WP-4 | MS-2 | CTRL-4 | VAL-5 | REV-2 | REL-1, OBS-3 | EVD-4 |
 
 Section status: Complete
 
