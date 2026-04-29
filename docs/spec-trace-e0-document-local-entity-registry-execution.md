@@ -5,7 +5,7 @@
 | Field | Value |
 | --- | --- |
 | Title | SpecTrace E0: Document-Local Entity Registry Prototype Execution |
-| Status | Draft |
+| Status | Approved to investigate |
 | Execution level | `E0` |
 | Execution level justification | The work is a local prototype whose purpose is to retire uncertainty about document-local entity registries before production or integration scope is approved. |
 | Author(s) | Codex |
@@ -14,7 +14,7 @@
 | Decision owner | Jason Belmonti |
 | Target branch, release, or milestone | SpecTrace R0 prototype implementation |
 | Last updated | 2026-04-29 |
-| Related source docs | `docs/spec-trace-r0-document-local-entity-registry.md`; PR #1 `[codex] Address design review observations` |
+| Related source docs | `docs/spec-trace-r0-document-local-entity-registry.md`; PR #1 `[codex] Address design review observations` ([#1](https://github.com/jasonbelmonti/spec-trace/pull/1), merge commit `2b7f760`) |
 | Related tickets | None |
 
 ## 0. Execution Summary
@@ -42,8 +42,8 @@ Section status: Complete
 | ID | Source | Authority | Execution implication |
 | --- | --- | --- | --- |
 | SRC-1 | `docs/spec-trace-r0-document-local-entity-registry.md` | Approved R0 design document | Defines the prototype scope, requirements, constraints, validation categories, risks, and continue/pivot/stop criteria. |
-| SRC-2 | Consensus review verdict on the R0 design | Three-reviewer consensus approval | Confirms duplicate canonical ID coverage and fixture-family scope are review-acceptable for R0. |
-| SRC-3 | PR #1 `[codex] Address design review observations` | Merged PR cleanup of non-blocking review observations | Provides clarified acceptance coverage and external-reference wording that implementation shall follow. |
+| SRC-2 | Consensus review verdict on the R0 design, recorded in the R0 internal review record at merge commit `2b7f760` | Three-reviewer consensus approval | Confirms duplicate canonical ID coverage and fixture-family scope are review-acceptable for R0. |
+| SRC-3 | PR #1 `[codex] Address design review observations` ([#1](https://github.com/jasonbelmonti/spec-trace/pull/1), merge commit `2b7f760`) | Merged PR cleanup of non-blocking review observations | Provides clarified acceptance coverage and external-reference wording that implementation shall follow. |
 
 In scope: Local fixture Markdown, document-local YAML registry, parser/scanner sufficient for the R0 fixture family, in-memory entity graph, deterministic validation report, local CLI or script harness, tests or fixture runs for `VAL-1` through `VAL-7`, and evidence capture.
 
@@ -392,7 +392,7 @@ Coupling tripwires:
 - Any package requires network access or live project-management credentials.
 - Separate agents need to edit the same file for normal work-package completion.
 
-N/A rationale: Section 7 applies because code, schema, and test surfaces are planned.
+Section applicability: Section 7 applies because code, schema, and test surfaces are planned.
 
 Section status: Complete
 
