@@ -6,27 +6,36 @@ import yaml
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-REGISTRY_PATH = REPO_ROOT / "fixtures/r0-document-local-registry/entity-registry.yaml"
-DOCUMENT_PATH = REPO_ROOT / "fixtures/r0-document-local-registry/execution-spec.md"
-VARIANTS_PATH = REPO_ROOT / "tests/fixtures/registry-variants.yaml"
+FIXTURE_FAMILY = "r0-document-local-registry"
+FIXTURE_DOCUMENT = f"fixtures/{FIXTURE_FAMILY}/execution-spec.md"
+FIXTURE_REGISTRY = f"fixtures/{FIXTURE_FAMILY}/entity-registry.yaml"
+VARIANT_INVENTORY = "tests/fixtures/registry-variants.yaml"
+
+REGISTRY_PATH = REPO_ROOT / FIXTURE_REGISTRY
+DOCUMENT_PATH = REPO_ROOT / FIXTURE_DOCUMENT
+VARIANTS_PATH = REPO_ROOT / VARIANT_INVENTORY
+
+
+def load_yaml(path):
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
 class RegistryFixtureTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.registry = yaml.safe_load(REGISTRY_PATH.read_text(encoding="utf-8"))
+        cls.registry = load_yaml(REGISTRY_PATH)
         cls.document_text = DOCUMENT_PATH.read_text(encoding="utf-8")
-        cls.variants = yaml.safe_load(VARIANTS_PATH.read_text(encoding="utf-8"))
+        cls.variants = load_yaml(VARIANTS_PATH)
 
     def test_registry_points_at_existing_fixture_document(self):
         document = self.registry["document"]
 
         self.assertEqual(
             document["path"],
-            "fixtures/r0-document-local-registry/execution-spec.md",
+            FIXTURE_DOCUMENT,
         )
         self.assertTrue((REPO_ROOT / document["path"]).is_file())
-        self.assertEqual(document["fixtureFamily"], "r0-document-local-registry")
+        self.assertEqual(document["fixtureFamily"], FIXTURE_FAMILY)
 
     def test_val_1_registry_shape_separates_identity_label_type_and_definitions(self):
         entities = self.registry["entities"]
@@ -87,11 +96,11 @@ class RegistryFixtureTests(unittest.TestCase):
 
         self.assertEqual(
             self.variants["baseDocument"],
-            "fixtures/r0-document-local-registry/execution-spec.md",
+            FIXTURE_DOCUMENT,
         )
         self.assertEqual(
             self.variants["baseRegistry"],
-            "fixtures/r0-document-local-registry/entity-registry.yaml",
+            FIXTURE_REGISTRY,
         )
         self.assertLessEqual(expected_categories, actual_categories)
 
