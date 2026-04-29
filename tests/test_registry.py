@@ -54,6 +54,22 @@ class RegistryFixtureTests(unittest.TestCase):
                 self.assertEqual(entity["defines"]["kind"], "heading")
                 self.assertIn(entity["defines"]["text"], self.document_text)
 
+    def test_base_registry_has_unique_canonical_ids_and_labels(self):
+        entities = self.registry["entities"]
+        canonical_ids = [entity["id"] for entity in entities]
+        labels = [entity["label"] for entity in entities]
+
+        self.assertEqual(
+            len(canonical_ids),
+            len(set(canonical_ids)),
+            "entities[].id values must be unique in the base registry",
+        )
+        self.assertEqual(
+            len(labels),
+            len(set(labels)),
+            "entities[].label values must be unique in the base registry",
+        )
+
     def test_declared_edges_use_canonical_ids_and_resolve_to_registered_entities(self):
         canonical_ids = {entity["id"] for entity in self.registry["entities"]}
 
