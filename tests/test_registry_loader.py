@@ -97,6 +97,19 @@ class RegistryLoaderTests(unittest.TestCase):
             },
         )
 
+    def test_load_registry_accepts_omitted_external_references(self):
+        raw_registry = yaml.safe_load(REGISTRY_PATH.read_text(encoding="utf-8"))
+        raw_registry.pop("externalRefs")
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            registry_path = Path(tmp_dir) / "registry-without-external-refs.yaml"
+            registry_path.write_text(yaml.safe_dump(raw_registry), encoding="utf-8")
+
+            registry = load_registry(registry_path)
+
+        self.assertEqual(registry.external_refs, ())
+        self.assertIn("exec.wp.1", registry.entities_by_id)
+
     def test_load_registry_rejects_duplicate_canonical_ids(self):
         raw_registry = yaml.safe_load(REGISTRY_PATH.read_text(encoding="utf-8"))
         raw_registry["entities"].append(dict(raw_registry["entities"][0]))

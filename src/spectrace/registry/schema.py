@@ -34,7 +34,7 @@ def parse_registry_data(raw_data: Any) -> EntityRegistry:
         document=_parse_document(data.get("document")),
         entities=entities,
         edges=_parse_required_items(data.get("edges"), "edges", _parse_edge),
-        external_refs=_parse_required_items(
+        external_refs=_parse_optional_items(
             data.get("externalRefs"), "externalRefs", _parse_external_ref
         ),
     )
