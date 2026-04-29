@@ -105,7 +105,7 @@ family, not as separate fixture families.
 | `duplicate-label` | `duplicate-label` | Append a distinct canonical ID using display label `WP-1`. |
 | `missing-reference` | `missing-reference` | Add reference label `WP-99` under the `WP-1` section. |
 | `missing-edge-target` | `missing-edge-target` | Add an edge from `exec.wp.1` to absent `exec.wp.99`. |
-| `incomplete-bounded-range` | `incomplete-range` | Remove `exec.con.2` while the document still references `CON-1 through CON-3`. |
+| `incomplete-bounded-range` | `incomplete-range` | Replace the `WP-1` reference `CON-1 through CON-3` with `CON-1 through CON-4`, leaving registry entities and edges intact. |
 | `unregistered-issue-key-collision` | `no-document-entity-from-issue-key` | Retain `BEL-858` as an issue-like token without registering it as a document entity. |
 
 ## VAL-1 Inspection Result

@@ -65,10 +65,13 @@ variants:
     expectedFinding: incomplete-range
     sourceRequirement: VAL-3
     mutation:
-      target: registry.entities
-      operation: remove_entity
-      id: exec.con.2
-      documentReference: "CON-1 through CON-3"
+      target: document
+      operation: replace_reference
+      selector: "### WP-1: Create fixture family, YAML registry shape, and test scaffolding"
+      from: "CON-1 through CON-3"
+      to: "CON-1 through CON-4"
+      absentLabels:
+        - CON-4
   - name: unregistered-issue-key-collision
     category: issue-key-collision
     expectedFinding: no-document-entity-from-issue-key

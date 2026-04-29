@@ -120,6 +120,23 @@ class RegistryFixtureTests(unittest.TestCase):
         )
         self.assertLessEqual(expected_categories, actual_categories)
 
+    def test_incomplete_range_variant_does_not_remove_registered_entities(self):
+        [variant] = [
+            variant
+            for variant in self.variants["variants"]
+            if variant["name"] == "incomplete-bounded-range"
+        ]
+        mutation = variant["mutation"]
+        entity_labels = {entity["label"] for entity in self.registry["entities"]}
+
+        self.assertEqual(mutation["target"], "document")
+        self.assertEqual(mutation["operation"], "replace_reference")
+        self.assertNotIn("id", mutation)
+        self.assertIn(mutation["selector"], self.document_text)
+        self.assertIn(mutation["from"], self.document_text)
+        self.assertNotIn(mutation["to"], self.document_text)
+        self.assertTrue(set(mutation["absentLabels"]).isdisjoint(entity_labels))
+
     def test_variant_inventory_declares_expected_findings_and_mutations(self):
         for variant in self.variants["variants"]:
             with self.subTest(variant=variant["name"]):
