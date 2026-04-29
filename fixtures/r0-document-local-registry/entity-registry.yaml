@@ -1,0 +1,163 @@
+registryVersion: spec-trace.r0.document-local-registry.v0
+document:
+  id: spec-trace.r0.fixture.execution
+  title: SpecTrace R0 Fixture Execution Spec
+  path: fixtures/r0-document-local-registry/execution-spec.md
+  fixtureFamily: r0-document-local-registry
+  sourceDocs:
+    - docs/spec-trace-r0-document-local-entity-registry.md
+    - docs/spec-trace-e0-document-local-entity-registry-execution.md
+entities:
+  - id: exec.con.1
+    label: CON-1
+    type: constraint
+    defines:
+      kind: heading
+      text: "### CON-1: Single fixture family"
+  - id: exec.con.2
+    label: CON-2
+    type: constraint
+    defines:
+      kind: heading
+      text: "### CON-2: YAML registry format"
+  - id: exec.con.3
+    label: CON-3
+    type: constraint
+    defines:
+      kind: heading
+      text: "### CON-3: Canonical ID syntax"
+  - id: exec.pkg.1
+    label: PKG-1
+    type: package_boundary
+    defines:
+      kind: heading
+      text: "### PKG-1: Registry model and loader"
+  - id: exec.pkg.4
+    label: PKG-4
+    type: package_boundary
+    defines:
+      kind: heading
+      text: "### PKG-4: Fixture harness and evidence paths"
+  - id: exec.wp.1
+    label: WP-1
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-1: Create fixture family, YAML registry shape, and test scaffolding"
+    expectedReferences:
+      labels:
+        - CON-1
+        - CON-2
+        - CON-3
+        - PKG-1
+        - PKG-4
+        - VAL-1
+        - EVD-1
+        - WP-2
+      ranges:
+        - labelFamily: CON
+          start: CON-1
+          end: CON-3
+          expandsTo:
+            - CON-1
+            - CON-2
+            - CON-3
+  - id: exec.wp.2
+    label: WP-2
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-2: Implement first valid end-to-end validation path"
+    expectedReferences:
+      labels:
+        - WP-1
+        - VAL-2
+        - MS-1
+  - id: exec.wp.3
+    label: WP-3
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-3: Implement required negative validation categories"
+    expectedReferences:
+      labels:
+        - VAL-3
+  - id: exec.ms.1
+    label: MS-1
+    type: milestone
+    defines:
+      kind: heading
+      text: "### MS-1: Approve first valid-fixture proof"
+  - id: exec.val.1
+    label: VAL-1
+    type: validation_checkpoint
+    defines:
+      kind: heading
+      text: "### VAL-1: Registry schema inspection"
+  - id: exec.val.2
+    label: VAL-2
+    type: validation_checkpoint
+    defines:
+      kind: heading
+      text: "### VAL-2: Valid fixture proof"
+  - id: exec.val.3
+    label: VAL-3
+    type: validation_checkpoint
+    defines:
+      kind: heading
+      text: "### VAL-3: Negative variant proof"
+  - id: exec.evd.1
+    label: EVD-1
+    type: evidence_artifact
+    defines:
+      kind: heading
+      text: "### EVD-1: Registry fixture inventory"
+  - id: exec.evd.2
+    label: EVD-2
+    type: evidence_artifact
+    defines:
+      kind: heading
+      text: "### EVD-2: Valid fixture validation report"
+edges:
+  - from: exec.wp.1
+    relationship: constrained_by
+    to: exec.con.1
+  - from: exec.wp.1
+    relationship: constrained_by
+    to: exec.con.2
+  - from: exec.wp.1
+    relationship: constrained_by
+    to: exec.con.3
+  - from: exec.wp.1
+    relationship: owns_package_boundary
+    to: exec.pkg.1
+  - from: exec.wp.1
+    relationship: owns_package_boundary
+    to: exec.pkg.4
+  - from: exec.wp.1
+    relationship: produces
+    to: exec.evd.1
+  - from: exec.wp.1
+    relationship: satisfies
+    to: exec.val.1
+  - from: exec.wp.1
+    relationship: blocks
+    to: exec.wp.2
+  - from: exec.wp.2
+    relationship: reviewed_at
+    to: exec.ms.1
+  - from: exec.wp.2
+    relationship: satisfies
+    to: exec.val.2
+  - from: exec.wp.3
+    relationship: satisfies
+    to: exec.val.3
+externalRefs:
+  - system: linear
+    key: BEL-893
+    relatedEntity: exec.wp.1
+    role: task_of_record
+  - system: github
+    key: c52874f
+    relatedEntity: exec.wp.1
+    role: source_commit
