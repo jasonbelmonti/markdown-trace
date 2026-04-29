@@ -13,7 +13,7 @@
 | Reviewers | Jason Belmonti |
 | Decision owner | Jason Belmonti |
 | Target branch, release, or milestone | SpecTrace R0 prototype implementation |
-| Last updated | 2026-04-28 |
+| Last updated | 2026-04-29 |
 | Related source docs | `docs/spec-trace-r0-document-local-entity-registry.md`; PR #1 `[codex] Address design review observations` |
 | Related tickets | None |
 
@@ -61,8 +61,9 @@ Section status: Complete
 | --- | --- | --- | --- |
 | OBJ-1 | Prove one fixture family can reconcile Markdown entity definitions with a document-local YAML registry. | Completion of `MS-1` and `MS-2`. | `EVD-1`, `EVD-2` |
 | OBJ-2 | Prove deterministic validation catches missing registered entity definitions, duplicate canonical IDs, duplicate labels, missing references, missing edge targets, and incomplete bounded ranges. | Completion of `MS-2`. | `EVD-3`, `EVD-4` |
-| OBJ-3 | Prove issue-key tokens such as `BEL-858` stay outside the document entity graph unless registered as external references. | Completion of `MS-2`. | `EVD-5` |
-| OBJ-4 | Produce a decision record comparing registry maintenance effort against detected validation value. | Completion of `MS-3`. | `EVD-7` |
+| OBJ-3 | Determine whether canonical dotted IDs and human labels are acceptable for agent-authored specs through manual inspection of registry and report usability. | Completion of `MS-3`. | `EVD-7` |
+| OBJ-4 | Prove issue-key tokens such as `BEL-858` stay outside the document entity graph unless registered as external references. | Completion of `MS-2`. | `EVD-5` |
+| OBJ-5 | Produce a decision record comparing registry maintenance effort against detected validation value. | Completion of `MS-3`. | `EVD-7` |
 | NG-1 | This execution will not validate live Linear, Jira, or other project-management projections. | Entire E0 execution. | Review of `REL-1`, `VAL-6` |
 | NG-2 | This execution does not include a graph database, service daemon, or multi-document namespace. | Entire E0 execution. | Review of `SURF-*` and `PKG-*` boundaries |
 | NG-3 | This execution will not modify `markdown-engine` or choose its final parser substrate. | Entire E0 execution. | Review of `SURF-5`, `CTRL-2` |
@@ -95,7 +96,7 @@ Section status: Complete
 | --- | --- | --- | --- | --- | --- |
 | CON-1 | Constraint | Execution remains local-only, read-only except for repository artifacts, and performs no network calls during validation. | Prototype implementer | No | Validate through `VAL-6` and `MS-2`. |
 | CON-2 | Constraint | The fixture set is one fixture family derived from one source execution spec and one document-local registry, with local variants or generated mutations. | Prototype implementer | No | Validate through `VAL-2`, `VAL-3`, and fixture inventory review. |
-| CON-3 | Constraint | Canonical entity IDs use dotted lowercase syntax; display labels remain separate. | Prototype implementer | No | Validate through `VAL-1`, `VAL-2`, and `VAL-3`. |
+| CON-3 | Constraint | Canonical entity IDs use dotted lowercase syntax; display labels remain separate. | Prototype implementer | No | Validate through `VAL-1`, `VAL-2`, `VAL-3`, and `VAL-7`. |
 | ASM-1 | Assumption | A Python 3 local CLI or script harness is sufficient for the E0 prototype. | Prototype implementer | No | Re-estimate if implementation requires a service, daemon, or compiled package. |
 | ASM-2 | Assumption | The fixture-family Markdown scanner can be simple and deterministic without full GFM support. | Prototype implementer | No | Retire through `VAL-2`, `VAL-3`, and `RISK-2` evidence. |
 | DEP-1 | Dependency | Merged PR #1 cleanup must be present before prototype implementation begins. | Prototype implementer | Yes | Confirm branch source in the entry gate; equivalent wording in the implementation branch is acceptable. |
@@ -139,7 +140,7 @@ Section status: Complete
 | SURF-3 | `src/spectrace/validation/**` | Code | Prototype implementer | Write graph resolver and validation rule evaluator. | Review required failure categories and ordering. |
 | SURF-4 | `src/spectrace/cli.py`, `src/spectrace/reporting/**` | Code | Prototype implementer | Write local command entry point and deterministic report output. | Review output stability and local-only operation. |
 | SURF-5 | `fixtures/**`, `tests/**` | Test | Prototype implementer | Write valid fixture, fixture variants, and automated tests. | Review coverage of all `VAL-*` checks. |
-| SURF-6 | `docs/**`, `README.md` | Docs | Prototype implementer | Write evidence notes and usage instructions. | Review decision evidence and handoff clarity. |
+| SURF-6 | `docs/evidence/**` | Docs | Prototype implementer | Write evidence notes and decision records only; source authority docs remain read-only during implementation. | Review decision evidence and handoff clarity. |
 | SURF-7 | `pyproject.toml` or equivalent local tool config | Config | Prototype implementer | Write only if needed for local test execution or a YAML parser dependency. | Review dependency footprint and reversibility. |
 
 Section status: Complete
@@ -324,7 +325,7 @@ Value / risk trace:
 - Blocking unknowns: None.
 
 Owns:
-- Files/directories: `src/spectrace/cli.py`, `src/spectrace/reporting/**`, `tests/test_cli.py`, evidence scripts if needed
+- Files/directories: `src/spectrace/cli.py`, `src/spectrace/reporting/**`, `tests/test_cli.py`, `docs/evidence/**`, evidence scripts if needed
 - Concepts: invocation contract, report shape, evidence artifact paths
 - Runtime responsibilities: local execution and stable output
 
@@ -412,8 +413,8 @@ Deferred completeness: Parser generalization, package polish, external projectio
 | WP-1 | Create the fixture family, YAML registry shape, and test scaffolding. | Prototype implementer | PKG-1, PKG-4 | `fixtures/**`, `tests/fixtures/**`, registry schema tests | `docs/spec-trace-r0-document-local-entity-registry.md` | `SRC-1`, `SRC-3` | Valid fixture, registry, broken-variant inventory | DEP-1 | Establishes source-controlled inputs for the prototype. | RISK-1 | MS-1 | VAL-1 | Fixture inventory and schema inspection pass. |
 | WP-2 | Implement first valid end-to-end validation path. | Prototype implementer | PKG-1, PKG-2, PKG-3, PKG-4 | `src/spectrace/**`, valid-path tests | `docs/**`, `fixtures/**` | WP-1 outputs | Passing local validation report for valid fixture | WP-1 | Proves operator can run a deterministic local validation path. | RISK-2 | MS-1 | VAL-2 | Valid fixture exits success with 0 findings and stable summary. |
 | WP-3 | Implement required negative validation categories. | Prototype implementer | PKG-1, PKG-2, PKG-3 | `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `src/spectrace/validation/**`, negative tests | `src/spectrace/cli.py`, `docs/**` | WP-2 output | Findings for missing registered definition, duplicate canonical ID, duplicate label, missing reference, missing edge target, and incomplete range | WP-2 | Proves central registry-integrity failure detection. | RISK-2 | MS-2 | VAL-3 | Each negative fixture variant fails with expected category, including missing registered definitions. |
-| WP-4 | Prove collision behavior, determinism, and no-network/local safety. | Prototype implementer | PKG-2, PKG-3, PKG-4 | `src/spectrace/markdown/**`, `src/spectrace/validation/**`, `src/spectrace/cli.py`, `src/spectrace/reporting/**`, `docs/evidence/determinism-repeat-report.md`, `docs/evidence/issue-key-collision-report.md`, `docs/evidence/local-safety-report.md`, collision/determinism tests, report harness | `src/spectrace/registry/**`, `docs/spec-trace-r0-document-local-entity-registry.md`, `docs/spec-trace-e0-document-local-entity-registry-execution.md`, fixtures from WP-1 | WP-3 output | Collision fixture result, 3-run deterministic evidence, no-network/manual safety record | WP-3 | Proves safe local operation and issue-key behavior. | RISK-3 | MS-2 | VAL-4, VAL-5, VAL-6 | Collision, repeat-output, and local-safety checks pass. |
-| WP-5 | Capture maintenance signal and decision evidence. | Prototype implementer | PKG-4 | `docs/**`, evidence artifacts, README usage notes | `src/spectrace/**`, `tests/**`, `fixtures/**` | WP-1 through WP-4 outputs | Prototype review packet and continue/pivot/stop recommendation | WP-4 | Produces decision-grade R0 evidence. | RISK-1 | MS-3 | VAL-7 | Evidence compares registry edits against detected failures and records recommendation. |
+| WP-4 | Prove collision behavior, determinism, and no-network/local safety. | Prototype implementer | PKG-2, PKG-3, PKG-4 | `src/spectrace/markdown/**`, `src/spectrace/validation/**`, `src/spectrace/cli.py`, `src/spectrace/reporting/**`, `docs/evidence/determinism-repeat-report.md`, `docs/evidence/issue-key-collision-report.md`, `docs/evidence/local-safety-report.md`, collision/determinism tests, report harness | `src/spectrace/registry/**`, `docs/spec-trace-r0-document-local-entity-registry.md`, `docs/spec-trace-e0-document-local-entity-registry-execution.md`, fixtures from WP-1 | WP-3 output | Collision fixture result, 3-run deterministic evidence, zero-network-attempt evidence, and approved-write safety record | WP-3 | Proves safe local operation and issue-key behavior. | RISK-3 | MS-2 | VAL-4, VAL-5, VAL-6 | Collision, repeat-output, zero-network-attempt, and approved-write checks pass. |
+| WP-5 | Capture usability, maintenance signal, and decision evidence. | Prototype implementer | PKG-4 | `docs/evidence/prototype-decision-record.md`, supporting `docs/evidence/**` artifacts | `docs/spec-trace-r0-document-local-entity-registry.md`, `docs/spec-trace-e0-document-local-entity-registry-execution.md`, `src/spectrace/**`, `tests/**`, `fixtures/**` | WP-1 through WP-4 outputs | Prototype review packet and continue/pivot/stop recommendation | WP-4 | Produces decision-grade R0 evidence without modifying source authority. | RISK-1 | MS-3 | VAL-7 | Evidence records canonical ID and human-label usability, compares registry edits against detected failures, and records recommendation. |
 
 Execution sequence:
 
@@ -436,8 +437,8 @@ Section status: Complete
 | ID | Gate objective | Covered work | Due point | Human verifier | Prerequisites | Review gate | Required evidence | Approval decision | Failure path |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | MS-1 | Approve first end-to-end valid-fixture proof. | OBJ-1, WP-1, WP-2, SURF-1 through SURF-5 | Before WP-3 starts | Jason Belmonti | VAL-1, VAL-2, EVD-1, EVD-2 | REV-1 | EVD-1, EVD-2 | Approve / Reject / Conditional approval | If rejected, pause WP-3 and revise fixture/schema or critical path. |
-| MS-2 | Approve validation breadth, determinism, collision behavior, and local safety. | OBJ-2, OBJ-3, WP-3, WP-4, PKG-1 through PKG-4 | Before WP-5 starts | Jason Belmonti | VAL-3, VAL-4, VAL-5, VAL-6, EVD-3 through EVD-6 | REV-1, REV-2 | EVD-3, EVD-4, EVD-5, EVD-6 | Approve / Reject / Conditional approval | If rejected, fix missing evidence or escalate design gap. |
-| MS-3 | Approve R0 decision packet and continue/pivot/stop recommendation. | OBJ-4, WP-5, all `RISK-*` | Before completion | Jason Belmonti | VAL-7, REV-3, EVD-7 | REV-3 | EVD-7 | Approve / Reject / Conditional approval | If rejected, capture missing evidence or declare R0 not ready. |
+| MS-2 | Approve validation breadth, determinism, collision behavior, and local safety. | OBJ-2, OBJ-4, WP-3, WP-4, PKG-1 through PKG-4 | Before WP-5 starts | Jason Belmonti | VAL-3, VAL-4, VAL-5, VAL-6, EVD-3 through EVD-6 | REV-1, REV-2 | EVD-3, EVD-4, EVD-5, EVD-6 | Approve / Reject / Conditional approval | If rejected, fix missing evidence or escalate design gap. |
+| MS-3 | Approve R0 decision packet and continue/pivot/stop recommendation. | OBJ-3, OBJ-5, WP-5, all `RISK-*` | Before completion | Jason Belmonti | VAL-7, REV-3, EVD-7 | REV-3 | EVD-7 | Approve / Reject / Conditional approval | If rejected, capture missing evidence or declare R0 not ready. |
 
 Manual verification guide:
 
@@ -448,8 +449,8 @@ Manual verification guide:
 | MV-3 | MS-2 | Run negative fixture validation suite. | Each required failure category appears in the expected fixture variant. | EVD-3 |
 | MV-4 | MS-2 | Run the issue-key collision fixture containing `BEL-858` without registering it as an external reference. | The report does not classify `BEL-858` as a SpecTrace document entity and records the expected collision-behavior evidence. | EVD-5 |
 | MV-5 | MS-2 | Run the same fixture variant 3 consecutive times. | Ordered findings and summary match exactly. | EVD-4 |
-| MV-6 | MS-2 | Disable network access or run with network unavailable and execute validation. | Validation still completes using local files only. | EVD-6 |
-| MV-7 | MS-3 | Review registry edit count, detected finding count, and recommendation. | Continue/pivot/stop recommendation is grounded in section 6 criteria from `SRC-1`. | EVD-7 |
+| MV-6 | MS-2 | Run validation with network unavailable, instrument or inspect execution to record attempted network access, and inspect filesystem writes after execution. | Validation completes using local files only, records zero network attempts, and writes only approved repository evidence artifacts. | EVD-6 |
+| MV-7 | MS-3 | Review registry/report usability for canonical dotted IDs and human labels, registry edit count, detected finding count, and recommendation. | Continue/pivot/stop recommendation is grounded in section 6 criteria from `SRC-1` and records whether canonical IDs and human labels are acceptable for agent-authored specs. | EVD-7 |
 
 Section status: Complete
 
@@ -457,7 +458,7 @@ Section status: Complete
 
 | ID | Trigger | Required action | Owner | Evidence |
 | --- | --- | --- | --- | --- |
-| CTRL-1 | Implementation needs network access, credentials, or live project-management APIs. | Stop execution and request design-owner approval before continuing. | Prototype implementer | DEV-* or design revision |
+| CTRL-1 | Implementation needs or attempts network access, credentials, live project-management APIs, or writes outside approved repository artifacts. | Stop execution and request design-owner approval before continuing. | Prototype implementer | DEV-* or design revision |
 | CTRL-2 | Scanner scope requires full Markdown semantics or markdown-engine changes. | Pause and decide whether to pivot parser strategy before adding production parser work. | Prototype implementer | Q-* resolution or DEV-* |
 | CTRL-3 | A work package must edit another package's owned paths. | Coordinate boundary change and update section 7 before continuing. | Prototype implementer | Updated execution spec or DEV-* |
 | CTRL-4 | Deterministic output differs across repeated runs. | Treat as blocking for `MS-2`; fix ordering or finding identity before approval. | Prototype implementer | EVD-4 |
@@ -492,8 +493,8 @@ Section status: Complete
 | VAL-3 | Test | Negative fixture variants fail for missing registered entity definitions, duplicate canonical IDs, duplicate labels, missing references, missing edge targets, and incomplete bounded ranges. | Pre-merge | Prototype implementer | EVD-3 |
 | VAL-4 | Test | Project-management issue keys are ignored unless explicitly registered as external references. | Pre-merge | Prototype implementer | EVD-5 |
 | VAL-5 | Test | Three consecutive runs over identical inputs produce the same ordered validation result. | Pre-merge | Prototype implementer | EVD-4 |
-| VAL-6 | Manual | Validation completes with network unavailable and without live external-system mutation. | Pre-merge | Prototype implementer | EVD-6 |
-| VAL-7 | Review | Prototype results are compared against continue, pivot, and stop criteria. | Before completion | Prototype implementer | EVD-7 |
+| VAL-6 | Manual | Validation completes with network unavailable, records zero network attempts, performs no live external-system mutation, and writes only approved repository artifacts. | Pre-merge | Prototype implementer | EVD-6 |
+| VAL-7 | Review | Prototype results, registry/report usability for canonical dotted IDs and human labels, and maintenance signal are compared against continue, pivot, and stop criteria. | Before completion | Prototype implementer | EVD-7 |
 
 Evidence artifact inventory:
 
@@ -504,8 +505,8 @@ Evidence artifact inventory:
 | EVD-3 | Negative fixture validation report | `docs/evidence/negative-fixture-report.md` | VAL-3, MV-3 | Shows each required failure category, including missing registered definitions. |
 | EVD-4 | Deterministic repeat report | `docs/evidence/determinism-repeat-report.md` | VAL-5, MV-5 | Shows 3 identical ordered outputs. |
 | EVD-5 | Issue-key collision report | `docs/evidence/issue-key-collision-report.md` | VAL-4, MV-4 | Shows unregistered issue key remains outside the document entity graph. |
-| EVD-6 | Local-safety report | `docs/evidence/local-safety-report.md` | VAL-6, MV-6 | Shows validation completes without network or live mutation. |
-| EVD-7 | Prototype decision record | `docs/evidence/prototype-decision-record.md` | VAL-7, MV-7 | Compares maintenance effort, findings, and continue/pivot/stop criteria. |
+| EVD-6 | Local-safety report | `docs/evidence/local-safety-report.md` | VAL-6, MV-6 | Shows validation completes with network unavailable, records zero network attempts, performs no live mutation, and writes only approved repository evidence artifacts. |
+| EVD-7 | Prototype decision record | `docs/evidence/prototype-decision-record.md` | VAL-7, MV-7 | Records canonical ID and human-label usability, compares maintenance effort and findings, and applies continue/pivot/stop criteria. |
 
 Section status: Complete
 
@@ -515,7 +516,7 @@ Section status: Complete
 | --- | --- | --- | --- | --- |
 | REV-1 | Code reviewer | Package boundaries, source ownership, first valid path, no-network safety. | Yes | Review approval on implementation PR or documented findings resolved. |
 | REV-2 | Code reviewer | Required negative validation categories, deterministic ordering, issue-key collision behavior. | Yes | Review approval on implementation PR or documented findings resolved. |
-| REV-3 | Jason Belmonti | R0 evidence packet and continue/pivot/stop recommendation. | Yes | `MS-3` approval decision recorded. |
+| REV-3 | Jason Belmonti | R0 evidence packet, canonical ID and human-label usability judgment, and continue/pivot/stop recommendation. | Yes | `MS-3` approval decision recorded. |
 
 Approval conditions: No blocking review finding remains open; `MS-1` through `MS-3` have required evidence by their due points; validation artifacts are available in the repository or review thread; no unapproved `DEV-*` or `WVR-*` exists.
 
@@ -526,9 +527,9 @@ Section status: Complete
 | ID | Action | Timing | Owner | Abort trigger | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | REL-1 | Prepare implementation review package after `MS-2` and code review approval. | Before `MS-3` | Prototype implementer | Missing `VAL-1` through `VAL-6` evidence or open blocking review finding. | EVD-1 through EVD-6 |
-| REL-2 | Merge local prototype artifacts and publish R0 decision evidence after `MS-3`. | Before completion | Prototype implementer | Missing maintenance signal or no decision-owner approval. | EVD-7 |
+| REL-2 | Merge local prototype artifacts and publish R0 decision evidence after `MS-3`. | Before completion | Prototype implementer | Missing canonical ID usability judgment, missing maintenance signal, or no decision-owner approval. | EVD-7 |
 
-Rollback or containment plan: If prototype behavior is rejected, revert the implementation PR or delete prototype artifacts before they become a dependency. Because no live service, migration, or external mutation exists, rollback is limited to repository state.
+Rollback or containment plan: If prototype behavior is rejected, if validation attempts network access, or if validation writes outside approved repository artifacts, stop execution and revert the implementation PR or delete prototype artifacts before they become a dependency. Because no live service, migration, or external mutation exists, rollback is limited to repository state.
 
 Recovery limit: Recovery restores the repository to the pre-prototype state; no external system state exists to recover.
 
@@ -541,7 +542,7 @@ Section status: Complete
 | OBS-1 | Validation summary | Show pass/fail status, finding count, and fixture identity. | Local operator | Inspect failures and compare against expected category. |
 | OBS-2 | Finding category counts | Show which entity-integrity rules failed. | Reviewer | Confirm required negative cases fired. |
 | OBS-3 | Fixture repeat result | Show deterministic output across 3 runs. | Reviewer | Reject `MS-2` if output order or finding identity differs. |
-| OBS-4 | Maintenance signal | Compare registry edit effort against detected failure value. | Decision owner | Continue, pivot, or stop at `MS-3`. |
+| OBS-4 | Usability and maintenance signal | Compare canonical ID and human-label usability plus registry edit effort against detected failure value. | Decision owner | Continue, pivot, or stop at `MS-3`. |
 
 Operator actions: Run the local validation command, inspect report output, capture evidence artifacts, and request milestone approval at due points.
 
@@ -591,8 +592,9 @@ Section status: Complete
 | SRC-2 / Consensus review authority | SURF-1, SURF-5, SURF-6 | PKG-1, PKG-3, PKG-4 | WP-1, WP-3, WP-5 | MS-1, MS-2, MS-3 | CTRL-3, CTRL-5 | VAL-1, VAL-3, VAL-7 | REV-1, REV-2, REV-3 | REL-1, REL-2, OBS-2, OBS-4 | EVD-1, EVD-3, EVD-7 |
 | SRC-3 / PR #1 cleanup authority | SURF-1, SURF-2, SURF-3, SURF-5, SURF-6 | PKG-1, PKG-2, PKG-3, PKG-4 | WP-1, WP-3, WP-4, WP-5 | MS-1, MS-2, MS-3 | CTRL-3, CTRL-5 | VAL-1, VAL-3, VAL-4, VAL-7 | REV-1, REV-2, REV-3 | REL-1, REL-2, OBS-2, OBS-4 | EVD-1, EVD-3, EVD-5, EVD-7 |
 | OBJ-2 / First proving slice expansion | SURF-1, SURF-2, SURF-3, SURF-5 | PKG-1, PKG-2, PKG-3 | WP-3 | MS-2 | CTRL-3, CTRL-5 | VAL-3 | REV-2 | REL-1, OBS-2 | EVD-3 |
-| OBJ-3 / Collision behavior | SURF-2, SURF-3, SURF-5 | PKG-2, PKG-3 | WP-4 | MS-2 | CTRL-1, CTRL-2 | VAL-4 | REV-2 | REL-1, OBS-2 | EVD-5 |
-| OBJ-4 / Maintenance signal | SURF-6 | PKG-4 | WP-5 | MS-3 | CTRL-4 | VAL-7 | REV-3 | REL-2, OBS-4 | EVD-7 |
+| OBJ-3 / Canonical ID usability | SURF-1, SURF-4, SURF-6 | PKG-1, PKG-4 | WP-1, WP-2, WP-5 | MS-1, MS-3 | CTRL-3 | VAL-1, VAL-2, VAL-7 | REV-1, REV-3 | REL-2, OBS-4 | EVD-1, EVD-2, EVD-7 |
+| OBJ-4 / Collision behavior | SURF-2, SURF-3, SURF-5 | PKG-2, PKG-3 | WP-4 | MS-2 | CTRL-1, CTRL-2 | VAL-4 | REV-2 | REL-1, OBS-2 | EVD-5 |
+| OBJ-5 / Maintenance signal | SURF-6 | PKG-4 | WP-5 | MS-3 | CTRL-4 | VAL-7 | REV-3 | REL-2, OBS-4 | EVD-7 |
 | Optional tool config / SURF-7 | SURF-7 | PKG-4 | WP-1, WP-2, WP-3, WP-4 | MS-1, MS-2 | CTRL-3 | VAL-2, VAL-3, VAL-4, VAL-5, VAL-6 | REV-1, REV-2 | REL-1 | EVD-2, EVD-3, EVD-4, EVD-5, EVD-6 |
 | RISK-1 | SURF-1, SURF-6 | PKG-1, PKG-4 | WP-1, WP-5 | MS-3 | CTRL-3 | VAL-1, VAL-7 | REV-3 | REL-2, OBS-4 | EVD-1, EVD-7 |
 | RISK-2 | SURF-2, SURF-3, SURF-5 | PKG-2, PKG-3 | WP-2, WP-3 | MS-1, MS-2 | CTRL-2, CTRL-5 | VAL-2, VAL-3 | REV-1, REV-2 | REL-1 | EVD-2, EVD-3 |
@@ -611,7 +613,7 @@ Completion gate: Complete only when `VAL-1` through `VAL-7` pass or have explici
 
 Release gate: Merge only local repository artifacts after `REL-2` prerequisites are satisfied; no hosted release or live activation is part of E0.
 
-Handoff record: Handoff shall include the implementation PR, fixture inventory, validation report output, deterministic repeat evidence, no-network evidence, maintenance signal, and `MS-3` decision.
+Handoff record: Handoff shall include the implementation PR, fixture inventory, validation report output, deterministic repeat evidence, local-safety evidence for zero network attempts and approved repository writes, canonical ID and human-label usability judgment, maintenance signal, and `MS-3` decision.
 
 Final readiness state: Ready to investigate
 
