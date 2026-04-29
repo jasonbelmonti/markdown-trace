@@ -1,0 +1,79 @@
+fixtureFamily: r0-document-local-registry
+baseDocument: fixtures/r0-document-local-registry/execution-spec.md
+baseRegistry: fixtures/r0-document-local-registry/entity-registry.yaml
+variantModel: generated_mutations
+variants:
+  - name: missing-registered-definition
+    category: missing-registered-definition
+    expectedFinding: missing-registered-definition
+    sourceRequirement: VAL-3
+    mutation:
+      target: document
+      operation: remove_heading
+      selector: "### VAL-1: Registry schema inspection"
+      retainedRegistryEntity: exec.val.1
+  - name: duplicate-canonical-id
+    category: duplicate-canonical-id
+    expectedFinding: duplicate-canonical-id
+    sourceRequirement: VAL-3
+    mutation:
+      target: registry.entities
+      operation: append_entity
+      entity:
+        id: exec.wp.1
+        label: WP-1-DUPLICATE
+        type: work_package
+        defines:
+          kind: heading
+          text: "### WP-1: Create fixture family, YAML registry shape, and test scaffolding"
+  - name: duplicate-label
+    category: duplicate-label
+    expectedFinding: duplicate-label
+    sourceRequirement: VAL-3
+    mutation:
+      target: registry.entities
+      operation: append_entity
+      entity:
+        id: exec.wp.99
+        label: WP-1
+        type: work_package
+        defines:
+          kind: heading
+          text: "### WP-1: Create fixture family, YAML registry shape, and test scaffolding"
+  - name: missing-reference
+    category: missing-reference
+    expectedFinding: missing-reference
+    sourceRequirement: VAL-3
+    mutation:
+      target: document
+      operation: append_reference
+      selector: "### WP-1: Create fixture family, YAML registry shape, and test scaffolding"
+      referenceLabel: WP-99
+  - name: missing-edge-target
+    category: missing-edge-target
+    expectedFinding: missing-edge-target
+    sourceRequirement: VAL-3
+    mutation:
+      target: registry.edges
+      operation: append_edge
+      edge:
+        from: exec.wp.1
+        relationship: blocks
+        to: exec.wp.99
+  - name: incomplete-bounded-range
+    category: incomplete-bounded-range
+    expectedFinding: incomplete-range
+    sourceRequirement: VAL-3
+    mutation:
+      target: registry.entities
+      operation: remove_entity
+      id: exec.con.2
+      documentReference: "CON-1 through CON-3"
+  - name: unregistered-issue-key-collision
+    category: issue-key-collision
+    expectedFinding: no-document-entity-from-issue-key
+    sourceRequirement: VAL-4
+    mutation:
+      target: document
+      operation: retain_unregistered_issue_key
+      issueKey: BEL-858
