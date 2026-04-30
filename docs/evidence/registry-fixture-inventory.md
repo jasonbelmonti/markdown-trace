@@ -16,7 +16,7 @@ Source-controlled inputs:
 | Fixture execution spec | `fixtures/r0-document-local-registry/execution-spec.md` | Compact execution-spec text derived from the R0 and E0 authority docs. |
 | Sidecar registry | `fixtures/r0-document-local-registry/entity-registry.yaml` | Document-local YAML registry for canonical entity identity, labels, definition expectations, edges, and external references. |
 | Generated variant inventory | `tests/fixtures/registry-variants.yaml` | Declarative mutation inventory for valid-family broken cases to be materialized by later validator work. |
-| Registry fixture tests | `tests/test_registry.py` | Schema and inventory inspection scaffold for VAL-1. |
+| Registry fixture tests | `tests/test_registry.test.ts` | Schema and inventory inspection scaffold for VAL-1. |
 
 The fixture intentionally contains the issue-like token `BEL-858` as prose
 context. It is not registered as a SpecTrace document entity.
