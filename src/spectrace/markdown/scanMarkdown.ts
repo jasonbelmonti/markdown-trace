@@ -3,7 +3,11 @@ import { readFile } from "node:fs/promises";
 import type { EntityRegistry } from "../registry/index.js";
 import { findDefinitions } from "./definitions.js";
 import { findIgnoredIssueKeys } from "./issueKeys.js";
-import { getSectionBody, toSourceLines } from "./lineScanning.js";
+import {
+  getMarkdownContentLines,
+  getSectionBody,
+  toSourceLines,
+} from "./lineScanning.js";
 import { findRanges } from "./ranges.js";
 import { findReferences } from "./references.js";
 import type {
@@ -26,13 +30,14 @@ function scanMarkdownText(
   registry: EntityRegistry,
 ): MarkdownScanFacts {
   const lines = toSourceLines(text);
+  const contentLines = getMarkdownContentLines(lines);
   const definitions = findDefinitions(lines, registry.entities);
   const references = new Array<MarkdownReferenceFact>();
   const ranges = new Array<MarkdownRangeFact>();
-  const ignoredIssueKeys = findIgnoredIssueKeys(lines, registry);
+  const ignoredIssueKeys = findIgnoredIssueKeys(contentLines, registry);
 
   for (const definition of definitions) {
-    const sectionLines = getSectionBody(lines, definition.line);
+    const sectionLines = getMarkdownContentLines(getSectionBody(lines, definition.line));
 
     references.push(...findReferences(sectionLines, definition, registry));
     ranges.push(...findRanges(sectionLines, definition));

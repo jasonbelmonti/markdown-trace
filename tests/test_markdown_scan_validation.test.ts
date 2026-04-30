@@ -195,6 +195,176 @@ edges: []
     );
   });
 
+  it("does not treat fenced labels, ranges, or issue keys as graph content", async () => {
+    const registryText = `registryVersion: spec-trace.test.v0
+document:
+  id: spec-trace.test
+  title: Fenced graph content fixture
+  path: execution-spec.md
+  fixtureFamily: test
+  sourceDocs:
+    - execution-spec.md
+entities:
+  - id: exec.con.1
+    label: CON-1
+    type: constraint
+    defines:
+      kind: heading
+      text: "### CON-1: First constraint"
+  - id: exec.con.2
+    label: CON-2
+    type: constraint
+    defines:
+      kind: heading
+      text: "### CON-2: Second constraint"
+  - id: exec.wp.1
+    label: WP-1
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-1: First work package"
+    expectedReferences:
+      labels:
+        - WP-2
+      ranges:
+        - labelFamily: CON
+          start: CON-1
+          end: CON-2
+          expandsTo:
+            - CON-1
+            - CON-2
+  - id: exec.wp.2
+    label: WP-2
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-2: Second work package"
+edges: []
+`;
+    const documentText = `# Fenced graph content fixture
+
+### CON-1: First constraint
+
+### CON-2: Second constraint
+
+### WP-1: First work package
+
+\`\`\`markdown
+WP-1 references WP-2 and CON-1 through CON-2.
+WP-1 also references WP-99.
+BEL-999 appears in a fenced example.
+\`\`\`
+
+### WP-2: Second work package
+`;
+
+    await withTemporaryFixture(
+      registryText,
+      documentText,
+      async ({ registryPath: temporaryRegistryPath, documentPath: temporaryDocumentPath }) => {
+        const registry = await loadRegistry(temporaryRegistryPath);
+        const scanFacts = await scanMarkdown(temporaryDocumentPath, registry);
+        const result = validate(registry, scanFacts);
+
+        expect(scanFacts.references).not.toContainEqual(
+          expect.objectContaining({
+            sourceEntityId: "exec.wp.1",
+            label: "WP-2",
+          }),
+        );
+        expect(scanFacts.references).not.toContainEqual(
+          expect.objectContaining({
+            sourceEntityId: "exec.wp.1",
+            label: "WP-99",
+          }),
+        );
+        expect(scanFacts.ranges).not.toContainEqual(
+          expect.objectContaining({
+            sourceEntityId: "exec.wp.1",
+            start: "CON-1",
+            end: "CON-2",
+          }),
+        );
+        expect(scanFacts.ignoredIssueKeys).not.toContainEqual(
+          expect.objectContaining({ key: "BEL-999" }),
+        );
+        expect(result.findings).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              category: "missing-reference",
+              entityId: "exec.wp.1",
+              label: "WP-2",
+            }),
+            expect.objectContaining({
+              category: "incomplete-range",
+              entityId: "exec.wp.1",
+              label: "CON-1 through CON-2",
+            }),
+          ]),
+        );
+      },
+    );
+  });
+
+  it("does not treat fenced headings as section boundaries", async () => {
+    const registryText = `registryVersion: spec-trace.test.v0
+document:
+  id: spec-trace.test
+  title: Fenced section boundary fixture
+  path: execution-spec.md
+  fixtureFamily: test
+  sourceDocs:
+    - execution-spec.md
+entities:
+  - id: exec.wp.1
+    label: WP-1
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-1: First work package"
+    expectedReferences:
+      labels:
+        - WP-2
+  - id: exec.wp.2
+    label: WP-2
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-2: Second work package"
+edges: []
+`;
+    const documentText = `# Fenced section boundary fixture
+
+### WP-1: First work package
+
+\`\`\`markdown
+### WP-2: Fenced heading example
+\`\`\`
+
+WP-1 references WP-2 after the fenced example.
+
+### WP-2: Second work package
+`;
+
+    await withTemporaryFixture(
+      registryText,
+      documentText,
+      async ({ registryPath: temporaryRegistryPath, documentPath: temporaryDocumentPath }) => {
+        const registry = await loadRegistry(temporaryRegistryPath);
+        const scanFacts = await scanMarkdown(temporaryDocumentPath, registry);
+        const result = validate(registry, scanFacts);
+
+        expect(scanFacts.references).toContainEqual(
+          expect.objectContaining({
+            sourceEntityId: "exec.wp.1",
+            label: "WP-2",
+          }),
+        );
+        expect(result.status).toBe("passed");
+      },
+    );
+  });
+
   it("keeps nested headings inside their parent entity section", async () => {
     const registry = await loadRegistry(registryPath);
     const documentText = await readFile(documentPath, "utf8");

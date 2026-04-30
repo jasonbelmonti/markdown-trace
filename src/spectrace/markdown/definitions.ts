@@ -1,13 +1,10 @@
 import type { RegistryEntity } from "../registry/index.js";
 import type { MarkdownDefinitionFact } from "./types.js";
-import { isHeadingLine, type SourceLine } from "./lineScanning.js";
-
-interface FenceMarker {
-  readonly marker: "`" | "~";
-  readonly length: number;
-}
-
-const fencePattern = /^ {0,3}(`{3,}|~{3,})/;
+import {
+  getMarkdownContentLines,
+  isHeadingLine,
+  type SourceLine,
+} from "./lineScanning.js";
 
 export function findDefinitions(
   lines: readonly SourceLine[],
@@ -37,46 +34,12 @@ export function findDefinitions(
 
 function findDefinitionLines(lines: readonly SourceLine[]): readonly SourceLine[] {
   const definitionLines = new Array<SourceLine>();
-  let openFence: FenceMarker | undefined;
 
-  for (const line of lines) {
-    const fence = parseFence(line.text);
-
-    if (openFence !== undefined) {
-      if (
-        fence !== undefined &&
-        fence.marker === openFence.marker &&
-        fence.length >= openFence.length
-      ) {
-        openFence = undefined;
-      }
-
-      continue;
-    }
-
-    if (fence !== undefined) {
-      openFence = fence;
-      continue;
-    }
-
+  for (const line of getMarkdownContentLines(lines)) {
     if (isHeadingLine(line.text)) {
       definitionLines.push(line);
     }
   }
 
   return definitionLines;
-}
-
-function parseFence(text: string): FenceMarker | undefined {
-  const match = text.match(fencePattern);
-  const fenceText = match?.[1];
-
-  if (fenceText === undefined) {
-    return undefined;
-  }
-
-  return {
-    marker: fenceText[0] as "`" | "~",
-    length: fenceText.length,
-  };
 }
