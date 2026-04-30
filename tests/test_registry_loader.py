@@ -137,6 +137,16 @@ class RegistryLoaderTests(unittest.TestCase):
             ):
                 load_registry(registry_path)
 
+    def test_load_registry_wraps_unreadable_file_failures(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            registry_path = Path(tmp_dir) / "missing-registry.yaml"
+
+            with self.assertRaisesRegex(
+                RegistryLoadError,
+                "cannot be read",
+            ):
+                load_registry(registry_path)
+
     def test_load_registry_rejects_duplicate_canonical_ids(self):
         raw_registry = yaml.safe_load(REGISTRY_PATH.read_text(encoding="utf-8"))
         raw_registry["entities"].append(dict(raw_registry["entities"][0]))

@@ -15,9 +15,14 @@ def load_registry(path: str | Path) -> EntityRegistry:
 
     registry_path = Path(path)
     try:
-        documents = tuple(
-            yaml.safe_load_all(registry_path.read_text(encoding="utf-8"))
-        )
+        registry_text = registry_path.read_text(encoding="utf-8")
+    except OSError as error:
+        raise RegistryLoadError(
+            f"{registry_path} cannot be read"
+        ) from error
+
+    try:
+        documents = tuple(yaml.safe_load_all(registry_text))
     except yaml.YAMLError as error:
         raise RegistryLoadError(
             f"{registry_path} contains invalid YAML"
