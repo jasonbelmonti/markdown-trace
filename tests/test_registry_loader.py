@@ -110,6 +110,33 @@ class RegistryLoaderTests(unittest.TestCase):
         self.assertEqual(registry.external_refs, ())
         self.assertIn("exec.wp.1", registry.entities_by_id)
 
+    def test_load_registry_rejects_multiple_yaml_documents(self):
+        raw_registry = yaml.safe_load(REGISTRY_PATH.read_text(encoding="utf-8"))
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            registry_path = Path(tmp_dir) / "multi-document-registry.yaml"
+            registry_path.write_text(
+                f"{yaml.safe_dump(raw_registry)}---\nignored: true\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(
+                RegistryLoadError,
+                "must contain exactly one YAML document",
+            ):
+                load_registry(registry_path)
+
+    def test_load_registry_wraps_yaml_syntax_failures(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            registry_path = Path(tmp_dir) / "malformed-registry.yaml"
+            registry_path.write_text("registryVersion: [unterminated\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(
+                RegistryLoadError,
+                "contains invalid YAML",
+            ):
+                load_registry(registry_path)
+
     def test_load_registry_rejects_duplicate_canonical_ids(self):
         raw_registry = yaml.safe_load(REGISTRY_PATH.read_text(encoding="utf-8"))
         raw_registry["entities"].append(dict(raw_registry["entities"][0]))
