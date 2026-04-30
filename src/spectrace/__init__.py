@@ -1,2 +1,1 @@
 """SpecTrace local validation prototype."""
-

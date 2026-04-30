@@ -77,4 +77,3 @@ class EntityRegistry:
     @property
     def entities_by_label(self) -> dict[str, RegistryEntity]:
         return {entity.label: entity for entity in self.entities}
-
