@@ -147,6 +147,20 @@ class RegistryLoaderTests(unittest.TestCase):
             ):
                 load_registry(registry_path)
 
+    def test_load_registry_rejects_whitespace_only_text_fields(self):
+        raw_registry = yaml.safe_load(REGISTRY_PATH.read_text(encoding="utf-8"))
+        raw_registry["entities"][0]["id"] = "   "
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            registry_path = Path(tmp_dir) / "whitespace-registry.yaml"
+            registry_path.write_text(yaml.safe_dump(raw_registry), encoding="utf-8")
+
+            with self.assertRaisesRegex(
+                RegistryLoadError,
+                r"entities\[0\]\.id must be a non-empty string",
+            ):
+                load_registry(registry_path)
+
     def test_load_registry_rejects_duplicate_canonical_ids(self):
         raw_registry = yaml.safe_load(REGISTRY_PATH.read_text(encoding="utf-8"))
         raw_registry["entities"].append(dict(raw_registry["entities"][0]))

@@ -136,7 +136,7 @@ def _require_sequence(value: Any, field: str) -> Sequence[Any]:
 
 
 def _require_text(value: Any, field: str) -> str:
-    if not isinstance(value, str) or not value:
+    if not isinstance(value, str) or not value.strip():
         raise RegistryLoadError(f"{field} must be a non-empty string")
     return value
 
