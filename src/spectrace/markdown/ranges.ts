@@ -1,7 +1,7 @@
 import type { SourceLine } from "./lineScanning.js";
 import type { MarkdownDefinitionFact, MarkdownRangeFact } from "./types.js";
 
-const rangePattern = /\b([A-Z]+)-(\d+)\s+through\s+([A-Z]+)-(\d+)\b/g;
+const rangePattern = /\b(([A-Z]+)-(\d+))\s+through\s+(([A-Z]+)-(\d+))\b/g;
 
 export function findRanges(
   lines: readonly SourceLine[],
@@ -27,7 +27,8 @@ function toRangeFact(
   line: SourceLine,
   definition: MarkdownDefinitionFact,
 ): MarkdownRangeFact | undefined {
-  const [, startFamily, startNumberText, endFamily, endNumberText] = match;
+  const [, startLabel, startFamily, startNumberText, endLabel, endFamily, endNumberText] =
+    match;
 
   if (startFamily !== endFamily) {
     return undefined;
@@ -39,9 +40,9 @@ function toRangeFact(
   return {
     sourceEntityId: definition.entityId,
     labelFamily: startFamily,
-    start: `${startFamily}-${startNumber}`,
-    end: `${endFamily}-${endNumber}`,
-    expandsTo: expandRange(startFamily, startNumber, endNumber),
+    start: startLabel,
+    end: endLabel,
+    expandsTo: expandRange(startFamily, startNumber, endNumber, startNumberText.length),
     line: line.number,
     text: line.text,
   };
@@ -51,6 +52,7 @@ function expandRange(
   labelFamily: string,
   startNumber: number,
   endNumber: number,
+  labelWidth: number,
 ): readonly string[] {
   if (endNumber < startNumber) {
     return [];
@@ -58,6 +60,6 @@ function expandRange(
 
   return Array.from(
     { length: endNumber - startNumber + 1 },
-    (_, offset) => `${labelFamily}-${startNumber + offset}`,
+    (_, offset) => `${labelFamily}-${String(startNumber + offset).padStart(labelWidth, "0")}`,
   );
 }

@@ -34,6 +34,28 @@ async function withTemporaryDocument<T>(
   }
 }
 
+async function withTemporaryFixture<T>(
+  registryText: string,
+  documentText: string,
+  callback: (paths: { registryPath: string; documentPath: string }) => Promise<T>,
+): Promise<T> {
+  const temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), "spec-trace-fixture-"));
+
+  try {
+    const temporaryRegistryPath = path.join(temporaryDirectory, "entity-registry.yaml");
+    const temporaryDocumentPath = path.join(temporaryDirectory, "execution-spec.md");
+    await writeFile(temporaryRegistryPath, registryText, "utf8");
+    await writeFile(temporaryDocumentPath, documentText, "utf8");
+
+    return await callback({
+      registryPath: temporaryRegistryPath,
+      documentPath: temporaryDocumentPath,
+    });
+  } finally {
+    await rm(temporaryDirectory, { recursive: true, force: true });
+  }
+}
+
 describe("valid fixture scan and validation", () => {
   it("extracts registered heading definitions from the valid fixture", async () => {
     const registry = await loadRegistry(registryPath);
@@ -114,6 +136,116 @@ describe("valid fixture scan and validation", () => {
         findingCount: 0,
       },
     });
+  });
+
+  it("keeps nested headings inside their parent entity section", async () => {
+    const registry = await loadRegistry(registryPath);
+    const documentText = await readFile(documentPath, "utf8");
+    const mutatedDocumentText = documentText.replace(
+      wp1Heading,
+      `${wp1Heading}\n\n#### Notes`,
+    );
+
+    await withTemporaryDocument(mutatedDocumentText, async (temporaryPath) => {
+      const scanFacts = await scanMarkdown(temporaryPath, registry);
+      const result = validate(registry, scanFacts);
+
+      expect(
+        scanFacts.references.some(
+          (reference) =>
+            reference.sourceEntityId === "exec.wp.1" && reference.label === "WP-2",
+        ),
+      ).toBe(true);
+      expect(scanFacts.ranges).toContainEqual(
+        expect.objectContaining({
+          sourceEntityId: "exec.wp.1",
+          labelFamily: "CON",
+          start: "CON-1",
+          end: "CON-3",
+        }),
+      );
+      expect(result.status).toBe("passed");
+    });
+  });
+
+  it("preserves zero-padded range labels during validation", async () => {
+    const registryText = `registryVersion: spec-trace.test.v0
+document:
+  id: spec-trace.test
+  title: Zero padded range fixture
+  path: execution-spec.md
+  fixtureFamily: test
+  sourceDocs:
+    - execution-spec.md
+entities:
+  - id: exec.con.1
+    label: CON-01
+    type: constraint
+    defines:
+      kind: heading
+      text: "### CON-01: First constraint"
+  - id: exec.con.2
+    label: CON-02
+    type: constraint
+    defines:
+      kind: heading
+      text: "### CON-02: Second constraint"
+  - id: exec.con.3
+    label: CON-03
+    type: constraint
+    defines:
+      kind: heading
+      text: "### CON-03: Third constraint"
+  - id: exec.wp.1
+    label: WP-01
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-01: Padded range owner"
+    expectedReferences:
+      ranges:
+        - labelFamily: CON
+          start: CON-01
+          end: CON-03
+          expandsTo:
+            - CON-01
+            - CON-02
+            - CON-03
+edges: []
+`;
+    const documentText = `# Zero padded range fixture
+
+### CON-01: First constraint
+
+### CON-02: Second constraint
+
+### CON-03: Third constraint
+
+### WP-01: Padded range owner
+
+WP-01 references CON-01 through CON-03.
+`;
+
+    await withTemporaryFixture(
+      registryText,
+      documentText,
+      async ({ registryPath: temporaryRegistryPath, documentPath: temporaryDocumentPath }) => {
+        const registry = await loadRegistry(temporaryRegistryPath);
+        const scanFacts = await scanMarkdown(temporaryDocumentPath, registry);
+        const result = validate(registry, scanFacts);
+
+        expect(scanFacts.ranges).toContainEqual(
+          expect.objectContaining({
+            sourceEntityId: "exec.wp.1",
+            labelFamily: "CON",
+            start: "CON-01",
+            end: "CON-03",
+            expandsTo: ["CON-01", "CON-02", "CON-03"],
+          }),
+        );
+        expect(result.status).toBe("passed");
+      },
+    );
   });
 
   it("reports unregistered labels from registered label families", async () => {
