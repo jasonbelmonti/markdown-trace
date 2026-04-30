@@ -33,5 +33,13 @@ export async function loadRegistry(path: string): Promise<EntityRegistry> {
     });
   }
 
-  return parseRegistryData(document.toJSON());
+  let registryData: unknown;
+
+  try {
+    registryData = document.toJSON();
+  } catch (error) {
+    throw new RegistryLoadError(`${path} contains invalid YAML`, { cause: error });
+  }
+
+  return parseRegistryData(registryData);
 }

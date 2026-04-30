@@ -69,6 +69,15 @@ export class EntityRegistry {
   readonly entitiesByLabel: ReadonlyMap<string, RegistryEntity>;
 
   constructor(input: EntityRegistryInput) {
+    requireUnique(
+      input.entities.map((entity) => entity.id),
+      "entities[].id",
+    );
+    requireUnique(
+      input.entities.map((entity) => entity.label),
+      "entities[].label",
+    );
+
     this.registryVersion = input.registryVersion;
     this.document = input.document;
     this.entities = input.entities;
@@ -76,5 +85,17 @@ export class EntityRegistry {
     this.externalRefs = input.externalRefs;
     this.entitiesById = new Map(input.entities.map((entity) => [entity.id, entity]));
     this.entitiesByLabel = new Map(input.entities.map((entity) => [entity.label, entity]));
+  }
+}
+
+function requireUnique(values: readonly string[], field: string): void {
+  const seen = new Set<string>();
+
+  for (const value of values) {
+    if (seen.has(value)) {
+      throw new RegistryLoadError(`${field} contains duplicate value '${value}'`);
+    }
+
+    seen.add(value);
   }
 }

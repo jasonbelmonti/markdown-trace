@@ -6,7 +6,11 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { parse, stringify } from "yaml";
 
-import { loadRegistry, RegistryLoadError } from "../src/spectrace/registry/index.js";
+import {
+  EntityRegistry,
+  loadRegistry,
+  RegistryLoadError,
+} from "../src/spectrace/registry/index.js";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const registryPath = path.join(
@@ -32,6 +36,16 @@ async function withTemporaryRegistry<T>(
   } finally {
     await rm(temporaryDirectory, { recursive: true, force: true });
   }
+}
+
+function toRegistryInput(registry: EntityRegistry): ConstructorParameters<typeof EntityRegistry>[0] {
+  return {
+    registryVersion: registry.registryVersion,
+    document: registry.document,
+    entities: registry.entities,
+    edges: registry.edges,
+    externalRefs: registry.externalRefs,
+  };
 }
 
 describe("loadRegistry", () => {
@@ -145,6 +159,17 @@ describe("loadRegistry", () => {
     );
   });
 
+  it("wraps YAML materialization failures", async () => {
+    await withTemporaryRegistry(
+      "unresolved-alias-registry.yaml",
+      "registryVersion: *missing\n",
+      async (temporaryPath) => {
+        await expect(loadRegistry(temporaryPath)).rejects.toThrow(RegistryLoadError);
+        await expect(loadRegistry(temporaryPath)).rejects.toThrow(/contains invalid YAML/);
+      },
+    );
+  });
+
   it("wraps unreadable file failures", async () => {
     const missingPath = path.join(os.tmpdir(), "spec-trace-missing-registry.yaml");
 
@@ -198,5 +223,31 @@ describe("loadRegistry", () => {
         );
       },
     );
+  });
+
+  it("rejects direct construction with duplicate canonical IDs", async () => {
+    const registry = await loadRegistry(registryPath);
+    const input = toRegistryInput(registry);
+
+    expect(
+      () =>
+        new EntityRegistry({
+          ...input,
+          entities: [...input.entities, { ...input.entities[0] }],
+        }),
+    ).toThrow(/entities\[\]\.id contains duplicate value 'exec.con.1'/);
+  });
+
+  it("rejects direct construction with duplicate labels", async () => {
+    const registry = await loadRegistry(registryPath);
+    const input = toRegistryInput(registry);
+
+    expect(
+      () =>
+        new EntityRegistry({
+          ...input,
+          entities: [...input.entities, { ...input.entities[0], id: "exec.con.99" }],
+        }),
+    ).toThrow(/entities\[\]\.label contains duplicate value 'CON-1'/);
   });
 });
