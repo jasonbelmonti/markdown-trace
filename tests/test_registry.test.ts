@@ -1,4 +1,4 @@
-import { access, readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -92,7 +92,8 @@ describe("registry fixtures", () => {
     const document = registry.document;
 
     expect(document.path).toBe(fixtureDocument);
-    await expect(access(path.join(repoRoot, document.path))).resolves.toBeUndefined();
+    const documentStats = await stat(path.join(repoRoot, document.path));
+    expect(documentStats.isFile()).toBe(true);
     expect(document.fixtureFamily).toBe(fixtureFamily);
   });
 
