@@ -3,7 +3,7 @@ export interface SourceLine {
   readonly text: string;
 }
 
-const headingPattern = /^(#{1,6})\s+/;
+const headingPattern = /^ {0,3}(#{1,6})\s+/;
 
 export function toSourceLines(text: string): readonly SourceLine[] {
   return text.split(/\r?\n/).map((line, index) => ({

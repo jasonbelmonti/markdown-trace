@@ -168,6 +168,86 @@ describe("valid fixture scan and validation", () => {
     });
   });
 
+  it("treats indented ATX headings as section boundaries", async () => {
+    const registryText = `registryVersion: spec-trace.test.v0
+document:
+  id: spec-trace.test
+  title: Indented heading boundary fixture
+  path: execution-spec.md
+  fixtureFamily: test
+  sourceDocs:
+    - execution-spec.md
+entities:
+  - id: exec.wp.1
+    label: WP-1
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-1: First work package"
+    expectedReferences:
+      labels:
+        - WP-3
+  - id: exec.wp.2
+    label: WP-2
+    type: work_package
+    defines:
+      kind: heading
+      text: "   ### WP-2: Second work package"
+    expectedReferences:
+      labels:
+        - WP-3
+  - id: exec.wp.3
+    label: WP-3
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-3: Third work package"
+edges: []
+`;
+    const documentText = `# Indented heading boundary fixture
+
+### WP-1: First work package
+
+WP-1 has no downstream package reference here.
+
+   ### WP-2: Second work package
+
+WP-2 references WP-3.
+
+### WP-3: Third work package
+`;
+
+    await withTemporaryFixture(
+      registryText,
+      documentText,
+      async ({ registryPath: temporaryRegistryPath, documentPath: temporaryDocumentPath }) => {
+        const registry = await loadRegistry(temporaryRegistryPath);
+        const scanFacts = await scanMarkdown(temporaryDocumentPath, registry);
+        const result = validate(registry, scanFacts);
+
+        expect(
+          scanFacts.references.some(
+            (reference) =>
+              reference.sourceEntityId === "exec.wp.1" && reference.label === "WP-3",
+          ),
+        ).toBe(false);
+        expect(scanFacts.references).toContainEqual(
+          expect.objectContaining({
+            sourceEntityId: "exec.wp.2",
+            label: "WP-3",
+          }),
+        );
+        expect(result.findings).toContainEqual(
+          expect.objectContaining({
+            category: "missing-reference",
+            entityId: "exec.wp.1",
+            label: "WP-3",
+          }),
+        );
+      },
+    );
+  });
+
   it("preserves zero-padded range labels during validation", async () => {
     const registryText = `registryVersion: spec-trace.test.v0
 document:
