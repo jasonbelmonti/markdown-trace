@@ -97,7 +97,7 @@ Section status: Complete
 | CON-1 | Constraint | Execution remains local-only, read-only except for repository artifacts, and performs no network calls during validation. | Prototype implementer | No | Validate through `VAL-6` and `MS-2`. |
 | CON-2 | Constraint | The fixture set is one fixture family derived from one source execution spec and one document-local registry, with local variants or generated mutations. | Prototype implementer | No | Validate through `VAL-2`, `VAL-3`, and fixture inventory review. |
 | CON-3 | Constraint | Canonical entity IDs use dotted lowercase syntax; display labels remain separate. | Prototype implementer | No | Validate through `VAL-1`, `VAL-2`, `VAL-3`, and `VAL-7`. |
-| ASM-1 | Assumption | A Python 3 local CLI or script harness is sufficient for the E0 prototype. | Prototype implementer | No | Re-estimate if implementation requires a service, daemon, or compiled package. |
+| ASM-1 | Assumption | A Node.js TypeScript local CLI or script harness using npm and Vitest is sufficient for the E0 prototype. | Prototype implementer | No | Re-estimate if implementation requires a service, daemon, or non-TypeScript package. |
 | ASM-2 | Assumption | The fixture-family Markdown scanner can be simple and deterministic without full GFM support. | Prototype implementer | No | Retire through `VAL-2`, `VAL-3`, and `RISK-2` evidence. |
 | DEP-1 | Dependency | Merged PR #1 cleanup must be present before prototype implementation begins. | Prototype implementer | Yes | Confirm branch source in the entry gate; equivalent wording in the implementation branch is acceptable. |
 
@@ -138,10 +138,10 @@ Section status: Complete
 | SURF-1 | `src/spectrace/registry/**` | Code | Prototype implementer | Write registry model, YAML loading, and schema checks only. | Review schema separation, duplicate canonical ID behavior, and no external calls. |
 | SURF-2 | `src/spectrace/markdown/**` | Code | Prototype implementer | Write fixture-family scanner only; no markdown-engine changes. | Review deterministic scanning and parser-scope containment. |
 | SURF-3 | `src/spectrace/validation/**` | Code | Prototype implementer | Write graph resolver and validation rule evaluator. | Review required failure categories and ordering. |
-| SURF-4 | `src/spectrace/cli.py`, `src/spectrace/reporting/**` | Code | Prototype implementer | Write local command entry point and deterministic report output. | Review output stability and local-only operation. |
+| SURF-4 | `src/spectrace/cli.ts`, `src/spectrace/reporting/**` | Code | Prototype implementer | Write local command entry point and deterministic report output. | Review output stability and local-only operation. |
 | SURF-5 | `fixtures/**`, `tests/**` | Test | Prototype implementer | Write valid fixture, fixture variants, and automated tests. | Review coverage of all `VAL-*` checks. |
 | SURF-6 | `docs/evidence/**` | Docs | Prototype implementer | Write evidence notes and decision records only; source authority docs remain read-only during implementation. | Review decision evidence and handoff clarity. |
-| SURF-7 | `pyproject.toml` or equivalent local tool config | Config | Prototype implementer | Write only if needed for local test execution or a YAML parser dependency. | Review dependency footprint and reversibility. |
+| SURF-7 | `package.json`, `package-lock.json`, `tsconfig.json`, or equivalent local tool config | Config | Prototype implementer | Write only if needed for local test execution or a YAML parser dependency. | Review dependency footprint and reversibility. |
 
 Section status: Complete
 
@@ -151,10 +151,10 @@ Decomposition mission: Keep registry loading, Markdown scanning, graph validatio
 
 | ID | Unit | Ladder level | Mission | Observable value enabled | Risk retired | Public interface | Validation command | Promotion blockers |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PKG-1 | Registry model and loader | 2 | Load and validate document-local YAML registry declarations. | Enables canonical ID and label reconciliation. | RISK-1 | `load_registry(path)`, registry dataclasses or typed records. | `pytest tests/test_registry.py` | Schema is experimental and tied to R0 fixture evidence. |
-| PKG-2 | Markdown fixture scanner | 2 | Extract definitions, label references, bounded ranges, and ignored issue-key candidates from fixture Markdown. | Enables document-to-registry comparison. | RISK-2 | `scan_markdown(path, registry)` returning deterministic scan facts. | `pytest tests/test_markdown_scanner.py` | Scanner is fixture-family scoped and not parser-substrate neutral. |
-| PKG-3 | Entity graph validator | 2 | Resolve registry and scan facts into deterministic findings. | Enables pass/fail validation for required failure categories. | RISK-2, RISK-3 | `validate(registry, scan_facts)` returning ordered findings. | `pytest tests/test_validation.py` | Rule set is R0-only until broader fixtures exist. |
-| PKG-4 | CLI, report writer, and fixture harness | 2 | Run local validation and emit stable evidence artifacts. | Enables operator workflow and milestone evidence. | RISK-1, RISK-3 | `main(argv)`, `write_report(result)`. | `pytest tests/test_cli.py` | CLI contract is not stable for external consumers. |
+| PKG-1 | Registry model and loader | 2 | Load and validate document-local YAML registry declarations. | Enables canonical ID and label reconciliation. | RISK-1 | `loadRegistry(path)`, registry TypeScript types or typed records. | `npm test -- tests/test_registry.test.ts` | Schema is experimental and tied to R0 fixture evidence. |
+| PKG-2 | Markdown fixture scanner | 2 | Extract definitions, label references, bounded ranges, and ignored issue-key candidates from fixture Markdown. | Enables document-to-registry comparison. | RISK-2 | `scanMarkdown(path, registry)` returning deterministic scan facts. | `npm test -- tests/test_markdown_scanner.test.ts` | Scanner is fixture-family scoped and not parser-substrate neutral. |
+| PKG-3 | Entity graph validator | 2 | Resolve registry and scan facts into deterministic findings. | Enables pass/fail validation for required failure categories. | RISK-2, RISK-3 | `validate(registry, scanFacts)` returning ordered findings. | `npm test -- tests/test_validation.test.ts` | Rule set is R0-only until broader fixtures exist. |
+| PKG-4 | CLI, report writer, and fixture harness | 2 | Run local validation and emit stable evidence artifacts. | Enables operator workflow and milestone evidence. | RISK-1, RISK-3 | `main(argv)`, `writeReport(result)`. | `npm test -- tests/test_cli.test.ts` | CLI contract is not stable for external consumers. |
 
 ### Package Boundary Card: PKG-1
 
@@ -179,7 +179,7 @@ Does not own:
 
 Public interface:
 - Exported types: registry record types
-- Exported functions/classes/components: `load_registry(path)`
+- Exported functions/classes/components: `loadRegistry(path)`
 - Events/messages/contracts: registry diagnostics
 - CLI/API surface: none
 
@@ -204,7 +204,7 @@ Agent ownership boundary:
 - Agent read-only paths: `docs/**`, scanner and validator modules
 - Required coordination before editing: public record shape consumed by `PKG-2` or `PKG-3`
 
-Validation command: `pytest tests/test_registry.py`
+Validation command: `npm test -- tests/test_registry.test.ts`
 
 Promotion blockers: Schema has one fixture-family consumer and no compatibility policy.
 
@@ -231,7 +231,7 @@ Does not own:
 
 Public interface:
 - Exported types: scan fact records
-- Exported functions/classes/components: `scan_markdown(path, registry)`
+- Exported functions/classes/components: `scanMarkdown(path, registry)`
 - Events/messages/contracts: scan diagnostics
 - CLI/API surface: none
 
@@ -256,7 +256,7 @@ Agent ownership boundary:
 - Agent read-only paths: `src/spectrace/registry/**`, `docs/**`
 - Required coordination before editing: scan fact contract consumed by `PKG-3`
 
-Validation command: `pytest tests/test_markdown_scanner.py`
+Validation command: `npm test -- tests/test_markdown_scanner.test.ts`
 
 Promotion blockers: Scanner is intentionally fixture-family scoped.
 
@@ -283,7 +283,7 @@ Does not own:
 
 Public interface:
 - Exported types: finding records, validation result
-- Exported functions/classes/components: `validate(registry, scan_facts)`
+- Exported functions/classes/components: `validate(registry, scanFacts)`
 - Events/messages/contracts: finding categories
 - CLI/API surface: none
 
@@ -308,7 +308,7 @@ Agent ownership boundary:
 - Agent read-only paths: `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `docs/**`
 - Required coordination before editing: finding categories consumed by `PKG-4`
 
-Validation command: `pytest tests/test_validation.py`
+Validation command: `npm test -- tests/test_validation.test.ts`
 
 Promotion blockers: Finding taxonomy is experimental until R0 review.
 
@@ -325,7 +325,7 @@ Value / risk trace:
 - Blocking unknowns: None.
 
 Owns:
-- Files/directories: `src/spectrace/cli.py`, `src/spectrace/reporting/**`, `tests/test_cli.py`, `docs/evidence/**`, evidence scripts if needed
+- Files/directories: `src/spectrace/cli.ts`, `src/spectrace/reporting/**`, `tests/test_cli.test.ts`, `docs/evidence/**`, evidence scripts if needed
 - Concepts: invocation contract, report shape, evidence artifact paths
 - Runtime responsibilities: local execution and stable output
 
@@ -335,7 +335,7 @@ Does not own:
 
 Public interface:
 - Exported types: report result if needed
-- Exported functions/classes/components: `main(argv)`, `write_report(result)`
+- Exported functions/classes/components: `main(argv)`, `writeReport(result)`
 - Events/messages/contracts: process exit codes and report text or JSON
 - CLI/API surface: local CLI command
 
@@ -356,11 +356,11 @@ State boundary:
 - Persistence responsibility: none beyond committed evidence artifacts
 
 Agent ownership boundary:
-- Agent editable paths: `src/spectrace/cli.py`, `src/spectrace/reporting/**`, `tests/test_cli.py`, `docs/evidence/**`
+- Agent editable paths: `src/spectrace/cli.ts`, `src/spectrace/reporting/**`, `tests/test_cli.test.ts`, `docs/evidence/**`
 - Agent read-only paths: `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `src/spectrace/validation/**`
 - Required coordination before editing: report schema or CLI exit-code changes
 
-Validation command: `pytest tests/test_cli.py`
+Validation command: `npm test -- tests/test_cli.test.ts`
 
 Promotion blockers: CLI is internal to R0 and has no external compatibility promise.
 
@@ -412,8 +412,8 @@ Deferred completeness: Parser generalization, package polish, external projectio
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | WP-1 | Create the fixture family, YAML registry shape, and test scaffolding. | Prototype implementer | PKG-1, PKG-4 | `fixtures/**`, `tests/fixtures/**`, registry schema tests | `docs/spec-trace-r0-document-local-entity-registry.md` | `SRC-1`, `SRC-3` | Valid fixture, registry, broken-variant inventory | DEP-1 | Establishes source-controlled inputs for the prototype. | RISK-1 | MS-1 | VAL-1 | Fixture inventory and schema inspection pass. |
 | WP-2 | Implement first valid end-to-end validation path. | Prototype implementer | PKG-1, PKG-2, PKG-3, PKG-4 | `src/spectrace/**`, valid-path tests | `docs/**`, `fixtures/**` | WP-1 outputs | Passing local validation report for valid fixture | WP-1 | Proves operator can run a deterministic local validation path. | RISK-2 | MS-1 | VAL-2 | Valid fixture exits success with 0 findings and stable summary. |
-| WP-3 | Implement required negative validation categories. | Prototype implementer | PKG-1, PKG-2, PKG-3 | `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `src/spectrace/validation/**`, negative tests | `src/spectrace/cli.py`, `docs/**` | WP-2 output | Findings for missing registered definition, duplicate canonical ID, duplicate label, missing reference, missing edge target, and incomplete range | WP-2 | Proves central registry-integrity failure detection. | RISK-2 | MS-2 | VAL-3 | Each negative fixture variant fails with expected category, including missing registered definitions. |
-| WP-4 | Prove collision behavior, determinism, and no-network/local safety. | Prototype implementer | PKG-2, PKG-3, PKG-4 | `src/spectrace/markdown/**`, `src/spectrace/validation/**`, `src/spectrace/cli.py`, `src/spectrace/reporting/**`, `docs/evidence/determinism-repeat-report.md`, `docs/evidence/issue-key-collision-report.md`, `docs/evidence/local-safety-report.md`, collision/determinism tests, report harness | `src/spectrace/registry/**`, `docs/spec-trace-r0-document-local-entity-registry.md`, `docs/spec-trace-e0-document-local-entity-registry-execution.md`, fixtures from WP-1 | WP-3 output | Collision fixture result, 3-run deterministic evidence, zero-network-attempt evidence, and approved-write safety record | WP-3 | Proves safe local operation and issue-key behavior. | RISK-3 | MS-2 | VAL-4, VAL-5, VAL-6 | Collision, repeat-output, zero-network-attempt, and approved-write checks pass. |
+| WP-3 | Implement required negative validation categories. | Prototype implementer | PKG-1, PKG-2, PKG-3 | `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `src/spectrace/validation/**`, negative tests | `src/spectrace/cli.ts`, `docs/**` | WP-2 output | Findings for missing registered definition, duplicate canonical ID, duplicate label, missing reference, missing edge target, and incomplete range | WP-2 | Proves central registry-integrity failure detection. | RISK-2 | MS-2 | VAL-3 | Each negative fixture variant fails with expected category, including missing registered definitions. |
+| WP-4 | Prove collision behavior, determinism, and no-network/local safety. | Prototype implementer | PKG-2, PKG-3, PKG-4 | `src/spectrace/markdown/**`, `src/spectrace/validation/**`, `src/spectrace/cli.ts`, `src/spectrace/reporting/**`, `docs/evidence/determinism-repeat-report.md`, `docs/evidence/issue-key-collision-report.md`, `docs/evidence/local-safety-report.md`, collision/determinism tests, report harness | `src/spectrace/registry/**`, `docs/spec-trace-r0-document-local-entity-registry.md`, `docs/spec-trace-e0-document-local-entity-registry-execution.md`, fixtures from WP-1 | WP-3 output | Collision fixture result, 3-run deterministic evidence, zero-network-attempt evidence, and approved-write safety record | WP-3 | Proves safe local operation and issue-key behavior. | RISK-3 | MS-2 | VAL-4, VAL-5, VAL-6 | Collision, repeat-output, zero-network-attempt, and approved-write checks pass. |
 | WP-5 | Capture usability, maintenance signal, and decision evidence. | Prototype implementer | PKG-4 | `docs/evidence/prototype-decision-record.md`, supporting `docs/evidence/**` artifacts | `docs/spec-trace-r0-document-local-entity-registry.md`, `docs/spec-trace-e0-document-local-entity-registry-execution.md`, `src/spectrace/**`, `tests/**`, `fixtures/**` | WP-1 through WP-4 outputs | Prototype review packet and continue/pivot/stop recommendation | WP-4 | Produces decision-grade R0 evidence without modifying source authority. | RISK-1 | MS-3 | VAL-7 | Evidence records canonical ID and human-label usability, compares registry edits against detected failures, and records recommendation. |
 
 Execution sequence:
