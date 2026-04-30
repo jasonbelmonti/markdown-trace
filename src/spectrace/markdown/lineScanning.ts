@@ -23,6 +23,10 @@ export function getSectionBody(
   return lines.slice(startIndex, endIndex);
 }
 
+export function isHeadingLine(text: string): boolean {
+  return getHeadingLevel(text) !== undefined;
+}
+
 function findNextSectionBoundaryIndex(
   lines: readonly SourceLine[],
   startIndex: number,

@@ -11,7 +11,7 @@ export function validate(
 ): ValidationResult {
   const findings = [
     ...findMissingDefinitions(registry, scanFacts),
-    ...findMissingReferences(registry.entities, scanFacts),
+    ...findMissingReferences(registry, scanFacts),
     ...findMissingEdgeTargets(registry),
   ];
 

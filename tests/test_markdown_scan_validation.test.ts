@@ -138,6 +138,63 @@ describe("valid fixture scan and validation", () => {
     });
   });
 
+  it("does not treat heading text inside fenced code as a definition", async () => {
+    const registryText = `registryVersion: spec-trace.test.v0
+document:
+  id: spec-trace.test
+  title: Fenced definition fixture
+  path: execution-spec.md
+  fixtureFamily: test
+  sourceDocs:
+    - execution-spec.md
+entities:
+  - id: exec.wp.1
+    label: WP-1
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-1: Missing work package"
+  - id: exec.wp.2
+    label: WP-2
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-2: Present work package"
+edges: []
+`;
+    const documentText = `# Fenced definition fixture
+
+\`\`\`markdown
+### WP-1: Missing work package
+\`\`\`
+
+### WP-2: Present work package
+`;
+
+    await withTemporaryFixture(
+      registryText,
+      documentText,
+      async ({ registryPath: temporaryRegistryPath, documentPath: temporaryDocumentPath }) => {
+        const registry = await loadRegistry(temporaryRegistryPath);
+        const scanFacts = await scanMarkdown(temporaryDocumentPath, registry);
+        const result = validate(registry, scanFacts);
+
+        expect(scanFacts.definitions).not.toContainEqual(
+          expect.objectContaining({
+            entityId: "exec.wp.1",
+          }),
+        );
+        expect(result.findings).toContainEqual(
+          expect.objectContaining({
+            category: "missing-registered-definition",
+            entityId: "exec.wp.1",
+            label: "WP-1",
+          }),
+        );
+      },
+    );
+  });
+
   it("keeps nested headings inside their parent entity section", async () => {
     const registry = await loadRegistry(registryPath);
     const documentText = await readFile(documentPath, "utf8");
@@ -324,6 +381,82 @@ WP-01 references CON-01 through CON-03.
           }),
         );
         expect(result.status).toBe("passed");
+      },
+    );
+  });
+
+  it("reports unregistered labels expanded from ranges", async () => {
+    const registryText = `registryVersion: spec-trace.test.v0
+document:
+  id: spec-trace.test
+  title: Sparse range fixture
+  path: execution-spec.md
+  fixtureFamily: test
+  sourceDocs:
+    - execution-spec.md
+entities:
+  - id: exec.con.1
+    label: CON-1
+    type: constraint
+    defines:
+      kind: heading
+      text: "### CON-1: First constraint"
+  - id: exec.con.3
+    label: CON-3
+    type: constraint
+    defines:
+      kind: heading
+      text: "### CON-3: Third constraint"
+  - id: exec.wp.1
+    label: WP-1
+    type: work_package
+    defines:
+      kind: heading
+      text: "### WP-1: Range owner"
+    expectedReferences:
+      ranges:
+        - labelFamily: CON
+          start: CON-1
+          end: CON-3
+          expandsTo:
+            - CON-1
+            - CON-2
+            - CON-3
+edges: []
+`;
+    const documentText = `# Sparse range fixture
+
+### CON-1: First constraint
+
+### CON-3: Third constraint
+
+### WP-1: Range owner
+
+WP-1 references CON-1 through CON-3.
+`;
+
+    await withTemporaryFixture(
+      registryText,
+      documentText,
+      async ({ registryPath: temporaryRegistryPath, documentPath: temporaryDocumentPath }) => {
+        const registry = await loadRegistry(temporaryRegistryPath);
+        const scanFacts = await scanMarkdown(temporaryDocumentPath, registry);
+        const result = validate(registry, scanFacts);
+
+        expect(scanFacts.ranges).toContainEqual(
+          expect.objectContaining({
+            sourceEntityId: "exec.wp.1",
+            expandsTo: ["CON-1", "CON-2", "CON-3"],
+          }),
+        );
+        expect(result.status).toBe("failed");
+        expect(result.findings).toContainEqual(
+          expect.objectContaining({
+            category: "missing-reference",
+            entityId: "exec.wp.1",
+            label: "CON-2",
+          }),
+        );
       },
     );
   });
