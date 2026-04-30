@@ -1,3 +1,5 @@
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -14,6 +16,23 @@ const documentPath = path.join(
   repoRoot,
   "fixtures/r0-document-local-registry/execution-spec.md",
 );
+const wp1Heading =
+  "### WP-1: Create fixture family, YAML registry shape, and test scaffolding";
+
+async function withTemporaryDocument<T>(
+  text: string,
+  callback: (temporaryPath: string) => Promise<T>,
+): Promise<T> {
+  const temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), "spec-trace-markdown-"));
+
+  try {
+    const temporaryPath = path.join(temporaryDirectory, "execution-spec.md");
+    await writeFile(temporaryPath, text, "utf8");
+    return await callback(temporaryPath);
+  } finally {
+    await rm(temporaryDirectory, { recursive: true, force: true });
+  }
+}
 
 describe("valid fixture scan and validation", () => {
   it("extracts registered heading definitions from the valid fixture", async () => {
@@ -94,6 +113,44 @@ describe("valid fixture scan and validation", () => {
         scannedRangeCount: scanFacts.ranges.length,
         findingCount: 0,
       },
+    });
+  });
+
+  it("reports unregistered labels from registered label families", async () => {
+    const registry = await loadRegistry(registryPath);
+    const documentText = await readFile(documentPath, "utf8");
+    const mutatedDocumentText = documentText.replace(
+      wp1Heading,
+      `${wp1Heading}\n\nWP-1 also references WP-99.`,
+    );
+
+    await withTemporaryDocument(mutatedDocumentText, async (temporaryPath) => {
+      const scanFacts = await scanMarkdown(temporaryPath, registry);
+      const result = validate(registry, scanFacts);
+
+      expect(scanFacts.references).toContainEqual(
+        expect.objectContaining({
+          sourceEntityId: "exec.wp.1",
+          label: "WP-99",
+        }),
+      );
+      expect(
+        scanFacts.references.find(
+          (reference) =>
+            reference.sourceEntityId === "exec.wp.1" && reference.label === "WP-99",
+        ),
+      ).not.toHaveProperty("targetEntityId");
+      expect(scanFacts.ignoredIssueKeys).not.toContainEqual(
+        expect.objectContaining({ key: "WP-99" }),
+      );
+      expect(result.status).toBe("failed");
+      expect(result.findings).toContainEqual(
+        expect.objectContaining({
+          category: "missing-reference",
+          entityId: "exec.wp.1",
+          label: "WP-99",
+        }),
+      );
     });
   });
 });

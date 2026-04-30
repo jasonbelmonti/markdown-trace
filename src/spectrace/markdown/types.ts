@@ -9,7 +9,7 @@ export interface MarkdownDefinitionFact {
 export interface MarkdownReferenceFact {
   readonly sourceEntityId: string;
   readonly label: string;
-  readonly targetEntityId: string;
+  readonly targetEntityId?: string;
   readonly line: number;
   readonly text: string;
 }

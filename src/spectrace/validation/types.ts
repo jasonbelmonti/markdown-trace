@@ -11,6 +11,7 @@ export interface ValidationFinding {
   readonly message: string;
   readonly entityId?: string;
   readonly label?: string;
+  readonly line?: number;
   readonly relationship?: string;
   readonly targetId?: string;
 }
