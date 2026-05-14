@@ -10,7 +10,7 @@ import {
   EntityRegistry,
   loadRegistry,
   RegistryLoadError,
-} from "../src/spectrace/registry/index.js";
+} from "../src/markdowntrace/registry/index.js";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const registryPath = path.join(
@@ -27,7 +27,7 @@ async function withTemporaryRegistry<T>(
   text: string,
   callback: (temporaryPath: string) => Promise<T>,
 ): Promise<T> {
-  const temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), "spec-trace-registry-"));
+  const temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), "markdown-trace-registry-"));
 
   try {
     const temporaryPath = path.join(temporaryDirectory, fileName);
@@ -52,15 +52,15 @@ describe("loadRegistry", () => {
   it("preserves document metadata", async () => {
     const registry = await loadRegistry(registryPath);
 
-    expect(registry.registryVersion).toBe("spec-trace.r0.document-local-registry.v0");
-    expect(registry.document.id).toBe("spec-trace.r0.fixture.execution");
+    expect(registry.registryVersion).toBe("markdown-trace.r0.document-local-registry.v0");
+    expect(registry.document.id).toBe("markdown-trace.r0.fixture.execution");
     expect(registry.document.path).toBe(
       "fixtures/r0-document-local-registry/execution-spec.md",
     );
     expect(registry.document.fixtureFamily).toBe("r0-document-local-registry");
     expect(registry.document.sourceDocs).toEqual([
-      "docs/spec-trace-r0-document-local-entity-registry.md",
-      "docs/spec-trace-e0-document-local-entity-registry-execution.md",
+      "docs/markdown-trace-r0-document-local-entity-registry.md",
+      "docs/markdown-trace-e0-document-local-entity-registry-execution.md",
     ]);
   });
 
@@ -171,7 +171,7 @@ describe("loadRegistry", () => {
   });
 
   it("wraps unreadable file failures", async () => {
-    const missingPath = path.join(os.tmpdir(), "spec-trace-missing-registry.yaml");
+    const missingPath = path.join(os.tmpdir(), "markdown-trace-missing-registry.yaml");
 
     await expect(loadRegistry(missingPath)).rejects.toThrow(RegistryLoadError);
     await expect(loadRegistry(missingPath)).rejects.toThrow(/cannot be read/);

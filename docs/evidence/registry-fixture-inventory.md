@@ -19,7 +19,7 @@ Source-controlled inputs:
 | Registry fixture tests | `tests/test_registry.test.ts` | Schema and inventory inspection scaffold for VAL-1. |
 
 The fixture intentionally contains the issue-like token `BEL-858` as prose
-context. It is not registered as a SpecTrace document entity.
+context. It is not registered as a Markdown Trace document entity.
 
 ## Registry Shape
 

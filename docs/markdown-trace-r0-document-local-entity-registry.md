@@ -1,19 +1,19 @@
-# SpecTrace R0: Document-Local Entity Registry Prototype
+# Markdown Trace R0: Document-Local Entity Registry Prototype
 
 ## Document Control
 
 | Field | Value |
 | --- | --- |
-| Title | SpecTrace R0: Document-Local Entity Registry Prototype |
+| Title | Markdown Trace R0: Document-Local Entity Registry Prototype |
 | Status | Draft |
 | Rigor level | `R0` |
 | Rigor justification | The work is a bounded experiment to determine whether stable entity references in one execution spec can be represented and validated deterministically before any production implementation is approved. |
 | Author(s) | Codex |
 | Reviewers | Jason Belmonti |
 | Decision owner | Jason Belmonti |
-| Target milestone or release | SpecTrace prototype decision |
+| Target milestone or release | Markdown Trace prototype decision |
 | Last updated | 2026-04-28 |
-| Related docs | Prior planning discussion for SpecTrace entity references; observed BEL-858 attribution pattern |
+| Related docs | Prior planning discussion for Markdown Trace entity references; observed BEL-858 attribution pattern |
 | Related tickets | None |
 
 ## 0. Executive Summary
@@ -24,7 +24,7 @@ Problem summary: Agent-authored execution specs can contain many useful identifi
 
 Proposed outcome: A local operator can validate one execution spec against a document-local entity registry and receive deterministic pass/fail evidence about entity definitions, references, ranges, and relationship integrity.
 
-Why now: The BEL-858 execution-reference pattern shows immediate value from stable identifiers, and the concept should be validated before SpecTrace commits to broader project-management or graph-storage scope.
+Why now: The BEL-858 execution-reference pattern shows immediate value from stable identifiers, and the concept should be validated before Markdown Trace commits to broader project-management or graph-storage scope.
 
 Top risks or unknowns:
 
@@ -40,7 +40,7 @@ Section status: Complete
 
 Problem declaration: Agents and document maintainers are unable to preserve stable, machine-checkable entity references in identifier-rich execution specs because identifiers are currently plain-text labels without a source-of-truth registry, resulting in stale references, duplicate labels, and ambiguous relationship claims during document edits.
 
-Affected actors or systems: Agent authors, human reviewers, execution-spec maintainers, downstream project-management projection workflows, and future SpecTrace tooling.
+Affected actors or systems: Agent authors, human reviewers, execution-spec maintainers, downstream project-management projection workflows, and future Markdown Trace tooling.
 
 Current-state baseline: Estimated from 1 directly observed Linear issue pattern, BEL-858, containing at least 9 execution identifier families: `WP-*`, `MS-*`, `PKG-*`, `SURF-*`, `CON-*`, `VAL-*`, `RISK-*`, `EVD-*`, and `REV-*`.
 
@@ -48,7 +48,7 @@ Evidence or source: Direct observation from the user-provided BEL-858 excerpt an
 
 Consequence of inaction: Within the next execution-spec authoring cycle, agents can continue producing useful identifier-rich documents without deterministic checks, increasing the chance that stale IDs or broken references enter implementation handoffs.
 
-Decision deadline or trigger: Before implementation work begins in `/Users/jasonbelmonti/Documents/Development/spec-trace`.
+Decision deadline or trigger: Before implementation work begins in `/Users/jasonbelmonti/Documents/Development/markdown-trace`.
 
 Section status: Complete
 
@@ -71,7 +71,7 @@ Section status: Complete
 | --- | --- | --- |
 | Jason Belmonti | Decides whether the prototype evidence justifies further investment. | Approve |
 | Prototype implementer | Needs a decision-complete experiment boundary. | Review |
-| Future SpecTrace maintainer | Needs evidence about registry usability and validation value. | Inform |
+| Future Markdown Trace maintainer | Needs evidence about registry usability and validation value. | Inform |
 | Future markdown-engine consumer | Needs boundary clarity between Markdown parsing and semantic entity validation. | Consult |
 
 Decision owner: Jason Belmonti
@@ -135,9 +135,9 @@ Trust or control boundaries: No network, authentication, authorization, secrets,
 
 | Interface | Owner | Consumer or dependency | Inputs | Outputs |
 | --- | --- | --- | --- | --- |
-| Fixture Markdown input | SpecTrace prototype | Validator | One local execution-spec Markdown file | Parsed headings, labels, and reference candidates |
-| YAML registry input | SpecTrace prototype | Validator | One local YAML registry file | Declared entities, labels, types, and edges |
-| Validation report output | SpecTrace prototype | Local operator | Validation findings and summary | Deterministic pass/fail report |
+| Fixture Markdown input | Markdown Trace prototype | Validator | One local execution-spec Markdown file | Parsed headings, labels, and reference candidates |
+| YAML registry input | Markdown Trace prototype | Validator | One local YAML registry file | Declared entities, labels, types, and edges |
+| Validation report output | Markdown Trace prototype | Local operator | Validation findings and summary | Deterministic pass/fail report |
 
 Section status: Complete
 
@@ -147,7 +147,7 @@ Section status: Complete
 | --- | --- | --- | --- | --- |
 | FLOW-1 | Operator runs validation on a valid fixture. | Fixture Markdown and registry are present and internally consistent. | The workflow reports success with a deterministic summary. | REQ-1, REQ-2, REQ-5, REQ-6 |
 | FLOW-2 | Operator runs validation on an intentionally broken fixture variant. | Fixture variant contains at least one duplicate canonical ID, duplicate label, missing reference, missing edge target, or incomplete bounded range. | The workflow reports failure with categorized findings that identify the violated entity rule. | REQ-3, REQ-5, REQ-6 |
-| FLOW-3 | Operator runs validation on a fixture containing a project-management issue key. | Fixture contains a token such as `BEL-858` that is not registered as a SpecTrace entity. | The workflow treats the issue key as external text and does not register it as a document entity. | REQ-4, REQ-5, REQ-6 |
+| FLOW-3 | Operator runs validation on a fixture containing a project-management issue key. | Fixture contains a token such as `BEL-858` that is not registered as a Markdown Trace entity. | The workflow treats the issue key as external text and does not register it as a document entity. | REQ-4, REQ-5, REQ-6 |
 | FUNC-1 | Validator receives a fixture spec and registry. | Inputs are readable local files. | The system associates registered canonical IDs with expected display labels and document definitions. | REQ-1, REQ-2 |
 | FUNC-2 | Validator detects invalid entity graph conditions. | Inputs contain a duplicate canonical ID, duplicate label, missing target, missing reference, or incomplete range. | The system emits deterministic failure findings. | REQ-3, REQ-5 |
 | FUNC-3 | Validator encounters a project-management issue key. | The issue key is not explicitly registered. | The system leaves the issue key outside the document entity graph. | REQ-4 |
@@ -180,7 +180,7 @@ External service expectations: Local prototype only; no availability or latency 
 | ACC-4 | Validate a fixture variant that references an unregistered entity label. | Report exits with failure and a missing-reference finding. | REQ-3, FUNC-2 |
 | ACC-5 | Validate a fixture variant whose registry edge points to an absent canonical ID. | Report exits with failure and a missing-edge-target finding. | REQ-3, FUNC-2 |
 | ACC-6 | Validate a fixture variant referencing `CON-3 through CON-6` while `CON-5` is absent. | Report exits with failure and an incomplete-range finding. | REQ-3, FUNC-2 |
-| ACC-7 | Validate a fixture containing `BEL-858` without registering it as an external reference. | Report does not classify `BEL-858` as a SpecTrace entity. | REQ-4, FUNC-3 |
+| ACC-7 | Validate a fixture containing `BEL-858` without registering it as an external reference. | Report does not classify `BEL-858` as a Markdown Trace entity. | REQ-4, FUNC-3 |
 | ACC-8 | Run validation 3 times on the same fixture variant and registry. | Ordered findings and summary are identical across all runs. | REQ-5, FUNC-2 |
 | ACC-9 | Run validation while network access is unavailable. | Validation completes using local files only. | REQ-6, FUNC-4 |
 
@@ -221,11 +221,11 @@ Section status: Complete
 
 | ID | Mechanism | Component or owner | Responsibility | Related behaviors |
 | --- | --- | --- | --- | --- |
-| TECH-1 | Document-local YAML registry model | SpecTrace prototype | Represent canonical IDs, display labels, entity types, definition expectations, and edges. | FUNC-1 |
-| TECH-2 | Markdown entity scanner | SpecTrace prototype | Locate expected labels, canonical IDs, registered reference labels, bounded ranges, and ignored issue-key candidates in fixture Markdown. | FUNC-1, FUNC-3 |
-| TECH-3 | Entity graph resolver | SpecTrace prototype | Build the in-memory graph and detect duplicate IDs, duplicate labels, missing definitions, missing references, missing edge targets, and incomplete ranges. | FUNC-1, FUNC-2 |
-| TECH-4 | Deterministic report writer | SpecTrace prototype | Emit ordered validation findings with stable finding categories and source context where available. | FUNC-2 |
-| TECH-5 | Local fixture harness | SpecTrace prototype | Exercise valid, invalid, collision, and deterministic-repeat cases from the one fixture family without external service access. | FUNC-2, FUNC-4 |
+| TECH-1 | Document-local YAML registry model | Markdown Trace prototype | Represent canonical IDs, display labels, entity types, definition expectations, and edges. | FUNC-1 |
+| TECH-2 | Markdown entity scanner | Markdown Trace prototype | Locate expected labels, canonical IDs, registered reference labels, bounded ranges, and ignored issue-key candidates in fixture Markdown. | FUNC-1, FUNC-3 |
+| TECH-3 | Entity graph resolver | Markdown Trace prototype | Build the in-memory graph and detect duplicate IDs, duplicate labels, missing definitions, missing references, missing edge targets, and incomplete ranges. | FUNC-1, FUNC-2 |
+| TECH-4 | Deterministic report writer | Markdown Trace prototype | Emit ordered validation findings with stable finding categories and source context where available. | FUNC-2 |
+| TECH-5 | Local fixture harness | Markdown Trace prototype | Exercise valid, invalid, collision, and deterministic-repeat cases from the one fixture family without external service access. | FUNC-2, FUNC-4 |
 
 Section status: Complete
 
@@ -235,7 +235,7 @@ The provisional registry shape for the experiment is:
 
 ```yaml
 document:
-  id: spec-trace.prototype
+  id: markdown-trace.prototype
   path: fixtures/execution-spec.md
 entities:
   - id: exec.wp.1
@@ -290,7 +290,7 @@ Section status: Complete
 | Fixture repeat result | Log | Show whether deterministic output held across 3 consecutive runs. | Local operator |
 | Internal review record | Audit | Capture whether the design is ready for experiment. | Decision owner |
 
-Rollout plan: Create the fixture execution spec, YAML registry, fixture variants, and local validation runner in the SpecTrace repository after this `R0` spec is approved for experiment. Run the fixture-variant suite locally and record evidence in the repository.
+Rollout plan: Create the fixture execution spec, YAML registry, fixture variants, and local validation runner in the Markdown Trace repository after this `R0` spec is approved for experiment. Run the fixture-variant suite locally and record evidence in the repository.
 
 Rollback or containment plan: Trigger rollback if the prototype writes outside the repository, attempts network access, or mutates live external systems. The rollback action is to stop execution and delete prototype artifacts; containment limit is local filesystem state only.
 
@@ -371,7 +371,7 @@ Section status: Complete
 
 | Field | Value |
 | --- | --- |
-| Document | SpecTrace R0: Document-Local Entity Registry Prototype |
+| Document | Markdown Trace R0: Document-Local Entity Registry Prototype |
 | Review date | 2026-04-28 |
 | Moderator | Codex internal review |
 | Decision owner | Jason Belmonti |
