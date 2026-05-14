@@ -1,7 +1,6 @@
 import type { MarkdownAdapterFacts } from "../markdown/index.js";
 import type { EntityRegistry } from "../registry/index.js";
 import type { ValidationSummary } from "./model.js";
-import { missingEdgeTargetFindings } from "./findings.js";
 import {
   hasExpandedRangeReference,
   hasLabelReference,
@@ -18,7 +17,7 @@ export function summarizeValidation(
     definitionsResolved: adapterFacts.definitions.length,
     expectedReferencesResolved: countResolvedReferences(registry, adapterFacts),
     expectedRangesResolved: countResolvedRanges(registry, adapterFacts),
-    edgesResolved: registry.edges.length - missingEdgeTargetFindings(registry).length,
+    edgesResolved: countResolvedEdges(registry),
     findings: findingCount,
   };
 }
@@ -51,4 +50,10 @@ function countResolvedRanges(
       ).length,
     0,
   );
+}
+
+function countResolvedEdges(registry: EntityRegistry): number {
+  return registry.edges.filter(
+    (edge) => registry.entitiesById.has(edge.source) && registry.entitiesById.has(edge.target),
+  ).length;
 }

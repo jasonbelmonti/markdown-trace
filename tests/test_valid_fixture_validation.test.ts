@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import { scanMarkdown } from "../src/markdowntrace/markdown/index.js";
-import { loadRegistry } from "../src/markdowntrace/registry/index.js";
+import { EntityRegistry, loadRegistry } from "../src/markdowntrace/registry/index.js";
 import { validate } from "../src/markdowntrace/validation/index.js";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -71,5 +71,38 @@ describe("validate", () => {
     } finally {
       await rm(temporaryDirectory, { recursive: true, force: true });
     }
+  });
+
+  it("counts resolved edges by edge instead of missing endpoint findings", async () => {
+    const registry = await loadRegistry(registryPath);
+    const adapterFacts = await scanMarkdown(documentPath, registry);
+    const registryWithBrokenEdge = new EntityRegistry({
+      registryVersion: registry.registryVersion,
+      document: registry.document,
+      entities: registry.entities,
+      edges: [
+        ...registry.edges,
+        {
+          source: "exec.missing.source",
+          relationship: "blocks",
+          target: "exec.missing.target",
+        },
+      ],
+      externalRefs: registry.externalRefs,
+    });
+
+    const result = validate(registryWithBrokenEdge, adapterFacts);
+
+    expect(result.summary.edgesResolved).toBe(registry.edges.length);
+    expect(result.findings).toEqual([
+      expect.objectContaining({
+        category: "missing_edge_target",
+        entityId: "exec.missing.source",
+      }),
+      expect.objectContaining({
+        category: "missing_edge_target",
+        entityId: "exec.missing.target",
+      }),
+    ]);
   });
 });
