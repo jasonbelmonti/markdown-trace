@@ -1,10 +1,10 @@
-# SpecTrace E0: Document-Local Entity Registry Prototype Execution
+# Markdown Trace E0: Document-Local Entity Registry Prototype Execution
 
 ## Document Control
 
 | Field | Value |
 | --- | --- |
-| Title | SpecTrace E0: Document-Local Entity Registry Prototype Execution |
+| Title | Markdown Trace E0: Document-Local Entity Registry Prototype Execution |
 | Status | Approved to investigate |
 | Execution level | `E0` |
 | Execution level justification | The work is a local prototype whose purpose is to retire uncertainty about document-local entity registries before production or integration scope is approved. |
@@ -12,9 +12,9 @@
 | Executor(s) | Prototype implementer |
 | Reviewers | Jason Belmonti |
 | Decision owner | Jason Belmonti |
-| Target branch, release, or milestone | SpecTrace R0 prototype implementation |
+| Target branch, release, or milestone | Markdown Trace R0 prototype implementation |
 | Last updated | 2026-04-29 |
-| Related source docs | `docs/spec-trace-r0-document-local-entity-registry.md`; PR #1 `[codex] Address design review observations` ([#1](https://github.com/jasonbelmonti/spec-trace/pull/1), merge commit `2b7f760`) |
+| Related source docs | `docs/markdown-trace-r0-document-local-entity-registry.md`; PR #1 `[codex] Address design review observations` ([#1](https://github.com/jasonbelmonti/markdown-trace/pull/1), merge commit `2b7f760`) |
 | Related tickets | None |
 
 ## 0. Execution Summary
@@ -41,9 +41,9 @@ Section status: Complete
 
 | ID | Source | Authority | Execution implication |
 | --- | --- | --- | --- |
-| SRC-1 | `docs/spec-trace-r0-document-local-entity-registry.md` | Approved R0 design document | Defines the prototype scope, requirements, constraints, validation categories, risks, and continue/pivot/stop criteria. |
+| SRC-1 | `docs/markdown-trace-r0-document-local-entity-registry.md` | Approved R0 design document | Defines the prototype scope, requirements, constraints, validation categories, risks, and continue/pivot/stop criteria. |
 | SRC-2 | Consensus review verdict on the R0 design, recorded in the R0 internal review record at merge commit `2b7f760` | Three-reviewer consensus approval | Confirms duplicate canonical ID coverage and fixture-family scope are review-acceptable for R0. |
-| SRC-3 | PR #1 `[codex] Address design review observations` ([#1](https://github.com/jasonbelmonti/spec-trace/pull/1), merge commit `2b7f760`) | Merged PR cleanup of non-blocking review observations | Provides clarified acceptance coverage and external-reference wording that implementation shall follow. |
+| SRC-3 | PR #1 `[codex] Address design review observations` ([#1](https://github.com/jasonbelmonti/markdown-trace/pull/1), merge commit `2b7f760`) | Merged PR cleanup of non-blocking review observations | Provides clarified acceptance coverage and external-reference wording that implementation shall follow. |
 
 In scope: Local fixture Markdown, document-local YAML registry, parser/scanner sufficient for the R0 fixture family, in-memory entity graph, deterministic validation report, local CLI or script harness, tests or fixture runs for `VAL-1` through `VAL-7`, and evidence capture.
 
@@ -77,7 +77,7 @@ Section status: Complete
 | Prototype implementer | Build the local prototype and produce evidence artifacts. | Execute |
 | Jason Belmonti | Own R0 decision, milestone approval, and continue/pivot/stop outcome. | Approve |
 | Code reviewer | Review implementation boundaries, validation evidence, and no-network safety. | Review |
-| Future SpecTrace maintainer | Consume evidence and follow-up questions. | Inform |
+| Future Markdown Trace maintainer | Consume evidence and follow-up questions. | Inform |
 
 Decision points:
 
@@ -109,7 +109,7 @@ Section status: Complete
 
 Observable outcome: A local operator can run one command against the fixture family and registry and inspect deterministic pass/fail output for entity definitions, references, edges, ranges, collision behavior, and local safety.
 
-Core value proposition: The prototype converts identifier-rich execution specs from prose-only artifacts into locally verifiable handoff artifacts without committing SpecTrace to production integration or storage scope.
+Core value proposition: The prototype converts identifier-rich execution specs from prose-only artifacts into locally verifiable handoff artifacts without committing Markdown Trace to production integration or storage scope.
 
 Critical path hypothesis: If the implementation can load the registry, scan the fixture Markdown, resolve canonical IDs and labels into an in-memory graph, and emit a stable report for valid and broken variants, then the document-local registry model is valuable enough to evaluate for the next design slice.
 
@@ -135,10 +135,10 @@ Section status: Complete
 
 | ID | Surface | Change type | Owner | Read/write boundary | Review expectation |
 | --- | --- | --- | --- | --- | --- |
-| SURF-1 | `src/spectrace/registry/**` | Code | Prototype implementer | Write registry model, YAML loading, and schema checks only. | Review schema separation, duplicate canonical ID behavior, and no external calls. |
-| SURF-2 | `src/spectrace/markdown/**` | Code | Prototype implementer | Write fixture-family scanner only; no markdown-engine changes. | Review deterministic scanning and parser-scope containment. |
-| SURF-3 | `src/spectrace/validation/**` | Code | Prototype implementer | Write graph resolver and validation rule evaluator. | Review required failure categories and ordering. |
-| SURF-4 | `src/spectrace/cli.ts`, `src/spectrace/reporting/**` | Code | Prototype implementer | Write local command entry point and deterministic report output. | Review output stability and local-only operation. |
+| SURF-1 | `src/markdowntrace/registry/**` | Code | Prototype implementer | Write registry model, YAML loading, and schema checks only. | Review schema separation, duplicate canonical ID behavior, and no external calls. |
+| SURF-2 | `src/markdowntrace/markdown/**` | Code | Prototype implementer | Write fixture-family scanner only; no markdown-engine changes. | Review deterministic scanning and parser-scope containment. |
+| SURF-3 | `src/markdowntrace/validation/**` | Code | Prototype implementer | Write graph resolver and validation rule evaluator. | Review required failure categories and ordering. |
+| SURF-4 | `src/markdowntrace/cli.ts`, `src/markdowntrace/reporting/**` | Code | Prototype implementer | Write local command entry point and deterministic report output. | Review output stability and local-only operation. |
 | SURF-5 | `fixtures/**`, `tests/**` | Test | Prototype implementer | Write valid fixture, fixture variants, and automated tests. | Review coverage of all `VAL-*` checks. |
 | SURF-6 | `docs/evidence/**` | Docs | Prototype implementer | Write evidence notes and decision records only; source authority docs remain read-only during implementation. | Review decision evidence and handoff clarity. |
 | SURF-7 | `package.json`, `package-lock.json`, `tsconfig.json`, or equivalent local tool config | Config | Prototype implementer | Write only if needed for local test execution or a YAML parser dependency. | Review dependency footprint and reversibility. |
@@ -169,7 +169,7 @@ Value / risk trace:
 - Blocking unknowns: None.
 
 Owns:
-- Files/directories: `src/spectrace/registry/**`
+- Files/directories: `src/markdowntrace/registry/**`
 - Concepts: registry schema, canonical IDs, display labels, external references, declared edges
 - Runtime responsibilities: local YAML load and schema diagnostics
 
@@ -200,7 +200,7 @@ State boundary:
 - Persistence responsibility: none
 
 Agent ownership boundary:
-- Agent editable paths: `src/spectrace/registry/**`, registry-focused tests and fixtures
+- Agent editable paths: `src/markdowntrace/registry/**`, registry-focused tests and fixtures
 - Agent read-only paths: `docs/**`, scanner and validator modules
 - Required coordination before editing: public record shape consumed by `PKG-2` or `PKG-3`
 
@@ -221,7 +221,7 @@ Value / risk trace:
 - Blocking unknowns: None.
 
 Owns:
-- Files/directories: `src/spectrace/markdown/**`
+- Files/directories: `src/markdowntrace/markdown/**`
 - Concepts: fixture-family scan facts, supported range syntax, ignored issue-key candidates
 - Runtime responsibilities: deterministic scanning of explicit local files
 
@@ -252,8 +252,8 @@ State boundary:
 - Persistence responsibility: none
 
 Agent ownership boundary:
-- Agent editable paths: `src/spectrace/markdown/**`, scanner-focused tests and fixtures
-- Agent read-only paths: `src/spectrace/registry/**`, `docs/**`
+- Agent editable paths: `src/markdowntrace/markdown/**`, scanner-focused tests and fixtures
+- Agent read-only paths: `src/markdowntrace/registry/**`, `docs/**`
 - Required coordination before editing: scan fact contract consumed by `PKG-3`
 
 Validation command: `npm test -- tests/test_markdown_scanner.test.ts`
@@ -273,7 +273,7 @@ Value / risk trace:
 - Blocking unknowns: None.
 
 Owns:
-- Files/directories: `src/spectrace/validation/**`
+- Files/directories: `src/markdowntrace/validation/**`
 - Concepts: entity graph, rule categories, ordered findings
 - Runtime responsibilities: local in-memory validation
 
@@ -304,8 +304,8 @@ State boundary:
 - Persistence responsibility: none
 
 Agent ownership boundary:
-- Agent editable paths: `src/spectrace/validation/**`, validation-focused tests and fixtures
-- Agent read-only paths: `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `docs/**`
+- Agent editable paths: `src/markdowntrace/validation/**`, validation-focused tests and fixtures
+- Agent read-only paths: `src/markdowntrace/registry/**`, `src/markdowntrace/markdown/**`, `docs/**`
 - Required coordination before editing: finding categories consumed by `PKG-4`
 
 Validation command: `npm test -- tests/test_validation.test.ts`
@@ -325,7 +325,7 @@ Value / risk trace:
 - Blocking unknowns: None.
 
 Owns:
-- Files/directories: `src/spectrace/cli.ts`, `src/spectrace/reporting/**`, `tests/test_cli.test.ts`, `docs/evidence/**`, evidence scripts if needed
+- Files/directories: `src/markdowntrace/cli.ts`, `src/markdowntrace/reporting/**`, `tests/test_cli.test.ts`, `docs/evidence/**`, evidence scripts if needed
 - Concepts: invocation contract, report shape, evidence artifact paths
 - Runtime responsibilities: local execution and stable output
 
@@ -356,8 +356,8 @@ State boundary:
 - Persistence responsibility: none beyond committed evidence artifacts
 
 Agent ownership boundary:
-- Agent editable paths: `src/spectrace/cli.ts`, `src/spectrace/reporting/**`, `tests/test_cli.test.ts`, `docs/evidence/**`
-- Agent read-only paths: `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `src/spectrace/validation/**`
+- Agent editable paths: `src/markdowntrace/cli.ts`, `src/markdowntrace/reporting/**`, `tests/test_cli.test.ts`, `docs/evidence/**`
+- Agent read-only paths: `src/markdowntrace/registry/**`, `src/markdowntrace/markdown/**`, `src/markdowntrace/validation/**`
 - Required coordination before editing: report schema or CLI exit-code changes
 
 Validation command: `npm test -- tests/test_cli.test.ts`
@@ -410,11 +410,11 @@ Deferred completeness: Parser generalization, package polish, external projectio
 
 | ID | Objective | Owner | Package boundary | Editable paths | Read-only paths | Inputs | Outputs | Dependencies | Observable value enabled | Risk retired | Milestone gate | Validation checkpoint | Completion criteria |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| WP-1 | Create the fixture family, YAML registry shape, and test scaffolding. | Prototype implementer | PKG-1, PKG-4 | `fixtures/**`, `tests/fixtures/**`, registry schema tests | `docs/spec-trace-r0-document-local-entity-registry.md` | `SRC-1`, `SRC-3` | Valid fixture, registry, broken-variant inventory | DEP-1 | Establishes source-controlled inputs for the prototype. | RISK-1 | MS-1 | VAL-1 | Fixture inventory and schema inspection pass. |
-| WP-2 | Implement first valid end-to-end validation path. | Prototype implementer | PKG-1, PKG-2, PKG-3, PKG-4 | `src/spectrace/**`, valid-path tests | `docs/**`, `fixtures/**` | WP-1 outputs | Passing local validation report for valid fixture | WP-1 | Proves operator can run a deterministic local validation path. | RISK-2 | MS-1 | VAL-2 | Valid fixture exits success with 0 findings and stable summary. |
-| WP-3 | Implement required negative validation categories. | Prototype implementer | PKG-1, PKG-2, PKG-3 | `src/spectrace/registry/**`, `src/spectrace/markdown/**`, `src/spectrace/validation/**`, negative tests | `src/spectrace/cli.ts`, `docs/**` | WP-2 output | Findings for missing registered definition, duplicate canonical ID, duplicate label, missing reference, missing edge target, and incomplete range | WP-2 | Proves central registry-integrity failure detection. | RISK-2 | MS-2 | VAL-3 | Each negative fixture variant fails with expected category, including missing registered definitions. |
-| WP-4 | Prove collision behavior, determinism, and no-network/local safety. | Prototype implementer | PKG-2, PKG-3, PKG-4 | `src/spectrace/markdown/**`, `src/spectrace/validation/**`, `src/spectrace/cli.ts`, `src/spectrace/reporting/**`, `docs/evidence/determinism-repeat-report.md`, `docs/evidence/issue-key-collision-report.md`, `docs/evidence/local-safety-report.md`, collision/determinism tests, report harness | `src/spectrace/registry/**`, `docs/spec-trace-r0-document-local-entity-registry.md`, `docs/spec-trace-e0-document-local-entity-registry-execution.md`, fixtures from WP-1 | WP-3 output | Collision fixture result, 3-run deterministic evidence, zero-network-attempt evidence, and approved-write safety record | WP-3 | Proves safe local operation and issue-key behavior. | RISK-3 | MS-2 | VAL-4, VAL-5, VAL-6 | Collision, repeat-output, zero-network-attempt, and approved-write checks pass. |
-| WP-5 | Capture usability, maintenance signal, and decision evidence. | Prototype implementer | PKG-4 | `docs/evidence/prototype-decision-record.md`, supporting `docs/evidence/**` artifacts | `docs/spec-trace-r0-document-local-entity-registry.md`, `docs/spec-trace-e0-document-local-entity-registry-execution.md`, `src/spectrace/**`, `tests/**`, `fixtures/**` | WP-1 through WP-4 outputs | Prototype review packet and continue/pivot/stop recommendation | WP-4 | Produces decision-grade R0 evidence without modifying source authority. | RISK-1 | MS-3 | VAL-7 | Evidence records canonical ID and human-label usability, compares registry edits against detected failures, and records recommendation. |
+| WP-1 | Create the fixture family, YAML registry shape, and test scaffolding. | Prototype implementer | PKG-1, PKG-4 | `fixtures/**`, `tests/fixtures/**`, registry schema tests | `docs/markdown-trace-r0-document-local-entity-registry.md` | `SRC-1`, `SRC-3` | Valid fixture, registry, broken-variant inventory | DEP-1 | Establishes source-controlled inputs for the prototype. | RISK-1 | MS-1 | VAL-1 | Fixture inventory and schema inspection pass. |
+| WP-2 | Implement first valid end-to-end validation path. | Prototype implementer | PKG-1, PKG-2, PKG-3, PKG-4 | `src/markdowntrace/**`, valid-path tests | `docs/**`, `fixtures/**` | WP-1 outputs | Passing local validation report for valid fixture | WP-1 | Proves operator can run a deterministic local validation path. | RISK-2 | MS-1 | VAL-2 | Valid fixture exits success with 0 findings and stable summary. |
+| WP-3 | Implement required negative validation categories. | Prototype implementer | PKG-1, PKG-2, PKG-3 | `src/markdowntrace/registry/**`, `src/markdowntrace/markdown/**`, `src/markdowntrace/validation/**`, negative tests | `src/markdowntrace/cli.ts`, `docs/**` | WP-2 output | Findings for missing registered definition, duplicate canonical ID, duplicate label, missing reference, missing edge target, and incomplete range | WP-2 | Proves central registry-integrity failure detection. | RISK-2 | MS-2 | VAL-3 | Each negative fixture variant fails with expected category, including missing registered definitions. |
+| WP-4 | Prove collision behavior, determinism, and no-network/local safety. | Prototype implementer | PKG-2, PKG-3, PKG-4 | `src/markdowntrace/markdown/**`, `src/markdowntrace/validation/**`, `src/markdowntrace/cli.ts`, `src/markdowntrace/reporting/**`, `docs/evidence/determinism-repeat-report.md`, `docs/evidence/issue-key-collision-report.md`, `docs/evidence/local-safety-report.md`, collision/determinism tests, report harness | `src/markdowntrace/registry/**`, `docs/markdown-trace-r0-document-local-entity-registry.md`, `docs/markdown-trace-e0-document-local-entity-registry-execution.md`, fixtures from WP-1 | WP-3 output | Collision fixture result, 3-run deterministic evidence, zero-network-attempt evidence, and approved-write safety record | WP-3 | Proves safe local operation and issue-key behavior. | RISK-3 | MS-2 | VAL-4, VAL-5, VAL-6 | Collision, repeat-output, zero-network-attempt, and approved-write checks pass. |
+| WP-5 | Capture usability, maintenance signal, and decision evidence. | Prototype implementer | PKG-4 | `docs/evidence/prototype-decision-record.md`, supporting `docs/evidence/**` artifacts | `docs/markdown-trace-r0-document-local-entity-registry.md`, `docs/markdown-trace-e0-document-local-entity-registry-execution.md`, `src/markdowntrace/**`, `tests/**`, `fixtures/**` | WP-1 through WP-4 outputs | Prototype review packet and continue/pivot/stop recommendation | WP-4 | Produces decision-grade R0 evidence without modifying source authority. | RISK-1 | MS-3 | VAL-7 | Evidence records canonical ID and human-label usability, compares registry edits against detected failures, and records recommendation. |
 
 Execution sequence:
 
@@ -447,7 +447,7 @@ Manual verification guide:
 | MV-1 | MS-1 | Run the local validation command against the valid fixture and registry. | Command exits success with 0 findings and stable summary. | EVD-2 |
 | MV-2 | MS-1 | Inspect registry schema and fixture inventory. | Canonical IDs, labels, edges, and external references are separate and fixture variants are listed. | EVD-1 |
 | MV-3 | MS-2 | Run negative fixture validation suite. | Each required failure category appears in the expected fixture variant. | EVD-3 |
-| MV-4 | MS-2 | Run the issue-key collision fixture containing `BEL-858` without registering it as an external reference. | The report does not classify `BEL-858` as a SpecTrace document entity and records the expected collision-behavior evidence. | EVD-5 |
+| MV-4 | MS-2 | Run the issue-key collision fixture containing `BEL-858` without registering it as an external reference. | The report does not classify `BEL-858` as a Markdown Trace document entity and records the expected collision-behavior evidence. | EVD-5 |
 | MV-5 | MS-2 | Run the same fixture variant 3 consecutive times. | Ordered findings and summary match exactly. | EVD-4 |
 | MV-6 | MS-2 | Run validation with network unavailable, instrument or inspect execution to record attempted network access, and inspect filesystem writes after execution. | Validation completes using local files only, records zero network attempts, and writes only approved repository evidence artifacts. | EVD-6 |
 | MV-7 | MS-3 | Review registry/report usability for canonical dotted IDs and human labels, registry edit count, detected finding count, and recommendation. | Continue/pivot/stop recommendation is grounded in section 6 criteria from `SRC-1` and records whether canonical IDs and human labels are acceptable for agent-authored specs. | EVD-7 |

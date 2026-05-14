@@ -1,12 +1,12 @@
-registryVersion: spec-trace.r0.document-local-registry.v0
+registryVersion: markdown-trace.r0.document-local-registry.v0
 document:
-  id: spec-trace.r0.fixture.execution
-  title: SpecTrace R0 Fixture Execution Spec
+  id: markdown-trace.r0.fixture.execution
+  title: Markdown Trace R0 Fixture Execution Spec
   path: fixtures/r0-document-local-registry/execution-spec.md
   fixtureFamily: r0-document-local-registry
   sourceDocs:
-    - docs/spec-trace-r0-document-local-entity-registry.md
-    - docs/spec-trace-e0-document-local-entity-registry-execution.md
+    - docs/markdown-trace-r0-document-local-entity-registry.md
+    - docs/markdown-trace-e0-document-local-entity-registry-execution.md
 entities:
   - id: exec.con.1
     label: CON-1

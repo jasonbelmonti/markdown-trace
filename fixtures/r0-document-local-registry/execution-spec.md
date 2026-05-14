@@ -1,4 +1,4 @@
-# SpecTrace R0 Fixture Execution Spec
+# Markdown Trace R0 Fixture Execution Spec
 
 ## Fixture Purpose
 
@@ -7,7 +7,7 @@ registry prototype. It is derived from the R0 and E0 source documents and keeps
 the registry experiment local, deterministic, and read-only.
 
 The Linear-style issue key BEL-858 appears here as source context. It is not a
-SpecTrace document entity unless a registry entry explicitly lists it under
+Markdown Trace document entity unless a registry entry explicitly lists it under
 externalRefs.
 
 ## Constraints
