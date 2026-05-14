@@ -42,6 +42,7 @@ export interface MarkdownRangeReferenceFact {
   readonly labelFamily: string;
   readonly start: string;
   readonly end: string;
+  readonly declared: boolean;
   readonly expandsTo: readonly string[];
   readonly targetId: string;
   readonly text: string;

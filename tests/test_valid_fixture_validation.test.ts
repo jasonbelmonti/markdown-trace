@@ -73,6 +73,80 @@ describe("validate", () => {
     }
   });
 
+  it("reports unregistered entity-like labels from registered label families", async () => {
+    const registry = await loadRegistry(registryPath);
+    const documentText = await readFile(documentPath, "utf8");
+    const temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), "markdown-trace-label-"));
+
+    try {
+      const temporaryPath = path.join(temporaryDirectory, "execution-spec.md");
+      await writeFile(
+        temporaryPath,
+        documentText.replace(
+          "### WP-1: Create fixture family, YAML registry shape, and test scaffolding",
+          "### WP-1: Create fixture family, YAML registry shape, and test scaffolding\n\nThis references WP-99.",
+        ),
+        "utf8",
+      );
+
+      const adapterFacts = await scanMarkdown(temporaryPath, registry);
+      const result = validate(registry, adapterFacts);
+
+      expect(adapterFacts.labelReferences).toContainEqual(
+        expect.objectContaining({
+          sourceEntityId: "exec.wp.1",
+          label: "WP-99",
+        }),
+      );
+      expect(result.findings).toContainEqual(
+        expect.objectContaining({
+          category: "missing_reference",
+          entityId: "exec.wp.1",
+          label: "WP-99",
+        }),
+      );
+    } finally {
+      await rm(temporaryDirectory, { recursive: true, force: true });
+    }
+  });
+
+  it("preserves unmatched range syntax for incomplete range validation", async () => {
+    const registry = await loadRegistry(registryPath);
+    const documentText = await readFile(documentPath, "utf8");
+    const temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), "markdown-trace-range-"));
+
+    try {
+      const temporaryPath = path.join(temporaryDirectory, "execution-spec.md");
+      await writeFile(
+        temporaryPath,
+        documentText.replace("CON-1 through CON-3", "CON-1 through CON-4"),
+        "utf8",
+      );
+
+      const adapterFacts = await scanMarkdown(temporaryPath, registry);
+      const result = validate(registry, adapterFacts);
+
+      expect(adapterFacts.rangeReferences).toContainEqual(
+        expect.objectContaining({
+          sourceEntityId: "exec.wp.1",
+          start: "CON-1",
+          end: "CON-4",
+          declared: false,
+          expandsTo: [],
+        }),
+      );
+      expect(result.findings).toContainEqual(
+        expect.objectContaining({
+          category: "incomplete_range",
+          entityId: "exec.wp.1",
+          label: "CON-4",
+        }),
+      );
+    } finally {
+      await rm(temporaryDirectory, { recursive: true, force: true });
+    }
+  });
+
   it("counts resolved edges by edge instead of missing endpoint findings", async () => {
     const registry = await loadRegistry(registryPath);
     const adapterFacts = await scanMarkdown(documentPath, registry);

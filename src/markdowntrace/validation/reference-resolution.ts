@@ -33,6 +33,7 @@ export function hasRangeReference(
       reference.labelFamily === range.labelFamily &&
       reference.start === range.start &&
       reference.end === range.end &&
+      reference.declared &&
       sameValues(reference.expandsTo, range.expandsTo),
   );
 }

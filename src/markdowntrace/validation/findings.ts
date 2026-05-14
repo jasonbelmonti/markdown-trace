@@ -14,7 +14,9 @@ export function collectFindings(
   return sortFindings([
     ...adapterDiagnosticFindings(adapterFacts),
     ...missingDefinitionFindings(registry, adapterFacts),
+    ...unregisteredLabelFindings(registry, adapterFacts),
     ...missingReferenceFindings(registry, adapterFacts),
+    ...incompleteRangeFindings(registry, adapterFacts),
     ...missingRangeFindings(registry, adapterFacts),
     ...missingEdgeTargetFindings(registry),
   ]);
@@ -76,6 +78,39 @@ function missingReferenceFindings(
   );
 }
 
+function unregisteredLabelFindings(
+  registry: EntityRegistry,
+  adapterFacts: MarkdownAdapterFacts,
+): readonly ValidationFinding[] {
+  return adapterFacts.labelReferences
+    .filter((reference) => !registry.entitiesByLabel.has(reference.label))
+    .map((reference) => ({
+      category: "missing_reference",
+      entityId: reference.sourceEntityId,
+      label: reference.label,
+      message: `${reference.sourceEntityId} references unregistered label ${reference.label}`,
+    }));
+}
+
+function incompleteRangeFindings(
+  registry: EntityRegistry,
+  adapterFacts: MarkdownAdapterFacts,
+): readonly ValidationFinding[] {
+  return adapterFacts.rangeReferences.flatMap((reference) => {
+    const findings: ValidationFinding[] = [];
+
+    if (!registry.entitiesByLabel.has(reference.start)) {
+      findings.push(incompleteRangeFinding(reference.sourceEntityId, reference.start));
+    }
+
+    if (!registry.entitiesByLabel.has(reference.end)) {
+      findings.push(incompleteRangeFinding(reference.sourceEntityId, reference.end));
+    }
+
+    return findings;
+  });
+}
+
 function missingRangeFindings(
   registry: EntityRegistry,
   adapterFacts: MarkdownAdapterFacts,
@@ -90,6 +125,15 @@ function missingRangeFindings(
         message: `${entity.id} (${entity.label}) does not reference expected ${range.labelFamily} range ${range.start} through ${range.end}`,
       })),
   );
+}
+
+function incompleteRangeFinding(entityId: string, label: string): ValidationFinding {
+  return {
+    category: "incomplete_range",
+    entityId,
+    label,
+    message: `${entityId} uses range endpoint ${label}, but that label is not registered`,
+  };
 }
 
 function edgeTargetFindings(

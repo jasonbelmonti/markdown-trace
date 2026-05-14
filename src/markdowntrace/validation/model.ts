@@ -2,7 +2,9 @@ import type { MarkdownAdapterMetadata } from "../markdown/index.js";
 
 export type ValidationFindingCategory =
   | "adapter_diagnostic"
+  | "incomplete_range"
   | "missing_registered_definition"
+  | "missing_reference"
   | "missing_expected_reference"
   | "missing_expected_range"
   | "missing_edge_target";
