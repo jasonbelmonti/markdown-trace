@@ -12,9 +12,9 @@
 | Reviewers | Jason Belmonti |
 | Decision owner | Jason Belmonti |
 | Target milestone or release | Markdown Trace prototype decision |
-| Last updated | 2026-04-28 |
-| Related docs | Prior planning discussion for Markdown Trace entity references; observed BEL-858 attribution pattern |
-| Related tickets | None |
+| Last updated | 2026-05-14 |
+| Related docs | Prior planning discussion for Markdown Trace entity references; observed BEL-858 attribution pattern; `docs/evidence/markdown-engine-2-adoption-decision.md`; `@jasonbelmonti/markdown-engine` 2.0 public API contract |
+| Related tickets | BEL-1045; BEL-991 |
 
 ## 0. Executive Summary
 
@@ -29,7 +29,7 @@ Why now: The BEL-858 execution-reference pattern shows immediate value from stab
 Top risks or unknowns:
 
 - RISK-1: A document-local registry may not provide enough value to justify agent maintenance overhead.
-- RISK-2: Markdown reference extraction may be too brittle if it depends on informal prose patterns.
+- RISK-2: Markdown reference extraction may still overstate feasibility if Markdown Trace adds semantic reference logic beyond the published `markdown-engine` 2.0 rich IR contract.
 - RISK-3: Collision handling may be over-designed before cross-system projections are in scope.
 
 Section status: Complete
@@ -61,7 +61,7 @@ Section status: Complete
 | OBJ-3 | Determine whether canonical dotted IDs and human labels are acceptable for agent-authored specs without solving global identity. | Prototype review after manual inspection of registry and report usability. |
 | NG-1 | This experiment will not validate live Linear, Jira, or other project-management projections. | Deferred until a later `R1` or `R2` design decision. |
 | NG-2 | This experiment does not include a graph database, multi-document namespace, or persistent service. | Deferred until document-local value is proven. |
-| NG-3 | This experiment will not modify `markdown-engine` or choose its final parser substrate. | Deferred until the entity model is validated. |
+| NG-3 | This experiment will not modify `markdown-engine`, consume unpublished `markdown-engine` builds, or inspect parser internals. | Markdown parsing uses the published package-root API from `@jasonbelmonti/markdown-engine@2.0.0`; document entity semantics remain local to Markdown Trace. |
 
 Section status: Complete
 
@@ -89,8 +89,10 @@ Section status: Complete
 | CON-3 | Invariant | Canonical entity IDs use dotted lowercase syntax such as `exec.wp.1`; human display labels may use `WP-1`. | Reduces collision with project-management keys while preserving readable labels. | Validate through `VAL-1`, `VAL-2`, and `VAL-4`. |
 | CON-4 | Constraint | The prototype performs no network calls and no live project-management mutation. | Keeps the `R0` experiment reversible and local. | Validate through `VAL-6`. |
 | CON-5 | Invariant | Jira-like or Linear-like keys such as `BEL-858` are external issue keys unless explicitly registered as external references. | Prevents accidental collision between document entity labels and project-management identifiers. | Validate through `VAL-4`. |
-| ASM-1 | Assumption | A sidecar registry can be maintained by an agent with lower total effort than manual reference cleanup. | The value is plausible from the BEL-858 pattern but unproven. | Resolve at prototype review using the success measures in section 6 by 2026-05-05. |
-| ASM-2 | Assumption | A simple Markdown scanner is sufficient for the `R0` fixture family because the prototype does not need full GFM semantics. | The experiment validates entity modeling, not parser completeness. | Resolve through fixture results in `VAL-2` and `VAL-3` by 2026-05-05. |
+| ASM-1 | Assumption | A sidecar registry can be maintained by an agent with lower total effort than manual reference cleanup. | The value is plausible from the BEL-858 pattern but unproven. | Resolve at prototype review after `DEP-1`, `DEP-2`, and required evidence are complete. |
+| DEP-1 | Dependency | `@jasonbelmonti/markdown-engine@2.0.0` must be available from npm before engine-backed validation implementation starts. | The prototype now depends on the package-root 2.0 parser and rich IR API instead of local line/string parsing. | Package availability was verified on 2026-05-14; revalidate with `npm view @jasonbelmonti/markdown-engine version` before implementation resumes. |
+| DEP-2 | Dependency | BEL-991 must record Markdown Engine 2.0 release authorization before engine-backed validation implementation starts. | The R0 implementation must not treat npm availability alone as release approval. | Confirm BEL-991 release authorization before implementation resumes. |
+| ASM-2 | Assumption | The published `markdown-engine` 2.0 rich IR exposes enough section, text-span, link, source-slice, and query information for the one-fixture R0 adapter. | The implementation should test the adapter boundary without duplicating parser behavior. | Resolve through `VAL-2`, `VAL-3`, and `EVD-2`/`EVD-3` package-version evidence. |
 
 Section status: Complete
 
@@ -100,7 +102,7 @@ Section status: Complete
 | --- | --- | --- | --- | --- | --- |
 | REQ-1 | Functional | Must | The prototype shall validate every registered entity definition in the fixture execution spec against one document-local YAML registry. | The experiment must prove registry-to-document integrity. | VAL-1, VAL-2 |
 | REQ-2 | Functional | Must | The prototype shall distinguish canonical entity IDs from human display labels during validation. | Identity must remain stable even when labels are optimized for humans. | VAL-1, VAL-2 |
-| REQ-3 | Functional | Must | The prototype shall report missing references, duplicate canonical IDs, duplicate labels, missing edge targets, and incomplete bounded ranges as failures. | The prototype must catch the reference failures that justify the project. | VAL-3 |
+| REQ-3 | Functional | Must | The prototype shall report missing registered entity definitions, missing references, duplicate canonical IDs, duplicate labels, missing edge targets, and incomplete bounded ranges as failures. | The prototype must catch the reference failures that justify the project. | VAL-3 |
 | REQ-4 | Functional | Must | The prototype shall ignore project-management issue keys unless they are explicitly registered as external references. | Collision resistance with systems such as Linear and Jira is necessary even in the first model. | VAL-4 |
 | REQ-5 | Reliability | Must | The prototype shall emit the same ordered validation result for identical inputs across 3 consecutive local runs. | Deterministic output is required for agent handoff and review evidence. | VAL-5 |
 | REQ-6 | Operability | Must | The prototype shall complete validation without network calls or live external-system mutation. | The experiment must remain safe, local, and reversible. | VAL-6 |
@@ -111,11 +113,11 @@ Section status: Complete
 
 | Measure | Baseline | Target or decision threshold | Evaluation date or decision event | Related IDs |
 | --- | --- | --- | --- | --- |
-| Valid fixture result | Baseline is 0 existing validators in the new repository. | Continue if a valid fixture spec and matching registry produce 0 validation failures. | Prototype review by 2026-05-05. | OBJ-1, REQ-1, REQ-2 |
-| Broken fixture detection | Baseline is manual review only. | Continue if fixture variants for duplicate canonical ID, duplicate label, missing reference, missing edge target, and incomplete range each fail with the expected finding category. | Prototype review by 2026-05-05. | OBJ-2, REQ-3 |
-| Collision behavior | Baseline is undefined handling for tokens like `BEL-858`. | Continue if project-management issue keys are ignored unless explicitly registered; pivot if they are treated as document entities by default. | Prototype review by 2026-05-05. | OBJ-3, REQ-4 |
-| Determinism | Baseline is no deterministic report. | Continue if 3 consecutive runs over the same fixture variant produce the same ordered result; stop if output order or finding identity is unstable. | Prototype review by 2026-05-05. | OBJ-2, REQ-5 |
-| Maintenance signal | Baseline is estimated from manual reference review. | Stop if the registry requires more manual edits than the number of reference failures it can detect in the prototype fixture variants. | Prototype review by 2026-05-05. | OBJ-1, OBJ-3 |
+| Valid fixture result | Baseline is 0 existing validators in the new repository. | Continue if a valid fixture spec and matching registry produce 0 validation failures. | Prototype review after `DEP-1`, `DEP-2`, and required evidence are complete. | OBJ-1, REQ-1, REQ-2 |
+| Broken fixture detection | Baseline is manual review only. | Continue if fixture variants for missing registered entity definition, duplicate canonical ID, duplicate label, missing reference, missing edge target, and incomplete range each fail with the expected finding category. | Prototype review after `DEP-1`, `DEP-2`, and required evidence are complete. | OBJ-2, REQ-3 |
+| Collision behavior | Baseline is undefined handling for tokens like `BEL-858`. | Continue if project-management issue keys are ignored unless explicitly registered; pivot if they are treated as document entities by default. | Prototype review after `DEP-1`, `DEP-2`, and required evidence are complete. | OBJ-3, REQ-4 |
+| Determinism | Baseline is no deterministic report. | Continue if 3 consecutive runs over the same fixture variant produce the same ordered result; stop if output order or finding identity is unstable. | Prototype review after `DEP-1`, `DEP-2`, and required evidence are complete. | OBJ-2, REQ-5 |
+| Maintenance signal | Baseline is estimated from manual reference review. | Stop if the registry requires more manual edits than the number of reference failures it can detect in the prototype fixture variants. | Prototype review after `DEP-1`, `DEP-2`, and required evidence are complete. | OBJ-1, OBJ-3 |
 
 Section status: Complete
 
@@ -127,15 +129,15 @@ Layer 1 status: Complete
 
 ## 7. System Context and External Interfaces
 
-System boundary: The prototype is a local validation workflow that reads a fixture Markdown execution spec and a sidecar YAML registry, builds an in-memory entity graph, and emits a deterministic validation report.
+System boundary: The prototype is a local validation workflow that reads a fixture Markdown execution spec and a sidecar YAML registry, normalizes the Markdown through the published `@jasonbelmonti/markdown-engine@2.0.0` package-root API, builds an in-memory entity graph, and emits a deterministic validation report.
 
-External actors and systems: Local operator; local filesystem. Linear, Jira, and markdown-engine have no data or control interface in this `R0` experiment.
+External actors and systems: Local operator; local filesystem; npm-installed `@jasonbelmonti/markdown-engine@2.0.0` package. Linear and Jira have no data or control interface in this `R0` experiment. The sibling `markdown-engine` repository is not modified or used as an unpublished dependency.
 
 Trust or control boundaries: No network, authentication, authorization, secrets, or external trust boundary is crossed. The only boundary is between local input files and local validation output.
 
 | Interface | Owner | Consumer or dependency | Inputs | Outputs |
 | --- | --- | --- | --- | --- |
-| Fixture Markdown input | Markdown Trace prototype | Validator | One local execution-spec Markdown file | Parsed headings, labels, and reference candidates |
+| Fixture Markdown input | Local filesystem | Markdown Engine document adapter | One local execution-spec Markdown file | Normalized rich IR document, sections, text spans, links, link references, and source slices from `markdown-engine` |
 | YAML registry input | Markdown Trace prototype | Validator | One local YAML registry file | Declared entities, labels, types, and edges |
 | Validation report output | Markdown Trace prototype | Local operator | Validation findings and summary | Deterministic pass/fail report |
 
@@ -146,10 +148,10 @@ Section status: Complete
 | ID | Trigger | Preconditions | Behavior or outcome | Related requirements |
 | --- | --- | --- | --- | --- |
 | FLOW-1 | Operator runs validation on a valid fixture. | Fixture Markdown and registry are present and internally consistent. | The workflow reports success with a deterministic summary. | REQ-1, REQ-2, REQ-5, REQ-6 |
-| FLOW-2 | Operator runs validation on an intentionally broken fixture variant. | Fixture variant contains at least one duplicate canonical ID, duplicate label, missing reference, missing edge target, or incomplete bounded range. | The workflow reports failure with categorized findings that identify the violated entity rule. | REQ-3, REQ-5, REQ-6 |
+| FLOW-2 | Operator runs validation on an intentionally broken fixture variant. | Fixture variant contains at least one missing registered entity definition, duplicate canonical ID, duplicate label, missing reference, missing edge target, or incomplete bounded range. | The workflow reports failure with categorized findings that identify the violated entity rule. | REQ-3, REQ-5, REQ-6 |
 | FLOW-3 | Operator runs validation on a fixture containing a project-management issue key. | Fixture contains a token such as `BEL-858` that is not registered as a Markdown Trace entity. | The workflow treats the issue key as external text and does not register it as a document entity. | REQ-4, REQ-5, REQ-6 |
 | FUNC-1 | Validator receives a fixture spec and registry. | Inputs are readable local files. | The system associates registered canonical IDs with expected display labels and document definitions. | REQ-1, REQ-2 |
-| FUNC-2 | Validator detects invalid entity graph conditions. | Inputs contain a duplicate canonical ID, duplicate label, missing target, missing reference, or incomplete range. | The system emits deterministic failure findings. | REQ-3, REQ-5 |
+| FUNC-2 | Validator detects invalid entity graph conditions. | Inputs contain a missing registered entity definition, duplicate canonical ID, duplicate label, missing target, missing reference, or incomplete range. | The system emits deterministic failure findings. | REQ-3, REQ-5 |
 | FUNC-3 | Validator encounters a project-management issue key. | The issue key is not explicitly registered. | The system leaves the issue key outside the document entity graph. | REQ-4 |
 | FUNC-4 | Validator runs locally. | Operator invokes the local validation workflow. | The system completes without external service calls or live mutation. | REQ-6 |
 
@@ -183,6 +185,7 @@ External service expectations: Local prototype only; no availability or latency 
 | ACC-7 | Validate a fixture containing `BEL-858` without registering it as an external reference. | Report does not classify `BEL-858` as a Markdown Trace entity. | REQ-4, FUNC-3 |
 | ACC-8 | Run validation 3 times on the same fixture variant and registry. | Ordered findings and summary are identical across all runs. | REQ-5, FUNC-2 |
 | ACC-9 | Run validation while network access is unavailable. | Validation completes using local files only. | REQ-6, FUNC-4 |
+| ACC-10 | Validate a registry entry that declares an expected document definition absent from the fixture. | Report exits with failure and a missing-registered-definition finding. | REQ-1, REQ-3, FUNC-2 |
 
 Section status: Complete
 
@@ -192,7 +195,7 @@ Section status: Complete
 | --- | --- | --- | --- |
 | REQ-1 | FLOW-1, FUNC-1 | ACC-1 | Registry-to-document integrity. |
 | REQ-2 | FLOW-1, FUNC-1 | ACC-1, ACC-3 | Canonical ID and display label separation. |
-| REQ-3 | FLOW-2, FUNC-2 | ACC-2, ACC-3, ACC-4, ACC-5, ACC-6 | Failure-mode detection. |
+| REQ-3 | FLOW-2, FUNC-2 | ACC-2, ACC-3, ACC-4, ACC-5, ACC-6, ACC-10 | Failure-mode detection. |
 | REQ-4 | FLOW-3, FUNC-3 | ACC-7 | Collision behavior. |
 | REQ-5 | FLOW-1, FLOW-2, FLOW-3, FUNC-2 | ACC-8 | Deterministic output. |
 | REQ-6 | FLOW-1, FLOW-2, FLOW-3, FUNC-4 | ACC-9 | Local read-only operation. |
@@ -207,13 +210,13 @@ Layer 2 status: Complete
 
 ## 12. Architecture Overview
 
-Architecture summary: The `R0` prototype will use local files and an in-memory validation pass. A fixture execution spec supplies Markdown text, a YAML sidecar registry supplies canonical entity declarations and relationships, and a validator reports deterministic findings.
+Architecture summary: The `R0` prototype will use local files, the published `@jasonbelmonti/markdown-engine@2.0.0` package-root API, and an in-memory validation pass. A fixture execution spec supplies Markdown text, `markdown-engine` supplies the normalized rich IR and structural query surface, a YAML sidecar registry supplies canonical entity declarations and relationships, and a validator reports deterministic findings.
 
-Major components and boundaries: The top-level components are fixture Markdown input, YAML registry input, entity loader, Markdown reference scanner, entity graph resolver, validation rule evaluator, and deterministic report writer. The main boundary is between raw local inputs and the in-memory entity graph.
+Major components and boundaries: The top-level components are fixture Markdown input, YAML registry input, registry loader, Markdown Engine document adapter, entity graph resolver, validation rule evaluator, and deterministic report writer. The main boundary is between package-owned Markdown structure from `markdown-engine` and Markdown Trace-owned entity semantics. Markdown Trace must not inspect raw parser AST, raw mdast, raw parser positions, or `markdown-engine` internal modules.
 
 Deployment or runtime placement: Local developer workstation only. No service, daemon, hosted database, or project-management integration is part of the experiment.
 
-Architecture rationale: A file-backed prototype is sufficient for REQ-1 through REQ-6 because the experiment tests entity identity, reference validation, range expansion, collision behavior, deterministic reporting, and local safety without requiring a durable database or live integration.
+Architecture rationale: A file-backed prototype is sufficient for REQ-1 through REQ-6 because the experiment tests entity identity, reference validation, range expansion, collision behavior, deterministic reporting, and local safety without requiring a durable database or live integration. Reusing `markdown-engine` 2.0 avoids duplicating generic Markdown parsing and keeps this experiment focused on document-local entity semantics.
 
 Section status: Complete
 
@@ -222,7 +225,7 @@ Section status: Complete
 | ID | Mechanism | Component or owner | Responsibility | Related behaviors |
 | --- | --- | --- | --- | --- |
 | TECH-1 | Document-local YAML registry model | Markdown Trace prototype | Represent canonical IDs, display labels, entity types, definition expectations, and edges. | FUNC-1 |
-| TECH-2 | Markdown entity scanner | Markdown Trace prototype | Locate expected labels, canonical IDs, registered reference labels, bounded ranges, and ignored issue-key candidates in fixture Markdown. | FUNC-1, FUNC-3 |
+| TECH-2 | Markdown Engine document adapter | Markdown Trace prototype | Use `parse`, `normalize`, and `documentQueries` from published `@jasonbelmonti/markdown-engine@2.0.0` to produce Markdown Trace adapter facts for definitions, label references, bounded ranges, ignored issue-key candidates, and source evidence. | FUNC-1, FUNC-3 |
 | TECH-3 | Entity graph resolver | Markdown Trace prototype | Build the in-memory graph and detect duplicate IDs, duplicate labels, missing definitions, missing references, missing edge targets, and incomplete ranges. | FUNC-1, FUNC-2 |
 | TECH-4 | Deterministic report writer | Markdown Trace prototype | Emit ordered validation findings with stable finding categories and source context where available. | FUNC-2 |
 | TECH-5 | Local fixture harness | Markdown Trace prototype | Exercise valid, invalid, collision, and deterministic-repeat cases from the one fixture family without external service access. | FUNC-2, FUNC-4 |
@@ -259,12 +262,13 @@ externalRefs:
 | Document-local registry schema | Config | Internal prototype only; no external consumer compatibility commitment. | Reversible | Treat schema as experimental and version it only inside fixture evidence. |
 | Validation report shape | Data | Internal prototype only; report categories may change before implementation approval. | Reversible | Keep fixture snapshots tied to the `R0` experiment only. |
 | Optional `externalRefs` section | Config | Internal prototype only; does not integrate with live Linear or Jira. | Reversible | Validate that external references are not treated as document entities by default. |
+| `@jasonbelmonti/markdown-engine@2.0.0` dependency | Package | npm availability is verified; Markdown Trace consumes only package-root public APIs and the `documentVersion: "1.0.0"` rich IR contract after `DEP-2` confirms BEL-991 release authorization. | Reversible by changing the adapter dependency before implementation resumes. | Confirm `DEP-1` and `DEP-2`; record package version and document contract version in `EVD-2` through `EVD-6`. |
 
 Section status: Complete
 
 ## 15. Control Logic and Non-Functional Controls
 
-Control logic summary: The validator loads registry entities, scans fixture Markdown, resolves canonical IDs and labels into one in-memory graph, expands supported bounded ranges, evaluates rule failures, sorts findings deterministically, and emits one report.
+Control logic summary: The validator loads registry entities, parses and normalizes fixture Markdown through `markdown-engine`, adapts rich IR query results into Markdown Trace adapter facts, resolves canonical IDs and labels into one in-memory graph, expands supported bounded ranges, evaluates rule failures, sorts findings deterministically, and emits one report.
 
 Concurrency and ordering model: No concurrency is required. Finding order is deterministic: input file order for source-derived findings, then canonical ID order, then finding category order for graph-derived findings.
 
@@ -290,7 +294,7 @@ Section status: Complete
 | Fixture repeat result | Log | Show whether deterministic output held across 3 consecutive runs. | Local operator |
 | Internal review record | Audit | Capture whether the design is ready for experiment. | Decision owner |
 
-Rollout plan: Create the fixture execution spec, YAML registry, fixture variants, and local validation runner in the Markdown Trace repository after this `R0` spec is approved for experiment. Run the fixture-variant suite locally and record evidence in the repository.
+Rollout plan: Create the fixture execution spec, YAML registry, fixture variants, and local validation runner in the Markdown Trace repository after this `R0` spec is approved for experiment, `DEP-1` is revalidated, and `DEP-2` confirms BEL-991 release authorization. Run the fixture-variant suite locally and record evidence in the repository.
 
 Rollback or containment plan: Trigger rollback if the prototype writes outside the repository, attempts network access, or mutates live external systems. The rollback action is to stop execution and delete prototype artifacts; containment limit is local filesystem state only.
 
@@ -304,7 +308,7 @@ Section status: Complete
 | --- | --- | --- | --- |
 | VAL-1 | Inspection | Registry schema separates canonical IDs, labels, entity types, definition expectations, edges, and external references. | REQ-1, REQ-2, TECH-1 |
 | VAL-2 | Test | Valid fixture produces a passing report with registered definitions resolved. | REQ-1, REQ-2, FUNC-1, TECH-1, TECH-2, TECH-3 |
-| VAL-3 | Test | Negative fixture variants fail for duplicate canonical IDs, duplicate labels, missing references, missing edge targets, and incomplete bounded ranges. | REQ-3, FUNC-2, TECH-3, TECH-4 |
+| VAL-3 | Test | Negative fixture variants fail for missing registered entity definitions, duplicate canonical IDs, duplicate labels, missing references, missing edge targets, and incomplete bounded ranges. | REQ-3, FUNC-2, TECH-3, TECH-4 |
 | VAL-4 | Test | Project-management issue keys are ignored unless explicitly registered as external references. | REQ-4, FUNC-3, TECH-2, TECH-3 |
 | VAL-5 | Test | Three consecutive runs over identical inputs produce the same ordered validation result. | REQ-5, FUNC-2, TECH-4, TECH-5 |
 | VAL-6 | Manual | Validation completes with network unavailable and without live external-system mutation. | REQ-6, FUNC-4, TECH-5 |
@@ -337,14 +341,14 @@ Section status: Complete
 | ID | Statement | Likelihood | Consequence | Mitigation |
 | --- | --- | --- | --- | --- |
 | RISK-1 | Registry upkeep may cost more than the reference failures it prevents. | Medium | Medium | Include maintenance signal kill criterion and inspect agent usability after the fixture-variant suite. |
-| RISK-2 | Markdown scanning may produce false positives or miss references in realistic prose. | Medium | Medium | Keep fixture scope explicit and decide after the experiment whether a proper parser is required. |
+| RISK-2 | Markdown Trace semantic reference extraction may produce false positives or miss references even when generic Markdown structure comes from `markdown-engine`. | Medium | Medium | Use `markdown-engine` 2.0 for generic parsing and constrain Markdown Trace to adapter plus entity semantics; record misses/false positives in prototype evidence. |
 | RISK-3 | Collision handling may be under-proven without live Linear or Jira data. | Low | Medium | Treat issue keys as external by default and defer live projection validation to a later design. |
 
 | ID | Question | Owner | Due date | Resolution plan |
 | --- | --- | --- | --- | --- |
-| Q-1 | Should a later implementation integrate this entity model into `markdown-engine` or remain a separate semantic validation layer? | Jason Belmonti | 2026-05-05 | Resolve after `VAL-7` by reviewing whether the prototype depends on generic Markdown parsing or execution-spec semantics. |
-| Q-2 | Should a later implementation keep YAML as the source of truth or derive the registry from annotated Markdown? | Jason Belmonti | 2026-05-05 | Resolve after comparing registry maintenance effort against detected failure value. |
-| Q-3 | Should live Linear or Jira projection validation be the next slice after document-local proof? | Jason Belmonti | 2026-05-05 | Resolve after the document-local fixture-variant suite passes or exposes a pivot condition. |
+| Q-1 | Should a later implementation integrate this entity model into `markdown-engine` or remain a separate semantic validation layer? | Jason Belmonti | 2026-05-14 | Resolved for R0: consume published `@jasonbelmonti/markdown-engine@2.0.0` for generic Markdown parsing and structural queries; keep document entity registry semantics in Markdown Trace. |
+| Q-2 | Should a later implementation keep YAML as the source of truth or derive the registry from annotated Markdown? | Jason Belmonti | At `MS-3` prototype review | Resolve after comparing registry maintenance effort against detected failure value. |
+| Q-3 | Should live Linear or Jira projection validation be the next slice after document-local proof? | Jason Belmonti | At `MS-3` prototype review | Resolve after the document-local fixture-variant suite passes or exposes a pivot condition. |
 
 Waivers: none
 
@@ -387,7 +391,7 @@ Section status: Complete
 | Required heightened controls | none |
 | Approval conditions | none |
 | Top blockers | none |
-| Required follow-ups | Resolve Q-1 through Q-3 at prototype review by 2026-05-05. |
+| Required follow-ups | Resolve Q-2 and Q-3 at prototype review; Q-1 is resolved by BEL-1045 and `docs/evidence/markdown-engine-2-adoption-decision.md`. |
 
 ### Findings Addressed During Revision
 
@@ -409,7 +413,7 @@ Section status: Complete
 | Problem validity | 2 | Evidence is limited but adequate for `R0`; the BEL-858 pattern is a concrete trigger. |
 | Requirement quality | 3 | Requirements are atomic and verification-linked. |
 | Functional adequacy | 3 | Behaviors cover valid, invalid, collision, deterministic, and local-safety cases. |
-| Technical feasibility | 2 | Mechanisms are plausible for a local prototype; parser completeness remains intentionally out of scope. |
+| Technical feasibility | 2 | Mechanisms are plausible for a local prototype; generic parser completeness is delegated to the published `markdown-engine` 2.0 package while semantic reference extraction remains experimental. |
 | Non-functional adequacy | 2 | Determinism and local-safety controls are specified for `R0`. |
 | Operational safety | 3 | No network, no live mutation, and local rollback are explicit. |
 | Verification adequacy | 3 | Verification targets the highest-risk claims for the experiment. |
