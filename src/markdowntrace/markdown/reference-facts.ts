@@ -64,18 +64,17 @@ function hasLabel(text: string, label: string): boolean {
 }
 
 function hasBoundedRange(text: string, start: string, end: string): boolean {
-  const startMatch = labelPattern(start).exec(text);
-
-  if (startMatch === null) {
-    return false;
-  }
-
-  const endMatch = labelPattern(end).exec(text.slice(startMatch.index + startMatch[0].length));
-  return endMatch !== null;
+  return rangePattern(start, end).test(text);
 }
 
 function labelPattern(label: string): RegExp {
   return new RegExp(`(^|[^A-Za-z0-9-])${escapeRegExp(label)}(?![A-Za-z0-9-])`);
+}
+
+function rangePattern(start: string, end: string): RegExp {
+  return new RegExp(
+    `(^|[^A-Za-z0-9-])${escapeRegExp(start)}\\s+through\\s+${escapeRegExp(end)}(?![A-Za-z0-9-])`,
+  );
 }
 
 function escapeRegExp(value: string): string {

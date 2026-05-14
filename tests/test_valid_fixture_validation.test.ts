@@ -1,3 +1,5 @@
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -34,5 +36,40 @@ describe("validate", () => {
     });
     expect(firstResult.metadata.enginePackage.version).toBe("2.0.0");
     expect(firstResult.metadata.documentVersion).toBe("1.0.0");
+  });
+
+  it("does not expand range labels without explicit bounded range syntax", async () => {
+    const registry = await loadRegistry(registryPath);
+    const documentText = await readFile(documentPath, "utf8");
+    const temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), "markdown-trace-range-"));
+
+    try {
+      const temporaryPath = path.join(temporaryDirectory, "execution-spec.md");
+      await writeFile(
+        temporaryPath,
+        documentText.replace("CON-1 through CON-3", "CON-1 and CON-3"),
+        "utf8",
+      );
+
+      const adapterFacts = await scanMarkdown(temporaryPath, registry);
+      const result = validate(registry, adapterFacts);
+
+      expect(adapterFacts.rangeReferences).toEqual([]);
+      expect(result.valid).toBe(false);
+      expect(result.findings).toEqual([
+        expect.objectContaining({
+          category: "missing_expected_range",
+          entityId: "exec.wp.1",
+          label: "CON-1..CON-3",
+        }),
+        expect.objectContaining({
+          category: "missing_expected_reference",
+          entityId: "exec.wp.1",
+          label: "CON-2",
+        }),
+      ]);
+    } finally {
+      await rm(temporaryDirectory, { recursive: true, force: true });
+    }
   });
 });
