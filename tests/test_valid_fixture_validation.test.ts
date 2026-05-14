@@ -147,6 +147,67 @@ describe("validate", () => {
     }
   });
 
+  it("reports missing interior labels inside declared bounded ranges", async () => {
+    const registry = await loadRegistry(registryPath);
+    const sourceEntity = registry.entitiesById.get("exec.wp.1");
+    const sourceRange = sourceEntity?.expectedReferences.ranges[0];
+
+    if (sourceRange === undefined) {
+      throw new Error("exec.wp.1 fixture range is required for this regression");
+    }
+
+    const rangeWithMissingInterior = {
+      ...sourceRange,
+      expandsTo: ["CON-1", "CON-2", "CON-99", "CON-3"],
+    };
+    const registryWithIncompleteRange = new EntityRegistry({
+      registryVersion: registry.registryVersion,
+      document: registry.document,
+      entities: registry.entities.map((entity) =>
+        entity.id === "exec.wp.1"
+          ? {
+              ...entity,
+              expectedReferences: {
+                ...entity.expectedReferences,
+                ranges: [rangeWithMissingInterior],
+              },
+            }
+          : entity,
+      ),
+      edges: registry.edges,
+      externalRefs: registry.externalRefs,
+    });
+
+    const adapterFacts = await scanMarkdown(documentPath, registryWithIncompleteRange);
+    const result = validate(registryWithIncompleteRange, adapterFacts);
+
+    expect(adapterFacts.rangeReferences).toContainEqual(
+      expect.objectContaining({
+        sourceEntityId: "exec.wp.1",
+        start: "CON-1",
+        end: "CON-3",
+        declared: true,
+        expandsTo: ["CON-1", "CON-2", "CON-99", "CON-3"],
+      }),
+    );
+    expect(result.valid).toBe(false);
+    expect(result.summary.expectedRangesResolved).toBe(0);
+    expect(result.findings).toContainEqual(
+      expect.objectContaining({
+        category: "incomplete_range",
+        entityId: "exec.wp.1",
+        label: "CON-99",
+      }),
+    );
+    expect(result.findings).not.toContainEqual(
+      expect.objectContaining({
+        category: "missing_expected_range",
+        entityId: "exec.wp.1",
+        label: "CON-1..CON-3",
+      }),
+    );
+  });
+
   it("counts resolved edges by edge instead of missing endpoint findings", async () => {
     const registry = await loadRegistry(registryPath);
     const adapterFacts = await scanMarkdown(documentPath, registry);

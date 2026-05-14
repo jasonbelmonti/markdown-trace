@@ -3,8 +3,8 @@ import type { EntityRegistry, RegistryEdge } from "../registry/index.js";
 import type { ValidationFinding } from "./model.js";
 import {
   hasExpandedRangeReference,
+  hasObservedRangeReference,
   hasLabelReference,
-  hasRangeReference,
 } from "./reference-resolution.js";
 
 export function collectFindings(
@@ -67,7 +67,7 @@ function missingReferenceFindings(
         (label) =>
           registry.entitiesByLabel.has(label) &&
           !hasLabelReference(adapterFacts, entity.id, label) &&
-          !hasExpandedRangeReference(adapterFacts, entity.id, label),
+          !hasExpandedRangeReference(adapterFacts, registry, entity.id, label),
       )
       .map((label) => ({
         category: "missing_expected_reference",
@@ -97,17 +97,15 @@ function incompleteRangeFindings(
   adapterFacts: MarkdownAdapterFacts,
 ): readonly ValidationFinding[] {
   return adapterFacts.rangeReferences.flatMap((reference) => {
-    const findings: ValidationFinding[] = [];
+    const rangeLabels = uniqueLabels([
+      reference.start,
+      reference.end,
+      ...reference.expandsTo,
+    ]);
 
-    if (!registry.entitiesByLabel.has(reference.start)) {
-      findings.push(incompleteRangeFinding(reference.sourceEntityId, reference.start));
-    }
-
-    if (!registry.entitiesByLabel.has(reference.end)) {
-      findings.push(incompleteRangeFinding(reference.sourceEntityId, reference.end));
-    }
-
-    return findings;
+    return rangeLabels
+      .filter((label) => !registry.entitiesByLabel.has(label))
+      .map((label) => incompleteRangeFinding(reference.sourceEntityId, label));
   });
 }
 
@@ -117,7 +115,7 @@ function missingRangeFindings(
 ): readonly ValidationFinding[] {
   return registry.entities.flatMap((entity) =>
     entity.expectedReferences.ranges
-      .filter((range) => !hasRangeReference(adapterFacts, entity.id, range))
+      .filter((range) => !hasObservedRangeReference(adapterFacts, entity.id, range))
       .map((range) => ({
         category: "missing_expected_range",
         entityId: entity.id,
@@ -132,8 +130,12 @@ function incompleteRangeFinding(entityId: string, label: string): ValidationFind
     category: "incomplete_range",
     entityId,
     label,
-    message: `${entityId} uses range endpoint ${label}, but that label is not registered`,
+    message: `${entityId} uses range label ${label}, but that label is not registered`,
   };
+}
+
+function uniqueLabels(labels: readonly string[]): readonly string[] {
+  return [...new Set(labels)].sort();
 }
 
 function edgeTargetFindings(

@@ -1,5 +1,5 @@
-import type { MarkdownAdapterFacts } from "../markdown/index.js";
-import type { ExpectedRange } from "../registry/index.js";
+import type { MarkdownAdapterFacts, MarkdownRangeReferenceFact } from "../markdown/index.js";
+import type { EntityRegistry, ExpectedRange } from "../registry/index.js";
 
 export function hasLabelReference(
   adapterFacts: MarkdownAdapterFacts,
@@ -13,28 +13,62 @@ export function hasLabelReference(
 
 export function hasExpandedRangeReference(
   adapterFacts: MarkdownAdapterFacts,
+  registry: EntityRegistry,
   entityId: string,
   label: string,
 ): boolean {
   return adapterFacts.rangeReferences.some(
     (reference) =>
-      reference.sourceEntityId === entityId && reference.expandsTo.includes(label),
+      reference.sourceEntityId === entityId &&
+      reference.expandsTo.includes(label) &&
+      isCompleteRangeReference(registry, reference),
   );
 }
 
 export function hasRangeReference(
+  adapterFacts: MarkdownAdapterFacts,
+  registry: EntityRegistry,
+  entityId: string,
+  range: ExpectedRange,
+): boolean {
+  return adapterFacts.rangeReferences.some(
+    (reference) =>
+      matchesRange(reference, entityId, range) && isCompleteRangeReference(registry, reference),
+  );
+}
+
+export function hasObservedRangeReference(
   adapterFacts: MarkdownAdapterFacts,
   entityId: string,
   range: ExpectedRange,
 ): boolean {
   return adapterFacts.rangeReferences.some(
     (reference) =>
-      reference.sourceEntityId === entityId &&
-      reference.labelFamily === range.labelFamily &&
-      reference.start === range.start &&
-      reference.end === range.end &&
-      reference.declared &&
-      sameValues(reference.expandsTo, range.expandsTo),
+      matchesRange(reference, entityId, range),
+  );
+}
+
+function matchesRange(
+  reference: MarkdownRangeReferenceFact,
+  entityId: string,
+  range: ExpectedRange,
+): boolean {
+  return (
+    reference.sourceEntityId === entityId &&
+    reference.labelFamily === range.labelFamily &&
+    reference.start === range.start &&
+    reference.end === range.end &&
+    reference.declared &&
+    sameValues(reference.expandsTo, range.expandsTo)
+  );
+}
+
+function isCompleteRangeReference(
+  registry: EntityRegistry,
+  reference: MarkdownRangeReferenceFact,
+): boolean {
+  return [reference.start, reference.end, ...reference.expandsTo].every((label) =>
+    registry.entitiesByLabel.has(label),
   );
 }
 

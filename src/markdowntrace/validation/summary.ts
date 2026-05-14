@@ -32,7 +32,7 @@ function countResolvedReferences(
       entity.expectedReferences.labels.filter(
         (label) =>
           hasLabelReference(adapterFacts, entity.id, label) ||
-          hasExpandedRangeReference(adapterFacts, entity.id, label),
+          hasExpandedRangeReference(adapterFacts, registry, entity.id, label),
       ).length,
     0,
   );
@@ -46,7 +46,7 @@ function countResolvedRanges(
     (count, entity) =>
       count +
       entity.expectedReferences.ranges.filter((range) =>
-        hasRangeReference(adapterFacts, entity.id, range),
+        hasRangeReference(adapterFacts, registry, entity.id, range),
       ).length,
     0,
   );
