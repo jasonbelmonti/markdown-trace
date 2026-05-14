@@ -42,7 +42,7 @@ Entity shape:
 | `type` | `work_package` | Entity classification. |
 | `defines.kind` | `heading` | Definition expectation kind. |
 | `defines.text` | `### WP-1: Create fixture family, YAML registry shape, and test scaffolding` | Expected Markdown definition text. |
-| `expectedReferences.labels` | `VAL-1`, `EVD-1`, `WP-2` | Fixture-family reference expectations for later scanner and validator work. |
+| `expectedReferences.labels` | `VAL-1`, `EVD-1`, `WP-2` | Fixture-family reference expectations for later engine-backed adapter and validator work. |
 | `expectedReferences.ranges` | `CON-1` through `CON-3` | Bounded range expectation for later incomplete-range validation. |
 
 ## Registered Entities
