@@ -14,6 +14,7 @@ export function collectFindings(
   return sortFindings([
     ...adapterDiagnosticFindings(adapterFacts),
     ...missingDefinitionFindings(registry, adapterFacts),
+    ...unregisteredExpectedLabelFindings(registry),
     ...unregisteredLabelFindings(registry, adapterFacts),
     ...missingReferenceFindings(registry, adapterFacts),
     ...incompleteRangeFindings(registry, adapterFacts),
@@ -74,6 +75,21 @@ function missingReferenceFindings(
         entityId: entity.id,
         label,
         message: `${entity.id} (${entity.label}) does not reference expected label ${label}`,
+      })),
+  );
+}
+
+function unregisteredExpectedLabelFindings(
+  registry: EntityRegistry,
+): readonly ValidationFinding[] {
+  return registry.entities.flatMap((entity) =>
+    entity.expectedReferences.labels
+      .filter((label) => !registry.entitiesByLabel.has(label))
+      .map((label) => ({
+        category: "missing_reference",
+        entityId: entity.id,
+        label,
+        message: `${entity.id} (${entity.label}) declares unregistered expected label ${label}`,
       })),
   );
 }

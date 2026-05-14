@@ -110,6 +110,40 @@ describe("validate", () => {
     }
   });
 
+  it("reports unregistered expected labels declared by the registry", async () => {
+    const registry = await loadRegistry(registryPath);
+    const registryWithStaleExpectedLabel = new EntityRegistry({
+      registryVersion: registry.registryVersion,
+      document: registry.document,
+      entities: registry.entities.map((entity) =>
+        entity.id === "exec.wp.1"
+          ? {
+              ...entity,
+              expectedReferences: {
+                ...entity.expectedReferences,
+                labels: [...entity.expectedReferences.labels, "VAL-99"],
+              },
+            }
+          : entity,
+      ),
+      edges: registry.edges,
+      externalRefs: registry.externalRefs,
+    });
+
+    const adapterFacts = await scanMarkdown(documentPath, registryWithStaleExpectedLabel);
+    const result = validate(registryWithStaleExpectedLabel, adapterFacts);
+
+    expect(result.valid).toBe(false);
+    expect(result.summary.expectedReferencesResolved).toBe(12);
+    expect(result.findings).toContainEqual(
+      expect.objectContaining({
+        category: "missing_reference",
+        entityId: "exec.wp.1",
+        label: "VAL-99",
+      }),
+    );
+  });
+
   it("preserves unmatched range syntax for incomplete range validation", async () => {
     const registry = await loadRegistry(registryPath);
     const documentText = await readFile(documentPath, "utf8");
