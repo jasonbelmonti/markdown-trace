@@ -12,9 +12,9 @@
 | Reviewers | Jason Belmonti |
 | Decision owner | Jason Belmonti |
 | Target milestone or release | Markdown Trace prototype decision |
-| Last updated | 2026-05-14 |
-| Related docs | Prior planning discussion for Markdown Trace entity references; observed BEL-858 attribution pattern; `docs/evidence/markdown-engine-2-adoption-decision.md`; `@jasonbelmonti/markdown-engine` 2.0 public API contract |
-| Related tickets | BEL-1045; BEL-991 |
+| Last updated | 2026-05-15 |
+| Related docs | Prior planning discussion for Markdown Trace entity references; observed BEL-858 attribution pattern; `docs/evidence/markdown-engine-2-adoption-decision.md`; `docs/evidence/prototype-decision-record.md`; `docs/markdown-trace-r1-link-backed-entity-syntax.md`; `@jasonbelmonti/markdown-engine` 2.0 public API contract |
+| Related tickets | BEL-1045; BEL-991; BEL-899; BEL-900; BEL-1064 |
 
 ## 0. Executive Summary
 
@@ -338,6 +338,8 @@ Section status: Complete
 | HTML comments as primary entity markers | Easy for machines to find in Markdown. | Adds hidden syntax to documents before proving that a sidecar registry is insufficient. |
 | Live Linear projection validation first | Closest to the BEL-858 example. | Expands blast radius and integration complexity before document-local stability is proven. |
 
+Post-R0 follow-on candidate: Markdown-native `ctx://trace` links are the preferred next experiment after the R0 evidence packet. This candidate uses standard Markdown inline links and reference-style links so entity definitions and references remain visible in the authoring surface while the URL target carries canonical identity. The candidate is documented in `docs/markdown-trace-r1-link-backed-entity-syntax.md`; it does not change the R0 requirement that the implemented prototype uses sidecar YAML plus heading-derived definitions.
+
 | ID | Statement | Likelihood | Consequence | Mitigation |
 | --- | --- | --- | --- | --- |
 | RISK-1 | Registry upkeep may cost more than the reference failures it prevents. | Medium | Medium | Include maintenance signal kill criterion and inspect agent usability after the fixture-variant suite. |
@@ -347,7 +349,7 @@ Section status: Complete
 | ID | Question | Owner | Due date | Resolution plan |
 | --- | --- | --- | --- | --- |
 | Q-1 | Should a later implementation integrate this entity model into `markdown-engine` or remain a separate semantic validation layer? | Jason Belmonti | 2026-05-14 | Resolved for R0: consume published `@jasonbelmonti/markdown-engine@2.0.0` for generic Markdown parsing and structural queries; keep document entity registry semantics in Markdown Trace. |
-| Q-2 | Should a later implementation keep YAML as the source of truth or derive the registry from annotated Markdown? | Jason Belmonti | At `MS-3` prototype review | Resolve after comparing registry maintenance effort against detected failure value. |
+| Q-2 | Should a later implementation keep YAML as the source of truth or derive the registry from annotated Markdown? | Jason Belmonti | At `MS-3` prototype review | `EVD-7` recommends preserving YAML as R0 historical evidence and pivoting the next experiment toward link-backed annotated Markdown; final acceptance occurs at `MS-3`. |
 | Q-3 | Should live Linear or Jira projection validation be the next slice after document-local proof? | Jason Belmonti | At `MS-3` prototype review | Resolve after the document-local fixture-variant suite passes or exposes a pivot condition. |
 
 Waivers: none
@@ -391,7 +393,7 @@ Section status: Complete
 | Required heightened controls | none |
 | Approval conditions | none |
 | Top blockers | none |
-| Required follow-ups | Resolve Q-2 and Q-3 at prototype review; Q-1 is resolved by BEL-1045 and `docs/evidence/markdown-engine-2-adoption-decision.md`. |
+| Required follow-ups | Q-2 recommendation is captured in `docs/evidence/prototype-decision-record.md`; resolve Q-3 at prototype review; Q-1 is resolved by BEL-1045 and `docs/evidence/markdown-engine-2-adoption-decision.md`. |
 
 ### Findings Addressed During Revision
 
