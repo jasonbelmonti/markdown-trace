@@ -7,6 +7,7 @@ import { collectDeterminismEvidence } from "./support/wp4-evidence/determinism.j
 import { collectIssueKeyCollisionEvidence } from "./support/wp4-evidence/issue-key-collision.js";
 import {
   collectLocalSafetyForCommand,
+  collectLocalSafetyForCommands,
   collectLocalSafetyReportEvidence,
 } from "./support/wp4-evidence/local-safety.js";
 import {
@@ -92,6 +93,50 @@ describe("WP-4 evidence", () => {
     expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
     expect(evidence.unapprovedWrites).not.toEqual([]);
     expect(evidence.approvedWritesOnly).toBe(false);
+  });
+
+  it("records guarded network attempts per command without cross-row contamination", async () => {
+    const evidence = await collectLocalSafetyForCommands([
+      {
+        pathName: "network probe",
+        command: "catch guarded fetch and write approved output",
+        expectedFilename: "network-probe.txt",
+        run: async (outputPath) => {
+          try {
+            await fetch("https://example.invalid/wp4-local-safety-probe");
+          } catch {
+            // The probe intentionally catches the guarded network failure.
+          }
+
+          await writeFile(outputPath, "approved", "utf8");
+
+          return {
+            exitCode: 0,
+            stdout: "",
+            stderr: "",
+          };
+        },
+      },
+      {
+        pathName: "clean follow-up",
+        command: "write approved output only",
+        expectedFilename: "clean-follow-up.txt",
+        run: async (outputPath) => {
+          await writeFile(outputPath, "approved", "utf8");
+
+          return {
+            exitCode: 0,
+            stdout: "",
+            stderr: "",
+          };
+        },
+      },
+    ]);
+
+    expect(evidence.map((command) => [command.pathName, command.networkAttempts])).toEqual([
+      ["network probe", 1],
+      ["clean follow-up", 0],
+    ]);
   });
 });
 

@@ -59,33 +59,47 @@ export async function collectLocalSafetyReportEvidence(): Promise<LocalSafetyEvi
 }
 
 export async function collectLocalSafetyEvidence(): Promise<readonly LocalSafetyCommandEvidence[]> {
-  return await withNetworkGuard(async (networkAttempts) => [
-    await collectCommandSafety(
-      networkAttempts,
-      {
-        pathName: "sidecar validation",
-        command: `${validateCommand} --report ${temporaryPathLabel("valid-fixture-report.md")}`,
-        expectedFilename: "valid-fixture-report.md",
-        run: runValidateCommand,
-      },
-    ),
-    await collectCommandSafety(
-      networkAttempts,
-      {
-        pathName: "derived registry generation",
-        command: `${deriveCommand} --output ${temporaryPathLabel("derived-registry-graph.yaml")}`,
-        expectedFilename: "derived-registry-graph.yaml",
-        run: runDeriveCommand,
-      },
-    ),
+  return await collectLocalSafetyForCommands([
+    {
+      pathName: "sidecar validation",
+      command: `${validateCommand} --report ${temporaryPathLabel("valid-fixture-report.md")}`,
+      expectedFilename: "valid-fixture-report.md",
+      run: runValidateCommand,
+    },
+    {
+      pathName: "derived registry generation",
+      command: `${deriveCommand} --output ${temporaryPathLabel("derived-registry-graph.yaml")}`,
+      expectedFilename: "derived-registry-graph.yaml",
+      run: runDeriveCommand,
+    },
   ]);
 }
 
 export async function collectLocalSafetyForCommand(
   input: LocalSafetyCommandInput,
 ): Promise<LocalSafetyCommandEvidence> {
+  const [evidence] = await collectLocalSafetyForCommands([input]);
+
+  if (evidence === undefined) {
+    throw new Error("local-safety command collection returned no evidence");
+  }
+
+  return evidence;
+}
+
+export async function collectLocalSafetyForCommands(
+  inputs: readonly LocalSafetyCommandInput[],
+): Promise<readonly LocalSafetyCommandEvidence[]> {
   return await withNetworkGuard(
-    async (networkAttempts) => await collectCommandSafety(networkAttempts, input),
+    async (networkAttempts) => {
+      const evidence: LocalSafetyCommandEvidence[] = [];
+
+      for (const input of inputs) {
+        evidence.push(await collectCommandSafety(networkAttempts, input));
+      }
+
+      return evidence;
+    },
   );
 }
 
@@ -99,18 +113,25 @@ async function collectCommandSafety(
     const approvedWrites = [temporaryPathLabel(expectedFilename)];
     const approvedAbsoluteWrites = [outputPath];
     const beforeStatus = await gitStatus();
-    const { evidence, unapprovedWrites } = await withTemporaryDirectory(
+    const {
+      evidence,
+      networkAttempts: commandNetworkAttempts,
+      unapprovedWrites,
+    } = await withTemporaryDirectory(
       "wp4-local-safety-watch-",
       async (watchDirectory) => {
         const watchRoots = await prepareWatchRoots(watchDirectory);
         const beforeWriteSurface = await snapshotWriteSurface(watchRoots.roots);
 
         return await withProcessEnvironment(watchRoots.environment, async () => {
+          const beforeNetworkAttempts = networkAttempts.count;
           const runEvidence = await input.run(outputPath);
+          const commandNetworkAttempts = networkAttempts.count - beforeNetworkAttempts;
           const afterWriteSurface = await snapshotWriteSurface(watchRoots.roots);
 
           return {
             evidence: commandEvidence(input, runEvidence),
+            networkAttempts: commandNetworkAttempts,
             unapprovedWrites: diffWriteSurface(
               beforeWriteSurface,
               afterWriteSurface,
@@ -127,7 +148,7 @@ async function collectCommandSafety(
 
     return {
       ...evidence,
-      networkAttempts: networkAttempts.count,
+      networkAttempts: commandNetworkAttempts,
       approvedWrites,
       observedWrites,
       unapprovedWrites,
