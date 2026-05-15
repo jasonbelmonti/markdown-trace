@@ -1,0 +1,314 @@
+import dns from "node:dns";
+import { mkdir, readFile, rm, unlink, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+
+import { describe, expect, it } from "vitest";
+
+import { collectDeterminismEvidence } from "./support/wp4-evidence/determinism.js";
+import { collectIssueKeyCollisionEvidence } from "./support/wp4-evidence/issue-key-collision.js";
+import {
+  collectLocalSafetyForCommand,
+  collectLocalSafetyForCommands,
+  collectLocalSafetyReportEvidence,
+} from "./support/wp4-evidence/local-safety.js";
+import {
+  determinismEvidencePath,
+  issueKeyCollisionEvidencePath,
+  localSafetyEvidencePath,
+  repoRoot,
+} from "./support/wp4-evidence/paths.js";
+import { formatDeterminismReport } from "./support/wp4-evidence/reports/determinism-report.js";
+import { formatIssueKeyCollisionReport } from "./support/wp4-evidence/reports/issue-key-collision-report.js";
+import { formatLocalSafetyReport } from "./support/wp4-evidence/reports/local-safety-report.js";
+
+describe("WP-4 evidence", () => {
+  it("records EVD-4 deterministic repeat evidence for selected command paths", async () => {
+    const evidence = await collectDeterminismEvidence();
+    const report = formatDeterminismReport(evidence);
+
+    expect(report).toBe(await readFile(determinismEvidencePath, "utf8"));
+    expect(evidence.commands).toHaveLength(2);
+    expect(evidence.commands.every((command) => command.identicalOrderedOutputs)).toBe(true);
+    expect(evidence.commands.flatMap((command) => command.runs).every((run) => run.exitCode === 0))
+      .toBe(true);
+  });
+
+  it("records EVD-5 issue-key collision evidence for sidecar and derived graphs", async () => {
+    const evidence = await collectIssueKeyCollisionEvidence();
+    const report = formatIssueKeyCollisionReport(evidence);
+
+    expect(report).toBe(await readFile(issueKeyCollisionEvidencePath, "utf8"));
+    expect(evidence.surfaces.every((surface) => surface.containsIssueKeyInInput)).toBe(true);
+    expect(
+      evidence.surfaces.every(
+        (surface) =>
+          !containsIssueKey(surface.entityIds, evidence.issueKey) &&
+          !containsIssueKey(surface.entityLabels, evidence.issueKey) &&
+          !containsIssueKey(surface.graphNodeIds, evidence.issueKey) &&
+          !containsIssueKey(surface.graphNodeLabels, evidence.issueKey) &&
+          !containsIssueKey(surface.graphEdgeEndpointIds, evidence.issueKey) &&
+          !containsIssueKey(surface.graphEdgeEndpointLabels, evidence.issueKey) &&
+          !containsIssueKey(surface.externalReferenceKeys, evidence.issueKey) &&
+          !containsIssueKey(surface.externalReferenceRelatedEntities, evidence.issueKey),
+      ),
+    ).toBe(true);
+  });
+
+  it("records EVD-6 local-only safety evidence for selected command paths", async () => {
+    const evidence = await collectLocalSafetyReportEvidence();
+    const report = formatLocalSafetyReport(evidence);
+
+    expect(report).toBe(await readFile(localSafetyEvidencePath, "utf8"));
+    expect(evidence.commands).toHaveLength(2);
+    expect(evidence.commands.every((command) => command.exitCode === 0)).toBe(true);
+    expect(evidence.commands.every((command) => command.networkAttempts === 0)).toBe(true);
+    expect(evidence.commands.every((command) => command.unapprovedWrites.length === 0)).toBe(true);
+    expect(evidence.commands.every((command) => command.approvedWritesOnly)).toBe(true);
+    expect(evidence.commands.every((command) => !command.repositoryStatusChanged)).toBe(true);
+    expect(evidence.commands.every((command) => command.stderr === "")).toBe(true);
+  });
+
+  it("detects unapproved local writes outside the approved output path", async () => {
+    const evidence = await collectLocalSafetyForCommand({
+      pathName: "injected write probe",
+      command: "write approved output and unapproved HOME cache file",
+      expectedFilename: "approved-output.txt",
+      run: async (outputPath) => {
+        const home = requiredHome();
+
+        await writeFile(outputPath, "approved", "utf8");
+        await mkdir(path.join(home, ".cache"), { recursive: true });
+        await writeFile(path.join(home, ".cache", "unapproved.txt"), "unapproved", "utf8");
+
+        return {
+          exitCode: 0,
+          stdout: "",
+          stderr: "",
+        };
+      },
+    });
+
+    expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
+    expect(evidence.unapprovedWrites).not.toEqual([]);
+    expect(evidence.approvedWritesOnly).toBe(false);
+  });
+
+  it("detects unapproved local deletes under monitored roots", async () => {
+    const evidence = await collectLocalSafetyForCommand({
+      pathName: "injected delete probe",
+      command: "delete pre-existing HOME cache file",
+      expectedFilename: "approved-output.txt",
+      prepare: async () => {
+        const home = requiredHome();
+
+        await mkdir(path.join(home, ".cache"), { recursive: true });
+        await writeFile(path.join(home, ".cache", "preexisting.txt"), "preexisting", "utf8");
+      },
+      run: async (outputPath) => {
+        const home = requiredHome();
+
+        await writeFile(outputPath, "approved", "utf8");
+        await unlink(path.join(home, ".cache", "preexisting.txt"));
+
+        return {
+          exitCode: 0,
+          stdout: "",
+          stderr: "",
+        };
+      },
+    });
+
+    expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
+    expect(evidence.unapprovedWrites).toContainEqual(expect.stringContaining("(deleted)"));
+    expect(evidence.approvedWritesOnly).toBe(false);
+  });
+
+  it("detects transient unapproved local writes under monitored roots", async () => {
+    const evidence = await collectLocalSafetyForCommand({
+      pathName: "transient write probe",
+      command: "create and delete unapproved HOME file before returning",
+      expectedFilename: "approved-output.txt",
+      run: async (outputPath) => {
+        const home = requiredHome();
+        const transientPath = path.join(home, "transient-unapproved.txt");
+
+        await writeFile(outputPath, "approved", "utf8");
+        await writeFile(transientPath, "transient", "utf8");
+        await unlink(transientPath);
+
+        return {
+          exitCode: 0,
+          stdout: "",
+          stderr: "",
+        };
+      },
+    });
+
+    expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
+    expect(evidence.unapprovedWrites).toContainEqual(
+      expect.stringContaining("transient-unapproved.txt"),
+    );
+    expect(evidence.approvedWritesOnly).toBe(false);
+  });
+
+  it("does not report unrelated shared temp writes outside harness-controlled roots", async () => {
+    const sharedTempRoot = tmpdir();
+    const sharedTempNoisePath = path.join(
+      sharedTempRoot,
+      `wp4-local-safety-shared-noise-${process.pid}.txt`,
+    );
+
+    try {
+      const evidence = await collectLocalSafetyForCommand({
+        pathName: "shared temp noise probe",
+        command: "write approved output while unrelated shared temp noise occurs",
+        expectedFilename: "approved-output.txt",
+        run: async (outputPath) => {
+          await writeFile(outputPath, "approved", "utf8");
+          await writeFile(sharedTempNoisePath, "shared temp noise", "utf8");
+          await unlink(sharedTempNoisePath);
+
+          return {
+            exitCode: 0,
+            stdout: "",
+            stderr: "",
+          };
+        },
+      });
+
+      expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
+      expect(evidence.unapprovedWrites).toEqual([]);
+      expect(evidence.approvedWritesOnly).toBe(true);
+    } finally {
+      await rm(sharedTempNoisePath, { force: true });
+    }
+  });
+
+  it("detects ignored repository writes outside the approved output path", async () => {
+    const ignoredOutputPath = path.join(
+      repoRoot,
+      "dist",
+      "wp4-local-safety-ignored-probe.txt",
+    );
+
+    try {
+      const evidence = await collectLocalSafetyForCommand({
+        pathName: "ignored repo write probe",
+        command: "write approved output and ignored dist file",
+        expectedFilename: "approved-output.txt",
+        prepare: async () => {
+          await rm(ignoredOutputPath, { force: true });
+        },
+        run: async (outputPath) => {
+          await writeFile(outputPath, "approved", "utf8");
+          await mkdir(path.dirname(ignoredOutputPath), { recursive: true });
+          await writeFile(ignoredOutputPath, "unapproved", "utf8");
+
+          return {
+            exitCode: 0,
+            stdout: "",
+            stderr: "",
+          };
+        },
+      });
+
+      expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
+      expect(evidence.unapprovedWrites).toContain("<repo>/dist/wp4-local-safety-ignored-probe.txt");
+      expect(evidence.approvedWritesOnly).toBe(false);
+    } finally {
+      await rm(ignoredOutputPath, { force: true });
+    }
+  });
+
+  it("records guarded network attempts per command without cross-row contamination", async () => {
+    const evidence = await collectLocalSafetyForCommands([
+      {
+        pathName: "network probe",
+        command: "catch guarded fetch and write approved output",
+        expectedFilename: "network-probe.txt",
+        run: async (outputPath) => {
+          try {
+            await fetch("https://example.invalid/wp4-local-safety-probe");
+          } catch {
+            // The probe intentionally catches the guarded network failure.
+          }
+
+          await writeFile(outputPath, "approved", "utf8");
+
+          return {
+            exitCode: 0,
+            stdout: "",
+            stderr: "",
+          };
+        },
+      },
+      {
+        pathName: "clean follow-up",
+        command: "write approved output only",
+        expectedFilename: "clean-follow-up.txt",
+        run: async (outputPath) => {
+          await writeFile(outputPath, "approved", "utf8");
+
+          return {
+            exitCode: 0,
+            stdout: "",
+            stderr: "",
+          };
+        },
+      },
+    ]);
+
+    expect(evidence.map((command) => [command.pathName, command.networkAttempts])).toEqual([
+      ["network probe", 1],
+      ["clean follow-up", 0],
+    ]);
+  });
+
+  it("guards DNS resolver APIs as network attempts", async () => {
+    const evidence = await collectLocalSafetyForCommand({
+      pathName: "dns resolver probe",
+      command: "catch guarded dns.promises.resolve4 calls and write approved output",
+      expectedFilename: "dns-resolver-probe.txt",
+      run: async (outputPath) => {
+        try {
+          await dns.promises.resolve4("example.invalid");
+        } catch {
+          // The probe intentionally catches the guarded network failure.
+        }
+
+        try {
+          await new dns.promises.Resolver().resolve4("example.invalid");
+        } catch {
+          // The probe intentionally catches the guarded network failure.
+        }
+
+        await writeFile(outputPath, "approved", "utf8");
+
+        return {
+          exitCode: 0,
+          stdout: "",
+          stderr: "",
+        };
+      },
+    });
+
+    expect(evidence.networkAttempts).toBe(2);
+    expect(evidence.observedWrites).toEqual(["<tempdir>/dns-resolver-probe.txt"]);
+    expect(evidence.approvedWritesOnly).toBe(true);
+  });
+});
+
+function containsIssueKey(values: readonly string[], issueKey: string): boolean {
+  return values.some((value) => value.includes(issueKey));
+}
+
+function requiredHome(): string {
+  const home = process.env.HOME;
+
+  if (home === undefined) {
+    throw new Error("HOME must be set by the local-safety harness");
+  }
+
+  return home;
+}
