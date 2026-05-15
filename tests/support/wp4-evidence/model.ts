@@ -49,6 +49,7 @@ export interface LocalSafetyCommandEvidence {
   readonly stderr: string;
   readonly approvedWrites: readonly string[];
   readonly observedWrites: readonly string[];
+  readonly unapprovedWrites: readonly string[];
   readonly approvedWritesOnly: boolean;
   readonly repositoryStatusChanged: boolean;
 }

@@ -1,9 +1,12 @@
 import { execFile } from "node:child_process";
 import dns from "node:dns";
+import type { Dirent } from "node:fs";
+import * as fsPromises from "node:fs/promises";
 import { readdir } from "node:fs/promises";
 import http from "node:http";
 import https from "node:https";
 import net from "node:net";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import tls from "node:tls";
 import { promisify } from "node:util";
@@ -31,9 +34,20 @@ type BaseCommandEvidence = Omit<
   | "networkAttempts"
   | "approvedWrites"
   | "observedWrites"
+  | "unapprovedWrites"
   | "approvedWritesOnly"
   | "repositoryStatusChanged"
 >;
+
+type FileSnapshot = readonly [string, string];
+type WriteSurfaceSnapshot = ReadonlyMap<string, string>;
+
+export interface LocalSafetyCommandInput {
+  readonly pathName: string;
+  readonly command: string;
+  readonly expectedFilename: string;
+  readonly run: (outputPath: string) => Promise<CommandRun>;
+}
 
 export async function collectLocalSafetyReportEvidence(): Promise<LocalSafetyEvidence> {
   const metadata = await readValidationMetadata();
@@ -48,61 +62,89 @@ export async function collectLocalSafetyEvidence(): Promise<readonly LocalSafety
   return await withNetworkGuard(async (networkAttempts) => [
     await collectCommandSafety(
       networkAttempts,
-      "valid-fixture-report.md",
-      async (outputPath) =>
-        commandEvidence(
-          "sidecar validation",
-          `${validateCommand} --report ${temporaryPathLabel("valid-fixture-report.md")}`,
-          await runValidateCommand(outputPath),
-        ),
+      {
+        pathName: "sidecar validation",
+        command: `${validateCommand} --report ${temporaryPathLabel("valid-fixture-report.md")}`,
+        expectedFilename: "valid-fixture-report.md",
+        run: runValidateCommand,
+      },
     ),
     await collectCommandSafety(
       networkAttempts,
-      "derived-registry-graph.yaml",
-      async (outputPath) =>
-        commandEvidence(
-          "derived registry generation",
-          `${deriveCommand} --output ${temporaryPathLabel("derived-registry-graph.yaml")}`,
-          await runDeriveCommand(outputPath),
-        ),
+      {
+        pathName: "derived registry generation",
+        command: `${deriveCommand} --output ${temporaryPathLabel("derived-registry-graph.yaml")}`,
+        expectedFilename: "derived-registry-graph.yaml",
+        run: runDeriveCommand,
+      },
     ),
   ]);
 }
 
+export async function collectLocalSafetyForCommand(
+  input: LocalSafetyCommandInput,
+): Promise<LocalSafetyCommandEvidence> {
+  return await withNetworkGuard(
+    async (networkAttempts) => await collectCommandSafety(networkAttempts, input),
+  );
+}
+
 async function collectCommandSafety(
   networkAttempts: { readonly count: number },
-  expectedFilename: string,
-  run: (outputPath: string) => Promise<BaseCommandEvidence>,
+  input: LocalSafetyCommandInput,
 ): Promise<LocalSafetyCommandEvidence> {
   return await withTemporaryDirectory("wp4-local-safety-", async (directory) => {
+    const expectedFilename = input.expectedFilename;
     const outputPath = path.join(directory, expectedFilename);
     const approvedWrites = [temporaryPathLabel(expectedFilename)];
+    const approvedAbsoluteWrites = [outputPath];
     const beforeStatus = await gitStatus();
-    const runEvidence = await run(outputPath);
+    const { evidence, unapprovedWrites } = await withTemporaryDirectory(
+      "wp4-local-safety-watch-",
+      async (watchDirectory) => {
+        const watchRoots = await prepareWatchRoots(watchDirectory);
+        const beforeWriteSurface = await snapshotWriteSurface(watchRoots.roots);
+
+        return await withProcessEnvironment(watchRoots.environment, async () => {
+          const runEvidence = await input.run(outputPath);
+          const afterWriteSurface = await snapshotWriteSurface(watchRoots.roots);
+
+          return {
+            evidence: commandEvidence(input, runEvidence),
+            unapprovedWrites: diffWriteSurface(
+              beforeWriteSurface,
+              afterWriteSurface,
+              approvedAbsoluteWrites,
+            ),
+          };
+        });
+      },
+    );
     const observedWrites = await listTemporaryWrites(directory);
     const afterStatus = await gitStatus();
 
     await readOutput(outputPath);
 
     return {
-      ...runEvidence,
+      ...evidence,
       networkAttempts: networkAttempts.count,
       approvedWrites,
       observedWrites,
-      approvedWritesOnly: arraysEqual(observedWrites, approvedWrites),
+      unapprovedWrites,
+      approvedWritesOnly:
+        arraysEqual(observedWrites, approvedWrites) && unapprovedWrites.length === 0,
       repositoryStatusChanged: beforeStatus !== afterStatus,
     };
   });
 }
 
 function commandEvidence(
-  pathName: string,
-  command: string,
+  input: LocalSafetyCommandInput,
   run: CommandRun,
 ): BaseCommandEvidence {
   return {
-    pathName,
-    command,
+    pathName: input.pathName,
+    command: input.command,
     exitCode: run.exitCode,
     stderr: run.stderr,
   };
@@ -122,6 +164,114 @@ async function listTemporaryWrites(directory: string): Promise<readonly string[]
     .sort();
 }
 
+async function prepareWatchRoots(watchDirectory: string): Promise<{
+  readonly roots: readonly string[];
+  readonly environment: Readonly<Record<string, string>>;
+}> {
+  const home = path.join(watchDirectory, "home");
+  const temp = path.join(watchDirectory, "tmp");
+  const cache = path.join(watchDirectory, "cache");
+
+  await Promise.all([
+    fsPromises.mkdir(home, { recursive: true }),
+    fsPromises.mkdir(temp, { recursive: true }),
+    fsPromises.mkdir(cache, { recursive: true }),
+  ]);
+
+  return {
+    roots: [tmpdir(), home, temp, cache],
+    environment: {
+      HOME: home,
+      TMPDIR: temp,
+      XDG_CACHE_HOME: cache,
+      npm_config_cache: path.join(cache, "npm"),
+    },
+  };
+}
+
+async function snapshotWriteSurface(roots: readonly string[]): Promise<WriteSurfaceSnapshot> {
+  const entries = await Promise.all(roots.map(snapshotRoot));
+
+  return new Map(entries.flat());
+}
+
+async function snapshotRoot(root: string): Promise<readonly FileSnapshot[]> {
+  const snapshots: FileSnapshot[] = [];
+  await collectSnapshots(root, snapshots);
+
+  return snapshots;
+}
+
+async function collectSnapshots(directory: string, snapshots: FileSnapshot[]): Promise<void> {
+  let entries: Dirent[];
+
+  try {
+    entries = await readdir(directory, { withFileTypes: true });
+  } catch (error) {
+    if (isIgnoredSnapshotError(error)) {
+      return;
+    }
+
+    throw error;
+  }
+
+  for (const entry of entries) {
+    const absolutePath = path.join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      await collectSnapshots(absolutePath, snapshots);
+      continue;
+    }
+
+    if (entry.isFile()) {
+      const snapshot = await snapshotFile(absolutePath);
+
+      if (snapshot !== undefined) {
+        snapshots.push(snapshot);
+      }
+    }
+  }
+}
+
+async function snapshotFile(
+  absolutePath: string,
+): Promise<FileSnapshot | undefined> {
+  try {
+    const stats = await fsPromises.stat(absolutePath);
+
+    return [absolutePath, `${stats.size}:${stats.mtimeMs}`] as const;
+  } catch (error) {
+    if (isIgnoredSnapshotError(error)) {
+      return undefined;
+    }
+
+    throw error;
+  }
+}
+
+function isIgnoredSnapshotError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    "code" in error &&
+    (error.code === "ENOENT" || error.code === "EPERM" || error.code === "EACCES")
+  );
+}
+
+function diffWriteSurface(
+  before: WriteSurfaceSnapshot,
+  after: WriteSurfaceSnapshot,
+  approvedAbsoluteWrites: readonly string[],
+): readonly string[] {
+  return uniqueSorted(
+    [...after.entries()].flatMap(([absolutePath, signature]) =>
+      before.get(absolutePath) === signature ||
+      isApprovedWritePath(absolutePath, approvedAbsoluteWrites)
+        ? []
+        : [displayLocalPath(absolutePath)],
+    ),
+  );
+}
+
 async function gitStatus(): Promise<string> {
   const { stdout } = await execFileAsync("git", ["status", "--short", "--untracked-files=all"], {
     cwd: repoRoot,
@@ -132,6 +282,46 @@ async function gitStatus(): Promise<string> {
 
 function arraysEqual(left: readonly string[], right: readonly string[]): boolean {
   return left.length === right.length && left.every((value, index) => value === right[index]);
+}
+
+async function withProcessEnvironment<T>(
+  values: Readonly<Record<string, string>>,
+  callback: () => Promise<T>,
+): Promise<T> {
+  const originalValues = new Map(
+    Object.keys(values).map((key) => [key, process.env[key]] as const),
+  );
+
+  try {
+    Object.assign(process.env, values);
+    return await callback();
+  } finally {
+    for (const [key, value] of originalValues) {
+      if (value === undefined) {
+        delete process.env[key];
+      } else {
+        process.env[key] = value;
+      }
+    }
+  }
+}
+
+function isApprovedWritePath(
+  absolutePath: string,
+  approvedAbsoluteWrites: readonly string[],
+): boolean {
+  return approvedAbsoluteWrites.some((approvedPath) => {
+    const absoluteApprovedPath = path.resolve(approvedPath);
+
+    return (
+      absolutePath === absoluteApprovedPath ||
+      absolutePath === path.dirname(absoluteApprovedPath)
+    );
+  });
+}
+
+function uniqueSorted(values: readonly string[]): readonly string[] {
+  return [...new Set(values)].sort();
 }
 
 async function withNetworkGuard<T>(
@@ -183,4 +373,20 @@ async function withNetworkGuard<T>(
 
 function temporaryPathLabel(filename: string): string {
   return `<tempdir>/${filename}`;
+}
+
+function displayLocalPath(absolutePath: string): string {
+  const relativeRepoPath = path.relative(repoRoot, absolutePath);
+
+  if (!relativeRepoPath.startsWith("..") && !path.isAbsolute(relativeRepoPath)) {
+    return `<repo>/${relativeRepoPath.split(path.sep).join("/")}`;
+  }
+
+  const relativeTempPath = path.relative(tmpdir(), absolutePath);
+
+  if (!relativeTempPath.startsWith("..") && !path.isAbsolute(relativeTempPath)) {
+    return `<tmp>/${relativeTempPath.split(path.sep).join("/")}`;
+  }
+
+  return absolutePath.split(path.sep).join("/");
 }

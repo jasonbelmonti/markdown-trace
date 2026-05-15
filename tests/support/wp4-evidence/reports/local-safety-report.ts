@@ -11,7 +11,7 @@ export function formatLocalSafetyReport(evidence: LocalSafetyEvidence): string {
     "",
     "## Coverage Statement",
     "",
-    "This local-safety proof covers the selected MS-2 command paths: sidecar validation and derived registry generation. During in-process command execution, Node network entry points were guarded and recorded zero network attempts. Command writes were directed only to explicit operator-selected output paths under a temporary directory; the checked-in WP-4 evidence files under `docs/evidence/**` are the approved repository writes from this task.",
+    "This local-safety proof covers the selected MS-2 command paths: sidecar validation and derived registry generation. During in-process command execution, Node network entry points were guarded, and the wider local write surface was snapshotted across the system temp root plus monitored local `HOME`, `TMPDIR`, and cache roots. The proof records zero network attempts, no unapproved local writes, no repository status mutation, and command writes only to explicit operator-selected output paths under a temporary directory; the checked-in WP-4 evidence files under `docs/evidence/**` are the approved repository writes from this task.",
     "",
     "## Inputs",
     "",
@@ -24,8 +24,8 @@ export function formatLocalSafetyReport(evidence: LocalSafetyEvidence): string {
     "",
     "## Safety Results",
     "",
-    "| Command path | Command | Exit code | Network attempts | Live external-system mutation | Approved writes | Observed writes | Approved writes only | Repository status changed | Stderr | Status |",
-    "| --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- | --- |",
+    "| Command path | Command | Exit code | Network attempts | Live external-system mutation | Approved writes | Observed approved writes | Unapproved local writes | Approved writes only | Repository status changed | Stderr | Status |",
+    "| --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- | --- | --- |",
     ...evidence.commands.map(formatCommandRow),
     "",
   ].join("\n");
@@ -35,6 +35,7 @@ function formatCommandRow(commandEvidence: LocalSafetyEvidence["commands"][numbe
   const status =
     commandEvidence.exitCode === 0 &&
     commandEvidence.networkAttempts === 0 &&
+    commandEvidence.unapprovedWrites.length === 0 &&
     commandEvidence.approvedWritesOnly &&
     !commandEvidence.repositoryStatusChanged &&
     commandEvidence.stderr === ""
@@ -45,9 +46,15 @@ function formatCommandRow(commandEvidence: LocalSafetyEvidence["commands"][numbe
     .map((write) => `\`${write}\``)
     .join(", ")} | ${commandEvidence.observedWrites
     .map((write) => `\`${write}\``)
-    .join(", ")} | \`${yesNo(commandEvidence.approvedWritesOnly)}\` | \`${yesNo(
+    .join(", ")} | ${formatWrites(commandEvidence.unapprovedWrites)} | \`${yesNo(
+    commandEvidence.approvedWritesOnly,
+  )}\` | \`${yesNo(
     commandEvidence.repositoryStatusChanged,
   )}\` | ${commandEvidence.stderr === "" ? "none" : `\`${escapeCell(commandEvidence.stderr)}\``} | \`${status}\` |`;
+}
+
+function formatWrites(writes: readonly string[]): string {
+  return writes.length === 0 ? "none" : writes.map((write) => `\`${write}\``).join(", ");
 }
 
 function escapeCell(value: string): string {

@@ -1,10 +1,14 @@
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
 import { collectDeterminismEvidence } from "./support/wp4-evidence/determinism.js";
 import { collectIssueKeyCollisionEvidence } from "./support/wp4-evidence/issue-key-collision.js";
-import { collectLocalSafetyReportEvidence } from "./support/wp4-evidence/local-safety.js";
+import {
+  collectLocalSafetyForCommand,
+  collectLocalSafetyReportEvidence,
+} from "./support/wp4-evidence/local-safety.js";
 import {
   determinismEvidencePath,
   issueKeyCollisionEvidencePath,
@@ -55,9 +59,39 @@ describe("WP-4 evidence", () => {
     expect(evidence.commands).toHaveLength(2);
     expect(evidence.commands.every((command) => command.exitCode === 0)).toBe(true);
     expect(evidence.commands.every((command) => command.networkAttempts === 0)).toBe(true);
+    expect(evidence.commands.every((command) => command.unapprovedWrites.length === 0)).toBe(true);
     expect(evidence.commands.every((command) => command.approvedWritesOnly)).toBe(true);
     expect(evidence.commands.every((command) => !command.repositoryStatusChanged)).toBe(true);
     expect(evidence.commands.every((command) => command.stderr === "")).toBe(true);
+  });
+
+  it("detects unapproved local writes outside the approved output path", async () => {
+    const evidence = await collectLocalSafetyForCommand({
+      pathName: "injected write probe",
+      command: "write approved output and unapproved HOME cache file",
+      expectedFilename: "approved-output.txt",
+      run: async (outputPath) => {
+        const home = process.env.HOME;
+
+        if (home === undefined) {
+          throw new Error("HOME must be set by the local-safety harness");
+        }
+
+        await writeFile(outputPath, "approved", "utf8");
+        await mkdir(path.join(home, ".cache"), { recursive: true });
+        await writeFile(path.join(home, ".cache", "unapproved.txt"), "unapproved", "utf8");
+
+        return {
+          exitCode: 0,
+          stdout: "",
+          stderr: "",
+        };
+      },
+    });
+
+    expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
+    expect(evidence.unapprovedWrites).not.toEqual([]);
+    expect(evidence.approvedWritesOnly).toBe(false);
   });
 });
 
