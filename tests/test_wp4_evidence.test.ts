@@ -1,4 +1,4 @@
-import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -14,6 +14,7 @@ import {
   determinismEvidencePath,
   issueKeyCollisionEvidencePath,
   localSafetyEvidencePath,
+  repoRoot,
 } from "./support/wp4-evidence/paths.js";
 import { formatDeterminismReport } from "./support/wp4-evidence/reports/determinism-report.js";
 import { formatIssueKeyCollisionReport } from "./support/wp4-evidence/reports/issue-key-collision-report.js";
@@ -119,6 +120,42 @@ describe("WP-4 evidence", () => {
     expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
     expect(evidence.unapprovedWrites).toContainEqual(expect.stringContaining("(deleted)"));
     expect(evidence.approvedWritesOnly).toBe(false);
+  });
+
+  it("detects ignored repository writes outside the approved output path", async () => {
+    const ignoredOutputPath = path.join(
+      repoRoot,
+      "dist",
+      "wp4-local-safety-ignored-probe.txt",
+    );
+
+    try {
+      const evidence = await collectLocalSafetyForCommand({
+        pathName: "ignored repo write probe",
+        command: "write approved output and ignored dist file",
+        expectedFilename: "approved-output.txt",
+        prepare: async () => {
+          await rm(ignoredOutputPath, { force: true });
+        },
+        run: async (outputPath) => {
+          await writeFile(outputPath, "approved", "utf8");
+          await mkdir(path.dirname(ignoredOutputPath), { recursive: true });
+          await writeFile(ignoredOutputPath, "unapproved", "utf8");
+
+          return {
+            exitCode: 0,
+            stdout: "",
+            stderr: "",
+          };
+        },
+      });
+
+      expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
+      expect(evidence.unapprovedWrites).toContain("<repo>/dist/wp4-local-safety-ignored-probe.txt");
+      expect(evidence.approvedWritesOnly).toBe(false);
+    } finally {
+      await rm(ignoredOutputPath, { force: true });
+    }
   });
 
   it("records guarded network attempts per command without cross-row contamination", async () => {

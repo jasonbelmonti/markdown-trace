@@ -202,7 +202,7 @@ async function prepareWatchRoots(watchDirectory: string): Promise<{
   ]);
 
   return {
-    roots: [tmpdir(), home, temp, cache],
+    roots: [repoRoot, tmpdir(), home, temp, cache],
     environment: {
       HOME: home,
       TMPDIR: temp,
@@ -241,6 +241,10 @@ async function collectSnapshots(directory: string, snapshots: FileSnapshot[]): P
   for (const entry of entries) {
     const absolutePath = path.join(directory, entry.name);
 
+    if (entry.isDirectory() && shouldSkipSnapshotDirectory(absolutePath)) {
+      continue;
+    }
+
     if (entry.isDirectory()) {
       await collectSnapshots(absolutePath, snapshots);
       continue;
@@ -254,6 +258,16 @@ async function collectSnapshots(directory: string, snapshots: FileSnapshot[]): P
       }
     }
   }
+}
+
+function shouldSkipSnapshotDirectory(absolutePath: string): boolean {
+  const relativeRepoPath = path.relative(repoRoot, absolutePath);
+
+  if (relativeRepoPath.startsWith("..") || path.isAbsolute(relativeRepoPath)) {
+    return false;
+  }
+
+  return new Set([".git", "node_modules"]).has(relativeRepoPath.split(path.sep)[0] ?? "");
 }
 
 async function snapshotFile(
