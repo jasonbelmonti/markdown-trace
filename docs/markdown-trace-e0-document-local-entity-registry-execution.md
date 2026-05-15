@@ -13,9 +13,9 @@
 | Reviewers | Jason Belmonti |
 | Decision owner | Jason Belmonti |
 | Target branch, release, or milestone | Markdown Trace R0 prototype implementation |
-| Last updated | 2026-05-14 |
-| Related source docs | `docs/markdown-trace-r0-document-local-entity-registry.md`; `docs/evidence/markdown-engine-2-adoption-decision.md`; PR #1 `[codex] Address design review observations` ([#1](https://github.com/jasonbelmonti/markdown-trace/pull/1), merge commit `2b7f760`) |
-| Related tickets | BEL-1045; BEL-991 |
+| Last updated | 2026-05-15 |
+| Related source docs | `docs/markdown-trace-r0-document-local-entity-registry.md`; `docs/evidence/markdown-engine-2-adoption-decision.md`; `docs/evidence/prototype-decision-record.md`; `docs/markdown-trace-r1-link-backed-entity-syntax.md`; PR #1 `[codex] Address design review observations` ([#1](https://github.com/jasonbelmonti/markdown-trace/pull/1), merge commit `2b7f760`) |
+| Related tickets | BEL-1045; BEL-991; BEL-898; BEL-899; BEL-900; BEL-1064 |
 
 ## 0. Execution Summary
 
@@ -48,11 +48,11 @@ Section status: Complete
 
 In scope: Local fixture Markdown, document-local YAML registry, published `@jasonbelmonti/markdown-engine@2.0.0` package-root API usage, a Markdown Engine document adapter for the R0 fixture family, in-memory entity graph, deterministic validation report, local CLI or script harness, tests or fixture runs for `VAL-1` through `VAL-7`, and evidence capture.
 
-Out of scope: Live Linear, Jira, or project-management mutation during validation; graph database; persistent service; multi-document namespace; modifying the sibling `markdown-engine` repository; unpublished local package/tarball dependencies; hosted deployment; irreversible migration.
+Out of scope: Live Linear, Jira, or project-management mutation during validation; graph database; persistent service; multi-document namespace; modifying the sibling `markdown-engine` repository; unpublished local package/tarball dependencies; hosted deployment; irreversible migration; implementing link-backed `ctx://trace` Markdown syntax in R0.
 
 Definition of done: The prototype can run locally against the valid fixture and required negative fixture variants, produce deterministic ordered output, demonstrate no network or live external mutation, and provide evidence for the section 6 continue/pivot/stop criteria in `SRC-1`.
 
-Re-decision boundaries: Execution shall not re-decide YAML as the registry format, document-local scope, no-network constraint, external issue-key default behavior, or the package-root-only `markdown-engine` 2.0 consumption boundary. If implementation evidence invalidates any of those decisions, execution pauses and the decision owner resolves the design question before scope expands.
+Re-decision boundaries: Execution shall not re-decide YAML as the registry format for R0, document-local scope, no-network constraint, external issue-key default behavior, or the package-root-only `markdown-engine` 2.0 consumption boundary. If implementation evidence invalidates any of those decisions, execution pauses and the decision owner resolves the design question before scope expands. Q-2 may recommend a post-R0 pivot without changing the implemented R0 evidence path.
 
 Section status: Complete
 
@@ -122,7 +122,7 @@ Sequencing principle: Sequence by risk retirement and progressive value: prove o
 
 Validation cadence: Each work package produces at least one `VAL-*` result before the next milestone gate. `MS-1` reviews the first proof, `MS-2` reviews validation breadth, and `MS-3` reviews the R0 continue/pivot/stop decision evidence.
 
-Deferred completeness: Multi-document IDs, live external-system projection, persistent graph storage, polished packaging, and any `markdown-engine` package changes are deferred until after `MS-3`.
+Deferred completeness: Multi-document IDs, live external-system projection, persistent graph storage, polished packaging, link-backed `ctx://trace` Markdown entity syntax, and any `markdown-engine` package changes are deferred until after `MS-3`.
 
 Primary risks and unknowns:
 
@@ -417,7 +417,7 @@ Deferred completeness: Adapter generalization, package polish, external projecti
 | WP-2 | Implement first valid end-to-end validation path through the engine-backed adapter. | Prototype implementer | PKG-1, PKG-2, PKG-3, PKG-4 | `src/markdowntrace/**`, valid-path tests, package manifest after `DEP-2` and `DEP-3` pass | `docs/**`, `fixtures/**` | WP-1 outputs and published `@jasonbelmonti/markdown-engine@2.0.0` | Passing local validation report for valid fixture, including engine package version and document contract version | WP-1, DEP-2, DEP-3 | Proves operator can run a deterministic local validation path through package-root engine APIs. | RISK-2 | MS-1 | VAL-2 | Valid fixture exits success with 0 findings, stable summary, engine package version, and document contract version. |
 | WP-3 | Implement required negative validation categories over adapter facts. | Prototype implementer | PKG-1, PKG-2, PKG-3 | `src/markdowntrace/registry/**`, `src/markdowntrace/markdown/**`, `src/markdowntrace/validation/**`, negative tests | `src/markdowntrace/cli.ts`, `docs/**` | WP-2 output | Findings for missing registered definition, duplicate canonical ID, duplicate label, missing reference, missing edge target, and incomplete range, derived from registry entities and adapter facts | WP-2 | Proves central registry-integrity failure detection without custom Markdown parsing. | RISK-2 | MS-2 | VAL-3 | Each negative fixture variant fails with expected category, including missing registered definitions, and records engine metadata. |
 | WP-4 | Prove collision behavior, determinism, and no-network/local safety through the adapter/report path. | Prototype implementer | PKG-2, PKG-3, PKG-4 | `src/markdowntrace/markdown/**`, `src/markdowntrace/validation/**`, `src/markdowntrace/cli.ts`, `src/markdowntrace/reporting/**`, `docs/evidence/determinism-repeat-report.md`, `docs/evidence/issue-key-collision-report.md`, `docs/evidence/local-safety-report.md`, collision/determinism tests, report harness | `src/markdowntrace/registry/**`, `docs/markdown-trace-r0-document-local-entity-registry.md`, `docs/markdown-trace-e0-document-local-entity-registry-execution.md`, fixtures from WP-1 | WP-3 output | Collision fixture result, 3-run deterministic evidence, zero-network-attempt evidence, approved-write safety record, engine package version, and document contract version | WP-3 | Proves safe local operation and issue-key behavior. | RISK-3 | MS-2 | VAL-4, VAL-5, VAL-6 | Collision, repeat-output, zero-network-attempt, approved-write, and engine-metadata checks pass. |
-| WP-5 | Capture usability, maintenance signal, and decision evidence. | Prototype implementer | PKG-4 | `docs/evidence/prototype-decision-record.md`, supporting `docs/evidence/**` artifacts | `docs/markdown-trace-r0-document-local-entity-registry.md`, `docs/markdown-trace-e0-document-local-entity-registry-execution.md`, `src/markdowntrace/**`, `tests/**`, `fixtures/**` | WP-1 through WP-4 outputs | Prototype review packet and continue/pivot/stop recommendation | WP-4 | Produces decision-grade R0 evidence without modifying source authority. | RISK-1 | MS-3 | VAL-7 | Evidence records canonical ID and human-label usability, compares registry edits against detected failures, and records recommendation. |
+| WP-5 | Capture usability, maintenance signal, and decision evidence. | Prototype implementer | PKG-4 | `docs/evidence/prototype-decision-record.md`, supporting `docs/evidence/**` artifacts | `docs/markdown-trace-r0-document-local-entity-registry.md`, `docs/markdown-trace-e0-document-local-entity-registry-execution.md`, `src/markdowntrace/**`, `tests/**`, `fixtures/**` | WP-1 through WP-4 outputs | Prototype review packet and continue/pivot/stop recommendation | WP-4 | Produces decision-grade R0 evidence without modifying source authority. | RISK-1 | MS-3 | VAL-7 | Evidence records canonical ID and human-label usability, compares registry edits against detected failures, resolves Q-2 with a recommended follow-on direction, and records recommendation. |
 
 Execution sequence:
 
@@ -453,7 +453,7 @@ Manual verification guide:
 | MV-4 | MS-2 | Run the issue-key collision fixture containing `BEL-858` without registering it as an external reference. | The report does not classify `BEL-858` as a Markdown Trace document entity and records expected collision evidence plus engine package and document contract versions. | EVD-5 |
 | MV-5 | MS-2 | Run the same fixture variant 3 consecutive times. | Ordered findings, summary, engine package version, and document contract version match exactly. | EVD-4 |
 | MV-6 | MS-2 | Run validation with network unavailable, instrument or inspect execution to record attempted network access, and inspect filesystem writes after execution. | Validation completes using local files only, records zero network attempts, writes only approved repository evidence artifacts, and records engine package and document contract versions. | EVD-6 |
-| MV-7 | MS-3 | Review registry/report usability for canonical dotted IDs and human labels, registry edit count, detected finding count, and recommendation. | Continue/pivot/stop recommendation is grounded in section 6 criteria from `SRC-1` and records whether canonical IDs and human labels are acceptable for agent-authored specs. | EVD-7 |
+| MV-7 | MS-3 | Review registry/report usability for canonical dotted IDs and human labels, registry edit count, detected finding count, Q-2 recommendation, and continue/pivot/stop recommendation. | Continue/pivot/stop recommendation is grounded in section 6 criteria from `SRC-1`, records whether canonical IDs and human labels are acceptable for agent-authored specs, and explicitly states whether YAML or annotated Markdown should be the next source-of-truth experiment. | EVD-7 |
 
 Section status: Complete
 
@@ -510,7 +510,7 @@ Evidence artifact inventory:
 | EVD-4 | Deterministic repeat report | `docs/evidence/determinism-repeat-report.md` | VAL-5, MV-5 | Shows 3 identical ordered outputs with identical engine package and document contract versions. |
 | EVD-5 | Issue-key collision report | `docs/evidence/issue-key-collision-report.md` | VAL-4, MV-4 | Shows unregistered issue key remains outside the document entity graph and records engine package and document contract versions. |
 | EVD-6 | Local-safety report | `docs/evidence/local-safety-report.md` | VAL-6, MV-6 | Shows validation completes with network unavailable, records zero network attempts, performs no live mutation, writes only approved repository evidence artifacts, and records engine package and document contract versions. |
-| EVD-7 | Prototype decision record | `docs/evidence/prototype-decision-record.md` | VAL-7, MV-7 | Records canonical ID and human-label usability, compares maintenance effort and findings, and applies continue/pivot/stop criteria. |
+| EVD-7 | Prototype decision record | `docs/evidence/prototype-decision-record.md` | VAL-7, MV-7 | Records canonical ID and human-label usability, compares maintenance effort and findings, resolves Q-2 with a recommended source-of-truth direction, and applies continue/pivot/stop criteria. |
 
 Section status: Complete
 
@@ -571,7 +571,7 @@ Open questions:
 | ID | Question | Owner | Due date | Blocking? | Resolution path |
 | --- | --- | --- | --- | --- | --- |
 | Q-1 | Should a later implementation integrate this model into `markdown-engine` or remain a semantic validation layer? | Jason Belmonti | 2026-05-14 | No | Resolved for R0 by BEL-1045 and `docs/evidence/markdown-engine-2-adoption-decision.md`: consume published `markdown-engine@2.0.0` for generic parsing and keep registry semantics in Markdown Trace. |
-| Q-2 | Should YAML remain source of truth or should annotated Markdown generate the registry? | Jason Belmonti | At `MS-3` prototype review | No | Resolve after registry maintenance signal in `EVD-7`. |
+| Q-2 | Should YAML remain source of truth or should annotated Markdown generate the registry? | Jason Belmonti | At `MS-3` prototype review | No | `EVD-7` recommends keeping YAML as R0 historical evidence while pivoting the next experiment toward link-backed annotated Markdown; final acceptance occurs at `MS-3`. |
 | Q-3 | Should live Linear or Jira projection validation be the next slice after document-local proof? | Jason Belmonti | At `MS-3` prototype review | No | Resolve after document-local fixture evidence passes or exposes pivot. |
 
 Approved deviations:
@@ -617,7 +617,7 @@ Completion gate: Complete only when `VAL-1` through `VAL-7` pass or have explici
 
 Release gate: Merge only local repository artifacts after `REL-2` prerequisites are satisfied; no hosted release or live activation is part of E0.
 
-Handoff record: Handoff shall include the implementation PR, fixture inventory, validation report output, deterministic repeat evidence, local-safety evidence for zero network attempts and approved repository writes, canonical ID and human-label usability judgment, maintenance signal, and `MS-3` decision.
+Handoff record: Handoff shall include the implementation PR, fixture inventory, validation report output, deterministic repeat evidence, local-safety evidence for zero network attempts and approved repository writes, canonical ID and human-label usability judgment, maintenance signal, Q-2 source-of-truth recommendation, and `MS-3` decision.
 
 Final readiness state: Ready to investigate
 
