@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "markdown-trace": "./dist/markdowntrace/cli.js"
+  },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "test": "vitest run \"--exclude=.worktrees/**\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate:fixture": "npm run build --silent && node dist/markdowntrace/cli.js validate --registry fixtures/r0-document-local-registry/entity-registry.yaml --document fixtures/r0-document-local-registry/execution-spec.md --report docs/evidence/valid-fixture-report.md"
   },
   "dependencies": {
     "@jasonbelmonti/markdown-engine": "2.0.0",
