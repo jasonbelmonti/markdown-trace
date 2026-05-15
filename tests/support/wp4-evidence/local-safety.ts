@@ -46,6 +46,7 @@ export interface LocalSafetyCommandInput {
   readonly pathName: string;
   readonly command: string;
   readonly expectedFilename: string;
+  readonly prepare?: () => Promise<void>;
   readonly run: (outputPath: string) => Promise<CommandRun>;
 }
 
@@ -121,9 +122,10 @@ async function collectCommandSafety(
       "wp4-local-safety-watch-",
       async (watchDirectory) => {
         const watchRoots = await prepareWatchRoots(watchDirectory);
-        const beforeWriteSurface = await snapshotWriteSurface(watchRoots.roots);
 
         return await withProcessEnvironment(watchRoots.environment, async () => {
+          await input.prepare?.();
+          const beforeWriteSurface = await snapshotWriteSurface(watchRoots.roots);
           const beforeNetworkAttempts = networkAttempts.count;
           const runEvidence = await input.run(outputPath);
           const commandNetworkAttempts = networkAttempts.count - beforeNetworkAttempts;
@@ -283,14 +285,19 @@ function diffWriteSurface(
   after: WriteSurfaceSnapshot,
   approvedAbsoluteWrites: readonly string[],
 ): readonly string[] {
-  return uniqueSorted(
-    [...after.entries()].flatMap(([absolutePath, signature]) =>
-      before.get(absolutePath) === signature ||
-      isApprovedWritePath(absolutePath, approvedAbsoluteWrites)
-        ? []
-        : [displayLocalPath(absolutePath)],
-    ),
+  const addedOrModified = [...after.entries()].flatMap(([absolutePath, signature]) =>
+    before.get(absolutePath) === signature ||
+    isApprovedWritePath(absolutePath, approvedAbsoluteWrites)
+      ? []
+      : [displayLocalPath(absolutePath)],
   );
+  const deleted = [...before.keys()].flatMap((absolutePath) =>
+    after.has(absolutePath) || isApprovedWritePath(absolutePath, approvedAbsoluteWrites)
+      ? []
+      : [`${displayLocalPath(absolutePath)} (deleted)`],
+  );
+
+  return uniqueSorted([...addedOrModified, ...deleted]);
 }
 
 async function gitStatus(): Promise<string> {

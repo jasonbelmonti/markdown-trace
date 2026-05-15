@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -72,11 +72,7 @@ describe("WP-4 evidence", () => {
       command: "write approved output and unapproved HOME cache file",
       expectedFilename: "approved-output.txt",
       run: async (outputPath) => {
-        const home = process.env.HOME;
-
-        if (home === undefined) {
-          throw new Error("HOME must be set by the local-safety harness");
-        }
+        const home = requiredHome();
 
         await writeFile(outputPath, "approved", "utf8");
         await mkdir(path.join(home, ".cache"), { recursive: true });
@@ -92,6 +88,36 @@ describe("WP-4 evidence", () => {
 
     expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
     expect(evidence.unapprovedWrites).not.toEqual([]);
+    expect(evidence.approvedWritesOnly).toBe(false);
+  });
+
+  it("detects unapproved local deletes under monitored roots", async () => {
+    const evidence = await collectLocalSafetyForCommand({
+      pathName: "injected delete probe",
+      command: "delete pre-existing HOME cache file",
+      expectedFilename: "approved-output.txt",
+      prepare: async () => {
+        const home = requiredHome();
+
+        await mkdir(path.join(home, ".cache"), { recursive: true });
+        await writeFile(path.join(home, ".cache", "preexisting.txt"), "preexisting", "utf8");
+      },
+      run: async (outputPath) => {
+        const home = requiredHome();
+
+        await writeFile(outputPath, "approved", "utf8");
+        await unlink(path.join(home, ".cache", "preexisting.txt"));
+
+        return {
+          exitCode: 0,
+          stdout: "",
+          stderr: "",
+        };
+      },
+    });
+
+    expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
+    expect(evidence.unapprovedWrites).toContainEqual(expect.stringContaining("(deleted)"));
     expect(evidence.approvedWritesOnly).toBe(false);
   });
 
@@ -142,4 +168,14 @@ describe("WP-4 evidence", () => {
 
 function containsIssueKey(values: readonly string[], issueKey: string): boolean {
   return values.some((value) => value.includes(issueKey));
+}
+
+function requiredHome(): string {
+  const home = process.env.HOME;
+
+  if (home === undefined) {
+    throw new Error("HOME must be set by the local-safety harness");
+  }
+
+  return home;
 }
