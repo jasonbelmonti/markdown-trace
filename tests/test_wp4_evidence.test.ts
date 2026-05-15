@@ -1,3 +1,4 @@
+import dns from "node:dns";
 import { mkdir, readFile, rm, unlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -262,6 +263,39 @@ describe("WP-4 evidence", () => {
       ["network probe", 1],
       ["clean follow-up", 0],
     ]);
+  });
+
+  it("guards DNS resolver APIs as network attempts", async () => {
+    const evidence = await collectLocalSafetyForCommand({
+      pathName: "dns resolver probe",
+      command: "catch guarded dns.promises.resolve4 calls and write approved output",
+      expectedFilename: "dns-resolver-probe.txt",
+      run: async (outputPath) => {
+        try {
+          await dns.promises.resolve4("example.invalid");
+        } catch {
+          // The probe intentionally catches the guarded network failure.
+        }
+
+        try {
+          await new dns.promises.Resolver().resolve4("example.invalid");
+        } catch {
+          // The probe intentionally catches the guarded network failure.
+        }
+
+        await writeFile(outputPath, "approved", "utf8");
+
+        return {
+          exitCode: 0,
+          stdout: "",
+          stderr: "",
+        };
+      },
+    });
+
+    expect(evidence.networkAttempts).toBe(2);
+    expect(evidence.observedWrites).toEqual(["<tempdir>/dns-resolver-probe.txt"]);
+    expect(evidence.approvedWritesOnly).toBe(true);
   });
 });
 

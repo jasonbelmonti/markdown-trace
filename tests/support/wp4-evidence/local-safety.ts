@@ -45,6 +45,31 @@ type FileSnapshot = readonly [string, string];
 type WriteSurfaceSnapshot = ReadonlyMap<string, string>;
 
 const WRITE_WATCH_SETTLE_MS = 50;
+const GUARDED_DNS_FUNCTION_NAMES = [
+  "lookup",
+  "lookupService",
+  "resolve",
+  "resolve4",
+  "resolve6",
+  "resolveAny",
+  "resolveCaa",
+  "resolveCname",
+  "resolveMx",
+  "resolveNaptr",
+  "resolveNs",
+  "resolvePtr",
+  "resolveSoa",
+  "resolveSrv",
+  "resolveTlsa",
+  "resolveTxt",
+  "reverse",
+] as const;
+
+interface PatchedFunction {
+  readonly target: Record<string, unknown>;
+  readonly name: string;
+  readonly original: unknown;
+}
 
 export interface LocalSafetyCommandInput {
   readonly pathName: string;
@@ -490,8 +515,7 @@ async function withNetworkGuard<T>(
   const originalHttpGet = http.get;
   const originalHttpsRequest = https.request;
   const originalHttpsGet = https.get;
-  const originalDnsLookup = dns.lookup;
-  const originalDnsPromisesLookup = dns.promises.lookup;
+  const dnsPatches: PatchedFunction[] = [];
 
   function blockedNetworkCall(): never {
     networkAttempts.count += 1;
@@ -499,6 +523,16 @@ async function withNetworkGuard<T>(
   }
 
   try {
+    dnsPatches.push(
+      ...patchFunctions(dns, GUARDED_DNS_FUNCTION_NAMES, blockedNetworkCall),
+      ...patchFunctions(dns.promises, GUARDED_DNS_FUNCTION_NAMES, blockedNetworkCall),
+      ...patchFunctions(dns.Resolver.prototype, GUARDED_DNS_FUNCTION_NAMES, blockedNetworkCall),
+      ...patchFunctions(
+        dns.promises.Resolver.prototype,
+        GUARDED_DNS_FUNCTION_NAMES,
+        blockedNetworkCall,
+      ),
+    );
     globalThis.fetch = blockedNetworkCall as typeof fetch;
     net.connect = blockedNetworkCall as typeof net.connect;
     net.createConnection = blockedNetworkCall as typeof net.createConnection;
@@ -507,8 +541,6 @@ async function withNetworkGuard<T>(
     http.get = blockedNetworkCall as typeof http.get;
     https.request = blockedNetworkCall as typeof https.request;
     https.get = blockedNetworkCall as typeof https.get;
-    dns.lookup = blockedNetworkCall as unknown as typeof dns.lookup;
-    dns.promises.lookup = blockedNetworkCall as unknown as typeof dns.promises.lookup;
 
     return await callback(networkAttempts);
   } finally {
@@ -520,8 +552,39 @@ async function withNetworkGuard<T>(
     http.get = originalHttpGet;
     https.request = originalHttpsRequest;
     https.get = originalHttpsGet;
-    dns.lookup = originalDnsLookup;
-    dns.promises.lookup = originalDnsPromisesLookup;
+    restoreFunctions(dnsPatches);
+  }
+}
+
+function patchFunctions(
+  target: object,
+  names: readonly string[],
+  replacement: () => never,
+): readonly PatchedFunction[] {
+  const writableTarget = target as Record<string, unknown>;
+  const patches: PatchedFunction[] = [];
+
+  for (const name of names) {
+    const original = writableTarget[name];
+
+    if (typeof original !== "function") {
+      continue;
+    }
+
+    patches.push({
+      target: writableTarget,
+      name,
+      original,
+    });
+    writableTarget[name] = replacement;
+  }
+
+  return patches;
+}
+
+function restoreFunctions(patches: readonly PatchedFunction[]): void {
+  for (const patch of patches) {
+    patch.target[patch.name] = patch.original;
   }
 }
 
