@@ -122,6 +122,34 @@ describe("WP-4 evidence", () => {
     expect(evidence.approvedWritesOnly).toBe(false);
   });
 
+  it("detects transient unapproved local writes under monitored roots", async () => {
+    const evidence = await collectLocalSafetyForCommand({
+      pathName: "transient write probe",
+      command: "create and delete unapproved HOME file before returning",
+      expectedFilename: "approved-output.txt",
+      run: async (outputPath) => {
+        const home = requiredHome();
+        const transientPath = path.join(home, "transient-unapproved.txt");
+
+        await writeFile(outputPath, "approved", "utf8");
+        await writeFile(transientPath, "transient", "utf8");
+        await unlink(transientPath);
+
+        return {
+          exitCode: 0,
+          stdout: "",
+          stderr: "",
+        };
+      },
+    });
+
+    expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
+    expect(evidence.unapprovedWrites).toContainEqual(
+      expect.stringContaining("transient-unapproved.txt"),
+    );
+    expect(evidence.approvedWritesOnly).toBe(false);
+  });
+
   it("detects ignored repository writes outside the approved output path", async () => {
     const ignoredOutputPath = path.join(
       repoRoot,

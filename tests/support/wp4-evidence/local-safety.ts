@@ -1,6 +1,7 @@
 import { execFile } from "node:child_process";
 import dns from "node:dns";
-import type { Dirent } from "node:fs";
+import { watch } from "node:fs";
+import type { Dirent, FSWatcher } from "node:fs";
 import * as fsPromises from "node:fs/promises";
 import { readdir } from "node:fs/promises";
 import http from "node:http";
@@ -8,6 +9,7 @@ import https from "node:https";
 import net from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
 import tls from "node:tls";
 import { promisify } from "node:util";
 
@@ -41,6 +43,8 @@ type BaseCommandEvidence = Omit<
 
 type FileSnapshot = readonly [string, string];
 type WriteSurfaceSnapshot = ReadonlyMap<string, string>;
+
+const WRITE_WATCH_SETTLE_MS = 50;
 
 export interface LocalSafetyCommandInput {
   readonly pathName: string;
@@ -127,18 +131,24 @@ async function collectCommandSafety(
           await input.prepare?.();
           const beforeWriteSurface = await snapshotWriteSurface(watchRoots.roots);
           const beforeNetworkAttempts = networkAttempts.count;
-          const runEvidence = await input.run(outputPath);
+          const {
+            result: runEvidence,
+            unapprovedWrites: liveUnapprovedWrites,
+          } = await withWriteSurfaceWatch(
+            watchRoots.roots,
+            approvedAbsoluteWrites,
+            async () => await input.run(outputPath),
+          );
           const commandNetworkAttempts = networkAttempts.count - beforeNetworkAttempts;
           const afterWriteSurface = await snapshotWriteSurface(watchRoots.roots);
 
           return {
             evidence: commandEvidence(input, runEvidence),
             networkAttempts: commandNetworkAttempts,
-            unapprovedWrites: diffWriteSurface(
-              beforeWriteSurface,
-              afterWriteSurface,
-              approvedAbsoluteWrites,
-            ),
+            unapprovedWrites: uniqueSorted([
+              ...diffWriteSurface(beforeWriteSurface, afterWriteSurface, approvedAbsoluteWrites),
+              ...liveUnapprovedWrites,
+            ]),
           };
         });
       },
@@ -312,6 +322,88 @@ function diffWriteSurface(
   );
 
   return uniqueSorted([...addedOrModified, ...deleted]);
+}
+
+async function withWriteSurfaceWatch<T>(
+  roots: readonly string[],
+  approvedAbsoluteWrites: readonly string[],
+  callback: () => Promise<T>,
+): Promise<{
+  readonly result: T;
+  readonly unapprovedWrites: readonly string[];
+}> {
+  const unapprovedWrites = new Set<string>();
+  const watchers = roots.flatMap((root) =>
+    watchRoot(root, approvedAbsoluteWrites, unapprovedWrites),
+  );
+
+  try {
+    const result = await callback();
+
+    await delay(WRITE_WATCH_SETTLE_MS);
+
+    return {
+      result,
+      unapprovedWrites: uniqueSorted([...unapprovedWrites]),
+    };
+  } finally {
+    closeWatchers(watchers);
+  }
+}
+
+function watchRoot(
+  root: string,
+  approvedAbsoluteWrites: readonly string[],
+  unapprovedWrites: Set<string>,
+): readonly FSWatcher[] {
+  try {
+    return [
+      watch(root, { recursive: true }, (_eventType, filename) => {
+        const absolutePath = watchedAbsolutePath(root, filename);
+
+        if (
+          absolutePath !== undefined &&
+          !shouldSkipObservedPath(absolutePath) &&
+          !isApprovedWritePath(absolutePath, approvedAbsoluteWrites)
+        ) {
+          unapprovedWrites.add(displayLocalPath(absolutePath));
+        }
+      }),
+    ];
+  } catch (error) {
+    if (isIgnoredSnapshotError(error)) {
+      return [];
+    }
+
+    throw error;
+  }
+}
+
+function closeWatchers(watchers: readonly FSWatcher[]): void {
+  for (const watcher of watchers) {
+    watcher.close();
+  }
+}
+
+function watchedAbsolutePath(
+  root: string,
+  filename: string | Buffer | null,
+): string | undefined {
+  if (filename === null) {
+    return root;
+  }
+
+  return path.resolve(root, filename.toString());
+}
+
+function shouldSkipObservedPath(absolutePath: string): boolean {
+  const relativeRepoPath = path.relative(repoRoot, absolutePath);
+
+  if (relativeRepoPath.startsWith("..") || path.isAbsolute(relativeRepoPath)) {
+    return false;
+  }
+
+  return new Set([".git", "node_modules"]).has(relativeRepoPath.split(path.sep)[0] ?? "");
 }
 
 async function gitStatus(): Promise<string> {
