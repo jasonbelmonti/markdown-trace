@@ -1,3 +1,11 @@
+export {
+  labelFamily,
+  parseLabel,
+  scanLabels,
+  scanRanges,
+  type ObservedRange,
+  type ParsedLabel,
+} from "./label-scanner.js";
 export { scanMarkdown } from "./scanner.js";
 export {
   MARKDOWN_ENGINE_PACKAGE,

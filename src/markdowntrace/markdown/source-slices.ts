@@ -8,17 +8,17 @@ import type { MarkdownDefinitionFact } from "./model.js";
 
 export type SectionBodySourceSlice = EngineSourceSlice & { readonly targetId: string };
 
-export function sectionBodySourceSlices(
+export function sectionBodySourceSlicesForTarget(
   document: EngineDocument,
-  definition: MarkdownDefinitionFact,
+  sectionTargetId: string | undefined,
 ): ReadonlyArray<SectionBodySourceSlice> {
-  if (definition.sectionTargetId === undefined) {
+  if (sectionTargetId === undefined) {
     return [];
   }
 
   const sectionResolution = documentQueries.resolveTarget(document, {
     kind: "node",
-    id: definition.sectionTargetId,
+    id: sectionTargetId,
   });
 
   if (sectionResolution?.category !== "section") {
@@ -34,4 +34,11 @@ export function sectionBodySourceSlices(
 
     return [{ ...sourceSlice, targetId: target.id }];
   });
+}
+
+export function sectionBodySourceSlices(
+  document: EngineDocument,
+  definition: MarkdownDefinitionFact,
+): ReadonlyArray<SectionBodySourceSlice> {
+  return sectionBodySourceSlicesForTarget(document, definition.sectionTargetId);
 }
