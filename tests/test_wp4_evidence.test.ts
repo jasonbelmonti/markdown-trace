@@ -1,4 +1,5 @@
 import { mkdir, readFile, rm, unlink, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -148,6 +149,39 @@ describe("WP-4 evidence", () => {
       expect.stringContaining("transient-unapproved.txt"),
     );
     expect(evidence.approvedWritesOnly).toBe(false);
+  });
+
+  it("does not report unrelated shared temp writes outside harness-controlled roots", async () => {
+    const sharedTempRoot = tmpdir();
+    const sharedTempNoisePath = path.join(
+      sharedTempRoot,
+      `wp4-local-safety-shared-noise-${process.pid}.txt`,
+    );
+
+    try {
+      const evidence = await collectLocalSafetyForCommand({
+        pathName: "shared temp noise probe",
+        command: "write approved output while unrelated shared temp noise occurs",
+        expectedFilename: "approved-output.txt",
+        run: async (outputPath) => {
+          await writeFile(outputPath, "approved", "utf8");
+          await writeFile(sharedTempNoisePath, "shared temp noise", "utf8");
+          await unlink(sharedTempNoisePath);
+
+          return {
+            exitCode: 0,
+            stdout: "",
+            stderr: "",
+          };
+        },
+      });
+
+      expect(evidence.observedWrites).toEqual(["<tempdir>/approved-output.txt"]);
+      expect(evidence.unapprovedWrites).toEqual([]);
+      expect(evidence.approvedWritesOnly).toBe(true);
+    } finally {
+      await rm(sharedTempNoisePath, { force: true });
+    }
   });
 
   it("detects ignored repository writes outside the approved output path", async () => {

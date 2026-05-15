@@ -125,7 +125,7 @@ async function collectCommandSafety(
     } = await withTemporaryDirectory(
       "wp4-local-safety-watch-",
       async (watchDirectory) => {
-        const watchRoots = await prepareWatchRoots(watchDirectory);
+        const watchRoots = await prepareWatchRoots(watchDirectory, directory);
 
         return await withProcessEnvironment(watchRoots.environment, async () => {
           await input.prepare?.();
@@ -197,7 +197,7 @@ async function listTemporaryWrites(directory: string): Promise<readonly string[]
     .sort();
 }
 
-async function prepareWatchRoots(watchDirectory: string): Promise<{
+async function prepareWatchRoots(watchDirectory: string, outputDirectory: string): Promise<{
   readonly roots: readonly string[];
   readonly environment: Readonly<Record<string, string>>;
 }> {
@@ -212,7 +212,7 @@ async function prepareWatchRoots(watchDirectory: string): Promise<{
   ]);
 
   return {
-    roots: [repoRoot, tmpdir(), home, temp, cache],
+    roots: [repoRoot, outputDirectory, home, temp, cache],
     environment: {
       HOME: home,
       TMPDIR: temp,
@@ -338,6 +338,8 @@ async function withWriteSurfaceWatch<T>(
   );
 
   try {
+    await delay(WRITE_WATCH_SETTLE_MS);
+
     const result = await callback();
 
     await delay(WRITE_WATCH_SETTLE_MS);
@@ -363,6 +365,7 @@ function watchRoot(
 
         if (
           absolutePath !== undefined &&
+          absolutePath !== root &&
           !shouldSkipObservedPath(absolutePath) &&
           !isApprovedWritePath(absolutePath, approvedAbsoluteWrites)
         ) {
@@ -393,7 +396,24 @@ function watchedAbsolutePath(
     return root;
   }
 
-  return path.resolve(root, filename.toString());
+  const relativePath = filename.toString();
+  const parentRelativePath = path.resolve(path.dirname(root), relativePath);
+
+  if (isSamePath(root, parentRelativePath) || isInsidePath(root, parentRelativePath)) {
+    return parentRelativePath;
+  }
+
+  return path.resolve(root, relativePath);
+}
+
+function isSamePath(parent: string, child: string): boolean {
+  return path.resolve(parent) === path.resolve(child);
+}
+
+function isInsidePath(parent: string, child: string): boolean {
+  const relativePath = path.relative(parent, child);
+
+  return relativePath !== "" && !relativePath.startsWith("..") && !path.isAbsolute(relativePath);
 }
 
 function shouldSkipObservedPath(absolutePath: string): boolean {
