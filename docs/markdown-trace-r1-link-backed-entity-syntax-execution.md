@@ -50,6 +50,9 @@ entityTypes:
   work_package:
     labelPrefixes: [WP]
     canonicalPattern: "^exec\\.wp\\.\\d+$"
+  constraint:
+    labelPrefixes: [CON]
+    canonicalPattern: "^exec\\.con\\.\\d+$"
   codefactory_component:
     labelPrefixes: [CF-COMP]
     canonicalPattern: "^codefactory\\.component\\.[a-z0-9.-]+$"

@@ -102,6 +102,9 @@ entityTypes:
   work_package:
     labelPrefixes: [WP]
     canonicalPattern: "^exec\\.wp\\.\\d+$"
+  constraint:
+    labelPrefixes: [CON]
+    canonicalPattern: "^exec\\.con\\.\\d+$"
   validation_checkpoint:
     labelPrefixes: [VAL]
     canonicalPattern: "^exec\\.val\\.\\d+$"
