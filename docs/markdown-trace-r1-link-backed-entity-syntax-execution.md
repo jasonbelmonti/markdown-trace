@@ -37,7 +37,7 @@ The implementation must make entity types configurable. Markdown Trace should va
 | Repeated reference type | A reference may include `type`, but if present it must match the definition type. |
 | Definition type source | Definition links must include `type`; inference from label family is not allowed in the first slice. |
 | Type validation source | The active type profile defines valid entity types and optional label/canonical-ID constraints. |
-| Profile discovery | Use CLI `--type-profile`, then document frontmatter, then the built-in execution-spec compatibility profile. |
+| Profile discovery | Use CLI `--type-profile`, then document frontmatter, then the built-in execution-spec profile only for recognized R0 compatibility fixtures. Non-R0 documents without a profile fail for missing profile data. |
 | Range syntax | Use `ctx://trace/range/<start-label>/<end-label>` for the first slice. |
 
 ## 4. Type Profile Contract
@@ -62,7 +62,8 @@ Validation rules:
 - `labelPrefixes` and `canonicalPattern` are optional but enforced when present.
 - Multiple definitions for one canonical ID must agree on type.
 - References that repeat `type` must match the resolved definition.
-- Built-in execution-spec types are compatibility defaults, not global Markdown Trace types.
+- Built-in execution-spec types are compatibility defaults only for recognized R0 fixtures, not global Markdown Trace types.
+- Non-R0 documents must supply a CLI or frontmatter profile before entity-link validation can pass.
 
 ## 5. Work Packages
 

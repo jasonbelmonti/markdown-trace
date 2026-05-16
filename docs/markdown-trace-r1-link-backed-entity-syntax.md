@@ -116,14 +116,16 @@ Profile rules:
 - `labelPrefixes` and `canonicalPattern` are optional validation constraints.
 - If a profile defines label or canonical-ID constraints for a type, generation and validation must enforce them.
 - Unknown types fail unless a future profile version explicitly adds an open-type mode.
-- A built-in execution-spec profile may cover the R0 fixture families, but it is only a default/example profile.
+- A built-in execution-spec profile may cover only recognized R0 compatibility fixtures; it is not a fallback for arbitrary documents.
 - A domain such as `CODEFACTORY` should provide its own profile rather than changing Markdown Trace core types.
 
 Type profile discovery order for the first implementation slice:
 
 1. CLI option, for example `--type-profile path/to/trace-types.yaml`.
 2. Document frontmatter reference to a local profile path.
-3. Built-in execution-spec default profile for R0 compatibility fixtures only.
+3. Built-in execution-spec default profile for recognized R0 compatibility fixtures only.
+
+If no profile is supplied and the document is not an R0 compatibility fixture, validation must fail for missing profile data.
 
 ## 6. Relationship to R0
 
