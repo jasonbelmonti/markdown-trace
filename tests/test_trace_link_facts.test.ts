@@ -64,6 +64,30 @@ describe("R1 ctx trace link facts", () => {
       });
   });
 
+  it("does not collect image references as heading definitions", () => {
+    const parsed = parse(
+      [
+        "# Image Reference Fixture",
+        "",
+        "### ![IMG-1][IMG-1]: Image is not an entity link",
+        "",
+        "[IMG-1]: ctx://trace/entity/exec.img.1?type=work_package",
+      ].join("\n"),
+      { path: "image-reference-fixture.md" },
+    );
+    const normalized = normalize(parsed.parsed);
+
+    expect(parsed.diagnostics).toEqual([]);
+    expect(normalized.diagnostics).toEqual([]);
+    expect(
+      collectTraceEntityDefinitions(
+        documentQueries.nodes(normalized.document, { type: "heading" }),
+        documentQueries.sections(normalized.document),
+        documentQueries.linkReferences(normalized.document),
+      ),
+    ).toEqual([]);
+  });
+
   it("collects reference-style body references with source evidence and repeated type data", () => {
     const { document, headings, sections, linkReferences } = parseFixture();
     const definitions = collectTraceEntityDefinitions(headings, sections, linkReferences);

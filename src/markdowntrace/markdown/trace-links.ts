@@ -265,7 +265,7 @@ function findTraceEntityLink(
 
   const linkReference = findNodeLinkReference(node, linkReferences);
 
-  if (linkReference?.url !== undefined) {
+  if (linkReference?.url !== undefined && isSupportedReferenceLink(linkReference)) {
     const referenceUrl = parseTraceEntityUrl(linkReference.url);
 
     if (referenceUrl !== undefined) {
