@@ -1,0 +1,8 @@
+profileVersion: markdown-trace.type-profile.v1
+entityTypes:
+  codefactory_component:
+    labelPrefixes: [CF-COMP]
+    canonicalPattern: "^codefactory\\.component\\.[a-z0-9.-]+$"
+  codefactory_decision:
+    labelPrefixes: [CF-DEC]
+    canonicalPattern: "^codefactory\\.decision\\.[a-z0-9.-]+$"

@@ -55,13 +55,15 @@ function assertLabelMatchesRule(
     return;
   }
 
-  const family = definition.label.match(/^([A-Z]+)-\d+$/)?.[1];
-
-  if (family === undefined || !rule.labelPrefixes.includes(family)) {
+  if (!rule.labelPrefixes.some((prefix) => labelHasPrefix(definition.label, prefix))) {
     throw new TypeProfileLoadError(
       `label '${definition.label}' does not match type '${definition.type}' label prefixes`,
     );
   }
+}
+
+function labelHasPrefix(label: string, prefix: string): boolean {
+  return label === prefix || label.startsWith(`${prefix}-`);
 }
 
 function assertCanonicalIdMatchesRule(
