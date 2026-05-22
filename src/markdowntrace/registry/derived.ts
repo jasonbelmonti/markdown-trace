@@ -11,6 +11,18 @@ import {
 } from "@jasonbelmonti/markdown-engine";
 
 import {
+  collectTraceEntityDefinitions,
+  collectTraceEntityReferences,
+  type TraceEntityDefinitionLink,
+  type TraceEntityReferenceLink,
+} from "../markdown/trace-links.js";
+import { loadTypeProfile } from "../profiles/loader.js";
+import {
+  TypeProfileLoadError,
+  type EntityTypeProfile,
+  requireProfiledEntityType,
+} from "../profiles/model.js";
+import {
   labelFamily,
   parseLabel,
   scanLabels,
@@ -66,9 +78,15 @@ export async function deriveRegistryResultFromMarkdown(
   options: DerivedRegistryOptions = {},
 ): Promise<DerivedRegistryResult> {
   const markdown = await readFile(documentPath, "utf8");
+  const typeProfile =
+    options.typeProfile ??
+    (options.typeProfilePath === undefined
+      ? undefined
+      : await loadTypeProfile(options.typeProfilePath));
 
   return deriveRegistryResultFromMarkdownText(markdown, {
     ...options,
+    typeProfile,
     documentPath: options.documentPath ?? documentPath,
   });
 }
@@ -99,17 +117,16 @@ export function deriveRegistryResultFromMarkdownText(
   const headings = documentQueries.nodes(document, { type: "heading" });
   const sections = documentQueries.sections(document);
   const traceConfig = traceConfigFromFrontmatter(document.frontmatter);
-  const namespace = options.namespace ?? traceConfig.namespace ?? "doc";
-  const entityTypes = {
-    ...DEFAULT_DERIVED_ENTITY_TYPES,
-    ...traceConfig.entityTypes,
-    ...options.entityTypes,
-  };
-  const initialContexts = deriveEntities(headings, sections, namespace, entityTypes);
-  const registeredLabels = collectRegisteredLabels(
-    initialContexts.map((context) => context.entity),
-  );
-  const contexts = deriveEntityReferences(document, initialContexts, registeredLabels);
+  const traceDefinitions = collectTraceEntityDefinitions(headings, sections);
+
+  const contexts =
+    traceDefinitions.length === 0
+      ? deriveHeadingContexts(document, headings, sections, options, traceConfig)
+      : deriveTraceEntityReferences(
+          document,
+          deriveTraceEntities(traceDefinitions, requireTypeProfile(options, traceDefinitions)),
+          collectTraceEntityReferences(document, traceDefinitions),
+        );
   const registryDocument = deriveRegistryDocument(document, headings, options, traceConfig);
   const entities = contexts.map((context) => context.entity);
 
@@ -124,6 +141,113 @@ export function deriveRegistryResultFromMarkdownText(
     }),
     diagnostics,
   };
+}
+
+function deriveHeadingContexts(
+  document: EngineDocument,
+  headings: readonly EngineNode[],
+  sections: readonly EngineSection[],
+  options: DerivedRegistryOptions,
+  traceConfig: TraceFrontmatterConfig,
+): readonly DerivedEntityContext[] {
+  const namespace = options.namespace ?? traceConfig.namespace ?? "doc";
+  const initialContexts = deriveEntities(headings, sections, namespace, {
+    ...DEFAULT_DERIVED_ENTITY_TYPES,
+    ...traceConfig.entityTypes,
+    ...options.entityTypes,
+  });
+  const registeredLabels = collectRegisteredLabels(
+    initialContexts.map((context) => context.entity),
+  );
+
+  return deriveEntityReferences(document, initialContexts, registeredLabels);
+}
+
+function deriveTraceEntities(
+  definitions: readonly TraceEntityDefinitionLink[],
+  typeProfile: EntityTypeProfile,
+): readonly DerivedEntityContext[] {
+  return definitions.map((definition) => {
+    const type = requireProfiledEntityType(definition, typeProfile);
+
+    return {
+      entity: {
+        id: definition.canonicalId,
+        label: definition.label,
+        type,
+        defines: {
+          kind: "heading",
+          text: definition.headingText,
+        },
+        expectedReferences: {
+          labels: [],
+          ranges: [],
+        },
+      },
+      sectionTargetId: definition.sectionTargetId,
+    };
+  });
+}
+
+function deriveTraceEntityReferences(
+  document: EngineDocument,
+  contexts: readonly DerivedEntityContext[],
+  references: readonly TraceEntityReferenceLink[],
+): readonly DerivedEntityContext[] {
+  const entitiesByCanonicalId = new Map(
+    contexts.map((context) => [context.entity.id, context.entity]),
+  );
+
+  return contexts.map((context) => {
+    const labels = new Set<string>();
+
+    for (const reference of references.filter(
+      (candidate) => candidate.sourceCanonicalId === context.entity.id,
+    )) {
+      const target = entitiesByCanonicalId.get(reference.canonicalId);
+
+      if (reference.type !== undefined && target !== undefined && reference.type !== target.type) {
+        throw new TypeProfileLoadError(
+          `${document.path ?? "document"} reference to '${reference.canonicalId}' declares type '${reference.type}' but definition uses '${target.type}'`,
+        );
+      }
+
+      if (target !== undefined && target.id !== context.entity.id) {
+        labels.add(target.label);
+      } else if (target === undefined) {
+        labels.add(reference.label);
+      }
+    }
+
+    return {
+      ...context,
+      entity: {
+        ...context.entity,
+        expectedReferences: {
+          labels: [...labels].sort(),
+          ranges: [],
+        },
+      },
+    };
+  });
+}
+
+function requireTypeProfile(
+  options: DerivedRegistryOptions,
+  definitions: readonly TraceEntityDefinitionLink[],
+): EntityTypeProfile {
+  if (options.typeProfile !== undefined) {
+    return options.typeProfile;
+  }
+
+  const firstDefinition = definitions[0];
+  const sourceRange = firstDefinition?.sourceRange;
+  const location =
+    sourceRange === undefined
+      ? options.documentPath ?? "document"
+      : `${options.documentPath ?? "document"}:${sourceRange.start.line}:${sourceRange.start.column}`;
+
+  throw new TypeProfileLoadError(`${location} requires a type profile for ctx://trace entity links`);
 }
 
 function deriveEntities(

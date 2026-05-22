@@ -1,4 +1,5 @@
 import type { EntityRegistry, ExternalReference } from "./model.js";
+import type { EntityTypeProfile } from "../profiles/model.js";
 
 export const DERIVED_REGISTRY_VERSION = "markdown-trace.derived-registry.v0";
 export const DERIVED_EDGE_RELATIONSHIP = "references";
@@ -24,6 +25,8 @@ export interface DerivedRegistryOptions {
   readonly sourceDocs?: readonly string[];
   readonly externalRefs?: readonly ExternalReference[];
   readonly entityTypes?: DerivedEntityTypeMap;
+  readonly typeProfile?: EntityTypeProfile;
+  readonly typeProfilePath?: string;
 }
 
 export interface DerivedRegistryDiagnostic {
