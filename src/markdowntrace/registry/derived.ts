@@ -13,8 +13,10 @@ import {
 import {
   collectTraceEntityDefinitions,
   collectTraceEntityReferences,
+  collectTraceRangeReferences,
   type TraceEntityDefinitionLink,
   type TraceEntityReferenceLink,
+  type TraceRangeReferenceLink,
 } from "../markdown/trace-links.js";
 import { loadTypeProfile } from "../profiles/loader.js";
 import {
@@ -116,8 +118,9 @@ export function deriveRegistryResultFromMarkdownText(
   const document = normalized.document;
   const headings = documentQueries.nodes(document, { type: "heading" });
   const sections = documentQueries.sections(document);
+  const linkReferences = documentQueries.linkReferences(document);
   const traceConfig = traceConfigFromFrontmatter(document.frontmatter);
-  const traceDefinitions = collectTraceEntityDefinitions(headings, sections);
+  const traceDefinitions = collectTraceEntityDefinitions(headings, sections, linkReferences);
 
   const contexts =
     traceDefinitions.length === 0
@@ -126,6 +129,7 @@ export function deriveRegistryResultFromMarkdownText(
           document,
           deriveTraceEntities(traceDefinitions, requireTypeProfile(options, traceDefinitions)),
           collectTraceEntityReferences(document, traceDefinitions),
+          collectTraceRangeReferences(document, traceDefinitions),
         );
   const registryDocument = deriveRegistryDocument(document, headings, options, traceConfig);
   const entities = contexts.map((context) => context.entity);
@@ -193,13 +197,16 @@ function deriveTraceEntityReferences(
   document: EngineDocument,
   contexts: readonly DerivedEntityContext[],
   references: readonly TraceEntityReferenceLink[],
+  rangeReferences: readonly TraceRangeReferenceLink[],
 ): readonly DerivedEntityContext[] {
   const entitiesByCanonicalId = new Map(
     contexts.map((context) => [context.entity.id, context.entity]),
   );
+  const registeredLabels = collectRegisteredLabels(contexts.map((context) => context.entity));
 
   return contexts.map((context) => {
     const labels = new Set<string>();
+    const ranges = new Map<string, ObservedRange>();
 
     for (const reference of references.filter(
       (candidate) => candidate.sourceCanonicalId === context.entity.id,
@@ -219,17 +226,43 @@ function deriveTraceEntityReferences(
       }
     }
 
+    for (const rangeReference of rangeReferences.filter(
+      (candidate) => candidate.sourceCanonicalId === context.entity.id,
+    )) {
+      const range = traceRangeToObservedRange(rangeReference);
+
+      ranges.set(`${range.labelFamily}\u0000${range.start}\u0000${range.end}`, range);
+      for (const label of expandRegisteredRange(range, registeredLabels)) {
+        if (label !== context.entity.label) {
+          labels.add(label);
+        }
+      }
+    }
+
     return {
       ...context,
       entity: {
         ...context.entity,
         expectedReferences: {
           labels: [...labels].sort(),
-          ranges: [],
+          ranges: [...ranges.values()].map((range) => ({
+            labelFamily: range.labelFamily,
+            start: range.start,
+            end: range.end,
+            expandsTo: expandRegisteredRange(range, registeredLabels),
+          })),
         },
       },
     };
   });
+}
+
+function traceRangeToObservedRange(range: TraceRangeReferenceLink): ObservedRange {
+  return {
+    labelFamily: labelFamily(range.start) ?? labelFamily(range.end) ?? "",
+    start: range.start,
+    end: range.end,
+  };
 }
 
 function requireTypeProfile(
