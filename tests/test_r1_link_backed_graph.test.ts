@@ -138,6 +138,45 @@ describe("R1 link-backed registry and graph", () => {
     ]);
   });
 
+  it("derives link-backed range facts for profiled hyphenated label prefixes", () => {
+    const { registry, diagnostics } = deriveRegistryResultFromMarkdownText(
+      [
+        "# CODEFACTORY Range Fixture",
+        "",
+        "### [CF-COMP-1](ctx://trace/entity/codefactory.component.one?type=codefactory_component): First component",
+        "",
+        "CF-COMP-1 covers [CF-COMP-1 through CF-COMP-2](ctx://trace/range/CF-COMP-1/CF-COMP-2).",
+        "",
+        "### [CF-COMP-2](ctx://trace/entity/codefactory.component.two?type=codefactory_component): Second component",
+      ].join("\n"),
+      {
+        documentPath: "codefactory-range.md",
+        typeProfile: codefactoryComponentProfile,
+      },
+    );
+
+    expect(diagnostics).toEqual([]);
+    expect(
+      registry.entitiesById.get("codefactory.component.one")?.expectedReferences,
+    ).toEqual({
+      labels: ["CF-COMP-2"],
+      ranges: [
+        {
+          labelFamily: "CF-COMP",
+          start: "CF-COMP-1",
+          end: "CF-COMP-2",
+          expandsTo: ["CF-COMP-1", "CF-COMP-2"],
+        },
+      ],
+    });
+    expect(deriveGraphFromRegistry(registry).edges).toEqual([
+      {
+        source: "codefactory.component.one",
+        target: "codefactory.component.two",
+      },
+    ]);
+  });
+
   it("rejects duplicate canonical ids for link-backed definitions deterministically", () => {
     expectLinkBackedDerivationError(
       [
@@ -244,6 +283,16 @@ const executionSpecProfile = {
     work_package: {
       labelPrefixes: ["WP"],
       canonicalPattern: "^exec\\.wp\\.\\d+$",
+    },
+  },
+} as const;
+
+const codefactoryComponentProfile = {
+  profileVersion: TYPE_PROFILE_VERSION,
+  entityTypes: {
+    codefactory_component: {
+      labelPrefixes: ["CF-COMP"],
+      canonicalPattern: "^codefactory\\.component\\.[a-z0-9.-]+$",
     },
   },
 } as const;
