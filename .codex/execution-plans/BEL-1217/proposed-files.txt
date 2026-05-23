@@ -1,0 +1,6 @@
+.codex/execution-briefs/BEL-1217/execution-brief.md
+.codex/execution-briefs/BEL-1217/execution-brief.sha256
+.codex/execution-plans/BEL-1217/execution-plan.md
+.codex/execution-plans/BEL-1217/execution-plan.sha256
+.codex/execution-plans/BEL-1217/proposed-files.txt
+docs/markdown-trace-r2-generated-sidecar-artifact-contract.md
