@@ -13,6 +13,7 @@ import {
   loadRegistry,
   RegistryLoadError,
   serializeRegistry,
+  writeGeneratedSidecarArtifact,
 } from "./registry/index.js";
 import { TypeProfileLoadError } from "./profiles/model.js";
 import { validate } from "./validation/index.js";
@@ -38,13 +39,20 @@ interface DeriveOptions {
   readonly outputPath?: string;
 }
 
-type CliOptions = ValidateOptions | DeriveOptions;
+interface DeriveSidecarOptions {
+  readonly command: "derive-sidecar";
+  readonly documentPath: string;
+  readonly typeProfilePath?: string;
+}
+
+type CliOptions = ValidateOptions | DeriveOptions | DeriveSidecarOptions;
 
 const USAGE = [
   "Usage: markdown-trace validate --registry <path> --document <path> [--report <path>]",
   "       markdown-trace derive --document <path> [--namespace <namespace>] [--type-profile <path>] [--output <path>]",
+  "       markdown-trace derive-sidecar --document <path> [--type-profile <path>]",
   "",
-  "Runs the local Markdown Trace validation path or derives a registry and graph.",
+  "Runs the local Markdown Trace validation path, derives a registry and graph, or writes a generated sidecar artifact.",
 ].join("\n");
 
 export async function main(
@@ -67,8 +75,12 @@ export async function main(
 
     commandForError = options.command;
 
-    return options.command === "derive"
-      ? await runDerive(options, environment)
+    if (options.command === "derive") {
+      return await runDerive(options, environment);
+    }
+
+    return options.command === "derive-sidecar"
+      ? await runDeriveSidecar(options, environment)
       : await runValidate(options, environment);
   } catch (error) {
     environment.stderr(formatCliError(error, commandForError));
@@ -135,15 +147,39 @@ async function runDerive(
   return 0;
 }
 
+async function runDeriveSidecar(
+  options: DeriveSidecarOptions,
+  environment: CliEnvironment,
+): Promise<number> {
+  const result = await writeGeneratedSidecarArtifact({
+    repoRoot: environment.cwd,
+    documentPath: options.documentPath,
+    typeProfilePath: options.typeProfilePath,
+  });
+
+  environment.stdout(`${result.artifactRelativePath}\n`);
+
+  return 0;
+}
+
 function parseArguments(argv: readonly string[]): CliOptions | "help" {
   if (argv.includes("--help") || argv.includes("-h")) {
     return "help";
   }
 
-  const command = argv[0] === "derive" || argv[0] === "validate" ? argv[0] : "validate";
+  const command =
+    argv[0] === "derive" || argv[0] === "validate" || argv[0] === "derive-sidecar"
+      ? argv[0]
+      : "validate";
   const args = command === argv[0] ? argv.slice(1) : argv;
 
-  return command === "derive" ? parseDeriveArguments(args) : parseValidateArguments(args);
+  if (command === "derive") {
+    return parseDeriveArguments(args);
+  }
+
+  return command === "derive-sidecar"
+    ? parseDeriveSidecarArguments(args)
+    : parseValidateArguments(args);
 }
 
 function parseValidateArguments(args: readonly string[]): ValidateOptions {
@@ -185,6 +221,21 @@ function parseDeriveArguments(args: readonly string[]): DeriveOptions {
   };
 }
 
+function parseDeriveSidecarArguments(args: readonly string[]): DeriveSidecarOptions {
+  const values = parseFlagValues(args, ["--document", "--type-profile"]);
+  const documentPath = values.get("--document");
+
+  if (documentPath === undefined) {
+    throw new Error(USAGE);
+  }
+
+  return {
+    command: "derive-sidecar",
+    documentPath,
+    typeProfilePath: values.get("--type-profile"),
+  };
+}
+
 function parseFlagValues(
   args: readonly string[],
   allowedFlags: readonly string[],
@@ -223,7 +274,10 @@ function normalizeDisplayPath(cwd: string, targetPath: string): string {
 
 function formatCliError(error: unknown, command: CliOptions["command"] | undefined): string {
   const message = error instanceof Error ? error.message : String(error);
-  const failureSurface = command === "derive" ? failureSurfaceForError(error) : undefined;
+  const failureSurface =
+    command === "derive" || command === "derive-sidecar"
+      ? failureSurfaceForError(error)
+      : undefined;
 
   return failureSurface === undefined
     ? `${message}\n`

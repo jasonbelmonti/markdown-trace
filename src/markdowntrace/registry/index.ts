@@ -13,6 +13,15 @@ export {
 } from "./derived.js";
 export { loadRegistry } from "./loader.js";
 export {
+  buildGeneratedSidecarArtifact,
+  generatedSidecarRelativePath,
+  serializeGeneratedSidecar,
+  writeGeneratedSidecarArtifact,
+  type BuildGeneratedSidecarOptions,
+  type GeneratedSidecarArtifact,
+  type GeneratedSidecarResult,
+} from "./generated-sidecar.js";
+export {
   serializeRegistry,
   type SerializedRegistry,
   type SerializedRegistryEdge,

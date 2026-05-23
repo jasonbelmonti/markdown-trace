@@ -1,0 +1,11 @@
+src/markdowntrace/registry/generated-sidecar.ts
+src/markdowntrace/registry/index.ts
+src/markdowntrace/cli.ts
+tests/test_generated_sidecar.test.ts
+tests/test_cli.test.ts
+fixtures/r1-link-backed-entity-syntax/.markdown-trace/generated/minimal-link-backed-execution-spec--profile-minimal-type-profile-378211c9.entity-registry.yaml
+.codex/execution-briefs/BEL-1218/execution-brief.md
+.codex/execution-briefs/BEL-1218/execution-brief.sha256
+.codex/execution-plans/BEL-1218/execution-plan.md
+.codex/execution-plans/BEL-1218/execution-plan.sha256
+.codex/execution-plans/BEL-1218/proposed-files.txt
