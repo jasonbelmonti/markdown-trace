@@ -15,7 +15,7 @@ export function labelFamily(label: string): string | undefined {
 }
 
 export function parseLabel(label: string): ParsedLabel | undefined {
-  const match = label.match(/^([A-Z]+)-(\d+)$/);
+  const match = label.match(/^([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*)-(\d+)$/);
 
   if (match === null) {
     return undefined;

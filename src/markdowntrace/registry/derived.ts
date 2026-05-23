@@ -45,6 +45,7 @@ import {
   type TraceFrontmatterConfig,
 } from "./derived-model.js";
 import { EntityRegistry, type RegistryDocument, type RegistryEntity } from "./model.js";
+import { assertTraceLinkIntegrity } from "./trace-integrity.js";
 
 export {
   DEFAULT_DERIVED_ENTITY_TYPES,
@@ -125,12 +126,7 @@ export function deriveRegistryResultFromMarkdownText(
   const contexts =
     traceDefinitions.length === 0
       ? deriveHeadingContexts(document, headings, sections, options, traceConfig)
-      : deriveTraceEntityReferences(
-          document,
-          deriveTraceEntities(traceDefinitions, requireTypeProfile(options, traceDefinitions)),
-          collectTraceEntityReferences(document, traceDefinitions),
-          collectTraceRangeReferences(document, traceDefinitions),
-        );
+      : deriveTraceContexts(document, traceDefinitions, options);
   const registryDocument = deriveRegistryDocument(document, headings, options, traceConfig);
   const entities = contexts.map((context) => context.entity);
 
@@ -165,6 +161,25 @@ function deriveHeadingContexts(
   );
 
   return deriveEntityReferences(document, initialContexts, registeredLabels);
+}
+
+function deriveTraceContexts(
+  document: EngineDocument,
+  traceDefinitions: readonly TraceEntityDefinitionLink[],
+  options: DerivedRegistryOptions,
+): readonly DerivedEntityContext[] {
+  const contexts = deriveTraceEntities(
+    traceDefinitions,
+    requireTypeProfile(options, traceDefinitions),
+  );
+  const references = collectTraceEntityReferences(document, traceDefinitions);
+  const rangeReferences = collectTraceRangeReferences(document, traceDefinitions);
+
+  assertTraceLinkIntegrity(contexts, references, rangeReferences, {
+    documentPath: options.documentPath ?? document.path,
+  });
+
+  return deriveTraceEntityReferences(document, contexts, references, rangeReferences);
 }
 
 function deriveTraceEntities(
