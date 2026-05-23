@@ -33,7 +33,7 @@ Path terms:
 | `source-stem` | Source Markdown basename without its final `.md` suffix. The generator must fail if the source path does not end in `.md`. | `minimal-link-backed-execution-spec` |
 | `profile-segment` | Empty when no type profile is active. When a type profile is active, append `--profile-<profile-stem>-<profile-path-hash>`. | `--profile-minimal-type-profile-378211c9` |
 | `profile-stem` | Profile basename without final `.yaml` or `.yml`, normalized to lowercase ASCII and replacing characters outside `[a-z0-9]+` with `-`. | `minimal-type-profile` |
-| `profile-path-hash` | First 8 lowercase hexadecimal characters of SHA-256 over the repository-relative profile path using `/` separators. | `7f3a21c8` |
+| `profile-path-hash` | First 8 lowercase hexadecimal characters of SHA-256 over the repository-relative profile path using `/` separators. | `378211c9` |
 
 Examples:
 
