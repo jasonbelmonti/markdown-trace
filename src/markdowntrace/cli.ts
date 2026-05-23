@@ -11,8 +11,10 @@ import { formatValidationReport } from "./reporting/index.js";
 import {
   deriveRegistryResultFromMarkdown,
   loadRegistry,
+  RegistryLoadError,
   serializeRegistry,
 } from "./registry/index.js";
+import { TypeProfileLoadError } from "./profiles/model.js";
 import { validate } from "./validation/index.js";
 
 interface CliEnvironment {
@@ -32,6 +34,7 @@ interface DeriveOptions {
   readonly command: "derive";
   readonly documentPath: string;
   readonly namespace?: string;
+  readonly typeProfilePath?: string;
   readonly outputPath?: string;
 }
 
@@ -39,7 +42,7 @@ type CliOptions = ValidateOptions | DeriveOptions;
 
 const USAGE = [
   "Usage: markdown-trace validate --registry <path> --document <path> [--report <path>]",
-  "       markdown-trace derive --document <path> [--namespace <namespace>] [--output <path>]",
+  "       markdown-trace derive --document <path> [--namespace <namespace>] [--type-profile <path>] [--output <path>]",
   "",
   "Runs the local Markdown Trace validation path or derives a registry and graph.",
 ].join("\n");
@@ -52,6 +55,8 @@ export async function main(
     stderr: (text) => process.stderr.write(text),
   },
 ): Promise<number> {
+  let commandForError: CliOptions["command"] | undefined;
+
   try {
     const options = parseArguments(argv);
 
@@ -60,11 +65,13 @@ export async function main(
       return 0;
     }
 
+    commandForError = options.command;
+
     return options.command === "derive"
       ? await runDerive(options, environment)
       : await runValidate(options, environment);
   } catch (error) {
-    environment.stderr(`${error instanceof Error ? error.message : String(error)}\n`);
+    environment.stderr(formatCliError(error, commandForError));
     return 2;
   }
 }
@@ -103,9 +110,14 @@ async function runDerive(
   environment: CliEnvironment,
 ): Promise<number> {
   const documentPath = path.resolve(environment.cwd, options.documentPath);
+  const typeProfilePath =
+    options.typeProfilePath === undefined
+      ? undefined
+      : path.resolve(environment.cwd, options.typeProfilePath);
   const { registry, diagnostics } = await deriveRegistryResultFromMarkdown(documentPath, {
     documentPath: normalizeDisplayPath(environment.cwd, documentPath),
     namespace: options.namespace,
+    typeProfilePath,
   });
   const graph = deriveGraphFromRegistry(registry);
   const output = stringify({
@@ -152,7 +164,12 @@ function parseValidateArguments(args: readonly string[]): ValidateOptions {
 }
 
 function parseDeriveArguments(args: readonly string[]): DeriveOptions {
-  const values = parseFlagValues(args, ["--document", "--namespace", "--output"]);
+  const values = parseFlagValues(args, [
+    "--document",
+    "--namespace",
+    "--type-profile",
+    "--output",
+  ]);
   const documentPath = values.get("--document");
 
   if (documentPath === undefined) {
@@ -163,6 +180,7 @@ function parseDeriveArguments(args: readonly string[]): DeriveOptions {
     command: "derive",
     documentPath,
     namespace: values.get("--namespace"),
+    typeProfilePath: values.get("--type-profile"),
     outputPath: values.get("--output"),
   };
 }
@@ -201,6 +219,29 @@ async function writeOutput(cwd: string, outputPath: string, output: string): Pro
 function normalizeDisplayPath(cwd: string, targetPath: string): string {
   const relativePath = path.relative(cwd, targetPath);
   return relativePath === "" ? "." : relativePath.split(path.sep).join("/");
+}
+
+function formatCliError(error: unknown, command: CliOptions["command"] | undefined): string {
+  const message = error instanceof Error ? error.message : String(error);
+  const failureSurface = command === "derive" ? failureSurfaceForError(error) : undefined;
+
+  return failureSurface === undefined
+    ? `${message}\n`
+    : `Failure surface: ${failureSurface}\n${message}\n`;
+}
+
+function failureSurfaceForError(error: unknown): string | undefined {
+  if (error instanceof TypeProfileLoadError) {
+    return "profile_validation";
+  }
+
+  if (error instanceof RegistryLoadError) {
+    return / has (parse|normalize) diagnostic /.test(error.message)
+      ? "link_parsing"
+      : "registry_derivation";
+  }
+
+  return undefined;
 }
 
 const invokedPath = process.argv[1];
