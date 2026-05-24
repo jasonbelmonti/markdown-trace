@@ -168,15 +168,28 @@ describe("R1 type profiles", () => {
     });
     expect(registry.entities.map((entity) => [entity.id, entity.label, entity.type])).toEqual([
       ["codefactory.component.parser", "CF-COMP-1", "codefactory_component"],
+      ["codefactory.component.renderer", "CF-COMP-2", "codefactory_component"],
       ["codefactory.decision.profile-contract", "CF-DEC-1", "codefactory_decision"],
     ]);
     expect(
       registry.entitiesById.get("codefactory.component.parser")?.expectedReferences,
     ).toEqual({
-      labels: ["CF-DEC-1"],
-      ranges: [],
+      labels: ["CF-COMP-2", "CF-DEC-1"],
+      ranges: [
+        {
+          labelFamily: "CF-COMP",
+          start: "CF-COMP-1",
+          end: "CF-COMP-2",
+          expandsTo: ["CF-COMP-1", "CF-COMP-2"],
+        },
+      ],
     });
     expect(registry.edges).toEqual([
+      {
+        source: "codefactory.component.parser",
+        relationship: DERIVED_EDGE_RELATIONSHIP,
+        target: "codefactory.component.renderer",
+      },
       {
         source: "codefactory.component.parser",
         relationship: DERIVED_EDGE_RELATIONSHIP,

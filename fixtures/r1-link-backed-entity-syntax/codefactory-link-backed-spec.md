@@ -11,7 +11,11 @@ markdownTrace:
 
 ### [CF-COMP-1](ctx://trace/entity/codefactory.component.parser?type=codefactory_component): Parser component
 
-CF-COMP-1 follows [CF-DEC-1](ctx://trace/entity/codefactory.decision.profile-contract).
+CF-COMP-1 follows [CF-DEC-1](ctx://trace/entity/codefactory.decision.profile-contract) and covers [CF-COMP-1 through CF-COMP-2](ctx://trace/range/CF-COMP-1/CF-COMP-2).
+
+### [CF-COMP-2](ctx://trace/entity/codefactory.component.renderer?type=codefactory_component): Renderer component
+
+CF-COMP-2 consumes parser output.
 
 ### [CF-DEC-1](ctx://trace/entity/codefactory.decision.profile-contract?type=codefactory_decision): Profile contract decision
 
