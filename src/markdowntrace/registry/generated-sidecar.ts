@@ -61,6 +61,21 @@ export interface GeneratedSidecarResult {
   readonly yaml: string;
 }
 
+export type GeneratedSidecarDriftCategory = "missing_artifact" | "content_mismatch";
+
+export interface GeneratedSidecarDriftDiagnostic {
+  readonly category: GeneratedSidecarDriftCategory;
+  readonly documentPath: string;
+  readonly artifactPath: string;
+  readonly artifactRelativePath: string;
+  readonly message: string;
+}
+
+export interface GeneratedSidecarCheckResult extends GeneratedSidecarResult {
+  readonly valid: boolean;
+  readonly diagnostics: readonly GeneratedSidecarDriftDiagnostic[];
+}
+
 export async function buildGeneratedSidecarArtifact(
   options: BuildGeneratedSidecarOptions,
 ): Promise<GeneratedSidecarResult> {
@@ -129,6 +144,41 @@ export async function writeGeneratedSidecarArtifact(
   await writeFile(result.artifactPath, result.yaml, "utf8");
 
   return result;
+}
+
+export async function checkGeneratedSidecarArtifact(
+  options: BuildGeneratedSidecarOptions,
+): Promise<GeneratedSidecarCheckResult> {
+  const result = await buildGeneratedSidecarArtifact(options);
+  let checkedYaml: string;
+
+  try {
+    checkedYaml = await readFile(result.artifactPath, "utf8");
+  } catch (error) {
+    if (isMissingFileError(error)) {
+      return {
+        ...result,
+        valid: false,
+        diagnostics: [generatedSidecarDriftDiagnostic("missing_artifact", result)],
+      };
+    }
+
+    throw error;
+  }
+
+  if (checkedYaml !== result.yaml) {
+    return {
+      ...result,
+      valid: false,
+      diagnostics: [generatedSidecarDriftDiagnostic("content_mismatch", result)],
+    };
+  }
+
+  return {
+    ...result,
+    valid: true,
+    diagnostics: [],
+  };
 }
 
 export function generatedSidecarRelativePath(input: {
@@ -224,6 +274,25 @@ function generatedCommand(documentPath: string, typeProfilePath: string | undefi
   ].join(" ");
 }
 
+function generatedSidecarDriftDiagnostic(
+  category: GeneratedSidecarDriftCategory,
+  result: GeneratedSidecarResult,
+): GeneratedSidecarDriftDiagnostic {
+  const documentPath = result.artifact.generated.source.documentPath;
+  const summary =
+    category === "missing_artifact"
+      ? "checked generated sidecar artifact is missing"
+      : "checked generated sidecar artifact content differs from freshly derived output";
+
+  return {
+    category,
+    documentPath,
+    artifactPath: result.artifactPath,
+    artifactRelativePath: result.artifactRelativePath,
+    message: `${summary}: ${result.artifactRelativePath} for ${documentPath}`,
+  };
+}
+
 function profileStem(profileRelativePath: string): string {
   const extension = profileRelativePath.endsWith(".yaml")
     ? ".yaml"
@@ -254,4 +323,8 @@ function repoRelativePath(repoRoot: string, targetPath: string, label: string): 
 
 function sha256Hex(value: string | Buffer): string {
   return createHash("sha256").update(value).digest("hex");
+}
+
+function isMissingFileError(error: unknown): boolean {
+  return error instanceof Error && "code" in error && error.code === "ENOENT";
 }
