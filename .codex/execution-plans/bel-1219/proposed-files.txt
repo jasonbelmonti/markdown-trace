@@ -1,9 +1,0 @@
-.codex/execution-briefs/bel-1219/execution-brief.md
-.codex/execution-briefs/bel-1219/execution-brief.sha256
-.codex/execution-plans/bel-1219/execution-plan.md
-.codex/execution-plans/bel-1219/execution-plan.sha256
-.codex/execution-plans/bel-1219/proposed-files.txt
-src/markdowntrace/registry/generated-sidecar.ts
-src/markdowntrace/registry/index.ts
-src/markdowntrace/cli.ts
-tests/test_generated_sidecar.test.ts
