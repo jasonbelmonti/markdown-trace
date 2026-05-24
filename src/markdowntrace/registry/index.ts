@@ -14,11 +14,15 @@ export {
 export { loadRegistry } from "./loader.js";
 export {
   buildGeneratedSidecarArtifact,
+  checkGeneratedSidecarArtifact,
   generatedSidecarRelativePath,
   serializeGeneratedSidecar,
   writeGeneratedSidecarArtifact,
   type BuildGeneratedSidecarOptions,
   type GeneratedSidecarArtifact,
+  type GeneratedSidecarCheckResult,
+  type GeneratedSidecarDriftCategory,
+  type GeneratedSidecarDriftDiagnostic,
   type GeneratedSidecarResult,
 } from "./generated-sidecar.js";
 export {

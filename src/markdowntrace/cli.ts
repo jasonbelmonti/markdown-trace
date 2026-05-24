@@ -9,7 +9,9 @@ import { deriveGraphFromRegistry } from "./graph/index.js";
 import { scanMarkdown } from "./markdown/index.js";
 import { formatValidationReport } from "./reporting/index.js";
 import {
+  checkGeneratedSidecarArtifact,
   deriveRegistryResultFromMarkdown,
+  type GeneratedSidecarDriftDiagnostic,
   loadRegistry,
   RegistryLoadError,
   serializeRegistry,
@@ -43,6 +45,7 @@ interface DeriveSidecarOptions {
   readonly command: "derive-sidecar";
   readonly documentPath: string;
   readonly typeProfilePath?: string;
+  readonly check: boolean;
 }
 
 type CliOptions = ValidateOptions | DeriveOptions | DeriveSidecarOptions;
@@ -50,9 +53,9 @@ type CliOptions = ValidateOptions | DeriveOptions | DeriveSidecarOptions;
 const USAGE = [
   "Usage: markdown-trace validate --registry <path> --document <path> [--report <path>]",
   "       markdown-trace derive --document <path> [--namespace <namespace>] [--type-profile <path>] [--output <path>]",
-  "       markdown-trace derive-sidecar --document <path> [--type-profile <path>]",
+  "       markdown-trace derive-sidecar --document <path> [--type-profile <path>] [--check]",
   "",
-  "Runs the local Markdown Trace validation path, derives a registry and graph, or writes a generated sidecar artifact.",
+  "Runs the local Markdown Trace validation path, derives a registry and graph, or writes/checks a generated sidecar artifact.",
 ].join("\n");
 
 export async function main(
@@ -151,6 +154,22 @@ async function runDeriveSidecar(
   options: DeriveSidecarOptions,
   environment: CliEnvironment,
 ): Promise<number> {
+  if (options.check) {
+    const result = await checkGeneratedSidecarArtifact({
+      repoRoot: environment.cwd,
+      documentPath: options.documentPath,
+      typeProfilePath: options.typeProfilePath,
+    });
+
+    if (!result.valid) {
+      environment.stderr(formatGeneratedSidecarDriftDiagnostics(result.diagnostics));
+      return 1;
+    }
+
+    environment.stdout(`${result.artifactRelativePath}\n`);
+    return 0;
+  }
+
   const result = await writeGeneratedSidecarArtifact({
     repoRoot: environment.cwd,
     documentPath: options.documentPath,
@@ -222,7 +241,11 @@ function parseDeriveArguments(args: readonly string[]): DeriveOptions {
 }
 
 function parseDeriveSidecarArguments(args: readonly string[]): DeriveSidecarOptions {
-  const values = parseFlagValues(args, ["--document", "--type-profile"]);
+  const { switches, values } = parseFlagValuesAndSwitches(
+    args,
+    ["--document", "--type-profile"],
+    ["--check"],
+  );
   const documentPath = values.get("--document");
 
   if (documentPath === undefined) {
@@ -233,6 +256,7 @@ function parseDeriveSidecarArguments(args: readonly string[]): DeriveSidecarOpti
     command: "derive-sidecar",
     documentPath,
     typeProfilePath: values.get("--type-profile"),
+    check: switches.has("--check"),
   };
 }
 
@@ -240,25 +264,56 @@ function parseFlagValues(
   args: readonly string[],
   allowedFlags: readonly string[],
 ): ReadonlyMap<string, string> {
-  const values = new Map<string, string>();
-  const allowed = new Set(allowedFlags);
+  return parseFlagValuesAndSwitches(args, allowedFlags, []).values;
+}
 
-  for (let index = 0; index < args.length; index += 2) {
+function parseFlagValuesAndSwitches(
+  args: readonly string[],
+  allowedFlags: readonly string[],
+  allowedSwitches: readonly string[],
+): {
+  readonly values: ReadonlyMap<string, string>;
+  readonly switches: ReadonlySet<string>;
+} {
+  const values = new Map<string, string>();
+  const switches = new Set<string>();
+  const allowed = new Set(allowedFlags);
+  const switchFlags = new Set(allowedSwitches);
+
+  for (let index = 0; index < args.length;) {
     const flag = args[index];
+
+    if (flag === undefined) {
+      throw new Error(`unknown argument ${flag ?? "argument"}`);
+    }
+
+    if (switchFlags.has(flag)) {
+      switches.add(flag);
+      index += 1;
+      continue;
+    }
+
+    const isValueFlag = allowed.has(flag);
+
+    if (!isValueFlag && switchFlags.size > 0) {
+      throw new Error(`unknown argument ${flag}`);
+    }
+
     const value = args[index + 1];
 
     if (value === undefined || value.startsWith("--")) {
-      throw new Error(`missing value for ${flag ?? "argument"}`);
+      throw new Error(`missing value for ${flag}`);
     }
 
-    if (!allowed.has(flag)) {
+    if (!isValueFlag) {
       throw new Error(`unknown argument ${flag}`);
     }
 
     values.set(flag, value);
+    index += 2;
   }
 
-  return values;
+  return { values, switches };
 }
 
 async function writeOutput(cwd: string, outputPath: string, output: string): Promise<void> {
@@ -270,6 +325,24 @@ async function writeOutput(cwd: string, outputPath: string, output: string): Pro
 function normalizeDisplayPath(cwd: string, targetPath: string): string {
   const relativePath = path.relative(cwd, targetPath);
   return relativePath === "" ? "." : relativePath.split(path.sep).join("/");
+}
+
+function formatGeneratedSidecarDriftDiagnostics(
+  diagnostics: readonly GeneratedSidecarDriftDiagnostic[],
+): string {
+  return (
+    diagnostics
+      .map((diagnostic) =>
+        [
+          "Generated sidecar drift detected.",
+          `category: ${diagnostic.category}`,
+          `document: ${diagnostic.documentPath}`,
+          `artifact: ${diagnostic.artifactRelativePath}`,
+          `message: ${diagnostic.message}`,
+        ].join("\n"),
+      )
+      .join("\n\n") + "\n"
+  );
 }
 
 function formatCliError(error: unknown, command: CliOptions["command"] | undefined): string {

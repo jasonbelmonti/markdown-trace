@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { cp, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -192,12 +192,131 @@ describe("generated sidecar artifacts", () => {
       await rm(temporaryRepo, { recursive: true, force: true });
     }
   });
+
+  it("checks a matching generated sidecar through the CLI without rewriting the artifact", async () => {
+    const temporaryRepo = await preparedTemporaryRepo([sidecarPath]);
+
+    try {
+      const artifactPath = path.join(temporaryRepo, sidecarPath);
+      const beforeBytes = await readFile(artifactPath, "utf8");
+      const beforeStat = await stat(artifactPath);
+      const stdout: string[] = [];
+      const stderr: string[] = [];
+      const exitCode = await main(
+        [
+          "derive-sidecar",
+          "--document",
+          documentPath,
+          "--type-profile",
+          typeProfilePath,
+          "--check",
+        ],
+        {
+          cwd: temporaryRepo,
+          stdout: (text) => stdout.push(text),
+          stderr: (text) => stderr.push(text),
+        },
+      );
+      const afterStat = await stat(artifactPath);
+
+      expect(exitCode).toBe(0);
+      expect(stderr).toEqual([]);
+      expect(stdout.join("")).toBe(`${sidecarPath}\n`);
+      expect(await readFile(artifactPath, "utf8")).toBe(beforeBytes);
+      expect(afterStat.size).toBe(beforeStat.size);
+      expect(afterStat.mtimeMs).toBe(beforeStat.mtimeMs);
+    } finally {
+      await rm(temporaryRepo, { recursive: true, force: true });
+    }
+  });
+
+  it("reports a missing generated sidecar without writing the artifact", async () => {
+    const temporaryRepo = await preparedTemporaryRepo();
+
+    try {
+      const artifactPath = path.join(temporaryRepo, sidecarPath);
+      const stdout: string[] = [];
+      const stderr: string[] = [];
+      const exitCode = await main(
+        [
+          "derive-sidecar",
+          "--document",
+          documentPath,
+          "--type-profile",
+          typeProfilePath,
+          "--check",
+        ],
+        {
+          cwd: temporaryRepo,
+          stdout: (text) => stdout.push(text),
+          stderr: (text) => stderr.push(text),
+        },
+      );
+      const diagnostic = stderr.join("");
+
+      expect(exitCode).toBe(1);
+      expect(stdout).toEqual([]);
+      expect(diagnostic).toContain("category: missing_artifact");
+      expect(diagnostic).toContain(`document: ${documentPath}`);
+      expect(diagnostic).toContain(`artifact: ${sidecarPath}`);
+      await expect(readFile(artifactPath, "utf8")).rejects.toHaveProperty("code", "ENOENT");
+    } finally {
+      await rm(temporaryRepo, { recursive: true, force: true });
+    }
+  });
+
+  it("reports a stale generated sidecar without rewriting checked bytes", async () => {
+    const temporaryRepo = await preparedTemporaryRepo([sidecarPath]);
+
+    try {
+      const artifactPath = path.join(temporaryRepo, sidecarPath);
+      const staleBytes = "# stale generated artifact\n";
+      await writeFile(artifactPath, staleBytes, "utf8");
+
+      const beforeStat = await stat(artifactPath);
+      const stdout: string[] = [];
+      const stderr: string[] = [];
+      const exitCode = await main(
+        [
+          "derive-sidecar",
+          "--document",
+          documentPath,
+          "--type-profile",
+          typeProfilePath,
+          "--check",
+        ],
+        {
+          cwd: temporaryRepo,
+          stdout: (text) => stdout.push(text),
+          stderr: (text) => stderr.push(text),
+        },
+      );
+      const afterStat = await stat(artifactPath);
+      const diagnostic = stderr.join("");
+
+      expect(exitCode).toBe(1);
+      expect(stdout).toEqual([]);
+      expect(diagnostic).toContain("category: content_mismatch");
+      expect(diagnostic).toContain(`document: ${documentPath}`);
+      expect(diagnostic).toContain(`artifact: ${sidecarPath}`);
+      expect(await readFile(artifactPath, "utf8")).toBe(staleBytes);
+      expect(afterStat.size).toBe(beforeStat.size);
+      expect(afterStat.mtimeMs).toBe(beforeStat.mtimeMs);
+    } finally {
+      await rm(temporaryRepo, { recursive: true, force: true });
+    }
+  });
 });
 
-async function preparedTemporaryRepo(): Promise<string> {
+async function preparedTemporaryRepo(extraRelativePaths: readonly string[] = []): Promise<string> {
   const temporaryRepo = await mkdtemp(path.join(os.tmpdir(), "markdown-trace-sidecar-"));
 
-  for (const relativePath of ["package.json", documentPath, typeProfilePath]) {
+  for (const relativePath of [
+    "package.json",
+    documentPath,
+    typeProfilePath,
+    ...extraRelativePaths,
+  ]) {
     const targetPath = path.join(temporaryRepo, relativePath);
 
     await mkdir(path.dirname(targetPath), { recursive: true });
