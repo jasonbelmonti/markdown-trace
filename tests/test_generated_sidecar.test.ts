@@ -20,6 +20,27 @@ const fixtureDirectory = "fixtures/r1-link-backed-entity-syntax";
 const documentPath = `${fixtureDirectory}/minimal-link-backed-execution-spec.md`;
 const typeProfilePath = `${fixtureDirectory}/minimal-type-profile.yaml`;
 const sidecarPath = `${fixtureDirectory}/.markdown-trace/generated/minimal-link-backed-execution-spec--profile-minimal-type-profile-378211c9.entity-registry.yaml`;
+const codefactoryDocumentPath = `${fixtureDirectory}/codefactory-link-backed-spec.md`;
+const codefactoryTypeProfilePath = `${fixtureDirectory}/codefactory-type-profile.yaml`;
+const codefactorySidecarPath = `${fixtureDirectory}/.markdown-trace/generated/codefactory-link-backed-spec--profile-codefactory-type-profile-1d87b2e3.entity-registry.yaml`;
+
+interface GeneratedSidecarFixture {
+  readonly documentPath: string;
+  readonly typeProfilePath: string;
+  readonly sidecarPath: string;
+}
+
+const minimalGeneratedSidecar: GeneratedSidecarFixture = {
+  documentPath,
+  typeProfilePath,
+  sidecarPath,
+};
+
+const codefactoryGeneratedSidecar: GeneratedSidecarFixture = {
+  documentPath: codefactoryDocumentPath,
+  typeProfilePath: codefactoryTypeProfilePath,
+  sidecarPath: codefactorySidecarPath,
+};
 
 interface ParsedGeneratedSidecar {
   readonly registryVersion: string;
@@ -74,6 +95,12 @@ describe("generated sidecar artifacts", () => {
         profileRelativePath: typeProfilePath,
       }),
     ).toBe(sidecarPath);
+    expect(
+      generatedSidecarRelativePath({
+        documentRelativePath: codefactoryDocumentPath,
+        profileRelativePath: codefactoryTypeProfilePath,
+      }),
+    ).toBe(codefactorySidecarPath);
   });
 
   it("builds the checked minimal sidecar artifact with deterministic contract metadata", async () => {
@@ -133,6 +160,82 @@ describe("generated sidecar artifacts", () => {
         from: "exec.wp.1",
         relationship: "references",
         to: "exec.con.1",
+      },
+    ]);
+    expect(parsed.externalRefs).toEqual([]);
+  });
+
+  it("builds the checked CODEFACTORY sidecar artifact with profile-backed domain facts", async () => {
+    const result = await buildGeneratedSidecarArtifact({
+      repoRoot,
+      documentPath: codefactoryDocumentPath,
+      typeProfilePath: codefactoryTypeProfilePath,
+    });
+    const checkedArtifact = await readFile(path.join(repoRoot, codefactorySidecarPath), "utf8");
+    const parsed = parse(result.yaml) as ParsedGeneratedSidecar;
+
+    expect(result.artifactRelativePath).toBe(codefactorySidecarPath);
+    expect(result.yaml).toBe(checkedArtifact);
+    expect(parsed.registryVersion).toBe("markdown-trace.derived-registry.v0");
+    expect(parsed.document).toMatchObject({
+      path: codefactoryDocumentPath,
+      fixtureFamily: "r1-link-backed-entity-syntax",
+    });
+    expect(parsed.generated).toEqual({
+      artifactVersion: "markdown-trace.generated-sidecar.v0",
+      artifactKind: "registry",
+      reviewMarker: "generated-by-markdown-trace",
+      humanEditable: false,
+      source: {
+        documentPath: codefactoryDocumentPath,
+        documentSha256: await sha256File(path.join(repoRoot, codefactoryDocumentPath)),
+      },
+      typeProfile: {
+        path: codefactoryTypeProfilePath,
+        pathSha256: sha256Text(codefactoryTypeProfilePath),
+        contentSha256: await sha256File(path.join(repoRoot, codefactoryTypeProfilePath)),
+        profileVersion: "markdown-trace.type-profile.v1",
+      },
+      generator: {
+        packageName: "markdown-trace",
+        packageVersion: "0.1.0",
+        command: `markdown-trace derive-sidecar --document ${codefactoryDocumentPath} --type-profile ${codefactoryTypeProfilePath}`,
+        serialization: "yaml-lf-final-newline-v0",
+      },
+    });
+    expect(parsed.entities.map((entity) => [entity.id, entity.label, entity.type])).toEqual([
+      ["codefactory.component.parser", "CF-COMP-1", "codefactory_component"],
+      ["codefactory.component.renderer", "CF-COMP-2", "codefactory_component"],
+      [
+        "codefactory.decision.profile-contract",
+        "CF-DEC-1",
+        "codefactory_decision",
+      ],
+    ]);
+    expect(
+      parsed.entities.find((entity) => entity.id === "codefactory.component.parser")
+        ?.expectedReferences,
+    ).toEqual({
+      labels: ["CF-COMP-2", "CF-DEC-1"],
+      ranges: [
+        {
+          labelFamily: "CF-COMP",
+          start: "CF-COMP-1",
+          end: "CF-COMP-2",
+          expandsTo: ["CF-COMP-1", "CF-COMP-2"],
+        },
+      ],
+    });
+    expect(parsed.edges).toEqual([
+      {
+        from: "codefactory.component.parser",
+        relationship: "references",
+        to: "codefactory.component.renderer",
+      },
+      {
+        from: "codefactory.component.parser",
+        relationship: "references",
+        to: "codefactory.decision.profile-contract",
       },
     ]);
     expect(parsed.externalRefs).toEqual([]);
@@ -230,6 +333,46 @@ describe("generated sidecar artifacts", () => {
     }
   });
 
+  it("checks a matching CODEFACTORY generated sidecar through the CLI", async () => {
+    const temporaryRepo = await preparedTemporaryRepo(
+      [codefactorySidecarPath],
+      codefactoryGeneratedSidecar,
+    );
+
+    try {
+      const artifactPath = path.join(temporaryRepo, codefactorySidecarPath);
+      const beforeBytes = await readFile(artifactPath, "utf8");
+      const beforeStat = await stat(artifactPath);
+      const stdout: string[] = [];
+      const stderr: string[] = [];
+      const exitCode = await main(
+        [
+          "derive-sidecar",
+          "--document",
+          codefactoryDocumentPath,
+          "--type-profile",
+          codefactoryTypeProfilePath,
+          "--check",
+        ],
+        {
+          cwd: temporaryRepo,
+          stdout: (text) => stdout.push(text),
+          stderr: (text) => stderr.push(text),
+        },
+      );
+      const afterStat = await stat(artifactPath);
+
+      expect(exitCode).toBe(0);
+      expect(stderr).toEqual([]);
+      expect(stdout.join("")).toBe(`${codefactorySidecarPath}\n`);
+      expect(await readFile(artifactPath, "utf8")).toBe(beforeBytes);
+      expect(afterStat.size).toBe(beforeStat.size);
+      expect(afterStat.mtimeMs).toBe(beforeStat.mtimeMs);
+    } finally {
+      await rm(temporaryRepo, { recursive: true, force: true });
+    }
+  });
+
   it("reports a missing generated sidecar without writing the artifact", async () => {
     const temporaryRepo = await preparedTemporaryRepo();
 
@@ -306,15 +449,63 @@ describe("generated sidecar artifacts", () => {
       await rm(temporaryRepo, { recursive: true, force: true });
     }
   });
+
+  it("reports stale CODEFACTORY generated sidecar diagnostics without rewriting bytes", async () => {
+    const temporaryRepo = await preparedTemporaryRepo(
+      [codefactorySidecarPath],
+      codefactoryGeneratedSidecar,
+    );
+
+    try {
+      const artifactPath = path.join(temporaryRepo, codefactorySidecarPath);
+      const staleBytes = "# stale codefactory generated artifact\n";
+      await writeFile(artifactPath, staleBytes, "utf8");
+
+      const beforeStat = await stat(artifactPath);
+      const stdout: string[] = [];
+      const stderr: string[] = [];
+      const exitCode = await main(
+        [
+          "derive-sidecar",
+          "--document",
+          codefactoryDocumentPath,
+          "--type-profile",
+          codefactoryTypeProfilePath,
+          "--check",
+        ],
+        {
+          cwd: temporaryRepo,
+          stdout: (text) => stdout.push(text),
+          stderr: (text) => stderr.push(text),
+        },
+      );
+      const afterStat = await stat(artifactPath);
+      const diagnostic = stderr.join("");
+
+      expect(exitCode).toBe(1);
+      expect(stdout).toEqual([]);
+      expect(diagnostic).toContain("category: content_mismatch");
+      expect(diagnostic).toContain(`document: ${codefactoryDocumentPath}`);
+      expect(diagnostic).toContain(`artifact: ${codefactorySidecarPath}`);
+      expect(await readFile(artifactPath, "utf8")).toBe(staleBytes);
+      expect(afterStat.size).toBe(beforeStat.size);
+      expect(afterStat.mtimeMs).toBe(beforeStat.mtimeMs);
+    } finally {
+      await rm(temporaryRepo, { recursive: true, force: true });
+    }
+  });
 });
 
-async function preparedTemporaryRepo(extraRelativePaths: readonly string[] = []): Promise<string> {
+async function preparedTemporaryRepo(
+  extraRelativePaths: readonly string[] = [],
+  fixture: GeneratedSidecarFixture = minimalGeneratedSidecar,
+): Promise<string> {
   const temporaryRepo = await mkdtemp(path.join(os.tmpdir(), "markdown-trace-sidecar-"));
 
   for (const relativePath of [
     "package.json",
-    documentPath,
-    typeProfilePath,
+    fixture.documentPath,
+    fixture.typeProfilePath,
     ...extraRelativePaths,
   ]) {
     const targetPath = path.join(temporaryRepo, relativePath);
