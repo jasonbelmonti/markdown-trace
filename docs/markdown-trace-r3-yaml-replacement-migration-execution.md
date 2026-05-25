@@ -21,7 +21,7 @@
 
 Decision requested: Approve to execute
 
-Approved outcome: Execute `SRC-1` and `SRC-2` by implementing the R3 migration checks that prove whether Markdown plus type profiles can become editable registry source while checked generated YAML remains review evidence; source-authority flip remains blocked until the required evidence set is approved.
+Approved outcome: Execute `SRC-1` and `SRC-2` by implementing the R3 migration checks that prove whether Markdown plus type profiles can become editable registry source while checked generated YAML remains review evidence; source-authority flip remains blocked until the required evidence set, including CI enforcement evidence or an explicit CI enforcement blocker, is approved.
 
 Execution approach: Deliver the work through `WP-1` first same-document parity proof, `WP-2` migration comparison core, `WP-3` local migration check wrapper, `WP-4` R2 fixture/profile coverage evidence, and `WP-5` review policy, rollback rehearsal, and final migration evidence. Each slice must preserve R0 YAML compatibility and no-write check mode.
 
@@ -32,6 +32,7 @@ Top risks or unknowns:
 - RISK-1: Manual YAML and generated sidecar outputs may diverge across registry, graph, metadata, or validation dimensions.
 - RISK-2: A future authority flip could miss R1 minimal, CODEFACTORY, stale, missing, or malformed-profile coverage required by R2.
 - RISK-3: Migration checks could accidentally rewrite generated artifacts in check mode or imply YAML removal before approval.
+- RISK-6: Final evidence could imply replacement readiness without proving CI enforcement or recording missing CI enforcement as a blocker.
 
 Section status: Complete
 
@@ -47,11 +48,11 @@ Section status: Complete
 | SRC-4 | `docs/markdown-trace-r2-generated-sidecar-artifact-contract.md` | Generated sidecar artifact contract | Defines deterministic generated sidecar path, schema, metadata, serialization, review marker, and coexistence with hand-authored YAML. |
 | SRC-5 | Repository state at merge commit `d928b4a` | Current implementation baseline | Provides R0 YAML fixture, R1 generated sidecars, CLI derivation and validation paths, and test coverage that execution shall preserve. |
 
-In scope: Local migration comparison code, report model, same-document parity fixture or equivalent control fixture, migrated fixture inventory, migration check command or npm script, tests for registry, graph, metadata, validation, missing artifacts, stale artifacts, malformed profiles, CODEFACTORY profile coverage, documentation for review and rollback, and evidence artifacts proving every required gate.
+In scope: Local migration comparison code, report model, same-document parity fixture or equivalent control fixture, migrated fixture inventory, migration check command or npm script, tests for registry, graph, metadata, validation, missing artifacts, stale artifacts, malformed profiles, CODEFACTORY profile coverage, documentation for review and rollback, and evidence artifacts proving every required gate, including CI enforcement status for replacement readiness.
 
 Out of scope: Removing YAML registry support, changing R1 `ctx://trace` syntax, changing R2 generated sidecar serialization, making generated sidecars sole source of truth, adding live Linear, Jira, graph database, service deployment, hosted CI administration outside repository scripts, or approving the final source-authority flip.
 
-Definition of done: A local operator can run the migration check against the required fixture set and receive deterministic pass/fail output plus reviewable evidence covering registry, graph, metadata, validation, fixture/profile coverage, YAML compatibility, no-write drift behavior, documentation, and rollback rehearsal. The final evidence package states whether authority flip may be requested, but does not perform the flip.
+Definition of done: A local operator can run the migration check against the required fixture set and receive deterministic pass/fail output plus reviewable evidence covering registry, graph, metadata, validation, fixture/profile coverage, YAML compatibility, no-write drift behavior, documentation, rollback rehearsal, and CI enforcement status. The final evidence package states whether authority flip may be requested, but does not perform the flip.
 
 Re-decision boundaries: Execution shall not re-decide the R2 sidecar artifact contract, YAML compatibility during the migration window, generated artifact human-editable status, required R2 fixture/profile coverage, or the requirement for a separate authority-flip approval record. If parity cannot be produced without changing registry semantics, execution pauses and returns to Jason Belmonti for design or scope revision.
 
@@ -101,7 +102,8 @@ Section status: Complete
 | CON-2 | Constraint | Generated sidecars are checked artifacts and are not human-editable source. | Implementation agent | No | Enforce with `VAL-5`, `VAL-7`, docs, and review gates. |
 | CON-3 | Constraint | Migration comparison must cover registry, graph, metadata, and validation dimensions. | Implementation agent | No | Prove with `VAL-1`, `VAL-2`, and `EVD-2`. |
 | CON-4 | Constraint | Check mode must not write generated artifacts or mutate stale bytes. | Implementation agent | No | Prove with `VAL-3` and `EVD-3`. |
-| CON-5 | Constraint | Source-authority flip is out of scope until `VAL-1` through `VAL-8` evidence is accepted. | Jason Belmonti | No | Block through `REV-4`, `REL-4`, and final gate wording. |
+| CON-5 | Constraint | Source-authority flip is out of scope until `VAL-1` through `VAL-10` evidence is accepted. | Jason Belmonti | No | Block through `REV-4`, `REL-4`, and final gate wording. |
+| CON-6 | Constraint | R2 CI enforcement is required before replacement readiness; if hosted CI administration remains out of scope, final evidence must record missing CI enforcement as an authority-flip blocker. | Jason Belmonti | No | Prove or block through `VAL-10`, `REV-4`, and `EVD-10`. |
 | ASM-1 | Assumption | A same-document parity fixture can be produced from the R0 fixture or a dedicated equivalent fixture without changing public registry semantics. | Implementation agent | No | Retire in `WP-1`; failure triggers `CTRL-1` and `MS-1` rejection. |
 | ASM-2 | Assumption | Existing registry loading, graph derivation, validation, and generated sidecar APIs can be reused without changing their public semantics. | Implementation agent | No | Retire through `VAL-1`, `VAL-2`, `VAL-4`, and `VAL-5`. |
 | DEP-1 | Dependency | Merge commit `d928b4a` containing PR #30 must be present on the implementation base. | Implementation agent | Yes | Confirm with `git merge-base --is-ancestor d928b4a HEAD` or equivalent branch inspection before code work. |
@@ -125,7 +127,7 @@ Sequencing principle: Sequence by risk retirement and progressive value: prove o
 
 Validation cadence: Each work package must produce at least one `VAL-*` result and evidence artifact before the next milestone. Baseline `npm run typecheck`, `npm test`, `npm run build`, `npm run validate:fixture`, and `npm run derive:fixture` run before every implementation PR review.
 
-Deferred completeness: Final source-authority flip, YAML removal, multi-document registry projection, hosted CI administration beyond repository scripts, public API stability guarantees, and generalized migration beyond the required fixture set are deferred until after `MS-5`.
+Deferred completeness: Final source-authority flip, YAML removal, multi-document registry projection, hosted CI administration beyond repository scripts, public API stability guarantees, and generalized migration beyond the required fixture set are deferred until after `MS-5`; if repository CI enforcement evidence is absent at `MS-5`, `EVD-10` must record that absence as a blocker for any later authority-flip request.
 
 Primary risks and unknowns:
 
@@ -135,6 +137,7 @@ Primary risks and unknowns:
 | RISK-2 | Manual YAML metadata absence may be confused with generated metadata drift. | Manual registries do not carry `generated.*`; incorrect comparison would create false blockers or false passes. | Implementation agent | `VAL-2` and `EVD-2` prove manual metadata absence is intentional only in `yaml-authoritative` state. | `MS-2` |
 | RISK-3 | Migration check mode could write generated bytes while attempting to verify drift. | A check command that rewrites artifacts hides stale evidence. | Implementation agent | `VAL-3` and `EVD-3` prove missing and stale cases exit non-zero without writes. | `MS-3` |
 | RISK-4 | Fixture/profile coverage could pass a single parity proof but miss R2-required breadth. | The R2 replacement criteria require more than one manual/generated pair. | Implementation agent | `VAL-6` and `EVD-6` coverage matrix with all required rows passing. | `MS-3` |
+| RISK-6 | CI enforcement could be assumed from local scripts without proof that missing, stale, metadata drift, and YAML compatibility failures are enforced before replacement. | R2 replacement criteria require CI enforcement before YAML replacement readiness. | Implementation agent | `EVD-10` records repository CI or accepted CI-equivalent enforcement evidence, or records missing enforcement as a blocker for any later authority-flip request. | `MS-5` |
 
 Section status: Complete
 
@@ -240,7 +243,7 @@ Public interface:
 - Exported types: none unless command options require local model extraction
 - Exported functions/classes/components: command handler or script entry point
 - Events/messages/contracts: exit code and report path
-- CLI/API surface: migration check command or `npm run migration:check`
+- CLI/API surface: migration check command or `npm run migration:check` suitable for local execution and future repository CI wiring
 
 Allowed dependencies:
 - May import: `PKG-1`, generated sidecar check helpers, registry validation helpers, report writer helpers
@@ -263,7 +266,7 @@ Agent ownership boundary:
 - Agent read-only paths: `src/markdowntrace/migration/**`, generated sidecar serialization modules, design docs
 - Required coordination before editing: command names, package scripts, or report schema used by `PKG-4`
 
-Validation command: `npm test -- tests/test_migration_check.test.ts`
+Validation command: `npm test -- tests/test_migration_check.test.ts` plus command-level evidence that `npm run migration:check` can run non-interactively.
 
 Promotion blockers: The command is local and experimental until source-authority workflow is approved.
 
@@ -327,17 +330,17 @@ Mission: Own human-facing migration workflow and rollback documentation.
 
 Value / risk trace:
 - Observable value enabled: Reviewers and operators can execute the intended workflow without hidden chat context.
-- Risk retired: RISK-3 and RISK-4.
+- Risk retired: RISK-3, RISK-4, and RISK-6.
 - Validation evidence: `VAL-7`, `VAL-8`, `EVD-7`, `EVD-8`, `EVD-10`.
 - Blocking unknowns: None.
 
 Owns:
 - Files/directories: migration workflow docs and final evidence docs under `docs/**`
-- Concepts: authority states, generated artifact review policy, regeneration instructions, rollback rehearsal, final approval handoff
+- Concepts: authority states, generated artifact review policy, regeneration instructions, rollback rehearsal, CI enforcement status, final approval handoff
 - Runtime responsibilities: none
 
 Does not own:
-- Explicitly excluded behavior: implementation code, generated sidecar bytes, final authority flip
+- Explicitly excluded behavior: implementation code, generated sidecar bytes, hosted CI administration, final authority flip
 - Responsibilities delegated elsewhere: code and fixture evidence packages
 
 Public interface:
@@ -397,6 +400,7 @@ Coupling tripwires:
 - `PKG-2` changes generated sidecar serialization to make comparison easier.
 - `PKG-3` fixture helpers become required production imports.
 - `PKG-4` says generated artifacts are authoritative before `MS-5` approval.
+- `PKG-4` states replacement readiness without CI enforcement evidence or an explicit missing-CI blocker.
 - Two agents must edit the same production file for separate work packages without a named coordination point.
 
 N/A rationale: Section 7 applies because code, fixtures, contracts, and multi-agent package boundaries are affected.
@@ -413,15 +417,15 @@ First proving slice: `WP-1` produces `EVD-1`, a first R0 or equivalent same-docu
 
 Validation cadence: Every work package produces validation evidence before its milestone gate. Full regression validation runs before merge of any implementation PR.
 
-Deferred completeness: Source-authority flip, YAML removal, generalized multi-document migration, and hosted CI policy are deferred until after `MS-5`.
+Deferred completeness: Source-authority flip, YAML removal, generalized multi-document migration, and hosted CI administration beyond repository-owned scripts are deferred until after `MS-5`; final evidence must still record CI enforcement evidence or block replacement readiness for missing enforcement.
 
 | ID | Objective | Owner | Package boundary | Editable paths | Read-only paths | Inputs | Outputs | Dependencies | Observable value enabled | Risk retired | Milestone gate | Validation checkpoint | Completion criteria |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | WP-1 | Produce the first same-document parity proof for R0 or an equivalent control fixture. | Implementation agent | PKG-1, PKG-3 | `src/markdowntrace/migration/**`; migration fixture additions under `fixtures/**`; `tests/test_migration_comparison.test.ts`; `docs/evidence/**` first parity evidence | R3 addendum, R2 criteria, existing registry, graph, validation, sidecar modules | `SRC-1` through `SRC-5`; existing R0 YAML fixture; generated sidecar contract | First comparison report with one row each for registry, graph, metadata, and validation | `DEP-1`, `DEP-2`, `ASM-1` | Establishes whether the migration path is technically feasible. | RISK-1, RISK-2 | MS-1 | VAL-1 | `EVD-1` exists and either proves parity or records blocking drift with no source-authority change. |
 | WP-2 | Harden deterministic comparison classifications and report model. | Implementation agent | PKG-1 | `src/markdowntrace/migration/**`; `tests/test_migration_comparison.test.ts` | Existing registry, graph, validation, generated-sidecar modules | `EVD-1`; comparison allocation detail from `SRC-1` | Stable `MigrationComparisonReport` with equivalent, intentional, and blocking classifications | `WP-1` approved or conditionally approved | Reviewers can understand every delta without hand-inspecting full YAML. | RISK-1, RISK-2 | MS-2 | VAL-2 | Tests cover equivalent, intentional, and blocking drift across all four dimensions. |
-| WP-3 | Add local migration check orchestration and no-write failure behavior. | Implementation agent | PKG-2 | `src/markdowntrace/cli.ts`; `src/markdowntrace/reporting/**`; `package.json`; `tests/test_migration_check.test.ts` | `PKG-1`; sidecar writer/check code; validation CLI | `EVD-2`; R2 sidecar contract | Local command or npm script that runs compatibility, generated sidecar checks, comparison, and exits non-zero on blocking drift | `WP-2` public report model stable | Operators can run one migration gate before review. | RISK-3 | MS-3 | VAL-3, VAL-4, VAL-5 | Missing, stale, unexplained drift, YAML compatibility, and byte-stability checks pass as specified. |
+| WP-3 | Add local migration check orchestration and no-write failure behavior. | Implementation agent | PKG-2 | `src/markdowntrace/cli.ts`; `src/markdowntrace/reporting/**`; `package.json`; `tests/test_migration_check.test.ts` | `PKG-1`; sidecar writer/check code; validation CLI | `EVD-2`; R2 sidecar contract | Local command or npm script that runs compatibility, generated sidecar checks, comparison, and exits non-zero on blocking drift | `WP-2` public report model stable | Operators can run one migration gate before review. | RISK-3 | MS-3 | VAL-3, VAL-4, VAL-5 | Missing, stale, unexplained drift, YAML compatibility, and byte-stability checks pass as specified, and the command is non-interactive for local or CI-equivalent execution. |
 | WP-4 | Expand evidence to the full R2 fixture/profile coverage matrix. | Implementation agent | PKG-3 | `fixtures/**` migration additions; `tests/support/**`; `tests/test_migration_evidence.test.ts`; `docs/evidence/**` coverage matrix | Existing R0 and R1 fixtures, type profiles, generated sidecars | `EVD-3`, `EVD-4`, `EVD-5`; R2 coverage criteria | Coverage matrix for R0 YAML, minimal R1, CODEFACTORY, stale artifact, missing artifact, and malformed profile cases | `WP-3` command available | Prevents a single parity proof from being mistaken for replacement readiness. | RISK-4 | MS-3 | VAL-6, VAL-9 | `EVD-6` lists passing evidence for every R2-required case and baseline suite. |
-| WP-5 | Document review policy, rollback rehearsal, and final migration evidence package. | Implementation agent | PKG-4 | `docs/**` migration workflow docs; `docs/evidence/**` final evidence and rollback rehearsal | Source authority docs, implementation evidence, command outputs | `EVD-1` through `EVD-9` | Operator workflow, reviewer policy, rollback rehearsal result, final R3 migration evidence package | `MS-3` approved | Humans can decide whether to request a later authority flip with complete evidence. | RISK-3, RISK-4 | MS-4, MS-5 | VAL-7, VAL-8, VAL-10 | Docs identify authority states, regeneration, review, rollback, and final flip remains a separate approval. |
+| WP-5 | Document review policy, rollback rehearsal, and final migration evidence package. | Implementation agent | PKG-4 | `docs/**` migration workflow docs; `docs/evidence/**` final evidence and rollback rehearsal | Source authority docs, implementation evidence, command outputs | `EVD-1` through `EVD-9` | Operator workflow, reviewer policy, rollback rehearsal result, final R3 migration evidence package | `MS-3` approved | Humans can decide whether to request a later authority flip with complete evidence. | RISK-3, RISK-4, RISK-6 | MS-4, MS-5 | VAL-7, VAL-8, VAL-10 | Docs identify authority states, regeneration, review, rollback, CI enforcement evidence or blocker status, and final flip remains a separate approval. |
 
 Execution sequence:
 
@@ -448,7 +452,7 @@ Section status: Complete
 | MS-2 | Approve deterministic comparison semantics and report model. | OBJ-1; SURF-1; PKG-1; WP-2 | Before WP-3 starts | Independent implementation reviewer | VAL-2; EVD-2 | REV-1 | EVD-2 | Approve / Reject / Conditional approval | If rejected, revise comparison normalization and rerun WP-2 validation. |
 | MS-3 | Approve local migration check command and full R2 coverage matrix. | OBJ-2; OBJ-3; SURF-2; SURF-3; SURF-4; SURF-5; PKG-2; PKG-3; WP-3; WP-4 | Before WP-5 final evidence claims | Jason Belmonti | VAL-3; VAL-4; VAL-5; VAL-6; VAL-9; EVD-3; EVD-4; EVD-5; EVD-6; EVD-9 | REV-1, REV-2 | EVD-3, EVD-4, EVD-5, EVD-6, EVD-9 | Approve / Reject / Conditional approval | If rejected, do not publish final migration readiness evidence; fix coverage or command behavior. |
 | MS-4 | Approve operator workflow and rollback rehearsal. | OBJ-4; SURF-6; SURF-7; PKG-4; WP-5 | Before completion gate | Local operator and Jason Belmonti | VAL-7; VAL-8; EVD-7; EVD-8 | REV-3 | EVD-7, EVD-8 | Approve / Reject / Conditional approval | If rejected, keep generated artifacts as transition evidence only and revise docs or rollback steps. |
-| MS-5 | Approve final execution evidence as ready for a separate authority-flip decision. | OBJ-5; all surfaces; all packages; WP-5 | Before declaring execution complete | Jason Belmonti | VAL-1 through VAL-10; EVD-1 through EVD-10 | REV-4 | EVD-10 | Approve / Reject / Conditional approval | If rejected, do not open or execute authority-flip work; record blockers in final evidence. |
+| MS-5 | Approve final execution evidence as ready for a separate authority-flip decision. | OBJ-5; all surfaces; all packages; WP-5 | Before declaring execution complete | Jason Belmonti | VAL-1 through VAL-10; EVD-1 through EVD-10, including CI enforcement evidence or blocker status | REV-4 | EVD-10 | Approve / Reject / Conditional approval | If rejected, or if CI enforcement is missing, do not open or execute authority-flip work; record blockers in final evidence. |
 
 Manual verification guide:
 
@@ -459,7 +463,7 @@ Manual verification guide:
 | MV-3 | MS-3 | Run the migration check command in check mode against the migrated fixture inventory. | Command exits `0` only when no blocking drift exists and writes no generated artifact bytes in check mode. | EVD-3 |
 | MV-4 | MS-3 | Inspect `EVD-6` coverage matrix. | R0 YAML, minimal R1, CODEFACTORY, stale artifact, missing artifact, and malformed profile rows all have passing evidence. | EVD-6 |
 | MV-5 | MS-4 | Execute rollback rehearsal steps from the runbook. | YAML-backed authority is restored or generated artifacts are deterministically regenerated without manual reconstruction. | EVD-8 |
-| MV-6 | MS-5 | Read final migration evidence and confirm source-authority flip is presented as a separate decision. | Evidence states whether a flip may be requested and does not remove YAML support. | EVD-10 |
+| MV-6 | MS-5 | Read final migration evidence and confirm source-authority flip is presented as a separate decision. | Evidence states whether a flip may be requested, does not remove YAML support, and records CI enforcement evidence or an explicit missing-CI blocker. | EVD-10 |
 
 Section status: Complete
 
@@ -473,10 +477,11 @@ Section status: Complete
 | CTRL-4 | Fixture/profile coverage omits any R2-required case. | Block `MS-3` and add missing case before final evidence work. | Implementation agent | EVD-6 |
 | CTRL-5 | Docs or evidence imply generated artifacts are authoritative before approval. | Block `MS-4` or `MS-5`, revise wording, and require Jason Belmonti review. | Implementation agent | REV-3 or REV-4 completion evidence |
 | CTRL-6 | Scope expands into YAML removal, multi-document projection, hosted service, or live PM integration. | Stop and re-estimate; require new design or execution spec. | Implementation agent | Updated estimator output and decision-owner approval |
+| CTRL-7 | Final evidence lacks CI enforcement evidence and does not explicitly record missing CI enforcement as a replacement blocker. | Block `MS-5`, revise `EVD-10`, and do not create authority-flip work until CI enforcement status is explicit. | Implementation agent | EVD-10 and REV-4 completion evidence |
 
 Deviation rules: Any approved deviation must be recorded as `DEV-*` with owner, approver, rationale, impact, expiry or boundary, compensating validation, and evidence. Deviations may not waive R2 fixture/profile coverage or source-authority flip approval.
 
-Pause or escalation conditions: Pause on failed `MS-*` approval, failed full regression validation, check-mode writes, YAML compatibility regression, missing coverage matrix row, or any contradiction with `SRC-1` through `SRC-4`.
+Pause or escalation conditions: Pause on failed `MS-*` approval, failed full regression validation, check-mode writes, YAML compatibility regression, missing coverage matrix row, missing CI enforcement status in final evidence, or any contradiction with `SRC-1` through `SRC-4`.
 
 Section status: Complete
 
@@ -509,7 +514,7 @@ Section status: Complete
 | VAL-7 | Review | Documentation marks generated sidecars as non-human-editable checked artifacts and gives regeneration/review instructions. | Pre-merge for `WP-5` | Implementation agent | EVD-7 |
 | VAL-8 | Manual | Rollback restores YAML-backed authority or deterministic generated artifacts without manual reconstruction. | Pre-completion | Local operator | EVD-8 |
 | VAL-9 | Test | Full local regression suite remains clean. | Every implementation PR and final completion gate | Implementation agent | EVD-9 |
-| VAL-10 | Review | Final R3 migration evidence package preserves the separate authority-flip approval boundary and summarizes all required evidence. | Pre-completion | Jason Belmonti | EVD-10 |
+| VAL-10 | Review | Final R3 migration evidence package preserves the separate authority-flip approval boundary, summarizes all required evidence, and records either CI enforcement evidence for migrated fixtures or an explicit blocker for missing CI enforcement. | Pre-completion | Jason Belmonti | EVD-10 |
 
 Section status: Complete
 
@@ -520,9 +525,9 @@ Section status: Complete
 | REV-1 | Independent implementation reviewer | Comparison core, report model, package boundaries, registry/graph/validation integration, no serialization drift. | Yes | Approved review or consensus-review verdict for `WP-1` through `WP-3`. |
 | REV-2 | Generated artifact reviewer | Generated sidecar diffs, no-write behavior, fixture/profile coverage, and coverage matrix evidence. | Yes | Approved review of `EVD-3`, `EVD-5`, and `EVD-6`. |
 | REV-3 | Jason Belmonti and local operator | Operator docs, review policy, regeneration instructions, rollback rehearsal. | Yes | Approved `MS-4` record. |
-| REV-4 | Jason Belmonti | Final evidence package and source-authority flip boundary. | Yes | Approved `MS-5` record or explicit rejection with blockers. |
+| REV-4 | Jason Belmonti | Final evidence package, CI enforcement status, and source-authority flip boundary. | Yes | Approved `MS-5` record or explicit rejection with blockers. |
 
-Approval conditions: Merge is allowed only when required validations for the touched work packages pass, blocking `REV-*` items are approved or explicitly rejected with fixes, no `DEV-*` is open without approval, and docs/evidence do not imply YAML removal or generated authority. Completion is allowed only after `MS-5` has an approval record.
+Approval conditions: Merge is allowed only when required validations for the touched work packages pass, blocking `REV-*` items are approved or explicitly rejected with fixes, no `DEV-*` is open without approval, and docs/evidence do not imply YAML removal or generated authority. Completion is allowed only after `MS-5` has an approval record, and authority-flip work may not proceed unless `EVD-10` includes CI enforcement evidence or names missing CI enforcement as a blocker.
 
 Section status: Complete
 
@@ -533,7 +538,7 @@ Section status: Complete
 | REL-1 | Land migration comparison core behind tests only. | After `MS-1` and `MS-2` approval. | Implementation agent | Comparator requires changing registry or sidecar semantics. | EVD-1, EVD-2 |
 | REL-2 | Add local migration check command or npm script. | After `REL-1`. | Implementation agent | Command changes existing command behavior or writes generated bytes in check mode. | EVD-3, EVD-4, EVD-5 |
 | REL-3 | Add fixture/profile coverage evidence and checked artifacts as review evidence only. | After `REL-2`. | Implementation agent | Coverage matrix incomplete or artifact metadata violates R2 contract. | EVD-6 |
-| REL-4 | Publish operator docs, rollback rehearsal, and final evidence package. | After `MS-3` approval. | Implementation agent | Docs imply source-authority flip or YAML removal without separate approval. | EVD-7, EVD-8, EVD-10 |
+| REL-4 | Publish operator docs, rollback rehearsal, and final evidence package. | After `MS-3` approval. | Implementation agent | Docs imply source-authority flip, YAML removal without separate approval, or replacement readiness without CI enforcement evidence or blocker status. | EVD-7, EVD-8, EVD-10 |
 
 Rollback or containment plan: Before source-authority flip, rollback is source-control based. Revert the implementation PR or affected fixture/artifact changes, keep hand-authored YAML as authority, rerun `npm run validate:fixture`, rerun generated sidecar checks where applicable, and record rollback evidence. If a generated artifact is stale, regenerate through the documented write command or restore prior checked bytes; never hand-edit generated YAML.
 
@@ -551,7 +556,7 @@ Section status: Complete
 | OBS-4 | Fixture/profile coverage matrix | Shows whether every R2-required case has passing evidence. | Decision owner, reviewer | Block source-authority flip request until all rows pass. |
 | OBS-5 | Rollback rehearsal result | Proves recovery before authority changes. | Decision owner, local operator | Reject final evidence if rollback cannot be executed. |
 
-Operator actions: Run the migration check command, inspect non-zero reports, regenerate sidecars only through documented write mode, restore YAML-backed authority through source control when needed, capture evidence artifacts, and stop before authority flip unless a separate approval record exists.
+Operator actions: Run the migration check command, inspect non-zero reports, regenerate sidecars only through documented write mode, restore YAML-backed authority through source control when needed, capture evidence artifacts, record CI enforcement status in final evidence, and stop before authority flip unless a separate approval record exists.
 
 Monitoring window: Local-only repository workflow. Monitor through pre-merge and final completion validation; no post-release production monitoring window is required.
 
@@ -570,6 +575,7 @@ Risks:
 | RISK-3 | Check mode rewrites artifacts or hides stale bytes. | Review evidence becomes untrustworthy. | Low | Implementation agent | Controlled missing and stale probes must prove no-write behavior. | VAL-3, VAL-5 |
 | RISK-4 | Coverage matrix omits required R2 cases. | Later authority flip could rest on incomplete evidence. | Medium | Implementation agent | Make R0, minimal R1, CODEFACTORY, stale, missing, and malformed rows required and blocking. | VAL-6 |
 | RISK-5 | Documentation implies generated authority before approval. | Reviewers may treat checked generated YAML as editable or authoritative source. | Medium | Implementation agent | Require generated artifact review policy and final source-authority boundary review. | VAL-7, REV-4 |
+| RISK-6 | CI enforcement status is omitted from final evidence. | Later authority-flip work could proceed without satisfying the R2 CI enforcement criterion. | Medium | Implementation agent | Require `EVD-10` to include repository CI or accepted CI-equivalent enforcement evidence, or to record missing enforcement as an authority-flip blocker. | VAL-10, REV-4 |
 
 Open questions: None. The R3 addendum resolved the design questions needed to execute migration checks; implementation discoveries become `DEV-*` or design revisions, not silent scope changes.
 
@@ -585,14 +591,14 @@ Section status: Complete
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | SRC-1 | SURF-1, SURF-3, SURF-6, SURF-7 | PKG-1, PKG-2, PKG-4 | WP-1, WP-2, WP-3, WP-5 | MS-1, MS-2, MS-4, MS-5 | CTRL-1, CTRL-5 | VAL-1, VAL-2, VAL-7, VAL-8 | REV-1, REV-3, REV-4 | REL-1, REL-4, OBS-2, OBS-5 | EVD-1, EVD-2, EVD-7, EVD-8, EVD-10 |
 | SRC-2 | SURF-1, SURF-4, SURF-5 | PKG-1, PKG-3 | WP-1, WP-4 | MS-1, MS-3 | CTRL-1, CTRL-4 | VAL-1, VAL-6 | REV-1, REV-2 | REL-1, REL-3, OBS-4 | EVD-1, EVD-6 |
-| SRC-3 | SURF-3, SURF-4, SURF-5, SURF-6 | PKG-2, PKG-3, PKG-4 | WP-3, WP-4, WP-5 | MS-3, MS-5 | CTRL-3, CTRL-4 | VAL-3, VAL-4, VAL-5, VAL-6, VAL-9 | REV-2, REV-4 | REL-2, REL-3, OBS-1, OBS-3, OBS-4 | EVD-3, EVD-4, EVD-5, EVD-6, EVD-9 |
+| SRC-3 | SURF-3, SURF-4, SURF-5, SURF-6 | PKG-2, PKG-3, PKG-4 | WP-3, WP-4, WP-5 | MS-3, MS-5 | CTRL-3, CTRL-4, CTRL-7 | VAL-3, VAL-4, VAL-5, VAL-6, VAL-9, VAL-10 | REV-2, REV-4 | REL-2, REL-3, OBS-1, OBS-3, OBS-4 | EVD-3, EVD-4, EVD-5, EVD-6, EVD-9, EVD-10 |
 | SRC-4 | SURF-2, SURF-3, SURF-4 | PKG-1, PKG-2, PKG-3 | WP-2, WP-3, WP-4 | MS-2, MS-3 | CTRL-2, CTRL-3 | VAL-2, VAL-5, VAL-6 | REV-1, REV-2 | REL-2, REL-3, OBS-3 | EVD-2, EVD-5, EVD-6 |
 | SRC-5 | SURF-2, SURF-4, SURF-5 | PKG-2, PKG-3 | WP-3, WP-4 | MS-3 | CTRL-3, CTRL-4 | VAL-4, VAL-5, VAL-6, VAL-9 | REV-1, REV-2 | REL-2, REL-3 | EVD-4, EVD-5, EVD-6, EVD-9 |
 | OBJ-1 | SURF-1, SURF-4 | PKG-1, PKG-3 | WP-1, WP-2 | MS-1, MS-2 | CTRL-1 | VAL-1, VAL-2 | REV-1 | REL-1, OBS-2 | EVD-1, EVD-2 |
 | OBJ-2 | SURF-2, SURF-3, SURF-5 | PKG-2 | WP-3 | MS-3 | CTRL-3 | VAL-3, VAL-4, VAL-5, VAL-9 | REV-1, REV-2 | REL-2, OBS-1, OBS-3 | EVD-3, EVD-4, EVD-5, EVD-9 |
 | OBJ-3 | SURF-4, SURF-5, SURF-6 | PKG-3 | WP-4 | MS-3 | CTRL-4 | VAL-6 | REV-2 | REL-3, OBS-4 | EVD-6 |
 | OBJ-4 | SURF-6, SURF-7 | PKG-4 | WP-5 | MS-4 | CTRL-5 | VAL-7, VAL-8 | REV-3 | REL-4, OBS-5 | EVD-7, EVD-8 |
-| OBJ-5 | SURF-6, SURF-7 | PKG-4 | WP-5 | MS-5 | CTRL-5, CTRL-6 | VAL-1 through VAL-10 | REV-4 | REL-4, OBS-4, OBS-5 | EVD-10 |
+| OBJ-5 | SURF-6, SURF-7 | PKG-4 | WP-5 | MS-5 | CTRL-5, CTRL-6, CTRL-7 | VAL-1 through VAL-10 | REV-4 | REL-4, OBS-4, OBS-5 | EVD-10 |
 | Critical path hypothesis | SURF-1, SURF-2, SURF-3, SURF-4 | PKG-1, PKG-2, PKG-3 | WP-1, WP-2, WP-3 | MS-1, MS-2, MS-3 | CTRL-1, CTRL-3 | VAL-1, VAL-2, VAL-3 | REV-1, REV-2 | REL-1, REL-2, OBS-1, OBS-2 | EVD-1, EVD-2, EVD-3 |
 | First proving slice | SURF-1, SURF-4 | PKG-1, PKG-3 | WP-1 | MS-1 | CTRL-1 | VAL-1 | REV-1 | REL-1, OBS-2 | EVD-1 |
 | RISK-1 | SURF-1 | PKG-1 | WP-1, WP-2 | MS-1, MS-2 | CTRL-1 | VAL-1, VAL-2 | REV-1 | OBS-2 | EVD-1, EVD-2 |
@@ -600,6 +606,7 @@ Section status: Complete
 | RISK-3 | SURF-3, SURF-4 | PKG-2, PKG-3 | WP-3 | MS-3 | CTRL-3 | VAL-3, VAL-5 | REV-2 | REL-2, OBS-3 | EVD-3, EVD-5 |
 | RISK-4 | SURF-4, SURF-5, SURF-6 | PKG-3 | WP-4 | MS-3 | CTRL-4 | VAL-6 | REV-2 | REL-3, OBS-4 | EVD-6 |
 | RISK-5 | SURF-6, SURF-7 | PKG-4 | WP-5 | MS-4, MS-5 | CTRL-5 | VAL-7, VAL-8, VAL-10 | REV-3, REV-4 | REL-4, OBS-5 | EVD-7, EVD-8, EVD-10 |
+| RISK-6 | SURF-3, SURF-6, SURF-7 | PKG-2, PKG-4 | WP-3, WP-5 | MS-5 | CTRL-7 | VAL-10 | REV-4 | REL-4, OBS-1, OBS-4 | EVD-10 |
 
 Section status: Complete
 
@@ -609,7 +616,7 @@ Entry gate: Ready to start implementation only after this spec passes determinis
 
 Milestone approval gate: `MS-1` through `MS-5` are non-waivable at their due points unless a `WVR-*` is explicitly approved by Jason Belmonti with compensating controls. No later package may start when its prerequisite milestone is rejected.
 
-Completion gate: Execution is complete only when `VAL-1` through `VAL-10` pass, `EVD-1` through `EVD-10` exist, all blocking `REV-*` reviews are approved, and the final evidence package states that source-authority flip remains a separate approval decision.
+Completion gate: Execution is complete only when `VAL-1` through `VAL-10` pass, `EVD-1` through `EVD-10` exist, all blocking `REV-*` reviews are approved, and the final evidence package states that source-authority flip remains a separate approval decision with CI enforcement evidence or an explicit missing-CI blocker.
 
 Release gate: Repository release or merge of implementation slices is allowed only when touched work-package validations pass and rollback containment is documented. No release may remove YAML support or declare generated authority in this execution.
 
