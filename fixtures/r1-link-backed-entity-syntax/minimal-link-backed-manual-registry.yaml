@@ -1,0 +1,33 @@
+registryVersion: markdown-trace.derived-registry.v0
+document:
+  id: markdown-trace.r1.fixture.minimal-link-backed
+  title: Minimal R1 Link-Backed Fixture
+  path: fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md
+  fixtureFamily: r1-link-backed-entity-syntax
+  sourceDocs:
+    - docs/markdown-trace-r1-link-backed-entity-syntax.md
+entities:
+  - id: exec.con.1
+    label: CON-1
+    type: constraint
+    defines:
+      kind: heading
+      text: "### [CON-1](ctx://trace/entity/exec.con.1?type=constraint): Preserve R0 compatibility"
+    expectedReferences:
+      labels: []
+      ranges: []
+  - id: exec.wp.1
+    label: WP-1
+    type: work_package
+    defines:
+      kind: heading
+      text: "### [WP-1](ctx://trace/entity/exec.wp.1?type=work_package): Prove minimal link path"
+    expectedReferences:
+      labels:
+        - CON-1
+      ranges: []
+edges:
+  - from: exec.wp.1
+    relationship: references
+    to: exec.con.1
+externalRefs: []
