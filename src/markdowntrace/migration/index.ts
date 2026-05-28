@@ -1,0 +1,27 @@
+export {
+  MIGRATION_COMPARISON_DIMENSIONS,
+  MIGRATION_COMPARISON_SIDES,
+  MIGRATION_DIMENSION_STATUSES,
+  type MigrationComparisonDimension,
+  type MigrationComparisonReport,
+  type MigrationComparisonSide,
+  type MigrationComparisonSideInput,
+  type MigrationDelta,
+  type MigrationDimensionResult,
+  type MigrationDimensionSnapshot,
+  type MigrationDimensionStatus,
+  type MigrationGeneratedMetadata,
+  type MigrationNormalizationInput,
+  type MigrationNormalizedComparison,
+  type MigrationNormalizedDimension,
+  type MigrationNormalizedEntry,
+  type MigrationNormalizedValue,
+  type MigrationValidationInput,
+} from "./model.js";
+export {
+  normalizeGraphEntries,
+  normalizeMetadataEntries,
+  normalizeMigrationComparison,
+  normalizeRegistryEntries,
+  normalizeValidationEntries,
+} from "./normalize.js";
