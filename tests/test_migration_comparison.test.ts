@@ -1,21 +1,42 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 
-import { MARKDOWN_ENGINE_PACKAGE } from "../src/markdowntrace/markdown/index.js";
+import { MARKDOWN_ENGINE_PACKAGE, scanMarkdown } from "../src/markdowntrace/markdown/index.js";
 import {
+  checkGeneratedSidecarArtifact,
   EntityRegistry,
+  loadRegistry,
   type RegistryEdge,
   type RegistryEntity,
 } from "../src/markdowntrace/registry/index.js";
-import type { TraceGraph } from "../src/markdowntrace/graph/index.js";
+import { deriveGraphFromRegistry, type TraceGraph } from "../src/markdowntrace/graph/index.js";
 import {
+  compareMigrationPair,
   MIGRATION_COMPARISON_DIMENSIONS,
   normalizeMetadataEntries,
   normalizeMigrationComparison,
+  type MigrationComparisonReport,
+  type MigrationComparisonReportInput,
   type MigrationComparisonSideInput,
   type MigrationGeneratedMetadata,
   type MigrationValidationInput,
 } from "../src/markdowntrace/migration/index.js";
-import type { ValidationFinding, ValidationResult } from "../src/markdowntrace/validation/index.js";
+import {
+  validate,
+  type ValidationFinding,
+  type ValidationResult,
+} from "../src/markdowntrace/validation/index.js";
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const selectedFixtureDirectory = "fixtures/r1-link-backed-entity-syntax";
+const selectedDocumentPath = `${selectedFixtureDirectory}/minimal-link-backed-execution-spec.md`;
+const selectedManualRegistryPath =
+  `${selectedFixtureDirectory}/minimal-link-backed-manual-registry.yaml`;
+const selectedTypeProfilePath = `${selectedFixtureDirectory}/minimal-type-profile.yaml`;
+const selectedGeneratedSidecarPath =
+  `${selectedFixtureDirectory}/.markdown-trace/generated/minimal-link-backed-execution-spec--profile-minimal-type-profile-378211c9.entity-registry.yaml`;
 
 describe("migration comparison contract", () => {
   it("normalizes every required comparison dimension in a stable dimension order", () => {
@@ -161,6 +182,99 @@ describe("migration comparison contract", () => {
     });
 
     expect(normalized).toEqual(normalizedAgain);
+  });
+
+  it("builds an equivalent report when all normalized dimensions match", () => {
+    const report = compareMigrationPair({
+      documentPath: "fixtures/migration-test.md",
+      manualRegistryPath: "fixtures/manual.yaml",
+      generatedSidecarPath: "fixtures/generated.yaml",
+      manual: sideInput("manual"),
+      generated: sideInput("manual"),
+    });
+
+    expect(report.exitCode).toBe(0);
+    expect(report.dimensions).toEqual(
+      MIGRATION_COMPARISON_DIMENSIONS.map((dimension) => ({
+        dimension,
+        status: "equivalent",
+        deltas: [],
+      })),
+    );
+  });
+
+  it("classifies unexplained dimension drift as blocking", () => {
+    const generated = sideInput("manual");
+    const report = compareMigrationPair({
+      documentPath: "fixtures/migration-test.md",
+      manualRegistryPath: "fixtures/manual.yaml",
+      generatedSidecarPath: "fixtures/generated.yaml",
+      manual: sideInput("manual"),
+      generated: {
+        ...generated,
+        graph: {
+          nodes: generated.graph.nodes,
+          edges: [],
+        },
+      },
+    });
+
+    expect(report.exitCode).toBe(1);
+    expect(
+      report.dimensions.find((dimension) => dimension.dimension === "graph"),
+    ).toMatchObject({
+      status: "blocking",
+      deltas: [
+        {
+          path: "edges.0.source",
+        },
+        {
+          path: "edges.0.target",
+        },
+        {
+          path: "edges.1.source",
+        },
+        {
+          path: "edges.1.target",
+        },
+      ],
+    });
+  });
+
+  it("produces the first selected same-document parity report", async () => {
+    const report = await selectedFixtureComparisonReport();
+
+    expect(report).toMatchObject({
+      documentPath: selectedDocumentPath,
+      manualRegistryPath: selectedManualRegistryPath,
+      generatedSidecarPath: selectedGeneratedSidecarPath,
+      exitCode: 0,
+    });
+    expect(report.dimensions.map((dimension) => dimension.dimension)).toEqual(
+      MIGRATION_COMPARISON_DIMENSIONS,
+    );
+    expect(report.dimensions.map(({ dimension, status }) => [dimension, status])).toEqual([
+      ["registry", "equivalent"],
+      ["graph", "equivalent"],
+      ["metadata", "intentional"],
+      ["validation", "equivalent"],
+    ]);
+    expect(
+      report.dimensions.find((dimension) => dimension.dimension === "metadata")?.deltas,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: "generated.present",
+          expected: false,
+          actual: true,
+        }),
+        expect.objectContaining({
+          path: "generated.humanEditable",
+          expected: { kind: "missing" },
+          actual: false,
+        }),
+      ]),
+    );
   });
 });
 
@@ -504,4 +618,47 @@ function generatedMetadata(): MigrationGeneratedMetadata {
 
 function orderedByFixtureOrder<T>(values: readonly T[], order: FixtureOrder): readonly T[] {
   return order === "ordered" ? [...values] : [...values].reverse();
+}
+
+async function selectedFixtureComparisonReport(): Promise<MigrationComparisonReport> {
+  const [manualRegistry, generatedRegistry, generatedSidecarCheck] = await Promise.all([
+    loadRegistry(path.join(repoRoot, selectedManualRegistryPath)),
+    loadRegistry(path.join(repoRoot, selectedGeneratedSidecarPath)),
+    checkGeneratedSidecarArtifact({
+      repoRoot,
+      documentPath: selectedDocumentPath,
+      typeProfilePath: selectedTypeProfilePath,
+    }),
+  ]);
+
+  expect(generatedSidecarCheck.valid).toBe(true);
+
+  return compareMigrationPair({
+    documentPath: selectedDocumentPath,
+    manualRegistryPath: selectedManualRegistryPath,
+    generatedSidecarPath: selectedGeneratedSidecarPath,
+    manual: await comparisonSideInput(manualRegistry),
+    generated: {
+      ...(await comparisonSideInput(generatedRegistry)),
+      metadata: generatedSidecarCheck.artifact.generated,
+    },
+  });
+}
+
+async function comparisonSideInput(
+  registry: EntityRegistry,
+): Promise<MigrationComparisonReportInput["manual"]> {
+  const result = validate(
+    registry,
+    await scanMarkdown(path.join(repoRoot, selectedDocumentPath), registry),
+  );
+
+  return {
+    registry,
+    graph: deriveGraphFromRegistry(registry),
+    validation: {
+      exitCode: result.valid ? 0 : 1,
+      result,
+    },
+  };
 }
