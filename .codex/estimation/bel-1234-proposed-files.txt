@@ -1,0 +1,6 @@
+.codex/execution-briefs/BEL-1234/execution-brief.md
+.codex/execution-plans/BEL-1234/execution-plan.md
+src/markdowntrace/reporting/migration-report.ts
+src/markdowntrace/reporting/index.ts
+tests/test_migration_report.test.ts
+docs/evidence/r3-stable-migration-report-examples.md
