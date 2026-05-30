@@ -1,0 +1,113 @@
+{
+  "change": {
+    "binariesTouched": 0,
+    "filesTouched": 6,
+    "linesAdded": 189,
+    "linesChanged": 315,
+    "linesDeleted": 126,
+    "maxSingleFileChurn": 90,
+    "topLevelDirectoriesTouched": [
+      ".codex",
+      "docs",
+      "src",
+      "tests"
+    ],
+    "touchedFiles": [
+      ".codex/execution-briefs/BEL-1234/execution-brief.md",
+      ".codex/execution-plans/BEL-1234/execution-plan.md",
+      "docs/evidence/r3-stable-migration-report-examples.md",
+      "src/markdowntrace/reporting/index.ts",
+      "src/markdowntrace/reporting/migration-report.ts",
+      "tests/test_migration_report.test.ts"
+    ]
+  },
+  "codebase": {
+    "skippedBinaryFiles": 0,
+    "skippedLargeFiles": 0,
+    "sourceFiles": 109,
+    "sourceLines": 16954,
+    "trackedFiles": 113
+  },
+  "comparison": {
+    "sourceLinesChangedPct": 1.858,
+    "trackedFilesTouchedPct": 5.3097
+  },
+  "estimation": {
+    "adjustedStoryPoints": 5,
+    "baseStoryPoints": 3,
+    "confidence": "medium",
+    "decompositionDepth": 0,
+    "decompositionRationale": [
+      "decomposition rule not matched: raw footprint is below split thresholds"
+    ],
+    "decompositionRecommended": false,
+    "rationale": [
+      "base story points from line churn: 315 -> 3",
+      "risk step: top-level directories touched >= 3",
+      "risk step: proposal mode uncertainty"
+    ],
+    "riskSteps": 2,
+    "storyPoints": 5
+  },
+  "execution": {
+    "action": "proceed-with-controls",
+    "rationale": [
+      "execution may proceed after applying the listed planning notes and quality controls"
+    ]
+  },
+  "mode": "proposal",
+  "planning": {
+    "blocksExecution": false,
+    "level": "brief",
+    "matchedRules": [
+      "medium-blast-radius-shaping"
+    ],
+    "rationale": [
+      "planning rule matched: medium-blast-radius-shaping - blast radius is medium and paired with mid-sized or cross-boundary work"
+    ],
+    "recommended": true
+  },
+  "repoRoot": "/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/bel-1234-r3-2b-report-rendering",
+  "risk": {
+    "blastRadius": {
+      "investigationAreas": [
+        "Inspect schema consumers, migrations, rollback path, and data compatibility assumptions."
+      ],
+      "level": "medium",
+      "lowImpactOnly": false,
+      "recommendedControls": [
+        "Run targeted automated tests around the touched boundary.",
+        "Request review from the primary owner of the touched area.",
+        "Validate backward compatibility and rollback or repair paths for data changes."
+      ],
+      "requiresHeightenedControls": false,
+      "score": 4,
+      "signals": [
+        {
+          "key": "data-schema",
+          "matchedFiles": [
+            "docs/evidence/r3-stable-migration-report-examples.md",
+            "src/markdowntrace/reporting/migration-report.ts",
+            "tests/test_migration_report.test.ts"
+          ],
+          "reason": "database, migration, or schema path touched",
+          "weight": 3
+        },
+        {
+          "key": "cross-boundary-surface",
+          "matchedFiles": [
+            ".codex/execution-briefs/BEL-1234/execution-brief.md",
+            ".codex/execution-plans/BEL-1234/execution-plan.md",
+            "docs/evidence/r3-stable-migration-report-examples.md",
+            "src/markdowntrace/reporting/index.ts",
+            "src/markdowntrace/reporting/migration-report.ts",
+            "tests/test_migration_report.test.ts"
+          ],
+          "reason": "change spans at least 3 top-level directories",
+          "weight": 1
+        }
+      ]
+    }
+  },
+  "schemaVersion": "execution-estimation.v5"
+}
