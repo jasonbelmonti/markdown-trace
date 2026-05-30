@@ -17,6 +17,8 @@ import {
   MIGRATION_COMPARISON_DIMENSIONS,
   normalizeMetadataEntries,
   normalizeMigrationComparison,
+  type MigrationApprovedIntentionalDelta,
+  type MigrationComparisonDimension,
   type MigrationComparisonReport,
   type MigrationComparisonReportInput,
   type MigrationComparisonSideInput,
@@ -189,6 +191,7 @@ describe("migration comparison contract", () => {
       documentPath: "fixtures/migration-test.md",
       manualRegistryPath: "fixtures/manual.yaml",
       generatedSidecarPath: "fixtures/generated.yaml",
+      authorityState: "yaml-authoritative",
       manual: sideInput("manual"),
       generated: sideInput("manual"),
     });
@@ -203,41 +206,101 @@ describe("migration comparison contract", () => {
     );
   });
 
-  it("classifies unexplained dimension drift as blocking", () => {
-    const generated = sideInput("manual");
+  for (const dimension of MIGRATION_COMPARISON_DIMENSIONS) {
+    it(`classifies approved ${dimension} drift as intentional`, () => {
+      const { delta, generated, manual } = singleDimensionDrift(dimension);
+      const rationale = `Approved ${dimension} drift for deterministic classification coverage.`;
+      const report = compareMigrationPair({
+        documentPath: "fixtures/migration-test.md",
+        manualRegistryPath: "fixtures/manual.yaml",
+        generatedSidecarPath: "fixtures/generated.yaml",
+        authorityState: "yaml-authoritative",
+        approvedIntentionalDeltas: [
+          {
+            dimension,
+            ...delta,
+            rationale,
+          },
+        ],
+        manual,
+        generated,
+      });
+
+      expect(report.exitCode).toBe(0);
+      expect(dimensionResult(report, dimension)).toMatchObject({
+        status: "intentional",
+        deltas: [expect.objectContaining({ ...delta, rationale })],
+      });
+    });
+  }
+
+  for (const dimension of MIGRATION_COMPARISON_DIMENSIONS) {
+    it(`classifies unexplained ${dimension} drift as blocking`, () => {
+      const { delta, generated, manual } = singleDimensionDrift(dimension);
+      const report = compareMigrationPair({
+        documentPath: "fixtures/migration-test.md",
+        manualRegistryPath: "fixtures/manual.yaml",
+        generatedSidecarPath: "fixtures/generated.yaml",
+        authorityState: "yaml-authoritative",
+        manual,
+        generated,
+      });
+
+      expect(report.exitCode).toBe(1);
+      expect(dimensionResult(report, dimension)).toMatchObject({
+        status: "blocking",
+        deltas: [expect.objectContaining(delta)],
+      });
+    });
+  }
+
+  it("keeps generated metadata absence blocking outside yaml-authoritative state", () => {
+    const checkedMetadata = generatedMetadata();
     const report = compareMigrationPair({
       documentPath: "fixtures/migration-test.md",
       manualRegistryPath: "fixtures/manual.yaml",
       generatedSidecarPath: "fixtures/generated.yaml",
-      manual: sideInput("manual"),
-      generated: {
-        ...generated,
-        graph: {
-          nodes: generated.graph.nodes,
-          edges: [],
-        },
+      authorityState: "generated-authoritative",
+      generatedMetadataCheck: {
+        valid: true,
+        metadata: checkedMetadata,
       },
+      manual: sideInput("manual"),
+      generated: sideInput("manual", checkedMetadata),
     });
 
     expect(report.exitCode).toBe(1);
-    expect(
-      report.dimensions.find((dimension) => dimension.dimension === "graph"),
-    ).toMatchObject({
+    expect(dimensionResult(report, "metadata")).toMatchObject({
       status: "blocking",
-      deltas: [
-        {
-          path: "edges.0.source",
-        },
-        {
-          path: "edges.0.target",
-        },
-        {
-          path: "edges.1.source",
-        },
-        {
-          path: "edges.1.target",
-        },
-      ],
+      deltas: expect.arrayContaining([
+        expect.objectContaining({
+          path: "generated.present",
+          expected: false,
+          actual: true,
+        }),
+      ]),
+    });
+  });
+
+  it("does not allow generic approvals to bypass the metadata absence authority guard", () => {
+    const checkedMetadata = generatedMetadata();
+    const report = compareMigrationPair({
+      documentPath: "fixtures/migration-test.md",
+      manualRegistryPath: "fixtures/manual.yaml",
+      generatedSidecarPath: "fixtures/generated.yaml",
+      authorityState: "generated-authoritative",
+      approvedIntentionalDeltas: generatedMetadataAbsenceApprovals(checkedMetadata),
+      generatedMetadataCheck: {
+        valid: true,
+        metadata: checkedMetadata,
+      },
+      manual: sideInput("manual"),
+      generated: sideInput("manual", checkedMetadata),
+    });
+
+    expect(report.exitCode).toBe(1);
+    expect(dimensionResult(report, "metadata")).toMatchObject({
+      status: "blocking",
     });
   });
 
@@ -269,6 +332,7 @@ describe("migration comparison contract", () => {
       documentPath: "fixtures/migration-test.md",
       manualRegistryPath: "fixtures/manual.yaml",
       generatedSidecarPath: "fixtures/generated.yaml",
+      authorityState: "yaml-authoritative",
       generatedMetadataCheck: {
         valid: true,
         metadata: checkedMetadata,
@@ -338,6 +402,17 @@ describe("migration comparison contract", () => {
 
 type FixtureOrder = "ordered" | "reversed";
 
+type IntentionalDeltaExpectation = Omit<
+  MigrationApprovedIntentionalDelta,
+  "dimension" | "rationale"
+>;
+
+interface SingleDimensionDrift {
+  readonly delta: IntentionalDeltaExpectation;
+  readonly generated: MigrationComparisonSideInput;
+  readonly manual: MigrationComparisonSideInput;
+}
+
 function sideInput(
   side: "manual" | "generated",
   metadata?: MigrationGeneratedMetadata,
@@ -349,6 +424,133 @@ function sideInput(
     ...(metadata === undefined ? {} : { metadata }),
     validation: validationFixture(order, side),
   };
+}
+
+function singleDimensionDrift(dimension: MigrationComparisonDimension): SingleDimensionDrift {
+  switch (dimension) {
+    case "registry":
+      return registryDimensionDrift();
+    case "graph":
+      return graphDimensionDrift();
+    case "metadata":
+      return metadataDimensionDrift();
+    case "validation":
+      return validationDimensionDrift();
+  }
+}
+
+function registryDimensionDrift(): SingleDimensionDrift {
+  const generated = sideInput("manual");
+
+  return {
+    delta: {
+      path: "document.title",
+      expected: "Migration Test",
+      actual: "Generated Migration Test",
+    },
+    manual: sideInput("manual"),
+    generated: {
+      ...generated,
+      registry: new EntityRegistry({
+        registryVersion: generated.registry.registryVersion,
+        document: {
+          ...generated.registry.document,
+          title: "Generated Migration Test",
+        },
+        entities: generated.registry.entities,
+        edges: generated.registry.edges,
+        externalRefs: generated.registry.externalRefs,
+      }),
+    },
+  };
+}
+
+function graphDimensionDrift(): SingleDimensionDrift {
+  const generated = sideInput("manual");
+
+  return {
+    delta: {
+      path: "nodes.0.label",
+      expected: "CON-1",
+      actual: "CON-DRIFT",
+    },
+    manual: sideInput("manual"),
+    generated: {
+      ...generated,
+      graph: {
+        ...generated.graph,
+        nodes: generated.graph.nodes.map((node) =>
+          node.id === "exec.con.1" ? { ...node, label: "CON-DRIFT" } : node,
+        ),
+      },
+    },
+  };
+}
+
+function metadataDimensionDrift(): SingleDimensionDrift {
+  const manualMetadata = generatedMetadata();
+  const generatedMetadataValue: MigrationGeneratedMetadata = {
+    ...manualMetadata,
+    generator: {
+      ...manualMetadata.generator,
+      packageVersion: "0.2.0",
+    },
+  };
+
+  return {
+    delta: {
+      path: "generated.generator.packageVersion",
+      expected: "0.1.0",
+      actual: "0.2.0",
+    },
+    manual: sideInput("manual", manualMetadata),
+    generated: sideInput("manual", generatedMetadataValue),
+  };
+}
+
+function validationDimensionDrift(): SingleDimensionDrift {
+  const generated = sideInput("manual");
+
+  return {
+    delta: {
+      path: "exitCode",
+      expected: 1,
+      actual: 0,
+    },
+    manual: sideInput("manual"),
+    generated: {
+      ...generated,
+      validation: {
+        ...generated.validation,
+        exitCode: 0,
+      },
+    },
+  };
+}
+
+function dimensionResult(
+  report: MigrationComparisonReport,
+  dimension: MigrationComparisonDimension,
+): MigrationComparisonReport["dimensions"][number] {
+  const result = report.dimensions.find((entry) => entry.dimension === dimension);
+
+  if (result === undefined) {
+    throw new Error(`missing ${dimension} result`);
+  }
+
+  return result;
+}
+
+function generatedMetadataAbsenceApprovals(
+  metadata: MigrationGeneratedMetadata,
+): readonly MigrationApprovedIntentionalDelta[] {
+  return normalizeMetadataEntries(metadata).map((entry) => ({
+    dimension: "metadata",
+    path: entry.path,
+    expected: entry.path === "generated.present" ? false : ({ kind: "missing" } as const),
+    actual: entry.value,
+    rationale: "Unsafe generic metadata absence approval.",
+  }));
 }
 
 function registryFixture(order: FixtureOrder): EntityRegistry {
@@ -695,6 +897,7 @@ async function selectedFixtureComparisonReport(): Promise<MigrationComparisonRep
     documentPath: selectedDocumentPath,
     manualRegistryPath: selectedManualRegistryPath,
     generatedSidecarPath: selectedGeneratedSidecarPath,
+    authorityState: "yaml-authoritative",
     generatedMetadataCheck: {
       valid: generatedSidecarCheck.valid,
       metadata: generatedSidecarCheck.artifact.generated,

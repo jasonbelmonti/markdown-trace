@@ -17,9 +17,15 @@ export const MIGRATION_DIMENSION_STATUSES = [
   "blocking",
 ] as const;
 
+export const MIGRATION_AUTHORITY_STATES = [
+  "yaml-authoritative",
+  "generated-authoritative",
+] as const;
+
 export type MigrationComparisonDimension = (typeof MIGRATION_COMPARISON_DIMENSIONS)[number];
 export type MigrationComparisonSide = (typeof MIGRATION_COMPARISON_SIDES)[number];
 export type MigrationDimensionStatus = (typeof MIGRATION_DIMENSION_STATUSES)[number];
+export type MigrationAuthorityState = (typeof MIGRATION_AUTHORITY_STATES)[number];
 
 export type MigrationNormalizedValue = string | number | boolean | null;
 
@@ -55,6 +61,14 @@ export interface MigrationDelta {
   readonly rationale: string;
 }
 
+export interface MigrationApprovedIntentionalDelta {
+  readonly dimension: MigrationComparisonDimension;
+  readonly path: string;
+  readonly expected: MigrationDeltaValue;
+  readonly actual: MigrationDeltaValue;
+  readonly rationale: string;
+}
+
 export interface MigrationDimensionResult {
   readonly dimension: MigrationComparisonDimension;
   readonly status: MigrationDimensionStatus;
@@ -73,6 +87,8 @@ export interface MigrationComparisonReportInput extends MigrationNormalizationIn
   readonly documentPath: string;
   readonly manualRegistryPath: string;
   readonly generatedSidecarPath: string;
+  readonly authorityState: MigrationAuthorityState;
+  readonly approvedIntentionalDeltas?: readonly MigrationApprovedIntentionalDelta[];
   readonly generatedMetadataCheck?: MigrationGeneratedMetadataCheck;
 }
 

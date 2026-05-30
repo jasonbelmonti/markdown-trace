@@ -1,7 +1,10 @@
 export {
+  MIGRATION_AUTHORITY_STATES,
   MIGRATION_COMPARISON_DIMENSIONS,
   MIGRATION_COMPARISON_SIDES,
   MIGRATION_DIMENSION_STATUSES,
+  type MigrationApprovedIntentionalDelta,
+  type MigrationAuthorityState,
   type MigrationComparisonDimension,
   type MigrationComparisonReport,
   type MigrationComparisonReportInput,
