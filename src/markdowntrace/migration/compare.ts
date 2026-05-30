@@ -9,7 +9,7 @@ import {
   type MigrationMissingValue,
   type MigrationNormalizedEntry,
 } from "./model.js";
-import { normalizeMigrationComparison } from "./normalize.js";
+import { normalizeMetadataEntries, normalizeMigrationComparison } from "./normalize.js";
 
 const MISSING_VALUE = {
   kind: "missing",
@@ -23,7 +23,7 @@ export function compareMigrationPair(
     const manual = snapshots?.find((snapshot) => snapshot.side === "manual")?.entries ?? [];
     const generated = snapshots?.find((snapshot) => snapshot.side === "generated")?.entries ?? [];
 
-    return classifyDimension(dimension, diffEntries(manual, generated), input.documentPath);
+    return classifyDimension(dimension, diffEntries(manual, generated), input);
   });
 
   return {
@@ -38,7 +38,7 @@ export function compareMigrationPair(
 function classifyDimension(
   dimension: MigrationComparisonDimension,
   deltas: readonly MigrationDelta[],
-  documentPath: string,
+  input: MigrationComparisonReportInput,
 ): MigrationDimensionResult {
   if (deltas.length === 0) {
     return {
@@ -49,7 +49,7 @@ function classifyDimension(
   }
 
   const status: MigrationDimensionStatus =
-    dimension === "metadata" && isIntentionalGeneratedMetadataDelta(deltas, documentPath)
+    dimension === "metadata" && isIntentionalGeneratedMetadataDelta(deltas, input)
       ? "intentional"
       : "blocking";
   const intentionalRationale = [
@@ -113,22 +113,61 @@ function entryValue(
 
 function isIntentionalGeneratedMetadataDelta(
   deltas: readonly MigrationDelta[],
-  documentPath: string,
+  input: MigrationComparisonReportInput,
 ): boolean {
+  if (input.generatedMetadataCheck?.valid !== true) {
+    return false;
+  }
+
   const deltaByPath = new Map(deltas.map((delta) => [delta.path, delta]));
+  const checkedMetadataEntries = normalizeMetadataEntries(input.generatedMetadataCheck.metadata);
+  const checkedMetadataByPath = entriesByPath(checkedMetadataEntries);
 
   return (
-    deltaByPath.get("generated.present")?.expected === false &&
-    deltaByPath.get("generated.present")?.actual === true &&
-    deltaByPath.get("generated.source.documentPath")?.actual === documentPath &&
-    deltaByPath.get("generated.artifactVersion")?.actual ===
+    haveSamePaths(deltaByPath, checkedMetadataByPath) &&
+    checkedMetadataByPath.get("generated.present") === true &&
+    checkedMetadataByPath.get("generated.source.documentPath") === input.documentPath &&
+    checkedMetadataByPath.get("generated.artifactVersion") ===
       "markdown-trace.generated-sidecar.v0" &&
-    deltaByPath.get("generated.artifactKind")?.actual === "registry" &&
-    deltaByPath.get("generated.reviewMarker")?.actual === "generated-by-markdown-trace" &&
-    deltaByPath.get("generated.humanEditable")?.actual === false &&
-    deltaByPath.get("generated.generator.packageName")?.actual === "markdown-trace" &&
-    deltaByPath.get("generated.generator.serialization")?.actual === "yaml-lf-final-newline-v0"
+    checkedMetadataByPath.get("generated.artifactKind") === "registry" &&
+    checkedMetadataByPath.get("generated.reviewMarker") === "generated-by-markdown-trace" &&
+    checkedMetadataByPath.get("generated.humanEditable") === false &&
+    checkedMetadataByPath.get("generated.generator.packageName") === "markdown-trace" &&
+    checkedMetadataByPath.get("generated.generator.serialization") ===
+      "yaml-lf-final-newline-v0" &&
+    checkedMetadataEntries.every((entry) =>
+      hasIntentionalMetadataDelta(deltaByPath, entry.path, entry.value),
+    )
   );
+}
+
+function hasIntentionalMetadataDelta(
+  deltas: ReadonlyMap<string, MigrationDelta>,
+  path: string,
+  checkedValue: MigrationDeltaValue,
+): boolean {
+  const delta = deltas.get(path);
+
+  if (delta === undefined || delta.actual !== checkedValue) {
+    return false;
+  }
+
+  return path === "generated.present" ? delta.expected === false : isMissingValue(delta.expected);
+}
+
+function haveSamePaths(
+  left: ReadonlyMap<string, unknown>,
+  right: ReadonlyMap<string, unknown>,
+): boolean {
+  if (left.size !== right.size) {
+    return false;
+  }
+
+  return [...left.keys()].every((path) => right.has(path));
+}
+
+function isMissingValue(value: MigrationDeltaValue): value is MigrationMissingValue {
+  return typeof value === "object" && value !== null && value.kind === "missing";
 }
 
 function compareTexts(left: string, right: string): number {

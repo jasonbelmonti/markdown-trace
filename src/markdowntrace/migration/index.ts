@@ -13,6 +13,7 @@ export {
   type MigrationDimensionSnapshot,
   type MigrationDimensionStatus,
   type MigrationGeneratedMetadata,
+  type MigrationGeneratedMetadataCheck,
   type MigrationMissingValue,
   type MigrationNormalizationInput,
   type MigrationNormalizedComparison,

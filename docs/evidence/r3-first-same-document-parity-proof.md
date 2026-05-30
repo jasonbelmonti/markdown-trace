@@ -64,11 +64,11 @@ Comparison report summary from the built implementation:
 
 | Check | Command | Result |
 | --- | --- | --- |
-| Focused parity tests | `npm test -- tests/test_migration_comparison.test.ts` | Passed: 1 test file, 9 tests. |
+| Focused parity tests | `npm test -- tests/test_migration_comparison.test.ts` | Passed: 1 test file, 10 tests. |
 | Selected manual validation | `node dist/markdowntrace/cli.js validate --registry fixtures/r1-link-backed-entity-syntax/minimal-link-backed-manual-registry.yaml --document fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md` | Exited `0`; status `PASS`; findings `0`. |
 | Selected generated sidecar check | `node dist/markdowntrace/cli.js derive-sidecar --document fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md --type-profile fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml --check` | Exited `0`; printed the checked generated sidecar path. |
 | TypeScript typecheck | `npm run typecheck` | Exited `0`. |
-| Full test suite | `npm test` | Passed: 13 test files, 108 tests. |
+| Full test suite | `npm test` | Passed: 13 test files, 109 tests. |
 | Build | `npm run build` | Exited `0`. |
 | R0 YAML compatibility | `npm run validate:fixture` | Exited `0`; report status `PASS`; findings `0`. |
 | R0 derive compatibility | `npm run derive:fixture` | Exited `0`; `diagnostics: []`. |

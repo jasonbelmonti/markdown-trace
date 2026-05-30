@@ -241,6 +241,64 @@ describe("migration comparison contract", () => {
     });
   });
 
+  it("classifies generated metadata that differs from the checked sidecar as blocking", () => {
+    const checkedMetadata = generatedMetadata();
+    const checkedTypeProfile = checkedMetadata.typeProfile;
+
+    if (checkedTypeProfile === undefined) {
+      throw new Error("generated metadata fixture must include type profile metadata");
+    }
+
+    const driftedMetadata: MigrationGeneratedMetadata = {
+      ...checkedMetadata,
+      source: {
+        ...checkedMetadata.source,
+        documentSha256: "unsupported-source-drift",
+      },
+      typeProfile: {
+        ...checkedTypeProfile,
+        pathSha256: "unsupported-profile-path-drift",
+      },
+      generator: {
+        ...checkedMetadata.generator,
+        packageVersion: "unsupported-version-drift",
+        command: "unsupported-command-drift",
+      },
+    };
+    const report = compareMigrationPair({
+      documentPath: "fixtures/migration-test.md",
+      manualRegistryPath: "fixtures/manual.yaml",
+      generatedSidecarPath: "fixtures/generated.yaml",
+      generatedMetadataCheck: {
+        valid: true,
+        metadata: checkedMetadata,
+      },
+      manual: sideInput("manual"),
+      generated: sideInput("manual", driftedMetadata),
+    });
+
+    expect(report.exitCode).toBe(1);
+    expect(
+      report.dimensions.find((dimension) => dimension.dimension === "metadata"),
+    ).toMatchObject({
+      status: "blocking",
+      deltas: expect.arrayContaining([
+        expect.objectContaining({
+          path: "generated.source.documentSha256",
+          actual: "unsupported-source-drift",
+        }),
+        expect.objectContaining({
+          path: "generated.typeProfile.pathSha256",
+          actual: "unsupported-profile-path-drift",
+        }),
+        expect.objectContaining({
+          path: "generated.generator.command",
+          actual: "unsupported-command-drift",
+        }),
+      ]),
+    });
+  });
+
   it("produces the first selected same-document parity report", async () => {
     const report = await selectedFixtureComparisonReport();
 
@@ -637,6 +695,10 @@ async function selectedFixtureComparisonReport(): Promise<MigrationComparisonRep
     documentPath: selectedDocumentPath,
     manualRegistryPath: selectedManualRegistryPath,
     generatedSidecarPath: selectedGeneratedSidecarPath,
+    generatedMetadataCheck: {
+      valid: generatedSidecarCheck.valid,
+      metadata: generatedSidecarCheck.artifact.generated,
+    },
     manual: await comparisonSideInput(manualRegistry),
     generated: {
       ...(await comparisonSideInput(generatedRegistry)),

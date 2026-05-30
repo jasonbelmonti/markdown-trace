@@ -73,6 +73,7 @@ export interface MigrationComparisonReportInput extends MigrationNormalizationIn
   readonly documentPath: string;
   readonly manualRegistryPath: string;
   readonly generatedSidecarPath: string;
+  readonly generatedMetadataCheck?: MigrationGeneratedMetadataCheck;
 }
 
 export interface MigrationValidationInput {
@@ -81,6 +82,11 @@ export interface MigrationValidationInput {
 }
 
 export type MigrationGeneratedMetadata = GeneratedSidecarArtifact["generated"];
+
+export interface MigrationGeneratedMetadataCheck {
+  readonly valid: boolean;
+  readonly metadata: MigrationGeneratedMetadata;
+}
 
 export interface MigrationComparisonSideInput {
   readonly registry: EntityRegistry;
