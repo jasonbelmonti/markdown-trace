@@ -4,13 +4,17 @@ export {
   MIGRATION_DIMENSION_STATUSES,
   type MigrationComparisonDimension,
   type MigrationComparisonReport,
+  type MigrationComparisonReportInput,
   type MigrationComparisonSide,
   type MigrationComparisonSideInput,
   type MigrationDelta,
+  type MigrationDeltaValue,
   type MigrationDimensionResult,
   type MigrationDimensionSnapshot,
   type MigrationDimensionStatus,
   type MigrationGeneratedMetadata,
+  type MigrationGeneratedMetadataCheck,
+  type MigrationMissingValue,
   type MigrationNormalizationInput,
   type MigrationNormalizedComparison,
   type MigrationNormalizedDimension,
@@ -18,6 +22,7 @@ export {
   type MigrationNormalizedValue,
   type MigrationValidationInput,
 } from "./model.js";
+export { compareMigrationPair } from "./compare.js";
 export {
   normalizeGraphEntries,
   normalizeMetadataEntries,

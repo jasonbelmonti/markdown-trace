@@ -23,6 +23,12 @@ export type MigrationDimensionStatus = (typeof MIGRATION_DIMENSION_STATUSES)[num
 
 export type MigrationNormalizedValue = string | number | boolean | null;
 
+export interface MigrationMissingValue {
+  readonly kind: "missing";
+}
+
+export type MigrationDeltaValue = MigrationNormalizedValue | MigrationMissingValue;
+
 export interface MigrationNormalizedEntry {
   readonly path: string;
   readonly value: MigrationNormalizedValue;
@@ -44,8 +50,8 @@ export interface MigrationNormalizedComparison {
 
 export interface MigrationDelta {
   readonly path: string;
-  readonly expected: MigrationNormalizedValue;
-  readonly actual: MigrationNormalizedValue;
+  readonly expected: MigrationDeltaValue;
+  readonly actual: MigrationDeltaValue;
   readonly rationale: string;
 }
 
@@ -63,12 +69,24 @@ export interface MigrationComparisonReport {
   readonly exitCode: number;
 }
 
+export interface MigrationComparisonReportInput extends MigrationNormalizationInput {
+  readonly documentPath: string;
+  readonly manualRegistryPath: string;
+  readonly generatedSidecarPath: string;
+  readonly generatedMetadataCheck?: MigrationGeneratedMetadataCheck;
+}
+
 export interface MigrationValidationInput {
   readonly exitCode: number;
   readonly result: ValidationResult;
 }
 
 export type MigrationGeneratedMetadata = GeneratedSidecarArtifact["generated"];
+
+export interface MigrationGeneratedMetadataCheck {
+  readonly valid: boolean;
+  readonly metadata: MigrationGeneratedMetadata;
+}
 
 export interface MigrationComparisonSideInput {
   readonly registry: EntityRegistry;
