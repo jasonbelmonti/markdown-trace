@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,7 +13,11 @@ const registryPath = "fixtures/r0-document-local-registry/entity-registry.yaml";
 const documentPath = "fixtures/r0-document-local-registry/execution-spec.md";
 const r1DocumentPath =
   "fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md";
+const r1ManualRegistryPath =
+  "fixtures/r1-link-backed-entity-syntax/minimal-link-backed-manual-registry.yaml";
 const r1ProfilePath = "fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml";
+const r1GeneratedSidecarPath =
+  "fixtures/r1-link-backed-entity-syntax/.markdown-trace/generated/minimal-link-backed-execution-spec--profile-minimal-type-profile-378211c9.entity-registry.yaml";
 const evidencePath = path.join(repoRoot, "docs/evidence/valid-fixture-report.md");
 
 describe("markdown-trace CLI", () => {
@@ -63,6 +67,84 @@ describe("markdown-trace CLI", () => {
     expect(exitCode).toBe(2);
     expect(stdout).toEqual([]);
     expect(stderr.join("")).toContain("Usage: markdown-trace validate");
+  });
+
+  it("runs the migration check command non-interactively for the minimal R1 fixture", async () => {
+    const stdout: string[] = [];
+    const stderr: string[] = [];
+    const exitCode = await main(
+      [
+        "migration-check",
+        "--document",
+        r1DocumentPath,
+        "--manual-registry",
+        r1ManualRegistryPath,
+        "--type-profile",
+        r1ProfilePath,
+      ],
+      {
+        cwd: repoRoot,
+        stdout: (text) => stdout.push(text),
+        stderr: (text) => stderr.push(text),
+      },
+    );
+    const output = stdout.join("");
+
+    expect(exitCode).toBe(0);
+    expect(stderr).toEqual([]);
+    expect(output).toContain("# Migration Check Report");
+    expect(output).toContain("| Exit code | `0` |");
+    expect(output).toContain("| `yaml-compatibility` | `passed` | `0` |");
+    expect(output).toContain("| `generated-sidecar` | `passed` | `0` |");
+    expect(output).toContain("| `comparison` | `passed` | `0` |");
+    expect(output).toContain("# Migration Comparison Report");
+    expect(output).toContain("| `registry` | `equivalent` | `0` |");
+  });
+
+  it("returns a non-zero migration check result when comparison drift blocks migration", async () => {
+    const temporaryRepo = await preparedMigrationCliRepo([
+      r1ManualRegistryPath,
+      r1GeneratedSidecarPath,
+    ]);
+    const registryPath = path.join(temporaryRepo.path, r1ManualRegistryPath);
+    const driftedRegistry = (await readFile(registryPath, "utf8")).replace(
+      "title: Minimal R1 Link-Backed Fixture",
+      "title: Drifted Manual Fixture",
+    );
+    await writeFile(registryPath, driftedRegistry, "utf8");
+
+    try {
+      const stdout: string[] = [];
+      const stderr: string[] = [];
+      const exitCode = await main(
+        [
+          "migration-check",
+          "--document",
+          r1DocumentPath,
+          "--manual-registry",
+          r1ManualRegistryPath,
+          "--type-profile",
+          r1ProfilePath,
+        ],
+        {
+          cwd: temporaryRepo.path,
+          stdout: (text) => stdout.push(text),
+          stderr: (text) => stderr.push(text),
+        },
+      );
+      const output = stdout.join("");
+
+      expect(exitCode).toBe(1);
+      expect(stderr).toEqual([]);
+      expect(output).toContain("| Exit code | `1` |");
+      expect(output).toContain("| `yaml-compatibility` | `passed` | `0` |");
+      expect(output).toContain("| `generated-sidecar` | `passed` | `0` |");
+      expect(output).toContain("| `comparison` | `failed` | `1` |");
+      expect(output).toContain("Migration comparison reported blocking drift.");
+      expect(output).toContain("| `registry` | `blocking` | `1` |");
+    } finally {
+      await temporaryRepo.remove();
+    }
   });
 
   it("does not label sidecar validation input errors as R1 derivation surfaces", async () => {
@@ -321,3 +403,31 @@ describe("markdown-trace CLI", () => {
     }
   });
 });
+
+interface TemporaryRepo {
+  readonly path: string;
+  readonly remove: () => Promise<void>;
+}
+
+async function preparedMigrationCliRepo(extraFiles: readonly string[]): Promise<TemporaryRepo> {
+  const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "markdown-trace-cli-"));
+  const files = ["package.json", r1DocumentPath, r1ProfilePath, ...extraFiles];
+
+  for (const file of files) {
+    await copyRepoFile(temporaryRoot, file);
+  }
+
+  return {
+    path: temporaryRoot,
+    remove: async () => {
+      await rm(temporaryRoot, { force: true, recursive: true });
+    },
+  };
+}
+
+async function copyRepoFile(temporaryRoot: string, file: string): Promise<void> {
+  const destination = path.join(temporaryRoot, file);
+
+  await mkdir(path.dirname(destination), { recursive: true });
+  await copyFile(path.join(repoRoot, file), destination);
+}
