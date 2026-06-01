@@ -11,6 +11,17 @@ export type CoverageCaseId = (typeof requiredCoverageCaseIds)[number];
 export type ExpectedResult = "pass" | "fail";
 export type MatrixStatus = "PASS" | "FAIL";
 
+export const coverageEvidenceIssueIds = ["BEL-1239", "BEL-1240"] as const;
+
+export type CoverageEvidenceIssueId = (typeof coverageEvidenceIssueIds)[number];
+
+export type NegativeProbeCaseId = Extract<
+  CoverageCaseId,
+  | "stale-artifact-failure"
+  | "missing-artifact-failure"
+  | "malformed-profile-failure"
+>;
+
 export interface CoverageMatrixRow {
   readonly caseId: CoverageCaseId;
   readonly caseName: string;
@@ -28,8 +39,9 @@ export interface CoverageMatrixEvidence {
   readonly evidenceId: "R3-EVD-6";
   readonly validationCheckpoint: "VAL-6";
   readonly workPackage: "WP-4";
-  readonly issue: "BEL-1239";
+  readonly relatedIssues: readonly CoverageEvidenceIssueId[];
   readonly rows: readonly CoverageMatrixRow[];
+  readonly negativeProbes: readonly NegativeProbeEvidence[];
   readonly missingRequiredCaseIds: readonly CoverageCaseId[];
   readonly status: MatrixStatus;
 }
@@ -39,6 +51,16 @@ export interface CommandProbe {
   readonly exitCode: number;
   readonly stdout: string;
   readonly stderr: string;
+  readonly status: MatrixStatus;
+}
+
+export interface NegativeProbeEvidence {
+  readonly caseId: NegativeProbeCaseId;
+  readonly probeName: string;
+  readonly failureSurface: string;
+  readonly exitCode: number;
+  readonly deterministicSignal: string;
+  readonly preservationEvidence: string;
   readonly status: MatrixStatus;
 }
 
