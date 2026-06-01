@@ -21,7 +21,7 @@ describe("migration coverage matrix evidence", () => {
     expect(report).toBe(await readFile(evidencePath, "utf8"));
     expect(evidence.evidenceId).toBe("R3-EVD-6");
     expect(evidence.validationCheckpoint).toBe("VAL-6");
-    expect(evidence.issue).toBe("BEL-1239");
+    expect(evidence.relatedIssues).toEqual(["BEL-1239", "BEL-1240"]);
     expect(evidence.status).toBe("PASS");
     expect(evidence.missingRequiredCaseIds).toEqual([]);
     expect(evidence.rows.map((row) => row.caseId)).toEqual(
@@ -41,6 +41,24 @@ describe("migration coverage matrix evidence", () => {
       ["missing-artifact-failure", "fail"],
       ["malformed-profile-failure", "fail"],
     ]);
+    expect(
+      evidence.negativeProbes.map((probe) => [
+        probe.caseId,
+        probe.exitCode,
+        probe.status,
+      ]),
+    ).toEqual([
+      ["stale-artifact-failure", 1, "PASS"],
+      ["missing-artifact-failure", 1, "PASS"],
+      ["malformed-profile-failure", 2, "PASS"],
+    ]);
+    expect(
+      evidence.negativeProbes.every(
+        (probe) =>
+          probe.deterministicSignal.length > 0 &&
+          probe.preservationEvidence.length > 0,
+      ),
+    ).toBe(true);
   });
 
   it("treats any omitted required row as an MS-3 blocker", () => {
