@@ -4,8 +4,8 @@ Evidence ID: `R3-EVD-10`
 Validation checkpoint: `VAL-10`
 Work package: `WP-5`
 Related issue: `BEL-1242`
-Status: Repository CI workflow defined and locally validated; hosted run and branch-protection evidence still required before authority flip
-Observed at: `2026-06-02T02:15:24Z`
+Status: Repository CI workflow is hosted and required on `main`; source-authority flip remains a separate approval
+Observed at: `2026-06-02T15:58:17Z`
 
 ## Objective
 
@@ -13,7 +13,7 @@ Summarize the R3 YAML replacement migration evidence package, preserve the separ
 
 ## Final Evidence Boundary
 
-This package supports final R3 evidence review only. It does not perform or approve a source-authority flip, remove YAML support, make generated sidecars authoritative, or declare replacement readiness before hosted CI run evidence and branch-protection enforcement evidence exist.
+This package supports final R3 evidence review only. It does not perform or approve a source-authority flip, remove YAML support, make generated sidecars authoritative, or declare replacement readiness without a later separate authority decision.
 
 ## Evidence Inventory
 
@@ -29,18 +29,20 @@ This package supports final R3 evidence review only. It does not perform or appr
 | `R3-EVD-7` | `docs/evidence/r3-reviewer-operator-migration-policy.md` | Documented reviewer/operator policy for checked non-human-editable sidecars, regeneration, drift handling, and authority-state boundaries. | `PASS` |
 | `R3-EVD-8` | `docs/evidence/r3-rollback-rehearsal.md` | Rehearsed stale artifact detection, source-control restore, deterministic regeneration, check-mode verification, migration check verification, and clean worktree recovery. | `PASS` |
 | `R3-EVD-9` | `docs/evidence/r3-baseline-regression-suite-status.md` | Recorded TypeScript, test, build, R0 YAML, R0 derive, migration check, and diff hygiene baseline status before final evidence. | `PASS` |
-| `R3-EVD-10` | `docs/evidence/r3-final-migration-evidence.md` | Summarizes final evidence, CI status, blocker state, and no-flip boundary. | `PASS WITH HOSTED ENFORCEMENT PENDING` |
+| `R3-EVD-10` | `docs/evidence/r3-final-migration-evidence.md` | Summarizes final evidence, CI status, enforcement state, and no-flip boundary. | `PASS WITH CI ENFORCEMENT` |
 
 ## CI Enforcement Status
 
 | Check | Observed result | Authority-flip impact |
 | --- | --- | --- |
-| Repository CI workflow definition | `.github/workflows/ci.yml` runs `npm run ci:enforcement` on pull requests and pushes to `main`. | Defines the hosted enforcement path; pushed workflow run evidence is still required before any source-authority flip request. |
-| Migrated fixture CI command surface | `scripts/ci-enforcement.sh` runs typecheck, tests, build, R0 validation, R0 derivation, migration check, minimal generated sidecar check, CODEFACTORY generated sidecar check, and repository mutation detection. | Covers the required repository-owned enforcement commands once the hosted workflow passes. |
-| Branch protection or ruleset enforcement | No local evidence exists yet that GitHub requires the workflow before merge to `main`. | Blocks any source-authority flip request until configured and recorded. |
-| Local CI-equivalent run | `npm run ci:enforcement` passed locally on `2026-06-02`; full test suite passed 19 files and 134 tests. | Supports PR readiness only; does not by itself satisfy hosted CI enforcement. |
+| Repository CI workflow definition | `.github/workflows/ci.yml` runs `npm run ci:enforcement` on pull requests and pushes to `main`. | Defines the hosted enforcement path for future source-authority decision review. |
+| Migrated fixture CI command surface | `scripts/ci-enforcement.sh` runs typecheck, tests, build, R0 validation, R0 derivation, migration check, minimal generated sidecar check, CODEFACTORY generated sidecar check, and repository mutation detection. | Covers the required repository-owned enforcement commands. |
+| Hosted `main` run evidence | GitHub Actions run `26829545825` passed on `main` commit `df89757701b22fdf128dde6d246ec6c0edfba41f`: `https://github.com/jasonbelmonti/markdown-trace/actions/runs/26829545825`. | Provides hosted CI evidence for the landed workflow after the README merge. |
+| Required-check enforcement evidence | `main` is protected and active branch ruleset `main` (`17146344`) targets `~DEFAULT_BRANCH` and requires status check context `CI enforcement` with integration id `15368`. | Satisfies the required-check enforcement blocker. |
+| Required-check update policy | Ruleset `17146344` records `strict_required_status_checks_policy: false`. | Branches must pass `CI enforcement`, but the ruleset does not require updating with latest `main` before merge. |
+| Local CI-equivalent run | `npm run ci:enforcement` passed locally on `2026-06-02`; full test suite passed 19 files and 134 tests. | Supports local review in addition to hosted enforcement. |
 
-Hosted CI enforcement is implemented at the repository workflow level but remains pending operational proof. Authority flip remains blocked until the workflow is pushed, a hosted run passes, and GitHub branch protection or a ruleset requires the workflow before merging to `main`.
+Hosted CI enforcement is implemented and required on `main`. This clears the missing-CI blocker that was recorded during `R3-MS-5`; it does not approve a source-authority flip, YAML removal, generated sidecar authority, or replacement readiness without a later separate approval record.
 
 ## Validation Results
 
@@ -55,8 +57,8 @@ Hosted CI enforcement is implemented at the repository workflow level but remain
 | CI enforcement aggregate | `npm run ci:enforcement` | Exit code `0`; ran typecheck, tests, build, fixture validation, fixture derivation, migration check, minimal sidecar check, CODEFACTORY sidecar check, and repository mutation detection. | `PASS` |
 | Diff hygiene | `git diff --check` | Exit code `0`. | `PASS` |
 | CI workflow inspection | `find .github -maxdepth 3 -type f -print` | `.github/workflows/ci.yml` exists in this worktree. | `PASS` |
-| Hosted CI run evidence | GitHub workflow run URL and result | Not available until this branch is pushed and the workflow runs on GitHub. | `PENDING` |
-| Required-check enforcement evidence | GitHub branch protection or ruleset requiring the CI workflow | Not available from this local repository change. | `PENDING` |
+| Hosted CI run evidence | `gh run list --workflow CI --branch main --limit 5 --json databaseId,status,conclusion,headSha,displayTitle,url,createdAt,updatedAt` | Run `26829545825` completed with conclusion `success` for `df89757701b22fdf128dde6d246ec6c0edfba41f`. | `PASS` |
+| Required-check enforcement evidence | `gh api repos/jasonbelmonti/markdown-trace/rulesets/17146344 --jq '{id,name,target,enforcement,conditions,rules}'` and `gh api repos/jasonbelmonti/markdown-trace/branches/main --jq '{name,protected,protection_url}'` | Active branch ruleset `main` requires status check context `CI enforcement`; `main` is protected. | `PASS` |
 | Authority-boundary inspection | Search `R3-EVD-8` and `R3-EVD-10` for authority, YAML removal, replacement readiness, and source-authority flip claims. | Matching text is explicit prohibition, blocker, or review-boundary language. | `PASS` |
 
 ## Authority Boundary
@@ -74,12 +76,12 @@ Hosted CI enforcement is implemented at the repository workflow level but remain
 | Gate | Evidence | Recommendation |
 | --- | --- | --- |
 | `R3-MS-4` | `R3-EVD-7`, `R3-EVD-8` | Review operator workflow and rollback rehearsal. If approved, proceed to `R3-MS-5` final evidence review. |
-| `R3-MS-5` | `R3-EVD-10` | Approve final evidence only as a no-flip package with CI workflow implementation recorded and hosted enforcement still pending. Do not open authority-flip work until hosted CI run evidence and required-check enforcement evidence exist. |
+| `R3-MS-5` | `R3-EVD-10` | Final evidence has CI workflow implementation, hosted run evidence, and required-check enforcement recorded. Authority flip remains a later separate approval decision. |
 
 ## Final Recommendation
 
-Close the R3 implementation evidence package only with the hosted-enforcement blocker visible. Do not request or execute a source-authority flip from this work. Continue to treat generated sidecars as checked transition evidence and keep hand-authored YAML as valid registry input until a later separately approved authority decision exists.
+Close the R3 implementation evidence package with hosted CI enforcement recorded. Do not execute a source-authority flip from this work. Continue to treat generated sidecars as checked transition evidence and keep hand-authored YAML as valid registry input until a later separately approved authority decision exists.
 
 ## Review Boundary
 
-This evidence supports `BEL-1242` and `R3-MS-5` review. It does not approve a source-authority flip, YAML removal, generated sidecar authority, branch-protection enforcement, or replacement readiness.
+This evidence supports `BEL-1242` and `R3-MS-5` review reconciliation. It records hosted CI enforcement and does not approve a source-authority flip, YAML removal, generated sidecar authority, or replacement readiness.
