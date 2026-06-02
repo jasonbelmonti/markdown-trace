@@ -13,6 +13,7 @@
     "build": "tsc -p tsconfig.build.json",
     "test": "vitest run \"--exclude=.worktrees/**\"",
     "typecheck": "tsc --noEmit",
+    "ci:enforcement": "bash scripts/ci-enforcement.sh",
     "derive:fixture": "npm run build --silent && node dist/markdowntrace/cli.js derive --document fixtures/r0-document-local-registry/execution-spec.md --namespace exec",
     "validate:fixture": "npm run build --silent && node dist/markdowntrace/cli.js validate --registry fixtures/r0-document-local-registry/entity-registry.yaml --document fixtures/r0-document-local-registry/execution-spec.md --report docs/evidence/valid-fixture-report.md",
     "migration:check": "npm run build --silent && node dist/markdowntrace/cli.js migration-check --document fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md --manual-registry fixtures/r1-link-backed-entity-syntax/minimal-link-backed-manual-registry.yaml --type-profile fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml"
