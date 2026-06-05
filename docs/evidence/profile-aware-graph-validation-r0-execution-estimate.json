@@ -1,0 +1,105 @@
+{
+  "change": {
+    "binariesTouched": 0,
+    "filesTouched": 10,
+    "linesAdded": 540,
+    "linesChanged": 900,
+    "linesDeleted": 360,
+    "maxSingleFileChurn": 90,
+    "topLevelDirectoriesTouched": [
+      "docs",
+      "experiments"
+    ],
+    "touchedFiles": [
+      "docs/evidence/profile-aware-graph-validation-r0-report.md",
+      "docs/markdown-trace-profile-aware-graph-validation-r0-execution.md",
+      "experiments/profile-aware-graph-validation-r0/extract-trace-evidence.ts",
+      "experiments/profile-aware-graph-validation-r0/fixtures/ctx-trace-table-links.md",
+      "experiments/profile-aware-graph-validation-r0/fixtures/negative-dangling-reference.md",
+      "experiments/profile-aware-graph-validation-r0/fixtures/negative-duplicate-primary-definition.md",
+      "experiments/profile-aware-graph-validation-r0/fixtures/negative-invalid-range.md",
+      "experiments/profile-aware-graph-validation-r0/fixtures/negative-missing-matrix-coverage.md",
+      "experiments/profile-aware-graph-validation-r0/graph-profile.design-spec.yaml",
+      "experiments/profile-aware-graph-validation-r0/graph-profile.execution-spec.yaml"
+    ]
+  },
+  "codebase": {
+    "skippedBinaryFiles": 0,
+    "skippedLargeFiles": 0,
+    "sourceFiles": 157,
+    "sourceLines": 24342,
+    "trackedFiles": 164
+  },
+  "comparison": {
+    "sourceLinesChangedPct": 3.6973,
+    "trackedFilesTouchedPct": 6.0976
+  },
+  "estimation": {
+    "adjustedStoryPoints": 8,
+    "baseStoryPoints": 5,
+    "confidence": "medium",
+    "decompositionDepth": 0,
+    "decompositionRationale": [
+      "decomposition rule not matched: raw footprint is below split thresholds"
+    ],
+    "decompositionRecommended": false,
+    "rationale": [
+      "base story points from line churn: 900 -> 5",
+      "risk step: files touched >= 8",
+      "risk step: proposal mode uncertainty"
+    ],
+    "riskSteps": 2,
+    "storyPoints": 8
+  },
+  "execution": {
+    "action": "proceed-with-controls",
+    "rationale": [
+      "execution may proceed after applying the listed planning notes and quality controls"
+    ]
+  },
+  "mode": "proposal",
+  "planning": {
+    "blocksExecution": false,
+    "level": "brief",
+    "matchedRules": [
+      "wide-proposal-change"
+    ],
+    "rationale": [
+      "planning rule matched: wide-proposal-change - proposal touches at least 8 files before implementation has started"
+    ],
+    "recommended": true
+  },
+  "repoRoot": "/Users/jasonbelmonti/Documents/Development/markdown-trace",
+  "risk": {
+    "blastRadius": {
+      "investigationAreas": [],
+      "level": "low",
+      "lowImpactOnly": false,
+      "recommendedControls": [
+        "Run the smallest targeted verification that proves the touched path still works."
+      ],
+      "requiresHeightenedControls": false,
+      "score": 1,
+      "signals": [
+        {
+          "key": "wide-file-fanout",
+          "matchedFiles": [
+            "docs/evidence/profile-aware-graph-validation-r0-report.md",
+            "docs/markdown-trace-profile-aware-graph-validation-r0-execution.md",
+            "experiments/profile-aware-graph-validation-r0/extract-trace-evidence.ts",
+            "experiments/profile-aware-graph-validation-r0/fixtures/ctx-trace-table-links.md",
+            "experiments/profile-aware-graph-validation-r0/fixtures/negative-dangling-reference.md",
+            "experiments/profile-aware-graph-validation-r0/fixtures/negative-duplicate-primary-definition.md",
+            "experiments/profile-aware-graph-validation-r0/fixtures/negative-invalid-range.md",
+            "experiments/profile-aware-graph-validation-r0/fixtures/negative-missing-matrix-coverage.md",
+            "experiments/profile-aware-graph-validation-r0/graph-profile.design-spec.yaml",
+            "experiments/profile-aware-graph-validation-r0/graph-profile.execution-spec.yaml"
+          ],
+          "reason": "change spans at least 8 files",
+          "weight": 1
+        }
+      ]
+    }
+  },
+  "schemaVersion": "execution-estimation.v5"
+}
