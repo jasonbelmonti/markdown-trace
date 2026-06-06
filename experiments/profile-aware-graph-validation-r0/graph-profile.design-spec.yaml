@@ -1,0 +1,77 @@
+profileVersion: markdown-trace.r0.graph-profile-sketch.v1
+profileStatus: provisional-r0-only
+artifactFamily: generated-codefactory-design-spec
+authorityBoundary:
+  privateR0Artifact: true
+  productionSchema: false
+  packageExport: false
+  registryAuthority: false
+  sourceMutation: false
+sourceEvidence:
+  task: BEL-1294
+  fixture: docs/evidence/generated-design-spec-demo.md
+  extractorReport: docs/evidence/profile-aware-graph-validation-r0-report.md
+  extractorPolicyVersion: markdown-trace.r0.raw-role-policy.v1
+observedFamilies:
+  primaryDefinition: [ACC, FLOW, FUNC, NG, OBJ, REQ, RISK, TECH, VAL]
+  supplementalDefinition: []
+  coverageOnly: []
+  mentionOnly: [ASM, CON]
+roleRules:
+  primary_definition:
+    source: first ID-like table column occurrence outside traceability matrices
+    evidenceRoles: [primary_definition]
+    authority: trace-evidence-only
+  supplemental_definition:
+    source: later ID-like table column occurrence for an already primary label outside traceability matrices
+    evidenceRoles: [supplemental_definition]
+    policy: not observed in the generated design-spec fixture, but reserved for source-authority restatement evidence
+  coverage_reference:
+    source: verification, related requirements, covers, related IDs, and traceability matrix cells
+    evidenceRoles: [coverage_reference]
+    policy: creates candidate relationship evidence without registry authority
+  mention:
+    source: prose or table text without definition or coverage-column signals
+    evidenceRoles: [mention]
+relationshipRules:
+  column_derived_coverage:
+    source: normalized non-matrix table column names with a "_coverage" suffix
+    policy: provisional semantic hint for the column's coverage intent; creates trace evidence only
+  traceability_matrix_coverage:
+    source: traceability matrix cells
+    policy: matrix row creates requirement-to-function or requirement-to-acceptance coverage edges only
+observedRelationshipHints:
+  covers_coverage: ACC-1 -> FUNC-1
+  related_ids_coverage: VAL-1 -> ACC-1
+  related_requirements_coverage: FLOW-1 -> REQ-1
+  traceability_matrix_coverage: REQ-1 -> ACC-1
+  verification_coverage: REQ-1 -> VAL-1
+  verification_method_coverage: VAL-3 -> VAL-1
+rangeRules:
+  syntax: "<FAMILY>-<n> through <FAMILY>-<m>"
+  validEndpointPolicy: both endpoints should resolve to primary or supplemental definitions when ranges appear
+  unresolvedEndpointPolicy: unresolved endpoints remain diagnostic candidates and do not create authoritative edges
+  observedValidExamples: []
+  observedGapExamples: []
+matrixSemantics:
+  tableSignal: headers include Requirement, Behavior, Acceptance, and Verification coverage columns
+  rowKind: matrix_coverage_row
+  rowSourcePolicy: first-column requirement labels can source coverage edges
+  cellPolicy: all matrix cells are coverage_reference
+  forbiddenRoles: [primary_definition, supplemental_definition]
+repeatedIdPolicy:
+  single_primary_with_references: one primary plus coverage or mention uses is valid
+  primary_with_supplemental_definition: reserved but not observed in this fixture
+  coverage_or_reference_only: repeated coverage references do not define an entity
+  non_authoritative_table_candidate: table-only typed ctx://trace labels remain candidates when present
+  duplicate_primary_candidate: more than one primary_definition is a diagnostic candidate
+diagnosticClasses:
+  unresolved_reference: r0.extractor.unresolved_raw_id_candidate
+  duplicate_primary: r0.extractor.repeated_id.duplicate_primary_candidate
+  supplemental_definition_notice: r0.extractor.repeated_id.primary_with_supplemental_definition
+  unresolved_range_endpoint: r0.extractor.unresolved_raw_range_endpoint_candidate
+  missing_matrix_coverage: r0.graph.missing_matrix_coverage_candidate
+profileShapeRecommendation:
+  preferred: standalone-graph-profile
+  rationale: design-spec relationship coverage is semantic and should compose beside structural markdown-engine validation instead of modifying it
+  deferredAlternatives: [authoring-profile-extension, markdown-engine-validation-profile-extension]
