@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| Work item | `BEL-1293` |
-| Evidence focus | `EVD-3` role-classified extraction evidence |
-| Status | Role-classification evidence captured |
+| Work item | `BEL-1293` / `BEL-1294` |
+| Evidence focus | `EVD-3` role-classified extraction evidence and `EVD-4` provisional graph profile semantics |
+| Status | Role-classification evidence captured; provisional profile semantics defined |
 | Generated from | Private R0 extractor under `experiments/profile-aware-graph-validation-r0/**` |
-| Generated at | `2026-06-06T16:02:33Z` |
+| Generated at | `2026-06-06T19:33:36Z` |
 | Scope note | This is not the final R0 recommendation and does not implement production graph validation. |
 
 ## Scope
@@ -16,6 +16,8 @@
 This report records role-classified extraction evidence for the real execution spec, generated design-spec fixture, and `ctx://trace` table fixture. It is R0-only evidence used to decide whether table-first artifacts can avoid false primary authority before profile semantics, smoke diagnostics, or final R0 recommendation work proceeds.
 
 Out of scope: production `derive` changes, public CLI or schema changes, final graph vocabulary, negative smoke diagnostics, source Markdown mutation, and authoritative registry promotion.
+
+BEL-1294 adds provisional profile semantics for `VAL-4`. These sketches are private R0 evidence only; they are not production validation profiles, package exports, public schemas, registry authority, or source-mutation behavior.
 
 ## Source Inputs
 
@@ -111,10 +113,135 @@ The provisional R0 role policy is deterministic and reviewable:
 | `REQ-1` | `single_primary_with_references` | Generated fixture: `primary_definition=1`, `coverage_reference=5`, `mention=1` |
 | `OBJ-99` | `non_authoritative_table_candidate` | `table_evidence_candidate=1`, `mention=1` |
 
+## BEL-1294 EVD-4 Provisional Profile Sketches
+
+| Profile sketch | Artifact family | Purpose | Authority boundary |
+| --- | --- | --- | --- |
+| `experiments/profile-aware-graph-validation-r0/graph-profile.execution-spec.yaml` | CODEFACTORY execution spec | Declares provisional table roles, ID families, relationship hints, range rules, matrix semantics, repeated-ID policy, and diagnostic classes for execution-spec evidence. | Private R0 trace-evidence sketch only. |
+| `experiments/profile-aware-graph-validation-r0/graph-profile.design-spec.yaml` | Generated CODEFACTORY design spec | Declares comparable provisional semantics for requirement, behavior, acceptance, technical, validation, and traceability matrix evidence. | Private R0 trace-evidence sketch only. |
+
+Both sketches use `profileVersion: markdown-trace.r0.graph-profile-sketch.v1` and explicitly set `productionSchema: false`, `packageExport: false`, `registryAuthority: false`, and `sourceMutation: false`.
+
+## Relationship Glossary
+
+| Relationship hint | Provisional meaning | Example evidence | Artifact family |
+| --- | --- | --- | --- |
+| `authority_coverage` | A source-authority row names an authority or source basis for the row label. | `SRC-6 -> BEL-1136` from `coverage-row-0007`. | Execution spec |
+| `execution_implication_coverage` | A source-authority row names the package or execution area affected by the source. | `SRC-6 -> PKG-4` from `coverage-row-0007`. | Execution spec |
+| `completion_horizon_coverage` | An objective row names the milestone or work package that completes the objective. | `OBJ-1 -> MS-1` and `OBJ-1 -> WP-1` from `coverage-row-0009`. | Execution spec |
+| `evidence_coverage` | An objective, package, validation, or matrix row names evidence or validation labels tied to the source label. | `OBJ-2 -> EVD-4` and `OBJ-2 -> VAL-4` from `coverage-row-0010`. | Execution spec |
+| `traceability_matrix_coverage` | A matrix row creates coverage edges only; matrix cells never become primary or supplemental definitions. | `SRC-1 -> SURF-11`, `SRC-1 -> PKG-1`, and `SRC-1 -> CTRL-1` from `coverage-row-0151`; `REQ-1 -> FUNC-1` and `REQ-1 -> ACC-1` from generated design-spec matrix rows. | Execution spec and generated design spec |
+| `verification_coverage` | A requirement row points to validation evidence. | `REQ-1 -> VAL-1`, `REQ-2 -> VAL-2`, and `REQ-3 -> VAL-3` from generated design-spec rows. | Generated design spec |
+| `related_requirements_coverage` | A flow or function row points to requirement coverage. | `FLOW-1 -> REQ-1`, `FLOW-1 -> REQ-2`, `FUNC-2 -> REQ-3`. | Generated design spec |
+| `covers_coverage` | An acceptance row points to the function or requirement it covers. | `ACC-3 -> FUNC-1`, `ACC-3 -> FUNC-2`, and `ACC-3 -> REQ-3`. | Generated design spec |
+| `related_ids_coverage` | A validation row points to acceptance, function, requirement, or technical mechanism evidence. | `VAL-1 -> ACC-1`, `VAL-1 -> FUNC-1`, `VAL-1 -> REQ-1`, and `VAL-1 -> TECH-2`. | Generated design spec |
+| `verification_method_coverage` | A validation row points to prerequisite validation methods. | `VAL-3 -> VAL-1` and `VAL-3 -> VAL-2`. | Generated design spec |
+| `coverage_range` | A same-family range expression creates range evidence only after endpoints are checked. | `PKG-1 through PKG-9`, `WP-1 through WP-6`, `MS-1 through MS-4`, and `VAL-1 through VAL-14` resolve; `EVD-1 through EVD-14` remains unresolved because endpoints are not same-document definitions. | Execution spec |
+
+No relationship hint is promoted to production graph schema naming in this R0. The glossary records evidence vocabulary for review and later R2 design-spec consideration only.
+
+The execution-spec sketch also records the complete observed execution-spec candidate-edge relationship inventory. Most hints are column-derived coverage semantics: the extractor normalizes a table column heading to a `*_coverage` hint, then preserves that hint as trace evidence without treating it as production graph schema naming.
+
+| Execution-spec relationship hint | Example edge | Evidence anchor |
+| --- | --- | --- |
+| `action_coverage` | `REL-3 -> MS-4` | `coverage-row-0133` |
+| `authority_coverage` | `SRC-6 -> BEL-1136` | `coverage-row-0007` |
+| `blocking_coverage` | `DEP-2 -> WP-2` | `coverage-row-0037` |
+| `claim_verified_coverage` | `VAL-1 -> SRC-1` | `coverage-row-0108` |
+| `completion_criteria_coverage` | `WP-3 -> BEL-1211` | `coverage-row-0070` |
+| `completion_evidence_coverage` | `REV-1 -> EVD-14` | `coverage-row-0122` |
+| `completion_horizon_coverage` | `OBJ-1 -> MS-1` | `coverage-row-0009` |
+| `coverage_range` | `CTRL-1 -> CTRL-1 through CTRL-11` | `raw-range-0020` |
+| `covered_work_coverage` | `MS-1 -> OBJ-1` | `coverage-row-0074` |
+| `decision_gate_coverage` | `RISK-1 -> MS-1` | `coverage-row-0040` |
+| `dependencies_coverage` | `WP-1 -> ASM-1` | `coverage-row-0068` |
+| `due_point_coverage` | `MS-1 -> WP-2` | `coverage-row-0074` |
+| `evidence_artifact_coverage` | `MV-1 -> EVD-1` | `coverage-row-0078` |
+| `evidence_coverage` | `CTRL-11 -> EVD-14` | `coverage-row-0097` |
+| `evidence_required_to_retire_coverage` | `RISK-1 -> VAL-1` | `coverage-row-0040` |
+| `execution_implication_coverage` | `SRC-6 -> PKG-4` | `coverage-row-0007` |
+| `expected_result_coverage` | `MV-1 -> SRC-1` | `coverage-row-0078` |
+| `failure_path_coverage` | `MS-3 -> SRC-1` | `coverage-row-0076` |
+| `inputs_coverage` | `WP-1 -> SRC-1` | `coverage-row-0068` |
+| `milestone_coverage` | `MV-1 -> MS-1` | `coverage-row-0078` |
+| `milestone_gate_coverage` | `WP-1 -> MS-1` | `coverage-row-0068` |
+| `mitigation_coverage` | `RISK-5 -> ACC-9` | `coverage-row-0147` |
+| `observable_value_enabled_coverage` | `PKG-5 -> ACC-9` | `coverage-row-0063` |
+| `operator_action_coverage` | `MV-5 -> SRC-1` | `coverage-row-0082` |
+| `package_boundary_coverage` | `WP-1 -> PKG-1` | `coverage-row-0068` |
+| `prerequisites_coverage` | `MS-1 -> EVD-1` | `coverage-row-0074` |
+| `required_action_coverage` | `CTRL-5 -> MS-3` | `coverage-row-0091` |
+| `response_coverage` | `OBS-3 -> MS-3` | `coverage-row-0137` |
+| `review_gate_coverage` | `MS-1 -> REV-1` | `coverage-row-0074` |
+| `review_scope_coverage` | `REV-1 -> SRC-1` | `coverage-row-0122` |
+| `risk_retired_coverage` | `PKG-1 -> RISK-1` | `coverage-row-0059` |
+| `statement_coverage` | `CON-10 -> SRC-1` | `coverage-row-0030` |
+| `timing_coverage` | `REL-2 -> WP-1` | `coverage-row-0132` |
+| `traceability_matrix_coverage` | `MS-1 -> CTRL-10` | `coverage-row-0181` |
+| `trigger_coverage` | `CTRL-1 -> SRC-1` | `coverage-row-0087` |
+| `validation_checkpoint_coverage` | `WP-1 -> VAL-1` | `coverage-row-0068` |
+| `validation_coverage` | `RISK-1 -> REV-1` | `coverage-row-0143` |
+| `validation_or_resolution_plan_coverage` | `ASM-1 -> MS-1` | `coverage-row-0033` |
+| `why_it_matters_coverage` | `RISK-5 -> ACC-9` | `coverage-row-0044` |
+
+Two additional execution-spec relationship hints are preserved only at coverage-row level and are not emitted as candidate-edge hints because the same row emits target labels through more specific per-target hints.
+
+| Row-only execution-spec relationship hint | Example row | Row source labels | Row target labels | Policy |
+| --- | --- | --- | --- | --- |
+| `abort_trigger_coverage` | `coverage-row-0133` | `REL-3` | `MS-4`, `WP-6`, `EVD-10` through `EVD-14` | Keep as row-level intent; do not treat as missing candidate-edge evidence. |
+| `required_evidence_coverage` | `coverage-row-0074` | `MS-1` | `EVD-1` through `EVD-4`, `EVD-9`, `VAL-1` through `VAL-4`, `VAL-9`, `REV-1`, `REV-2`, `REV-4`, `REV-6`, `REV-9` | Keep as row-level intent; do not treat as missing candidate-edge evidence. |
+
+The generated design-spec sketch records all observed generated design-spec relationship hints.
+
+| Generated design-spec relationship hint | Example edge | Evidence anchor |
+| --- | --- | --- |
+| `covers_coverage` | `ACC-1 -> FUNC-1` | `coverage-row-0010` |
+| `related_ids_coverage` | `VAL-1 -> ACC-1` | `coverage-row-0020` |
+| `related_requirements_coverage` | `FLOW-1 -> REQ-1` | `coverage-row-0007` |
+| `traceability_matrix_coverage` | `REQ-1 -> ACC-1` | `coverage-row-0013` |
+| `verification_coverage` | `REQ-1 -> VAL-1` | `coverage-row-0004` |
+| `verification_method_coverage` | `VAL-3 -> VAL-1` | `coverage-row-0022` |
+
+## Evidence-Grounded Family Buckets
+
+| Artifact family | Primary definition families | Supplemental definition families | Coverage-only families | Mention-only families | Coverage-or-mention-only families |
+| --- | --- | --- | --- | --- | --- |
+| Execution spec | `ASM`, `CON`, `CTRL`, `DEP`, `MS`, `MV`, `NG`, `OBJ`, `OBS`, `PKG`, `REL`, `REV`, `RISK`, `SRC`, `SURF`, `VAL`, `WP` | `RISK` | `EVD` | `DP`, `SHA` | `ACC`, `BEL`, `REQ` |
+| Generated design spec | `ACC`, `FLOW`, `FUNC`, `NG`, `OBJ`, `REQ`, `RISK`, `TECH`, `VAL` | None observed | None observed | `ASM`, `CON` | None observed |
+
+The family buckets above are evidence roles, not production entity-type commitments. Families with only mentions or coverage references remain non-authoritative trace evidence until a future R2 design-spec approves any broader interpretation.
+
+## Provisional Role, Range, Matrix, and Diagnostic Policy
+
+| Policy area | Provisional rule | Evidence basis | Approval impact |
+| --- | --- | --- | --- |
+| Primary definitions | The first ID-like table-column occurrence outside a traceability matrix is `primary_definition`. | Real execution spec has 130 raw primary definitions; generated design spec has 21. | Required for profile sketches. |
+| Supplemental definitions | Later ID-like table-column occurrences for an already primary label are `supplemental_definition` when they restate source authority or risk policy. | `RISK-1` through `RISK-7` use `primary_with_supplemental_definition` in the real execution spec. | Distinguishes valid repeated definitions from duplicate-primary failure. |
+| Coverage references | Relationship, evidence, validation, dependency, review, milestone, release, and matrix cells are `coverage_reference`. | Real execution spec has 1543 coverage references and generated design spec has 41. | Prevents false authority from coverage cells. |
+| Mentions | Prose or table text without definition or coverage-column signals is `mention`. | Real execution spec has 152 mentions; generated design spec has 11. | Keeps incidental references out of graph authority. |
+| Table-only `ctx://trace` candidates | Typed table-only links are `table_evidence_candidate`, not primary authority. | `OBJ-99`, `EVD-99`, and `VAL-99` remain non-authoritative candidates in the table fixture. | Preserves current heading-owned trace-link behavior. |
+| Ranges | `FAMILY-n through FAMILY-m` is range evidence; endpoints must resolve to same-document primary or supplemental definitions before a validated range edge can be accepted. | Execution-spec ranges resolve for `PKG`, `WP`, `MS`, and `VAL`; `EVD` ranges remain unresolved candidates. | Required for future invalid-range diagnostics. |
+| Matrices | Traceability matrix rows create `matrix_coverage_row` evidence; first-column labels can source edges, but matrix cells are never definitions. | The real execution-spec traceability matrix has 962 classified raw ID occurrences and all are `coverage_reference`. | Blocks matrix false-primary regressions. |
+| Duplicate primary diagnostics | More than one `primary_definition` for the same label is `duplicate_primary_candidate`. | No duplicate primary appears in the generated design-spec fixture; policy is carried for negative probes. | Required for future smoke diagnostics. |
+| Missing matrix coverage diagnostics | Missing required coverage paths are represented as `r0.graph.missing_matrix_coverage_candidate` until the smoke validator formalizes the code. | BEL-1294 profiles reserve the class for later negative-probe use. | Non-blocking for BEL-1294, blocking for later smoke diagnostics. |
+
+## Profile Shape Recommendation
+
+The R0 recommendation is to pursue a standalone graph profile shape for the future R2 design-spec, while preserving composition points with authoring profiles and markdown-engine structural validation profiles.
+
+Rationale:
+
+- Relationship direction, repeated-ID handling, range endpoint policy, matrix semantics, and diagnostic classes are semantic trace-evidence claims, not structural Markdown validation rules.
+- Keeping graph profiles standalone prevents structural validation success from implying graph approval.
+- Authoring-profile integration should consume graph diagnostics later, but authoring profiles should not own the first graph semantics contract.
+- Extending markdown-engine validation profiles directly remains a deferred option only if R2 proves a clean extension boundary that does not mix structural profile authority with semantic graph evidence.
+
+If future smoke diagnostics show that execution-spec and design-spec relationship hints cannot generalize, the fallback recommendation is to narrow R2 to artifact-family-specific graph profiles rather than reject CAND-4 outright.
+
 ## Containment
 
-The implementation is private R0 evidence only. It changes experiment-local extractor code, targeted extractor tests, and evidence documents. It does not edit production `src/markdowntrace/**`, authoritative `fixtures/**`, registry derivation, graph projection, validation runtime, public CLI behavior, package exports, or source Markdown.
+The BEL-1294 implementation is private R0 evidence only. It adds provisional graph profile sketches and updates this evidence report. It does not edit production `src/markdowntrace/**`, authoritative `fixtures/**`, registry derivation, graph projection, validation runtime, public CLI behavior, package exports, public schemas, production validation profiles, or source Markdown.
 
 ## Review Boundary
 
-Review should block on missing required fixture evidence, ambiguous matrix/repeated-ID role classifications, incorrect non-authoritative table-only handling, or production containment violations. Review should not block on final graph vocabulary, negative smoke diagnostics, broader fixture-family coverage, or final R0 recommendation content; those are later R0 tasks.
+Review should block on missing profile sketches, missing relationship examples from either execution-spec or generated design-spec evidence, ambiguous matrix/repeated-ID/range policy, unsupported profile-shape recommendation, or production containment violations. Review should not block on final production schema naming, negative smoke diagnostics, broader fixture-family coverage, or final R0 recommendation content; those are later R0 tasks.

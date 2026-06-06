@@ -1,0 +1,129 @@
+profileVersion: markdown-trace.r0.graph-profile-sketch.v1
+profileStatus: provisional-r0-only
+artifactFamily: codefactory-execution-spec
+authorityBoundary:
+  privateR0Artifact: true
+  productionSchema: false
+  packageExport: false
+  registryAuthority: false
+  sourceMutation: false
+sourceEvidence:
+  task: BEL-1294
+  fixture: /Users/jasonbelmonti/Documents/Development/execution-decomposer/docs/execution/execution-decomposer-execution-spec.md
+  extractorReport: docs/evidence/profile-aware-graph-validation-r0-report.md
+  extractorPolicyVersion: markdown-trace.r0.raw-role-policy.v1
+observedFamilies:
+  primaryDefinition: [ASM, CON, CTRL, DEP, MS, MV, NG, OBJ, OBS, PKG, REL, REV, RISK, SRC, SURF, VAL, WP]
+  supplementalDefinition: [RISK]
+  coverageOnly: [EVD]
+  mentionOnly: [DP, SHA]
+  coverageOrMentionOnly: [ACC, BEL, REQ]
+roleRules:
+  primary_definition:
+    source: first ID-like table column occurrence outside traceability matrices
+    evidenceRoles: [primary_definition]
+    authority: trace-evidence-only
+  supplemental_definition:
+    source: later ID-like table column occurrence for an already primary label outside traceability matrices
+    evidenceRoles: [supplemental_definition]
+    policy: supports repeated-risk or restated source-authority rows without duplicate-primary failure
+  coverage_reference:
+    source: relationship, validation, evidence, dependency, milestone, control, review, release, and traceability matrix cells
+    evidenceRoles: [coverage_reference]
+    policy: never creates primary authority
+  mention:
+    source: prose or table text without definition or coverage-column signals
+    evidenceRoles: [mention]
+  table_evidence_candidate:
+    source: table-only typed ctx://trace links from compatibility fixtures
+    evidenceRoles: [table_evidence_candidate]
+    policy: non-authoritative unless future R2 design approves promotion
+relationshipRules:
+  column_derived_coverage:
+    source: normalized non-matrix table column names with a "_coverage" suffix
+    policy: provisional semantic hint for the column's coverage intent; creates trace evidence only
+  traceability_matrix_coverage:
+    source: traceability matrix cells
+    policy: matrix row creates coverage edges only, never definitions
+  coverage_range:
+    source: same-family range text in coverage columns or matrix cells
+    policy: creates range evidence only after endpoint resolution checks
+observedRelationshipHints:
+  action_coverage: REL-3 -> MS-4
+  authority_coverage: SRC-6 -> BEL-1136
+  blocking_coverage: DEP-2 -> WP-2
+  claim_verified_coverage: VAL-1 -> SRC-1
+  completion_criteria_coverage: WP-3 -> BEL-1211
+  completion_evidence_coverage: REV-1 -> EVD-14
+  completion_horizon_coverage: OBJ-1 -> MS-1
+  coverage_range: CTRL-1 -> "CTRL-1 through CTRL-11"
+  covered_work_coverage: MS-1 -> OBJ-1
+  decision_gate_coverage: RISK-1 -> MS-1
+  dependencies_coverage: WP-1 -> ASM-1
+  due_point_coverage: MS-1 -> WP-2
+  evidence_artifact_coverage: MV-1 -> EVD-1
+  evidence_coverage: CTRL-11 -> EVD-14
+  evidence_required_to_retire_coverage: RISK-1 -> VAL-1
+  execution_implication_coverage: SRC-6 -> PKG-4
+  expected_result_coverage: MV-1 -> SRC-1
+  failure_path_coverage: MS-3 -> SRC-1
+  inputs_coverage: WP-1 -> SRC-1
+  milestone_coverage: MV-1 -> MS-1
+  milestone_gate_coverage: WP-1 -> MS-1
+  mitigation_coverage: RISK-5 -> ACC-9
+  observable_value_enabled_coverage: PKG-5 -> ACC-9
+  operator_action_coverage: MV-5 -> SRC-1
+  package_boundary_coverage: WP-1 -> PKG-1
+  prerequisites_coverage: MS-1 -> EVD-1
+  required_action_coverage: CTRL-5 -> MS-3
+  response_coverage: OBS-3 -> MS-3
+  review_gate_coverage: MS-1 -> REV-1
+  review_scope_coverage: REV-1 -> SRC-1
+  risk_retired_coverage: PKG-1 -> RISK-1
+  statement_coverage: CON-10 -> SRC-1
+  timing_coverage: REL-2 -> WP-1
+  traceability_matrix_coverage: MS-1 -> CTRL-10
+  trigger_coverage: CTRL-1 -> SRC-1
+  validation_checkpoint_coverage: WP-1 -> VAL-1
+  validation_coverage: RISK-1 -> REV-1
+  validation_or_resolution_plan_coverage: ASM-1 -> MS-1
+  why_it_matters_coverage: RISK-5 -> ACC-9
+observedRowOnlyRelationshipHints:
+  abort_trigger_coverage:
+    exampleRow: coverage-row-0133
+    rowSourceLabels: [REL-3]
+    rowTargetLabels: [MS-4, WP-6, EVD-10, EVD-11, EVD-12, EVD-13, EVD-14]
+    policy: preserved as row-level relationship intent but omitted from candidate edges because target labels are emitted through other per-target hints in the same row
+  required_evidence_coverage:
+    exampleRow: coverage-row-0074
+    rowSourceLabels: [MS-1]
+    rowTargetLabels: [EVD-1, EVD-2, EVD-3, EVD-4, EVD-9, VAL-1, VAL-2, VAL-3, VAL-4, VAL-9, REV-1, REV-2, REV-4, REV-6, REV-9]
+    policy: preserved as row-level relationship intent but omitted from candidate edges because target labels are emitted through per-target evidence, validation, and review hints
+rangeRules:
+  syntax: "<FAMILY>-<n> through <FAMILY>-<m>"
+  validEndpointPolicy: both endpoints should resolve to primary or supplemental definitions in the same document family
+  unresolvedEndpointPolicy: unresolved endpoints remain diagnostic candidates and do not create authoritative edges
+  observedValidExamples: [PKG-1 through PKG-9, WP-1 through WP-6, MS-1 through MS-4, VAL-1 through VAL-14]
+  observedGapExamples: [EVD-1 through EVD-14]
+matrixSemantics:
+  tableSignal: section title contains "Traceability Matrix"
+  rowKind: matrix_coverage_row
+  rowSourcePolicy: first-column labels can source coverage edges
+  cellPolicy: all matrix cells are coverage_reference or coverage_range
+  forbiddenRoles: [primary_definition, supplemental_definition]
+repeatedIdPolicy:
+  single_primary_with_references: one primary plus coverage or mention uses is valid
+  primary_with_supplemental_definition: one primary plus later ID-column restatement is valid supplemental evidence
+  coverage_or_reference_only: repeated coverage references do not define an entity
+  non_authoritative_table_candidate: table-only typed ctx://trace labels remain candidates
+  duplicate_primary_candidate: more than one primary_definition is a diagnostic candidate
+diagnosticClasses:
+  unresolved_reference: r0.extractor.unresolved_raw_id_candidate
+  duplicate_primary: r0.extractor.repeated_id.duplicate_primary_candidate
+  supplemental_definition_notice: r0.extractor.repeated_id.primary_with_supplemental_definition
+  unresolved_range_endpoint: r0.extractor.unresolved_raw_range_endpoint_candidate
+  missing_matrix_coverage: r0.graph.missing_matrix_coverage_candidate
+profileShapeRecommendation:
+  preferred: standalone-graph-profile
+  rationale: relationship, range, matrix, and duplicate-role semantics are semantic trace-evidence claims, not markdown-engine structural validation rules
+  deferredAlternatives: [authoring-profile-extension, markdown-engine-validation-profile-extension]
