@@ -1,5 +1,6 @@
 import { groupBy, unique } from "./collections.mjs";
 import { columnHeaderForCell } from "./document-context.mjs";
+import { buildRoleClassifiedRawFacts } from "./role-classification.mjs";
 
 export function buildCandidateTraceFacts({ rawIdOccurrences, tables, traceLinks }) {
   const primaryDefinitions = primaryDefinitionFacts(traceLinks);
@@ -14,15 +15,23 @@ export function buildCandidateTraceFacts({ rawIdOccurrences, tables, traceLinks 
   const nonAuthoritativeEntityCandidates = nonAuthoritativeCandidateFacts(entityLinks);
   const entityReferences = entityReferenceFacts(entityLinks, primaryByCanonicalId);
   const rangeReferences = rangeReferenceFacts(rangeLinks, primaryDefinitions);
+  const roleClassifiedRawFacts = buildRoleClassifiedRawFacts({ rawIdOccurrences, tables, traceLinks });
 
   return {
     primaryDefinitions,
     nonAuthoritativeEntityCandidates,
     entityReferences,
     rangeReferences,
-    candidateEdges: candidateEdgeFacts({ entityReferences, primaryBySectionId, rangeReferences }),
+    candidateEdges: [
+      ...candidateEdgeFacts({ entityReferences, primaryBySectionId, rangeReferences }),
+      ...roleClassifiedRawFacts.candidateEdges,
+    ],
     tableEvidenceRows: tableEvidenceRows({ rawIdOccurrences, tables, traceLinks }),
-    diagnosticHints: diagnosticHints({ entityReferences, primaryByCanonicalId, rangeReferences }),
+    roleClassifiedRawFacts,
+    diagnosticHints: [
+      ...diagnosticHints({ entityReferences, primaryByCanonicalId, rangeReferences }),
+      ...roleClassifiedRawFacts.diagnosticHints,
+    ],
   };
 }
 

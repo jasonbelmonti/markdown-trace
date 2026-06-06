@@ -84,6 +84,14 @@ export async function extractTraceEvidence(documentPath) {
       rangeReferenceCount: candidateTraceFacts.rangeReferences.length,
       candidateEdgeCount: candidateTraceFacts.candidateEdges.length,
       diagnosticHintCount: candidateTraceFacts.diagnosticHints.length,
+      rawPrimaryDefinitionCount:
+        candidateTraceFacts.roleClassifiedRawFacts.summary.primaryDefinitionCount,
+      supplementalDefinitionCount:
+        candidateTraceFacts.roleClassifiedRawFacts.summary.supplementalDefinitionCount,
+      coverageRowCount: candidateTraceFacts.roleClassifiedRawFacts.summary.coverageRowCount,
+      rawRangeReferenceCount:
+        candidateTraceFacts.roleClassifiedRawFacts.summary.rangeReferenceCount,
+      repeatedIdCount: candidateTraceFacts.roleClassifiedRawFacts.summary.repeatedIdCount,
     },
     sections: sections.map((section) => formatSection(section)),
     tables: tables.map((table, tableIndex) => formatTable(table, tableIndex, sections)),
