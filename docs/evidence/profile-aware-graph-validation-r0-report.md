@@ -4,22 +4,83 @@
 
 | Field | Value |
 | --- | --- |
-| Work item | `BEL-1293` / `BEL-1294` / `BEL-1295` |
-| Evidence focus | `EVD-3` role-classified extraction evidence, `EVD-4` provisional graph profile semantics, and `EVD-5` negative diagnostic smoke evidence |
-| Status | Role-classification evidence captured; provisional profile semantics defined; negative smoke probes pass |
+| Work item | `BEL-1293` / `BEL-1294` / `BEL-1295` / `BEL-1296` |
+| Evidence focus | `EVD-3` role-classified extraction evidence, `EVD-4` provisional graph profile semantics, `EVD-5` negative diagnostic smoke evidence, `EVD-6` final R0 recommendation, and `EVD-7` compatibility proof |
+| Status | Final R0 report complete; advance CAND-4 to R2 design-spec with scope controls |
 | Generated from | Private R0 extractor and smoke runner under `experiments/profile-aware-graph-validation-r0/**` |
-| Generated at | `2026-06-06T23:10:28Z` |
-| Scope note | This is not the final R0 recommendation and does not implement production graph validation. |
+| Generated at | `2026-06-07T01:45:00Z` |
+| Scope note | This is the final R0 decision packet. It does not implement production graph validation. |
 
 ## Scope
 
-This report records role-classified extraction evidence for the real execution spec, generated design-spec fixture, `ctx://trace` table fixture, and negative diagnostic smoke probes. It is R0-only evidence used to decide whether table-first artifacts can avoid false primary authority before final R0 recommendation work proceeds.
+This report records role-classified extraction evidence for the real execution spec, generated design-spec fixture, `ctx://trace` table fixture, negative diagnostic smoke probes, final R0 recommendation, and compatibility proof. It is R0-only evidence used to decide whether table-first artifacts can avoid false primary authority and whether profile-aware graph validation is ready for R2 design-spec.
 
-Out of scope: production `derive` changes, public CLI or schema changes, final graph vocabulary, final R0 recommendation, compatibility proof, source Markdown mutation, and authoritative registry promotion.
+Out of scope: production `derive` changes, public CLI or schema changes, production graph vocabulary, source Markdown mutation, and authoritative registry promotion.
 
 BEL-1294 adds provisional profile semantics for `VAL-4`. These sketches are private R0 evidence only; they are not production validation profiles, package exports, public schemas, registry authority, or source-mutation behavior.
 
 BEL-1295 adds private negative smoke diagnostics for `VAL-5`. The smoke runner emits review evidence only; it is not a production validator, public command, package export, source mutation behavior, or authoritative registry output.
+
+BEL-1296 closes the R0 by adding `EVD-6` final recommendation and `EVD-7` compatibility proof. The recommendation is to advance CAND-4 to R2 design-spec with scope controls: graph profiles should be standalone semantic trace-evidence profiles, and the initial production design should support artifact-family-specific execution-spec and design-spec semantics before claiming a universal graph vocabulary.
+
+## Final R0 Verdict
+
+| Decision field | Result |
+| --- | --- |
+| Experiment verdict | `pass-with-scope-controls` |
+| CAND-4 recommendation | Advance to R2 design-spec. |
+| Scope control | Start with standalone graph profiles and artifact-family-specific semantics for CODEFACTORY execution specs and generated design specs. Do not claim universal graph semantics yet. |
+| Production authorization | None. R0 does not authorize production graph validation, public CLI/API/schema, source mutation, or table-derived registry authority. |
+| MS-3 readiness | Ready for project-owner approve / conditional approve / reject decision. |
+
+The experiment worked for its R0 purpose. It proved that table-first artifacts can produce deterministic trace evidence, matrix rows can remain coverage evidence instead of false primary definitions, generated design-spec coverage paths are extractable, table-only `ctx://trace` links can remain non-authoritative candidates, and negative graph diagnostics can be smoke-tested with source evidence.
+
+The experiment did not prove final production contracts. Relationship names, CLI shape, schema versioning, durable authoring integration, and broad fixture coverage remain R2 design-spec work.
+
+## EVD-6 Final Recommendation
+
+| R0 gate | Result | Evidence basis | Disposition |
+| --- | --- | --- | --- |
+| `VAL-1` real execution-spec role extraction | Pass | 130 raw primary definitions, 7 supplemental definitions, 147 coverage rows, 25 ranges, 1924 candidate edges, and no matrix-row false primary definitions. | Retires `RISK-1` for the R0 fixture. |
+| `VAL-2` generated design-spec graph validation quality | Pass | 21 raw primary definitions, 15 coverage rows, 38 candidate edges, 0 diagnostics, and extractable requirement / behavior / mechanism / validation paths. | Supports R2 design-spec for design-spec graph semantics. |
+| `VAL-3` `ctx://trace` table compatibility | Pass | Heading-owned `WP-1`, `VAL-1`, and `VAL-2` remain primary definitions; table-only `OBJ-99`, `EVD-99`, and `VAL-99` remain non-authoritative candidates. | Preserves existing heading-defined authority boundary. |
+| `VAL-4` graph profile shape decision | Pass | `graph-profile.execution-spec.yaml` and `graph-profile.design-spec.yaml` define private R0 role rules, relationship hints, range policy, matrix semantics, repeated-ID policy, and diagnostic classes. | Resolve `Q-1` as standalone graph profile for R2, with composition points to authoring and structural profiles. |
+| `VAL-5` graph validation smoke test | Pass | Negative smoke runner passes 4/4 probes for unresolved reference, duplicate primary definition, invalid range endpoint, and missing matrix coverage. | Retires `RISK-3` for R0 smoke diagnostics. |
+| `VAL-6` authoritative compatibility guard | Pass | Build, full tests, R0 derive, R0 validate, migration check, and targeted R1 tests pass from the BEL-1296 worktree. | Existing production behavior remains compatible. |
+
+Question disposition:
+
+| Question | R0 answer | R2 carry-forward |
+| --- | --- | --- |
+| `Q-1` profile location and composition | Prefer standalone graph profiles. | R2 should define a graph-profile schema that composes beside authoring profiles and markdown-engine structural validation profiles. |
+| `Q-2` relationship vocabulary and direction | Column-derived relationship hints work as trace-evidence vocabulary, but should not be treated as final production graph schema names. | R2 should normalize relationship classes and decide which artifact-family hints become stable contract names. |
+| `Q-3` primary versus supplemental definition policy | First ID-like table-column occurrence can be primary; later restatements can be supplemental; matrix and coverage cells are never primary definitions. | R2 should encode repeated-ID policy explicitly and preserve duplicate-primary diagnostics. |
+
+## EVD-7 Compatibility Proof
+
+Commands were run from `/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/bel-1296-r0-report-compat-proof` on branch `codex/bel-1296-r0-report-compat-proof`.
+
+| Command | Exit code | Evidence |
+| --- | ---: | --- |
+| `npm run build --silent` | 0 | TypeScript build completed without diagnostics. |
+| `npm test` | 0 | Vitest reported 20 passed test files and 137 passed tests. |
+| `npm run derive:fixture` | 0 | R0 fixture derivation completed with `diagnostics: []`. |
+| `npm run validate:fixture` | 0 | R0 YAML validation report returned `Status` = `PASS` and `Findings` = `0`. |
+| `npm run migration:check` | 0 | Migration check returned `Valid` = `true`; registry, graph, and validation dimensions were equivalent, metadata differences were intentional, and blocking dimensions were `0`. |
+| `npm test -- tests/test_r1_link_backed_graph.test.ts tests/test_type_profiles.test.ts tests/test_trace_link_facts.test.ts tests/test_derived_registry_graph.test.ts` | 0 | Targeted R1 compatibility run reported 4 passed test files and 39 passed tests. |
+| `node experiments/profile-aware-graph-validation-r0/run-negative-smoke-probes.mjs` | 0 | Negative smoke runner reported `pass` for 4/4 probes. |
+
+Path containment review:
+
+| Check | Result |
+| --- | --- |
+| Production `src/markdowntrace/**` edits | None. |
+| Authoritative `fixtures/**` edits | None. |
+| Public CLI, package export, or schema edits | None. |
+| Source Markdown mutation behavior | None. |
+| BEL-1296 tracked file surface | `docs/evidence/profile-aware-graph-validation-r0-report.md` only. |
+
+The compatibility proof satisfies `VAL-6`: existing `derive`, `derive-sidecar` / migration check, `validate`, build, and R1 link-backed behavior remain unchanged by the R0 experiment.
 
 ## Source Inputs
 
@@ -31,7 +92,7 @@ BEL-1295 adds private negative smoke diagnostics for `VAL-5`. The smoke runner e
 
 ## Command Evidence
 
-Run from `/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/bel-1293`:
+BEL-1293 originally captured the extractor evidence. BEL-1296 reran the commands from `/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/bel-1296-r0-report-compat-proof`:
 
 ```bash
 node experiments/profile-aware-graph-validation-r0/extract-trace-evidence.mjs \
@@ -51,9 +112,11 @@ Generated JSON is ignored by `.gitignore`; output hashes make the local run repr
 
 | Output | SHA-256 |
 | --- | --- |
-| `ctx-table-trace-fixture.trace-evidence.json` | `3f6ce53f5f227612dcd4167c4e492c7c1c1cecff78e137d2257faa11ca6bf016` |
-| `generated-design-spec-demo.trace-evidence.json` | `e3b2987038cba0c145a2b0c565b183998e548ba43a591a07f7042e37e8533429` |
+| `ctx-table-trace-fixture.trace-evidence.json` | `ae480d3b1cc2d3f97f7a7dbbab540473ebe070dddeed93a925f6bebb6e3a6149` |
+| `generated-design-spec-demo.trace-evidence.json` | `393d264f8ba5c7f9bd770541cfaa1bf49021fe1f163bf835e7494b610f268a61` |
 | `execution-decomposer-execution-spec.trace-evidence.json` | `39714e19a92c69e98b734e7c456ef3d3e0783b3527f88bcfba34a8204cf2f5e1` |
+
+BEL-1296 repeated the extractor command sequence twice in the same worktree and observed identical hashes, so the current output is deterministic for identical inputs and runtime.
 
 ## EVD-3 Summary
 
@@ -126,7 +189,7 @@ Both sketches use `profileVersion: markdown-trace.r0.graph-profile-sketch.v1` an
 
 ## BEL-1295 EVD-5 Negative Diagnostic Smoke
 
-Run from `/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/bel-1295`:
+BEL-1295 originally captured the smoke evidence. BEL-1296 reran the same command from `/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/bel-1296-r0-report-compat-proof` and recorded the current result in `EVD-7`:
 
 ```bash
 node experiments/profile-aware-graph-validation-r0/run-negative-smoke-probes.mjs
@@ -278,7 +341,7 @@ The family buckets above are evidence roles, not production entity-type commitme
 | Ranges | `FAMILY-n through FAMILY-m` is range evidence; endpoints must resolve to same-document primary or supplemental definitions before a validated range edge can be accepted. | Execution-spec ranges resolve for `PKG`, `WP`, `MS`, and `VAL`; `EVD` ranges remain unresolved candidates. | Required for future invalid-range diagnostics. |
 | Matrices | Traceability matrix rows create `matrix_coverage_row` evidence; first-column labels can source edges, but matrix cells are never definitions. | The real execution-spec traceability matrix has 962 classified raw ID occurrences and all are `coverage_reference`. | Blocks matrix false-primary regressions. |
 | Duplicate primary diagnostics | More than one `primary_definition` for the same label is `duplicate_primary_candidate`. | No duplicate primary appears in the generated design-spec fixture; policy is carried for negative probes. | Required for future smoke diagnostics. |
-| Missing matrix coverage diagnostics | Missing required coverage paths are represented as `r0.graph.missing_matrix_coverage_candidate` until the smoke validator formalizes the code. | BEL-1294 profiles reserve the class for later negative-probe use. | Non-blocking for BEL-1294, blocking for later smoke diagnostics. |
+| Missing matrix coverage diagnostics | Missing required coverage paths are smoke-tested as `r0.graph_validation.missing_matrix_coverage`. | BEL-1295 negative smoke evidence proves the missing-validation-cell probe emits the expected diagnostic while the matrix row remains non-authoritative coverage evidence. | Required diagnostic class is proven for R0 and should be formalized in R2. |
 
 ## Profile Shape Recommendation
 
@@ -295,8 +358,8 @@ If future smoke diagnostics show that execution-spec and design-spec relationshi
 
 ## Containment
 
-The BEL-1294 and BEL-1295 implementation is private R0 evidence only. It adds provisional graph profile sketches, a private smoke runner, focused smoke helper modules, and updates this evidence report. It does not edit production `src/markdowntrace/**`, authoritative `fixtures/**`, registry derivation, graph projection, validation runtime, public CLI behavior, package exports, public schemas, production validation profiles, or source Markdown.
+The BEL-1294, BEL-1295, and BEL-1296 implementation is private R0 evidence only. It adds provisional graph profile sketches, a private smoke runner, focused smoke helper modules, final recommendation, compatibility proof, and updates this evidence report. It does not edit production `src/markdowntrace/**`, authoritative `fixtures/**`, registry derivation, graph projection, validation runtime, public CLI behavior, package exports, public schemas, production validation profiles, or source Markdown.
 
 ## Review Boundary
 
-Review should block on missing profile sketches, missing relationship examples from either execution-spec or generated design-spec evidence, ambiguous matrix/repeated-ID/range policy, missing or accidental negative smoke diagnostics, unsupported profile-shape recommendation, or production containment violations. Review should not block on final production schema naming, broader fixture-family coverage, compatibility proof, or final R0 recommendation content; those are later R0 tasks.
+Review should block on missing profile sketches, missing relationship examples from either execution-spec or generated design-spec evidence, ambiguous matrix/repeated-ID/range policy, missing or accidental negative smoke diagnostics, unsupported profile-shape recommendation, missing compatibility proof, ambiguous final recommendation, or production containment violations. Review should not block on final production schema naming, broader fixture-family coverage, public CLI/API design, source mutation workflows, or repair-loop integration; those are R2 or later tasks.
