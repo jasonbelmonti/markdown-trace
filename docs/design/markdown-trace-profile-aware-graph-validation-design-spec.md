@@ -128,7 +128,7 @@ Section status: Complete
 | Measure | Baseline | Target or decision threshold | Evaluation date or decision event | Related IDs |
 | --- | --- | --- | --- | --- |
 | Generated execution-spec graph confidence | R0 evidence exists only under `experiments/**`; no production command validates OBJ/WP/VAL/EVD paths. | Production fixture validates objective-to-work-package-to-validation-to-evidence paths and fails a missing-path negative fixture. | Implementation review | OBJ-1, OBJ-3, REQ-4, REQ-5 |
-| Generated design-spec graph confidence | R0 evidence exists only for a controlled generated design-spec fixture; no production command validates REQ/FUNC/TECH/VAL paths. | Production fixture validates requirement-to-behavior-to-mechanism-to-validation paths and fails a missing-path negative fixture. | Implementation review | OBJ-1, OBJ-4, REQ-4, REQ-6 |
+| Generated design-spec graph confidence | R0 evidence exists only for a controlled generated design-spec fixture; no production command validates REQ/FUNC/TECH/ACC/VAL paths. | Production fixture validates requirement-to-behavior-to-mechanism-to-acceptance-and-validation paths and fails a missing-path negative fixture. | Implementation review | OBJ-1, OBJ-4, REQ-4, REQ-6 |
 | Agent-readable diagnostics | Current production findings are registry validation findings, not graph-profile diagnostics. | Graph validation JSON includes stable diagnostic codes, severity, source ranges, related IDs, repair-plan references, and profile rule IDs. | Implementation review | OBJ-2, REQ-3, REQ-4, REQ-7 |
 | Graph-aware repair-loop readiness | No production repair-plan artifact exists. | Each blocking diagnostic family produces a non-mutating repair-plan entry with suggested action, confidence, affected source ranges, and validation target. | Implementation review | OBJ-5, REQ-8 |
 | Compatibility preservation | BEL-1296 compatibility proof passed build, tests, derive, validate, migration check, and targeted R1 tests. | Same command set passes after production implementation. | Implementation review | OBJ-6, REQ-11 |
@@ -287,10 +287,10 @@ Profile policy contract:
 
 | Profile field | Required production rule |
 | --- | --- |
-| `idFamilies` | Declares each supported family prefix, canonical label pattern, role bucket, and whether same-document primary definition is required for references to resolve. |
+| `idFamilies` | Declares each supported family prefix, canonical label pattern, role bucket, and whether same-document primary definition, terminal coverage policy, or coverage-or-mention policy is required for references to resolve. |
 | `definitionPolicies.primaryColumns` | Lists table column names or heading signals that may create `primary_definition` occurrences; matrix cells and coverage-only columns are forbidden as primary sources. |
 | `definitionPolicies.supplementalColumns` | Lists table columns or sections that may create `supplemental_definition` occurrences only after a same-label primary definition exists. |
-| `definitionPolicies.repeatedIdPolicy` | Declares one of `single_primary_with_references`, `primary_with_supplemental_definition`, `coverage_or_reference_only`, `mention_only`, or `non_authoritative_table_candidate` for each family. |
+| `definitionPolicies.repeatedIdPolicy` | Declares one of `single_primary_with_references`, `primary_with_supplemental_definition`, `terminal_coverage_node`, `coverage_or_reference_only`, `mention_only`, or `non_authoritative_table_candidate` for each family. |
 | `tableRoles` | Declares table matching rules, source label columns, target label columns, role classification, and whether row evidence may create relationships, coverage rows, supplemental definitions, or diagnostics. |
 | `rangePolicy` | Allows only same-family `FAMILY-n through FAMILY-m` ranges; endpoints must resolve to same-document primary or supplemental definitions before range expansion. Missing endpoints emit `markdown-trace.graph.invalid_range_endpoint`. |
 | `matrixSemantics` | Declares traceability matrices as coverage evidence only; first-column labels may source `matrix_coverage` relationships, but matrix cells never create primary or supplemental definitions. |
@@ -302,14 +302,14 @@ Production role classification rules:
 | --- | --- | --- | --- |
 | `primary_definition` | First accepted occurrence in a profile-declared primary definition position. | Non-registry trace evidence authority only. | A second primary for the same label emits `markdown-trace.graph.duplicate_primary_definition`. |
 | `supplemental_definition` | Later occurrence in a profile-declared supplemental position after a primary exists and the family policy allows supplemental definitions. | Clarifies or restates trace evidence; does not replace primary. | If no primary exists, classify as coverage or unresolved reference according to the family policy. |
-| `coverage_reference` | ID-like occurrence in relationship, validation, dependency, evidence, matrix, or traceability coverage cells. | Non-authoritative reference. | Missing target definition emits `markdown-trace.graph.unresolved_reference` unless the family is coverage-or-mention-only. |
+| `coverage_reference` | ID-like occurrence in relationship, validation, dependency, evidence, matrix, or traceability coverage cells. | Non-authoritative reference; `terminal_coverage_node` families may satisfy required paths without becoming primary or supplemental definitions. | Missing target definition emits `markdown-trace.graph.unresolved_reference` unless the family policy is `terminal_coverage_node` or coverage-or-mention-only. |
 | `mention` | Prose or table occurrence without profile-declared definition or coverage signal. | Non-authoritative mention. | Does not block validation by itself. |
 | `table_evidence_candidate` | Typed table-only `ctx://trace` link without heading ownership. | Non-authoritative candidate. | May be reported but shall not become primary authority. |
 | `range_evidence` | Raw same-family range expression. | Non-authoritative until endpoints resolve. | Missing endpoint emits `markdown-trace.graph.invalid_range_endpoint`. |
 
 Built-in family buckets:
 
-| Artifact family | Primary definition families | Supplemental definition families | Coverage-only families | Mention-only families | Coverage-or-mention-only families |
+| Artifact family | Primary definition families | Supplemental definition families | Terminal coverage families | Mention-only families | Coverage-or-mention-only families |
 | --- | --- | --- | --- | --- | --- |
 | `execution-spec` | `ASM`, `CON`, `CTRL`, `DEP`, `MS`, `MV`, `NG`, `OBJ`, `OBS`, `PKG`, `REL`, `REV`, `RISK`, `SRC`, `SURF`, `VAL`, `WP` | `RISK` | `EVD` | `DP`, `SHA` | `ACC`, `BEL`, `REQ` |
 | `design-spec` | `ACC`, `FLOW`, `FUNC`, `NG`, `OBJ`, `REQ`, `RISK`, `TECH`, `VAL` | none initially | none initially | `ASM`, `CON` | none initially |
@@ -320,9 +320,12 @@ Built-in repeated-ID policies:
 | --- | --- | --- |
 | `single_primary_with_references` | Most primary definition families in both built-in profiles. | One primary definition is allowed; later occurrences outside supplemental positions are coverage references or mentions. |
 | `primary_with_supplemental_definition` | `RISK` in the execution-spec profile. | One primary definition is allowed; later profile-approved risk register rows are supplemental definitions. |
-| `coverage_or_reference_only` | `EVD` in the execution-spec profile. | Occurrences are coverage references or unresolved references; they do not create primary or supplemental definitions. |
+| `terminal_coverage_node` | `EVD` in the execution-spec profile. | Occurrences are definition-free terminal evidence nodes. They may satisfy `VAL` to `EVD` path requirements when cited by profile-declared validation, evidence, milestone, review, or matrix coverage cells, but they do not create primary or supplemental definitions and do not enter registry authority. |
+| `coverage_or_reference_only` | Profile-declared coverage-only families that are not terminal evidence nodes. | Occurrences are coverage references or unresolved references; they do not create primary or supplemental definitions. |
 | `mention_only` | `DP`, `SHA`, and other non-trace labels listed by profile. | Occurrences are mentions and do not participate in required paths. |
 | `non_authoritative_table_candidate` | Table-only typed `ctx://trace` links without heading ownership. | Occurrences remain candidates and do not enter required-path validation as definitions. |
+
+Terminal coverage node policy: `terminal_coverage_node` families are graph-validation nodes only. They are valid required-path targets when cited by profile-declared evidence-bearing cells, they are included in graph validation result nodes with `authority: trace-evidence`, and they are excluded from primary definitions, supplemental definitions, `EntityRegistry`, and production `TraceGraph` authority.
 
 Built-in execution-spec table role selectors:
 
@@ -375,8 +378,8 @@ Execution-spec built-in profile contract:
 | --- | --- | --- | --- |
 | `objective_implemented_by` | `OBJ` to `WP` | Objective row, work-package row, milestone row, or execution traceability matrix coverage. | Required for `exec.objective_to_evidence`. |
 | `work_validated_by` | `WP` to `VAL` | Work-package validation checkpoint cell or execution traceability matrix coverage. | Required for `exec.objective_to_evidence` and `exec.work_to_evidence`. |
-| `validation_supported_by` | `VAL` to `EVD` | Validation, review, milestone, evidence, or matrix coverage that links a validation checkpoint to evidence. | Required for `exec.objective_to_evidence` and `exec.work_to_evidence`. |
-| `objective_supported_by_evidence` | `OBJ` to `EVD` | Objective row, milestone row, or matrix coverage naming evidence directly. | Supplemental evidence; does not replace the required `OBJ` to `WP` to `VAL` to `EVD` path. |
+| `validation_supported_by` | `VAL` to terminal `EVD` | Validation, review, milestone, evidence, or matrix coverage that links a validation checkpoint to a definition-free terminal evidence node. | Required for `exec.objective_to_evidence` and `exec.work_to_evidence`. |
+| `objective_supported_by_evidence` | `OBJ` to terminal `EVD` | Objective row, milestone row, or matrix coverage naming evidence directly. | Supplemental evidence; does not replace the required `OBJ` to `WP` to `VAL` to terminal `EVD` path. |
 | `matrix_coverage` | Row source family to covered target family | Traceability matrix row only. | Coverage evidence only; matrix cells never create definitions. |
 | `coverage_range` | Owning source occurrence to resolved same-family members | Same-family `FAMILY-n through FAMILY-m` expression after endpoint validation. | Expands path evidence only after both endpoints resolve. |
 
@@ -384,9 +387,9 @@ Execution-spec required path rules:
 
 | Path ID | Source selector | Required normalized path | Blocking diagnostic on failure |
 | --- | --- | --- | --- |
-| `exec.objective_to_evidence` | Each primary `OBJ` outside traceability matrices. | `OBJ` -> `WP` by `objective_implemented_by`; `WP` -> `VAL` by `work_validated_by`; `VAL` -> `EVD` by `validation_supported_by`. | `markdown-trace.graph.missing_required_path` |
-| `exec.work_to_evidence` | Each primary `WP` outside traceability matrices. | `WP` -> `VAL` by `work_validated_by`; `VAL` -> `EVD` by `validation_supported_by`. | `markdown-trace.graph.missing_required_path` |
-| `exec.matrix_row_minimum` | Each execution traceability matrix row with source family `OBJ` or `WP`. | Row evidence contains or resolves to at least one `WP`, one `VAL`, and one `EVD` target when those families are applicable to the row source. | `markdown-trace.graph.missing_matrix_coverage` |
+| `exec.objective_to_evidence` | Each primary `OBJ` outside traceability matrices. | `OBJ` -> `WP` by `objective_implemented_by`; `WP` -> `VAL` by `work_validated_by`; `VAL` -> terminal `EVD` by `validation_supported_by`. | `markdown-trace.graph.missing_required_path` |
+| `exec.work_to_evidence` | Each primary `WP` outside traceability matrices. | `WP` -> `VAL` by `work_validated_by`; `VAL` -> terminal `EVD` by `validation_supported_by`. | `markdown-trace.graph.missing_required_path` |
+| `exec.matrix_row_minimum` | Each execution traceability matrix row with source family `OBJ` or `WP`. | Row evidence contains or resolves to at least one `WP`, one `VAL`, and one terminal `EVD` target when those families are applicable to the row source. | `markdown-trace.graph.missing_matrix_coverage` |
 
 Design-spec built-in profile contract:
 
@@ -427,7 +430,7 @@ Schema contract summary:
 | Schema | Required top-level fields | Required nested contract |
 | --- | --- | --- |
 | `markdown-trace.trace-evidence.v1` | `schemaVersion`, `authority`, `source`, `profile`, `run`, `definitions`, `supplementalDefinitions`, `coverageRows`, `mentions`, `ranges`, `candidateEdges`, `diagnostics`, `hashes` | `authority` is exactly `trace-evidence`; `source` contains `path`, `sha256`, and `lineCount`; `profile` contains `profileId`, `artifactFamily`, `profileVersion`, and `sha256`; `run` contains package and runtime versions but no wall-clock timestamp in canonical JSON; each occurrence contains `occurrenceId`, `label`, `family`, `role`, `sourceKind`, and `sourceRange`. |
-| `markdown-trace.graph-profile.v1` | `schemaVersion`, `profileId`, `artifactFamily`, `profileVersion`, `idFamilies`, `definitionPolicies`, `tableRoles`, `rangePolicy`, `matrixSemantics`, `relationshipClasses`, `requiredPaths`, `diagnosticRules`, `serialization` | `idFamilies`, `definitionPolicies`, `tableRoles`, `rangePolicy`, and `matrixSemantics` implement the section 13 profile policy and built-in selector contracts; `relationshipClasses` declares normalized `class`, `sourceFamilies`, `targetFamilies`, `direction`, and accepted evidence bases; `requiredPaths` declares `pathId`, source selector, required relationship sequence, severity, and diagnostic code; `serialization` declares canonical sort keys. |
+| `markdown-trace.graph-profile.v1` | `schemaVersion`, `profileId`, `artifactFamily`, `profileVersion`, `idFamilies`, `definitionPolicies`, `tableRoles`, `rangePolicy`, `matrixSemantics`, `relationshipClasses`, `requiredPaths`, `diagnosticRules`, `serialization` | `idFamilies`, `definitionPolicies`, `tableRoles`, `rangePolicy`, and `matrixSemantics` implement the section 13 profile policy, terminal coverage node policy, and built-in selector contracts; `relationshipClasses` declares normalized `class`, `sourceFamilies`, `targetFamilies`, `direction`, and accepted evidence bases; `requiredPaths` declares `pathId`, source selector, required relationship sequence, severity, and diagnostic code; `serialization` declares canonical sort keys. |
 | `markdown-trace.graph-validation-result.v1` | `schemaVersion`, `status`, `source`, `profile`, `run`, `nodes`, `relationships`, `requiredPathResults`, `matrixCoverageResults`, `diagnostics`, `summary`, `hashes` | `status` is `pass`, `fail`, or `operational-error`; `relationships` contain normalized class, source ID, target ID, source ranges, and raw evidence anchors; diagnostics contain code, severity, message, profile rule ID, affected IDs, source ranges, blocking flag, and optional repair target ID. |
 | `markdown-trace.graph-repair-plan.v1` | `schemaVersion`, `source`, `profile`, `validationResult`, `run`, `status`, `actions`, `summary` | `status` is `available`, `partial`, or `unavailable`; each action contains `actionId`, diagnostic code, action kind, confidence from `0` to `1`, affected IDs, source ranges, suggested non-mutating action text, expected relationship or definition target, and validation target command. |
 
@@ -602,7 +605,7 @@ Section status: Complete
 | Traceability result | Pass after revision |
 | Verdict | Approve for implementation |
 | Open findings | none |
-| Resolved findings verified in this decision | `SM-1`, `TR-1`, `ST-2`, `SM-2`, `SM-3`, `SM-4` |
+| Resolved findings verified in this decision | `SM-1`, `TR-1`, `ST-2`, `SM-2`, `SM-3`, `SM-4`, `SM-5` |
 | Reviewed waivers | none |
 | Required heightened controls | none |
 | Approval conditions | none |
@@ -619,6 +622,7 @@ Findings addressed:
 - SM-2 Minor, resolved: Section 10 and VAL-11 now define reproducible Node.js 22.x local benchmark conditions and the median-of-three performance threshold.
 - SM-3 Major, resolved: Section 13 now defines graph profile policy fields, role classification rules, built-in family buckets, repeated-ID policies, range policy, and matrix semantics; section 14 and VAL-2 now require those fields in the profile schema and verification contract.
 - SM-4 Major, resolved: Consensus review found the built-in table-role and column-mapping contract under-specified. Section 13 now defines execution-spec and design-spec table role selectors, primary or source columns, target columns, and normalized column mapping behavior; section 14 and VAL-2 now require those selector contracts.
+- SM-5 Major, resolved: Consensus review found `EVD` terminal evidence semantics ambiguous because execution required paths depended on `VAL` to `EVD` while `EVD` could not become a primary or supplemental definition. Section 13 now defines `terminal_coverage_node` policy, classifies execution-spec `EVD` as a definition-free terminal evidence node, exempts that policy from unresolved-reference behavior, and updates execution-spec relationship and path rules to target terminal `EVD` nodes without registry authority.
 
 Semantic scores:
 
