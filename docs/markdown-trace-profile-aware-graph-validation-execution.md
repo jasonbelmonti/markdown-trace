@@ -13,7 +13,7 @@
 | Reviewers | Project owner; Markdown Trace maintainer; markdown-engine contract reviewer; graph validation reviewer; CODEFACTORY artifact-profile reviewer; agent authoring workflow reviewer |
 | Decision owner | Project owner |
 | Target branch, release, or milestone | Implementation branch to be created from `origin/main` after this execution spec is approved; execution-spec branch `codex/profile-aware-graph-validation-execution-spec` |
-| Last updated | 2026-06-07 |
+| Last updated | 2026-08-13 |
 | Related source docs | `docs/design/markdown-trace-profile-aware-graph-validation-design-spec.md`; `docs/evidence/profile-aware-graph-validation-r0-report.md`; `docs/design/markdown-trace-profile-aware-graph-validation-design-process.md`; `docs/markdown-trace-profile-aware-graph-validation-r0-execution.md` |
 | Related tickets | `BEL-1290` through `BEL-1296`; implementation follow-up ticket to be assigned |
 
@@ -46,6 +46,7 @@ Section status: Complete
 | SRC-3 | Current `src/markdowntrace/**`, `tests/**`, `fixtures/**`, and `package.json` on `origin/main` at merge commit `5a65b11`. | Repository implementation baseline for current command behavior, package exports, markdown-engine boundary, tests, and fixture scripts. | Keep new modules additive; preserve current authoritative `derive`, `derive-sidecar`, `validate`, migration check, and R1 link-backed tests. |
 | SRC-4 | User request dated 2026-06-07: better validation for generated specs, graph-aware repair loops, agent-readable diagnostics, confidence that planning artifacts connect, and safer future Markdown authoring automation. | Product objective source for why this implementation should proceed after R0 and R2. | Prioritize graph-validation outputs, repair-plan readiness, and agent-readable diagnostics over source-writing automation. |
 | SRC-5 | Execution-estimation pass for this planning artifact in `.worktrees/profile-aware-graph-validation-execution-spec` using proposed file `docs/markdown-trace-profile-aware-graph-validation-execution.md`. | Planning control source for drafting this execution spec only; result was `execution.action=proceed`, `planning.recommended=false`, `decompositionRecommended=false`, blast radius `low`, adjusted estimate 8 story points for the artifact draft. | Draft one execution spec rather than decomposing this planning artifact; `DEP-3` requires a separate implementation-scope estimate before coding starts. |
+| SRC-6 | Implementation-scope estimate `.codefactory/execution-estimates/profile-aware-graph-validation-implementation-estimate.json`, decomposed WP-1 estimate `.codefactory/execution-estimates/profile-aware-graph-validation-wp1-estimate.json`, and project-owner approval in the current thread on 2026-08-13. | Current execution-entry authority for the bounded WP-1 child only. | The full scope returned `decompose-first`; WP-1 was then estimated as a depth-1 child and returned `execution.action=proceed`, `decompositionRecommended=false`, and low blast radius. Project-owner approval satisfies `DEP-3` for WP-1 but does not authorize `MS-1` passage or later work packages. |
 
 In scope: Add production TypeScript modules for trace evidence extraction, graph profile loading, graph validation, graph reporting, graph repair plans, canonical serialization and hashing, CLI adapters, public package exports, built-in execution-spec and design-spec graph profiles, positive and negative fixtures, tests, performance evidence, compatibility evidence, and local-safety evidence.
 
@@ -109,7 +110,7 @@ Section status: Complete
 | ASM-2 | Assumption | The implementation can reuse R0 extractor knowledge without making private R0 scripts production dependencies. | Implementation agent | No | `VAL-13` checks production code imports from `experiments/**`; `REV-2` reviews boundaries. |
 | DEP-1 | Dependency | Project owner approval of this execution spec is required before implementation begins. | Project owner | Yes | Entry gate in section 18 blocks execution until approval is recorded. |
 | DEP-2 | Dependency | Node.js runtime shall satisfy the current package engine range `^20.19.0` or `>=22.12.0`; performance evidence uses documented Node.js 22.x conditions. | Local operator | No | `VAL-11` records Node version and benchmark conditions. |
-| DEP-3 | Dependency | Implementation-scope execution estimation over the proposed implementation surfaces is required before coding begins. | Implementation agent | Yes | Run `$execution-estimation` against the implementation file-touch plan covering `SURF-1` through `SURF-12`; if the result recommends decomposition or does not return `execution.action=proceed`, stop implementation and update this spec or decompose before coding. |
+| DEP-3 | Dependency | Implementation-scope execution estimation is required before coding begins. The full `SURF-1` through `SURF-12` estimate required decomposition; the bounded WP-1 child estimate subsequently returned `execution.action=proceed` with no decomposition recommendation and received project-owner approval on 2026-08-13. | Implementation agent | No | Treat `.codefactory/execution-estimates/profile-aware-graph-validation-wp1-estimate.json` as satisfying entry estimation for WP-1 only. Re-estimate any later milestone-authorized scope if its work-package boundary differs materially from the current execution specification. |
 
 Section status: Complete
 
@@ -646,7 +647,7 @@ Section status: Complete
 | CTRL-6 | 10,000-line graph validation median exceeds 10 seconds after one focused optimization pass. | Stop release readiness and escalate to project owner for scope reduction, optimization approval, or conditional deferral. | Implementation agent | `EVD-11` |
 | CTRL-7 | A new dependency, network call, live integration, or secret access appears in the implementation. | Remove it or escalate as out-of-scope; no merge before `REV-5` and `VAL-13` clear the finding. | Markdown Trace maintainer | `EVD-13` |
 | CTRL-8 | Two work packages need concurrent writes to the same file or package boundary before its contract is stable. | Serialize the work, assign a single owner for the shared file, and update package boundary notes before continuing. | Implementation agent | Updated work-package note and `REV-2` approval |
-| CTRL-9 | Implementation-scope execution estimation is missing, recommends decomposition, or does not return `execution.action=proceed`. | Do not start coding; update this execution spec with the estimate result, decompose the implementation if required, and obtain project-owner approval before proceeding. | Implementation agent | Implementation-scope estimate artifact and `MS-1` evidence record |
+| CTRL-9 | Implementation-scope execution estimation is missing, recommends decomposition, or does not return `execution.action=proceed`. | Do not start coding. If the full scope requires decomposition, use an existing source-authorized work-package boundary, estimate that child with the required decomposition depth, record the result here, and obtain project-owner approval before proceeding. | Implementation agent | Full-scope and child-scope estimate artifacts, project-owner approval, and `MS-1` evidence record |
 
 Deviation rules: Any approved departure from this execution spec shall be recorded as `DEV-*` with owner, approver, rationale, impact, and evidence in section 16 before merge. Deviations are not valid for source mutation, registry authority promotion, live integrations, or unsafe CLI compatibility changes unless a new design approval supersedes this spec.
 
@@ -756,7 +757,7 @@ Risks:
 
 Open questions: None. `SRC-1` states no open questions and this execution spec treats new blocking scope questions as pause conditions under section 10.
 
-Approved deviations: None.
+Approved deviations: None. The WP-1 child estimate follows the decomposition path required by `CTRL-9`; it is not a deviation from the execution plan.
 
 Approved waivers: None.
 
@@ -771,6 +772,7 @@ Section status: Complete
 | SRC-3 current code baseline | `SURF-5`, `SURF-6`, `SURF-7`, `SURF-9`, `SURF-11`, `SURF-12` | `PKG-6`, `PKG-7` | `WP-6`, `WP-7` | `MS-3`, `MS-4` | `CTRL-4`, `CTRL-8` | `VAL-8`, `VAL-12`, `VAL-13` | `REV-2`, `REV-5`, `REV-6` | `REL-2`, `REL-3`, `REL-4`, `OBS-6` | `EVD-8`, `EVD-12`, `EVD-13` |
 | SRC-4 user goals | `SURF-3`, `SURF-4`, `SURF-5`, `SURF-6`, `SURF-10` | `PKG-3`, `PKG-4`, `PKG-5`, `PKG-6`, `PKG-7` | `WP-4`, `WP-5`, `WP-6`, `WP-7` | `MS-2`, `MS-3`, `MS-4` | `CTRL-2`, `CTRL-3` | `VAL-4`, `VAL-7`, `VAL-8`, `VAL-9` | `REV-1`, `REV-4`, `REV-6` | `REL-3`, `OBS-1`, `OBS-2` | `EVD-4`, `EVD-7`, `EVD-8`, `EVD-9` |
 | SRC-5 planning-artifact estimation control | `SURF-10` | `PKG-7` | `WP-7` | `MS-4` | `CTRL-8`, `CTRL-9` | `VAL-12` | `REV-6` | `REL-3` | `EVD-12` |
+| SRC-6 approved WP-1 DEP-3 disposition | `SURF-1`, `SURF-2`, `SURF-3`, `SURF-8`, `SURF-9`, `SURF-10` | `PKG-1`, `PKG-2`, `PKG-3`, `PKG-7` | `WP-1` | `MS-1` | `CTRL-9` | `VAL-0` | `REV-1`, `REV-2`, `REV-3`, `REV-7` | `REL-1` | WP-1 estimate artifact and `EVD-0` |
 | DEP-3 implementation-scope estimate | `SURF-1` through `SURF-12` | `PKG-1` through `PKG-7` | `WP-1` through `WP-7` | `MS-1`, `MS-4` | `CTRL-9` | `VAL-0`, `VAL-12` | `REV-1`, `REV-2`, `REV-6` | `REL-1`, `REL-3` | `EVD-0`, `EVD-12` |
 | OBJ-1 trace evidence extraction | `SURF-1`, `SURF-8`, `SURF-9` | `PKG-1`, `PKG-7` | `WP-1`, `WP-3`, `WP-7` | `MS-1`, `MS-2`, `MS-4` | `CTRL-1`, `CTRL-5`, `CTRL-7`, `CTRL-9` | `VAL-0`, `VAL-1`, `VAL-3`, `VAL-10`, `VAL-13` | `REV-2`, `REV-3`, `REV-5`, `REV-7` | `REL-1`, `REL-2`, `OBS-3`, `OBS-4` | `EVD-0`, `EVD-1`, `EVD-3`, `EVD-10`, `EVD-13` |
 | OBJ-2 graph profiles | `SURF-2`, `SURF-8`, `SURF-9` | `PKG-2`, `PKG-7` | `WP-1`, `WP-2`, `WP-7` | `MS-1`, `MS-2`, `MS-4` | `CTRL-3`, `CTRL-9` | `VAL-0`, `VAL-2`, `VAL-5`, `VAL-6` | `REV-2`, `REV-3`, `REV-7` | `REL-1`, `OBS-3`, `OBS-4` | `EVD-0`, `EVD-2`, `EVD-5`, `EVD-6` |
@@ -800,7 +802,7 @@ Section status: Complete
 
 ## 18. Final Execution Gate
 
-Entry gate: Ready to start only after the project owner approves this execution spec, `DEP-1` and `DEP-3` are satisfied, the implementation branch is created from the merged R2 design on `origin/main`, and the executor confirms no entry work requires source mutation, registry authority promotion, universal vocabulary expansion, or live integration.
+Entry gate: Ready to start WP-1. The project owner approved execution kickoff (`DEP-1`) and, on 2026-08-13, approved the decomposed WP-1 estimate route after `.codefactory/execution-estimates/profile-aware-graph-validation-wp1-estimate.json` returned `execution.action=proceed` with `decompositionRecommended=false` (`DEP-3`). The implementation branch exists from the merged R2 design on `origin/main`, and no entry work requires source mutation, registry authority promotion, universal vocabulary expansion, or live integration. This entry disposition authorizes WP-1 only and does not approve `MS-1` or later work packages.
 
 Milestone approval gate: `MS-1`, `MS-2`, `MS-3`, and `MS-4` are non-waivable at their due points. Each milestone requires the named verifier, manual verification steps, `REV-*` review scope, and `EVD-*` evidence before work may proceed past that gate.
 
