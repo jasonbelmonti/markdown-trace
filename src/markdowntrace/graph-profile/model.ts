@@ -143,15 +143,34 @@ export interface GraphRequiredPathSourceSelector {
   readonly excludedTableRoleIds: readonly string[];
 }
 
-export interface GraphRequiredPath {
+interface GraphRequiredPathBase {
   readonly pathId: string;
   readonly sourceFamilies: readonly string[];
   readonly sourceSelector: GraphRequiredPathSourceSelector;
+  readonly severity: "error";
+}
+
+export interface GraphRelationshipRequiredPath extends GraphRequiredPathBase {
   readonly steps: readonly GraphRequiredPathStep[];
   readonly alternativeSteps: readonly (readonly GraphRequiredPathStep[])[];
-  readonly severity: "error";
   readonly diagnosticCode: "markdown-trace.graph.missing_required_path";
 }
+
+export interface GraphMatrixCoverageRequirement {
+  readonly sourceFamilies: readonly string[];
+  readonly requiredTargetFamilies: readonly string[];
+}
+
+export interface GraphMatrixCoverageRequiredPath extends GraphRequiredPathBase {
+  readonly steps: readonly [];
+  readonly alternativeSteps: readonly [];
+  readonly rowRequirements: readonly GraphMatrixCoverageRequirement[];
+  readonly diagnosticCode: "markdown-trace.graph.missing_matrix_coverage";
+}
+
+export type GraphRequiredPath =
+  | GraphRelationshipRequiredPath
+  | GraphMatrixCoverageRequiredPath;
 
 export interface GraphDiagnosticRule {
   readonly code: GraphDiagnosticCode;
@@ -162,6 +181,7 @@ export interface GraphDiagnosticRule {
 
 export interface GraphProfile<
   TArtifactFamily extends GraphArtifactFamily = "execution-spec",
+  TRequiredPath extends GraphRequiredPath = GraphRequiredPath,
 > {
   readonly schemaVersion: typeof GRAPH_PROFILE_SCHEMA_VERSION;
   readonly profileId: string;
@@ -188,7 +208,7 @@ export interface GraphProfile<
     readonly definitionsFromCells: false;
   };
   readonly relationshipClasses: readonly GraphRelationshipDefinition[];
-  readonly requiredPaths: readonly GraphRequiredPath[];
+  readonly requiredPaths: readonly TRequiredPath[];
   readonly diagnosticRules: readonly GraphDiagnosticRule[];
   readonly serialization: {
     readonly ordering: Readonly<

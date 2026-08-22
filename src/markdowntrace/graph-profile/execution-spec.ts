@@ -1,6 +1,11 @@
 import { createHash } from "node:crypto";
 
-import type { GraphArtifactFamily, GraphDiagnosticRule, GraphProfile } from "./model.js";
+import type {
+  GraphArtifactFamily,
+  GraphDiagnosticRule,
+  GraphProfile,
+  GraphRelationshipRequiredPath,
+} from "./model.js";
 
 const DIAGNOSTIC_RULES: readonly GraphDiagnosticRule[] = [
   {
@@ -41,7 +46,10 @@ const DIAGNOSTIC_RULES: readonly GraphDiagnosticRule[] = [
   },
 ];
 
-export const EXECUTION_SPEC_FIRST_SLICE_PROFILE: GraphProfile = {
+export const EXECUTION_SPEC_FIRST_SLICE_PROFILE: GraphProfile<
+  "execution-spec",
+  GraphRelationshipRequiredPath
+> = {
   schemaVersion: "markdown-trace.graph-profile.v1",
   profileId: "markdown-trace.execution-spec.first-slice",
   artifactFamily: "execution-spec",

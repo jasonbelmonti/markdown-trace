@@ -20,6 +20,8 @@ import {
   GRAPH_SERIALIZATION_ORDERING_CATEGORIES,
   GRAPH_TABLE_EFFECTS,
   type GraphArtifactFamily,
+  type GraphProfile,
+  type GraphRequiredPath,
 } from "../src/markdowntrace/graph-profile/model.js";
 
 describe("graph profile model contract", () => {
@@ -191,6 +193,47 @@ describe("graph profile model contract", () => {
     expect(Object.isFrozen(failure.ok ? [] : failure.diagnostics)).toBe(true);
     expect(success.ok).toBe(true);
     expect(failure.ok).toBe(false);
+  });
+
+  it("represents the R2 execution matrix row minimum", () => {
+    const matrixCoverageDiagnostic: GraphRequiredPath["diagnosticCode"] =
+      "markdown-trace.graph.missing_matrix_coverage";
+    const matrixRowMinimum: GraphRequiredPath = {
+      pathId: "exec.matrix_row_minimum",
+      sourceFamilies: ["OBJ", "WP"],
+      sourceSelector: {
+        families: ["OBJ", "WP"],
+        roles: ["matrix_coverage"],
+        excludedTableRoleIds: [],
+      },
+      steps: [],
+      alternativeSteps: [],
+      rowRequirements: [
+        {
+          sourceFamilies: ["OBJ"],
+          requiredTargetFamilies: ["WP", "VAL", "EVD"],
+        },
+        {
+          sourceFamilies: ["WP"],
+          requiredTargetFamilies: ["VAL", "EVD"],
+        },
+      ],
+      severity: "error",
+      diagnosticCode: matrixCoverageDiagnostic,
+    };
+    const profileWithMatrixCoverage: GraphProfile = {
+      ...EXECUTION_SPEC_FIRST_SLICE_PROFILE,
+      requiredPaths: [...EXECUTION_SPEC_FIRST_SLICE_PROFILE.requiredPaths, matrixRowMinimum],
+    };
+
+    expect(profileWithMatrixCoverage.requiredPaths.at(-1)).toMatchObject({
+      pathId: "exec.matrix_row_minimum",
+      diagnosticCode: "markdown-trace.graph.missing_matrix_coverage",
+      rowRequirements: [
+        { sourceFamilies: ["OBJ"], requiredTargetFamilies: ["WP", "VAL", "EVD"] },
+        { sourceFamilies: ["WP"], requiredTargetFamilies: ["VAL", "EVD"] },
+      ],
+    });
   });
 
   it("preserves the WP-1 profile export and deterministic hash behavior", () => {

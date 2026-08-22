@@ -1,3 +1,13 @@
+import type {
+  GraphArtifactFamily,
+  GraphProfile as CompleteGraphProfile,
+  GraphRelationshipRequiredPath,
+} from "./model.js";
+
+export type GraphProfile<
+  TArtifactFamily extends GraphArtifactFamily = "execution-spec",
+> = CompleteGraphProfile<TArtifactFamily, GraphRelationshipRequiredPath>;
+
 export {
   GRAPH_PROFILE_ERROR_CODE,
   graphProfileError,
@@ -14,12 +24,11 @@ export {
   type GraphEvidenceRole,
   type GraphIdFamily,
   type GraphIdFamilyPolicy,
-  type GraphProfile,
   type GraphRelationshipClass,
   type GraphRelationshipDefinition,
   type GraphRepairActionKind,
   type GraphRepeatedIdPolicy,
-  type GraphRequiredPath,
+  type GraphRelationshipRequiredPath as GraphRequiredPath,
   type GraphRequiredPathSourceSelector,
   type GraphRequiredPathStep,
   type GraphTableEffect,
