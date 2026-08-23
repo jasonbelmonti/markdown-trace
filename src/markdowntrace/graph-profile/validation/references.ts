@@ -1,11 +1,13 @@
 import type {
   GraphArtifactFamily,
   GraphDiagnosticCode,
+  GraphIdFamilyPolicy,
   GraphMatrixCoverageRequiredPath,
   GraphProfile,
   GraphRelationshipClass,
   GraphRelationshipDefinition,
   GraphRepairActionKind,
+  GraphRepeatedIdPolicy,
   GraphRequiredPathStep,
 } from "../model.js";
 import {
@@ -36,16 +38,8 @@ export function validateReferences(profile: GraphProfile<GraphArtifactFamily>): 
   const diagnosticCodes = new Set(profile.diagnosticRules.map(({ code }) => code));
 
   for (const [index, family] of profile.idFamilies.entries()) {
-    const policy = profile.definitionPolicies.repeatedIdPolicy[family.family];
-    const compatible =
-      (family.policy === "primary_definition" &&
-        (policy === "single_primary_with_references" || policy === "primary_with_supplemental_definition")) ||
-      (family.policy === "supplemental_definition" && policy === "primary_with_supplemental_definition") ||
-      (family.policy === "terminal_coverage_node" && policy === "terminal_coverage_node") ||
-      (family.policy === "mention_only" && policy === "mention_only") ||
-      (family.policy === "coverage_or_mention_only" &&
-        (policy === "coverage_or_reference_only" || policy === "non_authoritative_table_candidate"));
-    if (!compatible) {
+    const repeatedIdPolicy = profile.definitionPolicies.repeatedIdPolicy[family.family];
+    if (!hasCompatibleRepeatedIdPolicy(family.policy, repeatedIdPolicy)) {
       fail(`definitionPolicies.repeatedIdPolicy.${family.family}`, `conflicts with idFamilies[${index}].policy`);
     }
   }
@@ -109,6 +103,30 @@ export function validateReferences(profile: GraphProfile<GraphArtifactFamily>): 
     if (!diagnosticCodes.has(path.diagnosticCode)) {
       fail(`requiredPaths[${index}].diagnosticCode`, "must reference a declared diagnostic rule");
     }
+  }
+}
+
+function hasCompatibleRepeatedIdPolicy(
+  familyPolicy: GraphIdFamilyPolicy,
+  repeatedIdPolicy: GraphRepeatedIdPolicy | undefined,
+): boolean {
+  switch (familyPolicy) {
+    case "primary_definition":
+      return (
+        repeatedIdPolicy === "single_primary_with_references" ||
+        repeatedIdPolicy === "primary_with_supplemental_definition"
+      );
+    case "supplemental_definition":
+      return repeatedIdPolicy === "primary_with_supplemental_definition";
+    case "terminal_coverage_node":
+      return repeatedIdPolicy === "terminal_coverage_node";
+    case "mention_only":
+      return repeatedIdPolicy === "mention_only";
+    case "coverage_or_mention_only":
+      return (
+        repeatedIdPolicy === "coverage_or_reference_only" ||
+        repeatedIdPolicy === "non_authoritative_table_candidate"
+      );
   }
 }
 

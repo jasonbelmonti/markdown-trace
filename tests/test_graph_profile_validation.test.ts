@@ -20,28 +20,8 @@ describe("graph profile structural validation", () => {
   });
 
   it("accepts a generic matrix-row requirement alongside relationship paths", () => {
-    const profile = structuredClone(EXECUTION_SPEC_FIRST_SLICE_PROFILE) as unknown as {
-      requiredPaths: unknown[];
-    };
-    profile.requiredPaths.push({
-      pathId: "exec.matrix_row_minimum",
-      sourceFamilies: ["OBJ"],
-      sourceSelector: {
-        families: ["OBJ"],
-        roles: ["matrix_coverage"],
-        excludedTableRoleIds: [],
-      },
-      steps: [],
-      alternativeSteps: [],
-      rowRequirements: [
-        {
-          sourceFamilies: ["OBJ"],
-          requiredTargetFamilies: ["WP", "VAL", "EVD"],
-        },
-      ],
-      severity: "error",
-      diagnosticCode: "markdown-trace.graph.missing_matrix_coverage",
-    });
+    const profile = executionProfile();
+    entries(profile, "requiredPaths").push(matrixPath());
 
     const result = validateGraphProfile(profile);
 
@@ -58,25 +38,10 @@ describe("graph profile structural validation", () => {
   });
 
   it("returns a frozen schema diagnostic for an invalid matrix path", () => {
-    const profile = structuredClone(EXECUTION_SPEC_FIRST_SLICE_PROFILE) as unknown as {
-      requiredPaths: unknown[];
-    };
-    profile.requiredPaths.push({
-      pathId: "exec.matrix_row_minimum",
-      sourceFamilies: ["OBJ"],
-      sourceSelector: {
-        families: ["OBJ"],
-        roles: ["matrix_coverage"],
-        excludedTableRoleIds: [],
-      },
-      steps: [{ relationshipClass: "objective_implemented_by", targetFamilies: ["WP"] }],
-      alternativeSteps: [],
-      rowRequirements: [
-        { sourceFamilies: ["OBJ"], requiredTargetFamilies: ["WP", "VAL", "EVD"] },
-      ],
-      severity: "error",
-      diagnosticCode: "markdown-trace.graph.missing_matrix_coverage",
-    });
+    const profile = executionProfile();
+    const path = matrixPath();
+    path.steps = [{ relationshipClass: "objective_implemented_by", targetFamilies: ["WP"] }];
+    entries(profile, "requiredPaths").push(path);
 
     const result = validateGraphProfile(profile);
 
@@ -102,11 +67,10 @@ describe("graph profile structural validation", () => {
     }
   });
 
-  it.each(invalidProfiles)("rejects %s with a stable frozen schema diagnostic", (
-    _name,
+  it.each(invalidProfiles)("rejects $name with a stable frozen schema diagnostic", ({
     mutate,
     expectedMessage,
-  ) => {
+  }) => {
     const profile = executionProfile();
     mutate(profile);
 
@@ -118,24 +82,108 @@ describe("graph profile structural validation", () => {
 
 type MutableRecord = Record<string, unknown>;
 
-const invalidProfiles: readonly [
-  string,
-  (profile: MutableRecord) => void,
-  string,
-][] = [
-  ["a missing root field", (profile) => delete profile.schemaVersion, "schemaVersion must be"],
-  ["an unsupported field", (profile) => { profile.unexpectedField = true; }, "root contains unsupported field"],
-  ["an unsupported artifact-family token", (profile) => { profile.artifactFamily = "unsupported"; }, "artifactFamily must be one of"],
-  ["an invalid family regular expression", (profile) => { entries(profile, "idFamilies")[0]!.labelPattern = "["; }, "idFamilies[0].labelPattern must be a valid regular expression"],
-  ["a duplicate ID family", (profile) => entries(profile, "idFamilies").push(structuredClone(entries(profile, "idFamilies")[0]!)), "idFamilies.family must not contain duplicates"],
-  ["an incompatible repeated-ID policy", (profile) => { mapping(mapping(profile, "definitionPolicies"), "repeatedIdPolicy").OBJ = "mention_only"; }, "definitionPolicies.repeatedIdPolicy.OBJ conflicts"],
-  ["an invalid required-path discriminator", (profile) => { entries(profile, "requiredPaths")[0]!.diagnosticCode = "unknown"; }, "requiredPaths[0].diagnosticCode must be one of"],
-  ["a mismatched diagnostic action mapping", (profile) => { entries(profile, "diagnosticRules")[0]!.repairActionKinds = ["fix_graph_profile"]; }, "diagnosticRules[0].repairActionKinds must match"],
-  ["a dangling relationship family", (profile) => { entries(profile, "relationshipClasses")[0]!.targetFamilies = ["UNKNOWN"]; }, "relationshipClasses[0].targetFamilies references unknown family"],
-  ["a dangling table-role relationship", (profile) => { entries(profile, "tableRoles")[0]!.relationshipClass = "matrix_coverage"; }, "tableRoles[0].relationshipClass must reference"],
-  ["a dangling path table-role reference", (profile) => { mapping(entries(profile, "requiredPaths")[0]!, "sourceSelector").excludedTableRoleIds = ["missing-role"]; }, "requiredPaths[0].sourceSelector.excludedTableRoleIds references"],
-  ["a matrix target family that is not declared", (profile) => { entries(profile, "requiredPaths").push(matrixPath("OBJ", ["UNKNOWN"])); }, "requiredPaths[1].rowRequirements[0].requiredTargetFamilies references unknown family"],
-  ["a matrix source family outside the selected path", (profile) => { entries(profile, "requiredPaths").push(matrixPath("WP")); }, "requiredPaths[1].rowRequirements[0].sourceFamilies family WP is not selected"],
+interface InvalidProfileCase {
+  readonly name: string;
+  readonly mutate: (profile: MutableRecord) => void;
+  readonly expectedMessage: string;
+}
+
+const invalidProfiles: readonly InvalidProfileCase[] = [
+  {
+    name: "a missing root field",
+    mutate: (profile) => delete profile.schemaVersion,
+    expectedMessage: "schemaVersion must be",
+  },
+  {
+    name: "an unsupported field",
+    mutate: (profile) => {
+      profile.unexpectedField = true;
+    },
+    expectedMessage: "root contains unsupported field",
+  },
+  {
+    name: "an unsupported artifact-family token",
+    mutate: (profile) => {
+      profile.artifactFamily = "unsupported";
+    },
+    expectedMessage: "artifactFamily must be one of",
+  },
+  {
+    name: "an invalid family regular expression",
+    mutate: (profile) => {
+      entries(profile, "idFamilies")[0]!.labelPattern = "[";
+    },
+    expectedMessage: "idFamilies[0].labelPattern must be a valid regular expression",
+  },
+  {
+    name: "a duplicate ID family",
+    mutate: (profile) => {
+      entries(profile, "idFamilies").push(
+        structuredClone(entries(profile, "idFamilies")[0]!),
+      );
+    },
+    expectedMessage: "idFamilies.family must not contain duplicates",
+  },
+  {
+    name: "an incompatible repeated-ID policy",
+    mutate: (profile) => {
+      mapping(mapping(profile, "definitionPolicies"), "repeatedIdPolicy").OBJ = "mention_only";
+    },
+    expectedMessage: "definitionPolicies.repeatedIdPolicy.OBJ conflicts",
+  },
+  {
+    name: "an invalid required-path discriminator",
+    mutate: (profile) => {
+      entries(profile, "requiredPaths")[0]!.diagnosticCode = "unknown";
+    },
+    expectedMessage: "requiredPaths[0].diagnosticCode must be one of",
+  },
+  {
+    name: "a mismatched diagnostic action mapping",
+    mutate: (profile) => {
+      entries(profile, "diagnosticRules")[0]!.repairActionKinds = ["fix_graph_profile"];
+    },
+    expectedMessage: "diagnosticRules[0].repairActionKinds must match",
+  },
+  {
+    name: "a dangling relationship family",
+    mutate: (profile) => {
+      entries(profile, "relationshipClasses")[0]!.targetFamilies = ["UNKNOWN"];
+    },
+    expectedMessage: "relationshipClasses[0].targetFamilies references unknown family",
+  },
+  {
+    name: "a dangling table-role relationship",
+    mutate: (profile) => {
+      entries(profile, "tableRoles")[0]!.relationshipClass = "matrix_coverage";
+    },
+    expectedMessage: "tableRoles[0].relationshipClass must reference",
+  },
+  {
+    name: "a dangling path table-role reference",
+    mutate: (profile) => {
+      mapping(entries(profile, "requiredPaths")[0]!, "sourceSelector").excludedTableRoleIds = [
+        "missing-role",
+      ];
+    },
+    expectedMessage: "requiredPaths[0].sourceSelector.excludedTableRoleIds references",
+  },
+  {
+    name: "a matrix target family that is not declared",
+    mutate: (profile) => {
+      entries(profile, "requiredPaths").push(matrixPath("OBJ", ["UNKNOWN"]));
+    },
+    expectedMessage:
+      "requiredPaths[1].rowRequirements[0].requiredTargetFamilies references unknown family",
+  },
+  {
+    name: "a matrix source family outside the selected path",
+    mutate: (profile) => {
+      entries(profile, "requiredPaths").push(matrixPath("WP"));
+    },
+    expectedMessage:
+      "requiredPaths[1].rowRequirements[0].sourceFamilies family WP is not selected",
+  },
 ];
 
 function executionProfile(): MutableRecord {
@@ -198,7 +246,7 @@ function designProfile(): MutableRecord {
 }
 
 function matrixPath(
-  sourceFamily: string,
+  sourceFamily = "OBJ",
   requiredTargetFamilies = ["WP", "VAL", "EVD"],
 ): MutableRecord {
   return {

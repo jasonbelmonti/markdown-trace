@@ -23,6 +23,7 @@ import {
   ID_FAMILY_POLICIES,
   RELATIONSHIP_CLASSES,
   REPAIR_ACTION_KINDS,
+  REQUIRED_PATH_DIAGNOSTIC_CODES,
   REPEATED_ID_POLICIES,
   TABLE_EFFECTS,
   array,
@@ -185,14 +186,15 @@ function parseRelationship(value: unknown, path: string): GraphRelationshipDefin
 
 function parseRequiredPath(value: unknown, path: string): GraphRequiredPath {
   const input = record(value, path);
-  const code = token(
+  const diagnosticCode = token(
     input.diagnosticCode,
-    ["markdown-trace.graph.missing_required_path", "markdown-trace.graph.missing_matrix_coverage"] as const,
+    REQUIRED_PATH_DIAGNOSTIC_CODES,
     `${path}.diagnosticCode`,
   );
-  return code === "markdown-trace.graph.missing_matrix_coverage"
-    ? parseMatrixCoverageRequiredPath(value, path)
-    : parseRelationshipRequiredPath(value, path);
+  if (diagnosticCode === "markdown-trace.graph.missing_matrix_coverage") {
+    return parseMatrixCoverageRequiredPath(value, path);
+  }
+  return parseRelationshipRequiredPath(value, path);
 }
 
 function parseRelationshipRequiredPath(value: unknown, path: string): GraphRelationshipRequiredPath {

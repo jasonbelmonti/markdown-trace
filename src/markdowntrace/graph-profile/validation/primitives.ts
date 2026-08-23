@@ -61,6 +61,10 @@ export const DIAGNOSTIC_CODES = [
   "markdown-trace.graph.missing_required_path",
   "markdown-trace.graph.profile_error",
 ] as const satisfies readonly GraphDiagnosticCode[];
+export const REQUIRED_PATH_DIAGNOSTIC_CODES = [
+  "markdown-trace.graph.missing_required_path",
+  "markdown-trace.graph.missing_matrix_coverage",
+] as const;
 export const REPAIR_ACTION_KINDS = [
   "define_missing_id",
   "remove_or_replace_reference",
