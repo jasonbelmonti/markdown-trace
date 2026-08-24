@@ -31,6 +31,11 @@ const DIAGNOSTIC_REPAIR_ACTIONS: Readonly<
 
 export function validateReferences(profile: GraphProfile<GraphArtifactFamily>): void {
   const families = new Set(profile.idFamilies.map(({ family }) => family));
+  unique(profile.relationshipClasses.map(({ class: className }) => className), "relationshipClasses.class");
+  unique(profile.tableRoles.map(({ selectorId }) => selectorId), "tableRoles.selectorId");
+  unique(profile.requiredPaths.map(({ pathId }) => pathId), "requiredPaths.pathId");
+  unique(profile.diagnosticRules.map(({ code }) => code), "diagnosticRules.code");
+
   const relationships = new Map<GraphRelationshipClass, GraphRelationshipDefinition>(
     profile.relationshipClasses.map((relationship) => [relationship.class, relationship]),
   );
@@ -44,10 +49,6 @@ export function validateReferences(profile: GraphProfile<GraphArtifactFamily>): 
     }
   }
 
-  unique([...relationships.keys()], "relationshipClasses.class");
-  unique([...tableRoleIds], "tableRoles.selectorId");
-  unique(profile.requiredPaths.map(({ pathId }) => pathId), "requiredPaths.pathId");
-  unique([...diagnosticCodes], "diagnosticRules.code");
   for (const code of DIAGNOSTIC_CODES) {
     if (!diagnosticCodes.has(code)) {
       fail("diagnosticRules", `must declare ${code}`);
@@ -95,9 +96,16 @@ export function validateReferences(profile: GraphProfile<GraphArtifactFamily>): 
     if (path.diagnosticCode === "markdown-trace.graph.missing_matrix_coverage") {
       validateMatrixCoverageRequirements(path, index, families);
     } else {
-      validatePathSteps(path.steps, index, "steps", relationships, families);
+      validatePathSteps(path.steps, path.sourceFamilies, index, "steps", relationships, families);
       path.alternativeSteps.forEach((steps, alternativeIndex) =>
-        validatePathSteps(steps, index, `alternativeSteps[${alternativeIndex}]`, relationships, families),
+        validatePathSteps(
+          steps,
+          path.sourceFamilies,
+          index,
+          `alternativeSteps[${alternativeIndex}]`,
+          relationships,
+          families,
+        ),
       );
     }
     if (!diagnosticCodes.has(path.diagnosticCode)) {
@@ -155,15 +163,25 @@ function validateMatrixCoverageRequirements(
 
 function validatePathSteps(
   steps: readonly GraphRequiredPathStep[],
+  sourceFamilies: readonly string[],
   pathIndex: number,
   path: string,
   relationships: ReadonlyMap<GraphRelationshipClass, GraphRelationshipDefinition>,
   families: ReadonlySet<string>,
 ): void {
+  let precedingFamilies = sourceFamilies;
   for (const [index, step] of steps.entries()) {
     const relationship = relationships.get(step.relationshipClass);
     if (relationship === undefined) {
       fail(`requiredPaths[${pathIndex}].${path}[${index}].relationshipClass`, "must reference a declared relationship class");
+    }
+    for (const family of precedingFamilies) {
+      if (!relationship.sourceFamilies.includes(family)) {
+        fail(
+          `requiredPaths[${pathIndex}].${path}[${index}].relationshipClass`,
+          `must accept preceding family ${family}`,
+        );
+      }
     }
     requireFamilies(step.targetFamilies, families, `requiredPaths[${pathIndex}].${path}[${index}].targetFamilies`);
     for (const family of step.targetFamilies) {
@@ -174,5 +192,6 @@ function validatePathSteps(
         );
       }
     }
+    precedingFamilies = step.targetFamilies;
   }
 }

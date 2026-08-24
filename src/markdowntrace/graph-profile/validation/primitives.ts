@@ -151,7 +151,11 @@ export function array<T>(
   if (!Array.isArray(value)) {
     fail(path, "must be a list");
   }
-  return value.map((item, index) => parse(item, `${path}[${index}]`));
+  const values: T[] = [];
+  for (let index = 0; index < value.length; index += 1) {
+    values.push(parse(value[index], `${path}[${index}]`));
+  }
+  return values;
 }
 
 export function nonEmptyArray<T>(

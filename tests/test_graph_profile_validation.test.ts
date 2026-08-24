@@ -125,6 +125,33 @@ const invalidProfiles: readonly InvalidProfileCase[] = [
     expectedMessage: "idFamilies.family must not contain duplicates",
   },
   {
+    name: "a duplicate relationship class",
+    mutate: (profile) => {
+      entries(profile, "relationshipClasses").push(
+        structuredClone(entries(profile, "relationshipClasses")[0]!),
+      );
+    },
+    expectedMessage: "relationshipClasses.class must not contain duplicates",
+  },
+  {
+    name: "a duplicate table-role selector",
+    mutate: (profile) => {
+      entries(profile, "tableRoles").push(
+        structuredClone(entries(profile, "tableRoles")[0]!),
+      );
+    },
+    expectedMessage: "tableRoles.selectorId must not contain duplicates",
+  },
+  {
+    name: "a duplicate diagnostic rule",
+    mutate: (profile) => {
+      entries(profile, "diagnosticRules").push(
+        structuredClone(entries(profile, "diagnosticRules")[0]!),
+      );
+    },
+    expectedMessage: "diagnosticRules.code must not contain duplicates",
+  },
+  {
     name: "an incompatible repeated-ID policy",
     mutate: (profile) => {
       mapping(mapping(profile, "definitionPolicies"), "repeatedIdPolicy").OBJ = "mention_only";
@@ -167,6 +194,33 @@ const invalidProfiles: readonly InvalidProfileCase[] = [
       ];
     },
     expectedMessage: "requiredPaths[0].sourceSelector.excludedTableRoleIds references",
+  },
+  {
+    name: "a relationship path that starts outside its source family",
+    mutate: (profile) => {
+      entries(entries(profile, "requiredPaths")[0]!, "steps").splice(0, 1, {
+        relationshipClass: "work_validated_by",
+        targetFamilies: ["VAL"],
+      });
+    },
+    expectedMessage: "requiredPaths[0].steps[0].relationshipClass must accept preceding family OBJ",
+  },
+  {
+    name: "a disconnected ordered relationship path",
+    mutate: (profile) => {
+      entries(entries(profile, "requiredPaths")[0]!, "steps").splice(1, 1, {
+        relationshipClass: "validation_supported_by",
+        targetFamilies: ["EVD"],
+      });
+    },
+    expectedMessage: "requiredPaths[0].steps[1].relationshipClass must accept preceding family WP",
+  },
+  {
+    name: "a sparse string list",
+    mutate: (profile) => {
+      mapping(profile, "definitionPolicies").primaryColumns = new Array(1);
+    },
+    expectedMessage: "definitionPolicies.primaryColumns[0] must be a non-empty string",
   },
   {
     name: "a matrix target family that is not declared",
