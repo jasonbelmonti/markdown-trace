@@ -16,6 +16,7 @@ export {
   type GraphProfileResult,
 } from "./diagnostics.js";
 export { EXECUTION_SPEC_FIRST_SLICE_PROFILE, graphProfileHash } from "./execution-spec.js";
+export { validateGraphProfile } from "./validate.js";
 export {
   GRAPH_PROFILE_SCHEMA_VERSION,
   type GraphArtifactFamily,
