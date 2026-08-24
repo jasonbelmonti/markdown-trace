@@ -67,6 +67,15 @@ describe("graph profile structural validation", () => {
     }
   });
 
+  it("rejects a profile whose fields are inherited", () => {
+    const profile = Object.create({
+      ...executionProfile(),
+      unexpectedField: true,
+    });
+
+    expectProfileError(validateGraphProfile(profile), "root must be a plain mapping");
+  });
+
   it.each(invalidProfiles)("rejects $name with a stable frozen schema diagnostic", ({
     mutate,
     expectedMessage,
