@@ -95,9 +95,14 @@ export function record(
   ) {
     fail(path, "must be a plain mapping");
   }
+  if (!hasOnlyEnumerableStringFields(value)) {
+    fail(path, "must contain only enumerable string fields");
+  }
   const result = value as Record<string, unknown>;
   if (allowedKeys !== undefined) {
-    const unknownKeys = Object.keys(result).filter((key) => !allowedKeys.includes(key));
+    const unknownKeys = Object.getOwnPropertyNames(result).filter(
+      (key) => !allowedKeys.includes(key),
+    );
     if (unknownKeys.length > 0) {
       fail(path, `contains unsupported field ${unknownKeys.sort()[0]}`);
     }
@@ -108,6 +113,13 @@ export function record(
 function isPlainMapping(value: object): boolean {
   const prototype = Object.getPrototypeOf(value);
   return prototype === Object.prototype || prototype === null;
+}
+
+function hasOnlyEnumerableStringFields(value: object): boolean {
+  return Object.getOwnPropertySymbols(value).length === 0 &&
+    Object.getOwnPropertyNames(value).every((key) =>
+      Object.prototype.propertyIsEnumerable.call(value, key)
+    );
 }
 
 export function string(value: unknown, path: string): string {

@@ -111,6 +111,32 @@ const invalidProfiles: readonly InvalidProfileCase[] = [
     expectedMessage: "root contains unsupported field",
   },
   {
+    name: "a non-enumerable root field",
+    mutate: (profile) => {
+      Object.defineProperty(profile, "unexpectedField", { value: true });
+    },
+    expectedMessage: "root must contain only enumerable string fields",
+  },
+  {
+    name: "a non-enumerable nested field",
+    mutate: (profile) => {
+      Object.defineProperty(mapping(profile, "definitionPolicies"), "unexpectedField", {
+        value: true,
+      });
+    },
+    expectedMessage: "definitionPolicies must contain only enumerable string fields",
+  },
+  {
+    name: "a symbol-keyed field",
+    mutate: (profile) => {
+      Object.defineProperty(profile, Symbol("unexpectedField"), {
+        value: true,
+        enumerable: true,
+      });
+    },
+    expectedMessage: "root must contain only enumerable string fields",
+  },
+  {
     name: "an unsupported artifact-family token",
     mutate: (profile) => {
       profile.artifactFamily = "unsupported";
