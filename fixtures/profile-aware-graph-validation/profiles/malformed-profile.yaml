@@ -1,0 +1,4 @@
+schemaVersion: markdown-trace.graph-profile.v1
+profileId: markdown-trace.malformed-profile
+artifactFamily: unsupported-spec
+unexpectedField: true

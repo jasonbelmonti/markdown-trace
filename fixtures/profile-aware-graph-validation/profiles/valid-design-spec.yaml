@@ -1,0 +1,127 @@
+schemaVersion: markdown-trace.graph-profile.v1
+profileId: markdown-trace.design-spec.contract-fixture
+artifactFamily: design-spec
+profileVersion: 1.0.0
+idFamilies:
+  - { family: REQ, labelPattern: '^REQ-[0-9]+$', policy: primary_definition }
+  - { family: FUNC, labelPattern: '^FUNC-[0-9]+$', policy: primary_definition }
+  - { family: TECH, labelPattern: '^TECH-[0-9]+$', policy: primary_definition }
+  - { family: VAL, labelPattern: '^VAL-[0-9]+$', policy: primary_definition }
+  - { family: ACC, labelPattern: '^ACC-[0-9]+$', policy: primary_definition }
+definitionPolicies:
+  primaryColumns: [ID]
+  supplementalColumns: []
+  repeatedIdPolicy:
+    ACC: single_primary_with_references
+    FUNC: single_primary_with_references
+    REQ: single_primary_with_references
+    TECH: single_primary_with_references
+    VAL: single_primary_with_references
+tableRoles:
+  - selectorId: design.requirements_table
+    match:
+      headingIncludes: [Requirements]
+      requiredColumns: [ID, Verification]
+    sourceFamilies: [REQ]
+    sourceColumns: [ID]
+    targetColumns: [Verification]
+    role: coverage_reference
+    effects: [create_relationships, create_coverage_rows]
+    relationshipClass: requirement_validated_by
+    relationshipDirection: source-to-target
+  - selectorId: design.behavior_table
+    match:
+      headingIncludes: [Functional Behavior]
+      requiredColumns: [ID, Related requirements]
+    sourceFamilies: [FUNC]
+    sourceColumns: [ID]
+    targetColumns: [Related requirements]
+    role: coverage_reference
+    effects: [create_relationships, create_coverage_rows]
+    relationshipClass: requirement_realized_by_behavior
+    relationshipDirection: target-to-source
+rangePolicy:
+  syntax: '<FAMILY>-<n> through <FAMILY>-<m>'
+  sameFamilyOnly: true
+  requireDefinedEndpoints: true
+  endpointRoles: [primary_definition, supplemental_definition]
+  diagnosticCode: markdown-trace.graph.invalid_range_endpoint
+matrixSemantics:
+  authority: coverage-only
+  rowRole: matrix_coverage
+  firstColumnMaySourceRelationships: true
+  definitionsFromCells: false
+relationshipClasses:
+  - class: requirement_realized_by_behavior
+    sourceFamilies: [REQ]
+    targetFamilies: [FUNC]
+    direction: source-to-target
+    acceptedEvidenceBases: [behavior row, requirements-to-behavior matrix]
+  - class: behavior_allocated_to_mechanism
+    sourceFamilies: [FUNC]
+    targetFamilies: [TECH]
+    direction: source-to-target
+    acceptedEvidenceBases: [mechanism allocation row]
+  - class: requirement_validated_by
+    sourceFamilies: [REQ]
+    targetFamilies: [VAL]
+    direction: source-to-target
+    acceptedEvidenceBases: [requirement verification cell]
+  - class: mechanism_verified_by
+    sourceFamilies: [TECH]
+    targetFamilies: [VAL]
+    direction: source-to-target
+    acceptedEvidenceBases: [verification row]
+  - class: requirement_accepted_by
+    sourceFamilies: [REQ]
+    targetFamilies: [ACC]
+    direction: source-to-target
+    acceptedEvidenceBases: [acceptance row]
+requiredPaths:
+  - pathId: design.requirement_to_validation
+    sourceFamilies: [REQ]
+    sourceSelector:
+      families: [REQ]
+      roles: [primary_definition]
+      excludedTableRoleIds: []
+    steps:
+      - { relationshipClass: requirement_realized_by_behavior, targetFamilies: [FUNC] }
+      - { relationshipClass: behavior_allocated_to_mechanism, targetFamilies: [TECH] }
+      - { relationshipClass: mechanism_verified_by, targetFamilies: [VAL] }
+    alternativeSteps:
+      - - { relationshipClass: requirement_validated_by, targetFamilies: [VAL] }
+    severity: error
+    diagnosticCode: markdown-trace.graph.missing_required_path
+diagnosticRules:
+  - code: markdown-trace.graph.unresolved_reference
+    severity: error
+    blocking: true
+    repairActionKinds: [define_missing_id, remove_or_replace_reference]
+  - code: markdown-trace.graph.duplicate_primary_definition
+    severity: error
+    blocking: true
+    repairActionKinds: [deduplicate_primary_definition]
+  - code: markdown-trace.graph.invalid_range_endpoint
+    severity: error
+    blocking: true
+    repairActionKinds: [define_range_endpoint, narrow_range]
+  - code: markdown-trace.graph.missing_matrix_coverage
+    severity: error
+    blocking: true
+    repairActionKinds: [add_matrix_coverage]
+  - code: markdown-trace.graph.missing_required_path
+    severity: error
+    blocking: true
+    repairActionKinds: [add_required_relationship_evidence]
+  - code: markdown-trace.graph.profile_error
+    severity: error
+    blocking: true
+    repairActionKinds: [fix_graph_profile]
+serialization:
+  ordering:
+    definitions: [sourceRange.start.offset, label]
+    coverageRows: [sourceRange.start.offset, sourceLabel, coverageRowId]
+    ranges: [sourceRange.start.offset, expression]
+    relationships: [sourceId, class, targetId]
+    diagnostics: ['sourceRanges[0].start.offset', code, message]
+    repairActions: [diagnosticCode, actionKind, actionId]
