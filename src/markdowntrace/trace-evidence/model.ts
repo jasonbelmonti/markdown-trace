@@ -1,6 +1,9 @@
 import type { SourceRange } from "@jasonbelmonti/markdown-engine";
 
-import type { GraphRelationshipClass } from "../graph-profile/index.js";
+import type {
+  GraphArtifactFamily,
+  GraphRelationshipClass,
+} from "../graph-profile/index.js";
 
 export type TraceEvidenceRole =
   | "primary_definition"
@@ -49,7 +52,9 @@ export interface TraceEvidenceDiagnostic {
   readonly sourceRange?: SourceRange;
 }
 
-export interface TraceEvidenceResult {
+export interface TraceEvidenceResult<
+  TArtifactFamily extends GraphArtifactFamily = GraphArtifactFamily,
+> {
   readonly schemaVersion: "markdown-trace.trace-evidence.v1";
   readonly authority: "trace-evidence";
   readonly source: {
@@ -59,7 +64,7 @@ export interface TraceEvidenceResult {
   };
   readonly profile: {
     readonly profileId: string;
-    readonly artifactFamily: "execution-spec";
+    readonly artifactFamily: TArtifactFamily;
     readonly profileVersion: string;
     readonly sha256: string;
   };

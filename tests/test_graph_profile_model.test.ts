@@ -26,7 +26,11 @@ import {
 
 describe("graph profile model contract", () => {
   it("freezes the complete R2 token inventories", () => {
-    expect(GRAPH_ARTIFACT_FAMILIES).toEqual(["execution-spec", "design-spec"]);
+    expect(GRAPH_ARTIFACT_FAMILIES).toEqual([
+      "execution-spec",
+      "execution-plan",
+      "design-spec",
+    ]);
     expect(GRAPH_ID_FAMILY_POLICIES).toEqual([
       "primary_definition",
       "supplemental_definition",
@@ -65,6 +69,9 @@ describe("graph profile model contract", () => {
       "objective_implemented_by",
       "work_validated_by",
       "validation_supported_by",
+      "execution_plan_source_anchors_outcome",
+      "execution_plan_outcome_implemented_by_action",
+      "execution_plan_outcome_validated_by_gate",
       "objective_supported_by_evidence",
       "requirement_realized_by_behavior",
       "behavior_allocated_to_mechanism",
@@ -118,7 +125,7 @@ describe("graph profile model contract", () => {
     }
 
     const supportedFamilies: readonly GraphArtifactFamily[] = GRAPH_ARTIFACT_FAMILIES;
-    expect(supportedFamilies).toHaveLength(2);
+    expect(supportedFamilies).toHaveLength(3);
   });
 
   it("represents every required profile policy and ordering category", () => {

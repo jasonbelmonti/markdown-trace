@@ -67,7 +67,7 @@ export function parseGraphProfile(input: unknown): GraphProfile<GraphArtifactFam
 function parseIdFamily(value: unknown, path: string): GraphIdFamily {
   const item = record(value, path, ["family", "labelPattern", "policy"]);
   const family = string(item.family, `${path}.family`);
-  if (!/^[A-Z][A-Z0-9]*$/.test(family)) {
+  if (!/^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*$/.test(family)) {
     fail(`${path}.family`, "must be an uppercase identifier prefix");
   }
   const labelPattern = string(item.labelPattern, `${path}.labelPattern`);

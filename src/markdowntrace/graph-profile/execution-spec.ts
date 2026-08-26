@@ -2,49 +2,10 @@ import { createHash } from "node:crypto";
 
 import type {
   GraphArtifactFamily,
-  GraphDiagnosticRule,
   GraphProfile,
   GraphRelationshipRequiredPath,
 } from "./model.js";
-
-const DIAGNOSTIC_RULES: readonly GraphDiagnosticRule[] = [
-  {
-    code: "markdown-trace.graph.unresolved_reference",
-    severity: "error",
-    blocking: true,
-    repairActionKinds: ["define_missing_id", "remove_or_replace_reference"],
-  },
-  {
-    code: "markdown-trace.graph.duplicate_primary_definition",
-    severity: "error",
-    blocking: true,
-    repairActionKinds: ["deduplicate_primary_definition"],
-  },
-  {
-    code: "markdown-trace.graph.invalid_range_endpoint",
-    severity: "error",
-    blocking: true,
-    repairActionKinds: ["define_range_endpoint", "narrow_range"],
-  },
-  {
-    code: "markdown-trace.graph.missing_matrix_coverage",
-    severity: "error",
-    blocking: true,
-    repairActionKinds: ["add_matrix_coverage"],
-  },
-  {
-    code: "markdown-trace.graph.missing_required_path",
-    severity: "error",
-    blocking: true,
-    repairActionKinds: ["add_required_relationship_evidence"],
-  },
-  {
-    code: "markdown-trace.graph.profile_error",
-    severity: "error",
-    blocking: true,
-    repairActionKinds: ["fix_graph_profile"],
-  },
-];
+import { GRAPH_DIAGNOSTIC_RULES } from "./diagnostic-rules.js";
 
 export const EXECUTION_SPEC_FIRST_SLICE_PROFILE: GraphProfile<
   "execution-spec",
@@ -160,7 +121,7 @@ export const EXECUTION_SPEC_FIRST_SLICE_PROFILE: GraphProfile<
       diagnosticCode: "markdown-trace.graph.missing_required_path",
     },
   ],
-  diagnosticRules: DIAGNOSTIC_RULES,
+  diagnosticRules: GRAPH_DIAGNOSTIC_RULES,
   serialization: {
     ordering: {
       definitions: ["sourceRange.start.offset", "label"],

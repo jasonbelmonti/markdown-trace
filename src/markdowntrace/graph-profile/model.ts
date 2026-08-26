@@ -2,6 +2,7 @@ export const GRAPH_PROFILE_SCHEMA_VERSION = "markdown-trace.graph-profile.v1";
 
 export const GRAPH_ARTIFACT_FAMILIES = Object.freeze([
   "execution-spec",
+  "execution-plan",
   "design-spec",
 ] as const);
 
@@ -9,6 +10,9 @@ export const GRAPH_RELATIONSHIP_CLASSES = Object.freeze([
   "objective_implemented_by",
   "work_validated_by",
   "validation_supported_by",
+  "execution_plan_source_anchors_outcome",
+  "execution_plan_outcome_implemented_by_action",
+  "execution_plan_outcome_validated_by_gate",
   "objective_supported_by_evidence",
   "requirement_realized_by_behavior",
   "behavior_allocated_to_mechanism",
