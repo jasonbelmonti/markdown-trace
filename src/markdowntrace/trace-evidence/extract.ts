@@ -20,7 +20,7 @@ import type {
   TraceEvidenceResult,
 } from "./model.js";
 
-const ID_TOKEN_PATTERN = /\b[A-Z][A-Z0-9]*-\d+(?:-[A-Z0-9]+)*\b/g;
+const ID_TOKEN_PATTERN = /\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b/g;
 
 interface ExtractTraceEvidenceOptions {
   readonly sourcePath?: string;
@@ -162,8 +162,8 @@ function sourceDefinition(
       continue;
     }
 
-    const label = idTokens(cell.text)[0];
-    const family = label === undefined ? undefined : familyOf(label);
+    const label = idTokens(cell.text, profile)[0];
+    const family = label === undefined ? undefined : familyOf(label, profile);
     const policy = profile.idFamilies.find((candidate) => candidate.family === family)?.policy;
 
     if (label !== undefined && family !== undefined && policy === "primary_definition") {
@@ -195,10 +195,11 @@ function extractRoleEdges(
   const targetCells = cellsForColumns(cells, headers, role.targetColumns);
 
   for (const sourceCell of sourceCells) {
-    for (const sourceLabel of idTokens(sourceCell.text)) {
-      const sourceFamily = familyOf(sourceLabel);
+    for (const sourceLabel of idTokens(sourceCell.text, profile)) {
+      const sourceFamily = familyOf(sourceLabel, profile);
 
       if (
+        sourceFamily === undefined ||
         !role.sourceFamilies.includes(sourceFamily) ||
         !relationship.sourceFamilies.includes(sourceFamily)
       ) {
@@ -207,10 +208,13 @@ function extractRoleEdges(
 
       for (const targetCell of targetCells) {
         const targetHeader = headers.get(targetCell.columnIndex) ?? "";
-        for (const targetLabel of idTokens(targetCell.text)) {
-          const targetFamily = familyOf(targetLabel);
+        for (const targetLabel of idTokens(targetCell.text, profile)) {
+          const targetFamily = familyOf(targetLabel, profile);
 
-          if (!relationship.targetFamilies.includes(targetFamily)) {
+          if (
+            targetFamily === undefined ||
+            !relationship.targetFamilies.includes(targetFamily)
+          ) {
             continue;
           }
 
@@ -292,22 +296,29 @@ function terminalOccurrences(
       .filter((candidate) => candidate.policy === "terminal_coverage_node")
       .map((candidate) => candidate.family),
   );
-  const byLabel = new Map<string, TraceEvidenceCandidateEdge>();
+  const byLabel = new Map<
+    string,
+    { readonly edge: TraceEvidenceCandidateEdge; readonly family: string }
+  >();
 
   for (const edge of edges) {
-    if (terminalFamilies.has(familyOf(edge.toLabel)) && !byLabel.has(edge.toLabel)) {
-      byLabel.set(edge.toLabel, edge);
+    const family = familyOf(edge.toLabel, profile);
+
+    if (family !== undefined && terminalFamilies.has(family) && !byLabel.has(edge.toLabel)) {
+      byLabel.set(edge.toLabel, { edge, family });
     }
   }
 
-  return [...byLabel.values()].sort(compareEdge).map((edge, index) => ({
-    occurrenceId: numberedId("terminal", index + 1),
-    label: edge.toLabel,
-    family: familyOf(edge.toLabel),
-    role: "terminal_coverage_node",
-    sourceKind: "table_cell",
-    sourceRange: edge.rawEvidenceAnchor.sourceRange,
-  }));
+  return [...byLabel.values()]
+    .sort((left, right) => compareEdge(left.edge, right.edge))
+    .map(({ edge, family }, index) => ({
+      occurrenceId: numberedId("terminal", index + 1),
+      label: edge.toLabel,
+      family,
+      role: "terminal_coverage_node",
+      sourceKind: "table_cell",
+      sourceRange: edge.rawEvidenceAnchor.sourceRange,
+    }));
 }
 
 function engineDiagnostics(
@@ -322,12 +333,18 @@ function engineDiagnostics(
   return diagnostics.map((diagnostic) => ({ stage, ...diagnostic }));
 }
 
-function idTokens(text: string): readonly string[] {
-  return [...text.matchAll(ID_TOKEN_PATTERN)].map((match) => match[0]);
+function idTokens(text: string, profile: GraphProfile): readonly string[] {
+  return [...text.matchAll(ID_TOKEN_PATTERN)]
+    .map((match) => match[0])
+    .filter((label) => familyOf(label, profile) !== undefined);
 }
 
-function familyOf(label: string): string {
-  return label.split("-", 1)[0] ?? label;
+function familyOf(label: string, profile: GraphProfile): string | undefined {
+  const matchingFamily = profile.idFamilies.find(({ labelPattern }) =>
+    new RegExp(labelPattern).test(label),
+  );
+
+  return matchingFamily?.family;
 }
 
 function normalizeHeader(header: string): string {

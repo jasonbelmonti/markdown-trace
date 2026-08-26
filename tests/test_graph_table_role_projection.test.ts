@@ -26,6 +26,44 @@ const projectionProfile: GraphProfile = {
   ],
 };
 
+const multiSegmentProjectionProfile: GraphProfile = {
+  ...EXECUTION_SPEC_FIRST_SLICE_PROFILE,
+  idFamilies: [
+    { family: "EP-SRC", labelPattern: "^EP-SRC-[0-9]+$", policy: "primary_definition" },
+    { family: "EP-OUT", labelPattern: "^EP-OUT-[0-9]+$", policy: "primary_definition" },
+  ],
+  definitionPolicies: {
+    primaryColumns: ["Source ID", "Outcome ID"],
+    supplementalColumns: [],
+    repeatedIdPolicy: {
+      "EP-SRC": "single_primary_with_references",
+      "EP-OUT": "single_primary_with_references",
+    },
+  },
+  tableRoles: [
+    {
+      selectorId: "projection.source_to_outcome",
+      match: { headingIncludes: [], requiredColumns: ["Source ID", "Outcome IDs"] },
+      sourceFamilies: ["EP-SRC"],
+      sourceColumns: ["Source ID"],
+      targetColumns: ["Outcome IDs"],
+      role: "coverage_reference",
+      effects: ["create_relationships"],
+      relationshipClass: "objective_implemented_by",
+      relationshipDirection: "source-to-target",
+    },
+  ],
+  relationshipClasses: [
+    {
+      class: "objective_implemented_by",
+      sourceFamilies: ["EP-SRC"],
+      targetFamilies: ["EP-OUT"],
+      direction: "source-to-target",
+      acceptedEvidenceBases: ["in-memory multi-segment table"],
+    },
+  ],
+};
+
 describe("generic graph table-role projection", () => {
   it("projects declared cross-column relationships independently of the primary definition", () => {
     const evidence = extractTraceEvidence(
@@ -80,5 +118,35 @@ describe("generic graph table-role projection", () => {
     expect(firstEvidence.definitions.map((definition) => definition.label)).toEqual(["WP-1"]);
     expect(firstEvidence.candidateEdges).toEqual([]);
     expect(JSON.stringify(secondEvidence)).toBe(JSON.stringify(firstEvidence));
+  });
+
+  it("resolves multi-segment labels only through declared profile families", () => {
+    const evidence = extractTraceEvidence(
+      `| Source ID | Outcome IDs |
+| --- | --- |
+| EP-SRC-1 | EP-OUT-1, EP-UNKNOWN-1 |
+
+| Outcome ID |
+| --- |
+| EP-OUT-1 |
+
+| Source ID | Outcome IDs |
+| --- | --- |
+| EP-UNKNOWN-2 | EP-UNKNOWN-3 |
+`,
+      multiSegmentProjectionProfile,
+    );
+
+    expect(evidence.definitions.map(({ label, family }) => ({ label, family }))).toEqual([
+      { label: "EP-SRC-1", family: "EP-SRC" },
+      { label: "EP-OUT-1", family: "EP-OUT" },
+    ]);
+    expect(evidence.candidateEdges).toEqual([
+      expect.objectContaining({
+        fromLabel: "EP-SRC-1",
+        toLabel: "EP-OUT-1",
+        relationshipClass: "objective_implemented_by",
+      }),
+    ]);
   });
 });
