@@ -132,45 +132,20 @@ function extractTableEvidence(
   edges: PendingEdge[],
 ): void {
   const headers = tableHeaders(table);
+  const roles = matchingTableRoles(profile, headers);
   const rows = [...new Set(table.cells.filter((cell) => !cell.header).map((cell) => cell.rowIndex))]
     .sort((left, right) => left - right);
 
   for (const rowIndex of rows) {
     const cells = table.cells.filter((cell) => !cell.header && cell.rowIndex === rowIndex);
-    const source = sourceDefinition(cells, headers, profile);
+    const definition = sourceDefinition(cells, headers, profile);
 
-    if (source === undefined) {
-      continue;
+    if (definition !== undefined) {
+      definitions.push(definition);
     }
 
-    definitions.push(source.definition);
-    for (const cell of cells) {
-      if (cell === source.cell) {
-        continue;
-      }
-
-      const header = headers.get(cell.columnIndex) ?? "";
-      for (const targetLabel of idTokens(cell.text)) {
-        const role = matchingTableRole(profile, source.definition.family, familyOf(targetLabel), header);
-
-        if (role === undefined) {
-          continue;
-        }
-
-        edges.push({
-          fromLabel: source.definition.label,
-          toLabel: targetLabel,
-          relationshipClass: role.relationshipClass,
-          anchor: {
-            tableTargetId: table.target.id,
-            rowIndex,
-            columnIndex: cell.columnIndex,
-            columnHeader: header,
-            sourceRange: cell.sourceRange,
-          },
-          sourceRange: source.definition.sourceRange,
-        });
-      }
+    for (const role of roles) {
+      extractRoleEdges(table, rowIndex, cells, headers, profile, role, edges);
     }
   }
 }
@@ -179,7 +154,7 @@ function sourceDefinition(
   cells: readonly EngineTableCell[],
   headers: ReadonlyMap<number, string>,
   profile: GraphProfile,
-): { readonly cell: EngineTableCell; readonly definition: PendingDefinition } | undefined {
+): PendingDefinition | undefined {
   const primaryHeaders = new Set(profile.definitionPolicies.primaryColumns.map(normalizeHeader));
 
   for (const cell of cells) {
@@ -192,36 +167,95 @@ function sourceDefinition(
     const policy = profile.idFamilies.find((candidate) => candidate.family === family)?.policy;
 
     if (label !== undefined && family !== undefined && policy === "primary_definition") {
-      return {
-        cell,
-        definition: { label, family, sourceRange: cell.sourceRange },
-      };
+      return { label, family, sourceRange: cell.sourceRange };
     }
   }
 
   return undefined;
 }
 
-function matchingTableRole(
+function extractRoleEdges(
+  table: EngineTable,
+  rowIndex: number,
+  cells: readonly EngineTableCell[],
+  headers: ReadonlyMap<number, string>,
   profile: GraphProfile,
-  sourceFamily: string,
-  targetFamily: string,
-  targetHeader: string,
-): GraphTableRole | undefined {
-  const normalizedTargetHeader = normalizeHeader(targetHeader);
+  role: GraphTableRole,
+  edges: PendingEdge[],
+): void {
+  const relationship = profile.relationshipClasses.find(
+    (candidate) => candidate.class === role.relationshipClass,
+  );
 
-  return profile.tableRoles.find((role) => {
-    const relationship = profile.relationshipClasses.find(
-      (candidate) => candidate.class === role.relationshipClass,
-    );
+  if (relationship === undefined) {
+    return;
+  }
 
-    return (
-      role.sourceFamilies.includes(sourceFamily) &&
-      role.targetColumns.map(normalizeHeader).includes(normalizedTargetHeader) &&
-      relationship?.sourceFamilies.includes(sourceFamily) === true &&
-      relationship.targetFamilies.includes(targetFamily)
-    );
-  });
+  const sourceCells = cellsForColumns(cells, headers, role.sourceColumns);
+  const targetCells = cellsForColumns(cells, headers, role.targetColumns);
+
+  for (const sourceCell of sourceCells) {
+    for (const sourceLabel of idTokens(sourceCell.text)) {
+      const sourceFamily = familyOf(sourceLabel);
+
+      if (
+        !role.sourceFamilies.includes(sourceFamily) ||
+        !relationship.sourceFamilies.includes(sourceFamily)
+      ) {
+        continue;
+      }
+
+      for (const targetCell of targetCells) {
+        const targetHeader = headers.get(targetCell.columnIndex) ?? "";
+        for (const targetLabel of idTokens(targetCell.text)) {
+          const targetFamily = familyOf(targetLabel);
+
+          if (!relationship.targetFamilies.includes(targetFamily)) {
+            continue;
+          }
+
+          edges.push({
+            fromLabel: sourceLabel,
+            toLabel: targetLabel,
+            relationshipClass: role.relationshipClass,
+            anchor: {
+              tableTargetId: table.target.id,
+              rowIndex,
+              columnIndex: targetCell.columnIndex,
+              columnHeader: targetHeader,
+              sourceRange: targetCell.sourceRange,
+            },
+            sourceRange: sourceCell.sourceRange,
+          });
+        }
+      }
+    }
+  }
+}
+
+function matchingTableRoles(
+  profile: GraphProfile,
+  headers: ReadonlyMap<number, string>,
+): readonly GraphTableRole[] {
+  const normalizedHeaders = new Set([...headers.values()].map(normalizeHeader));
+
+  return profile.tableRoles.filter(
+    (role) =>
+      role.relationshipDirection === "source-to-target" &&
+      role.match.requiredColumns.every((column) => normalizedHeaders.has(normalizeHeader(column))),
+  );
+}
+
+function cellsForColumns(
+  cells: readonly EngineTableCell[],
+  headers: ReadonlyMap<number, string>,
+  columns: readonly string[],
+): readonly EngineTableCell[] {
+  const normalizedColumns = new Set(columns.map(normalizeHeader));
+
+  return cells.filter((cell) =>
+    normalizedColumns.has(normalizeHeader(headers.get(cell.columnIndex) ?? "")),
+  );
 }
 
 function tableHeaders(table: EngineTable): ReadonlyMap<number, string> {
