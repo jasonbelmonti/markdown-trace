@@ -8,7 +8,7 @@ import type {
   GraphTableEffect,
 } from "../model.js";
 
-export const ARTIFACT_FAMILIES = ["execution-spec", "design-spec"] as const;
+export const ARTIFACT_FAMILIES = ["execution-spec", "execution-plan", "design-spec"] as const;
 export const ID_FAMILY_POLICIES = [
   "primary_definition",
   "supplemental_definition",
@@ -43,6 +43,9 @@ export const RELATIONSHIP_CLASSES = [
   "objective_implemented_by",
   "work_validated_by",
   "validation_supported_by",
+  "execution_plan_source_anchors_outcome",
+  "execution_plan_outcome_implemented_by_action",
+  "execution_plan_outcome_validated_by_gate",
   "objective_supported_by_evidence",
   "requirement_realized_by_behavior",
   "behavior_allocated_to_mechanism",

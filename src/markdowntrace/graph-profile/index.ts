@@ -5,7 +5,7 @@ import type {
 } from "./model.js";
 
 export type GraphProfile<
-  TArtifactFamily extends GraphArtifactFamily = "execution-spec",
+  TArtifactFamily extends GraphArtifactFamily = GraphArtifactFamily,
 > = CompleteGraphProfile<TArtifactFamily, GraphRelationshipRequiredPath>;
 
 export {
@@ -16,6 +16,7 @@ export {
   type GraphProfileResult,
 } from "./diagnostics.js";
 export { EXECUTION_SPEC_FIRST_SLICE_PROFILE, graphProfileHash } from "./execution-spec.js";
+export { EXECUTION_PLAN_PROFILE } from "./execution-plan.js";
 export { loadGraphProfile } from "./load.js";
 export { validateGraphProfile } from "./validate.js";
 export {

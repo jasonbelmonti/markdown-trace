@@ -1,0 +1,184 @@
+import { GRAPH_DIAGNOSTIC_RULES } from "./diagnostic-rules.js";
+import {
+  GRAPH_PROFILE_SCHEMA_VERSION,
+  type GraphProfile,
+  type GraphRelationshipRequiredPath,
+} from "./model.js";
+import { deepFreeze } from "./validation/primitives.js";
+
+export const EXECUTION_PLAN_PROFILE: GraphProfile<
+  "execution-plan",
+  GraphRelationshipRequiredPath
+> = deepFreeze({
+  schemaVersion: GRAPH_PROFILE_SCHEMA_VERSION,
+  profileId: "markdown-trace.execution-plan.core",
+  artifactFamily: "execution-plan",
+  profileVersion: "1.0.0",
+  idFamilies: [
+    { family: "EP-SRC", labelPattern: "^EP-SRC-[A-Z0-9]+$", policy: "primary_definition" },
+    { family: "EP-OUT", labelPattern: "^EP-OUT-[A-Z0-9]+$", policy: "primary_definition" },
+    { family: "EP-FIND", labelPattern: "^EP-FIND-[A-Z0-9]+$", policy: "primary_definition" },
+    { family: "EP-PRE", labelPattern: "^EP-PRE-[A-Z0-9]+$", policy: "primary_definition" },
+    { family: "EP-DEC", labelPattern: "^EP-DEC-[A-Z0-9]+$", policy: "primary_definition" },
+    { family: "EP-PH", labelPattern: "^EP-PH-[A-Z0-9]+$", policy: "primary_definition" },
+    { family: "EP-ACT", labelPattern: "^EP-ACT-[A-Z0-9]+$", policy: "primary_definition" },
+    { family: "EP-GATE", labelPattern: "^EP-GATE-[A-Z0-9]+$", policy: "primary_definition" },
+    { family: "EP-RESP", labelPattern: "^EP-RESP-[A-Z0-9]+$", policy: "primary_definition" },
+    { family: "EP-TRIG", labelPattern: "^EP-TRIG-[A-Z0-9]+$", policy: "primary_definition" },
+  ],
+  definitionPolicies: {
+    primaryColumns: [
+      "Source ID",
+      "Outcome ID",
+      "Finding ID",
+      "Precondition ID",
+      "Decision ID",
+      "Phase ID",
+      "Action ID",
+      "Gate ID",
+      "Response ID",
+      "Trigger ID",
+    ],
+    supplementalColumns: [],
+    repeatedIdPolicy: {
+      "EP-ACT": "single_primary_with_references",
+      "EP-DEC": "single_primary_with_references",
+      "EP-FIND": "single_primary_with_references",
+      "EP-GATE": "single_primary_with_references",
+      "EP-OUT": "single_primary_with_references",
+      "EP-PH": "single_primary_with_references",
+      "EP-PRE": "single_primary_with_references",
+      "EP-RESP": "single_primary_with_references",
+      "EP-SRC": "single_primary_with_references",
+      "EP-TRIG": "single_primary_with_references",
+    },
+  },
+  tableRoles: [
+    {
+      selectorId: "execution-plan.source-anchors-outcome",
+      match: { headingIncludes: [], requiredColumns: ["Outcome ID", "Source IDs"] },
+      sourceFamilies: ["EP-SRC"],
+      sourceColumns: ["Source IDs"],
+      targetColumns: ["Outcome ID"],
+      role: "coverage_reference",
+      effects: ["create_relationships", "create_coverage_rows"],
+      relationshipClass: "execution_plan_source_anchors_outcome",
+      relationshipDirection: "source-to-target",
+    },
+    {
+      selectorId: "execution-plan.outcome-implemented-by-action",
+      match: { headingIncludes: [], requiredColumns: ["Action ID", "Outcome IDs"] },
+      sourceFamilies: ["EP-OUT"],
+      sourceColumns: ["Outcome IDs"],
+      targetColumns: ["Action ID"],
+      role: "coverage_reference",
+      effects: ["create_relationships", "create_coverage_rows"],
+      relationshipClass: "execution_plan_outcome_implemented_by_action",
+      relationshipDirection: "source-to-target",
+    },
+    {
+      selectorId: "execution-plan.outcome-validated-by-gate",
+      match: { headingIncludes: [], requiredColumns: ["Gate ID", "Outcome IDs"] },
+      sourceFamilies: ["EP-OUT"],
+      sourceColumns: ["Outcome IDs"],
+      targetColumns: ["Gate ID"],
+      role: "coverage_reference",
+      effects: ["create_relationships", "create_coverage_rows"],
+      relationshipClass: "execution_plan_outcome_validated_by_gate",
+      relationshipDirection: "source-to-target",
+    },
+  ],
+  rangePolicy: {
+    syntax: "<FAMILY>-<n> through <FAMILY>-<m>",
+    sameFamilyOnly: true,
+    requireDefinedEndpoints: true,
+    endpointRoles: ["primary_definition", "supplemental_definition"],
+    diagnosticCode: "markdown-trace.graph.invalid_range_endpoint",
+  },
+  matrixSemantics: {
+    authority: "coverage-only",
+    rowRole: "matrix_coverage",
+    firstColumnMaySourceRelationships: true,
+    definitionsFromCells: false,
+  },
+  relationshipClasses: [
+    {
+      class: "execution_plan_source_anchors_outcome",
+      sourceFamilies: ["EP-SRC"],
+      targetFamilies: ["EP-OUT"],
+      direction: "source-to-target",
+      acceptedEvidenceBases: ["Outcome Anchors Source IDs"],
+    },
+    {
+      class: "execution_plan_outcome_implemented_by_action",
+      sourceFamilies: ["EP-OUT"],
+      targetFamilies: ["EP-ACT"],
+      direction: "source-to-target",
+      acceptedEvidenceBases: ["Execution Actions Outcome IDs"],
+    },
+    {
+      class: "execution_plan_outcome_validated_by_gate",
+      sourceFamilies: ["EP-OUT"],
+      targetFamilies: ["EP-GATE"],
+      direction: "source-to-target",
+      acceptedEvidenceBases: ["Validation Gates Outcome IDs"],
+    },
+  ],
+  requiredPaths: [
+    {
+      pathId: "execution-plan.source-to-action",
+      sourceFamilies: ["EP-SRC"],
+      sourceSelector: {
+        families: ["EP-SRC"],
+        roles: ["primary_definition"],
+        excludedTableRoleIds: [],
+      },
+      steps: [
+        {
+          relationshipClass: "execution_plan_source_anchors_outcome",
+          targetFamilies: ["EP-OUT"],
+        },
+        {
+          relationshipClass: "execution_plan_outcome_implemented_by_action",
+          targetFamilies: ["EP-ACT"],
+        },
+      ],
+      alternativeSteps: [],
+      severity: "error",
+      diagnosticCode: "markdown-trace.graph.missing_required_path",
+    },
+    {
+      pathId: "execution-plan.source-to-gate",
+      sourceFamilies: ["EP-SRC"],
+      sourceSelector: {
+        families: ["EP-SRC"],
+        roles: ["primary_definition"],
+        excludedTableRoleIds: [],
+      },
+      steps: [
+        {
+          relationshipClass: "execution_plan_source_anchors_outcome",
+          targetFamilies: ["EP-OUT"],
+        },
+        {
+          relationshipClass: "execution_plan_outcome_validated_by_gate",
+          targetFamilies: ["EP-GATE"],
+        },
+      ],
+      alternativeSteps: [],
+      severity: "error",
+      diagnosticCode: "markdown-trace.graph.missing_required_path",
+    },
+  ],
+  diagnosticRules: GRAPH_DIAGNOSTIC_RULES,
+  serialization: {
+    ordering: {
+      definitions: ["sourceRange.start.offset", "label"],
+      coverageRows: ["sourceRange.start.offset", "sourceLabel", "coverageRowId"],
+      ranges: ["sourceRange.start.offset", "expression"],
+      relationships: ["sourceId", "class", "targetId"],
+      diagnostics: ["sourceRanges[0].start.offset", "code", "message"],
+      repairActions: ["diagnosticCode", "actionKind", "actionId"],
+    },
+  },
+});

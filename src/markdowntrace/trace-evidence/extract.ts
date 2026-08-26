@@ -10,7 +10,12 @@ import {
   type SourceRange,
 } from "@jasonbelmonti/markdown-engine";
 
-import { graphProfileHash, type GraphProfile, type GraphTableRole } from "../graph-profile/index.js";
+import {
+  graphProfileHash,
+  type GraphArtifactFamily,
+  type GraphProfile,
+  type GraphTableRole,
+} from "../graph-profile/index.js";
 import type {
   TraceEvidenceAnchor,
   TraceEvidenceCandidateEdge,
@@ -40,20 +45,22 @@ interface PendingEdge {
   readonly sourceRange?: SourceRange;
 }
 
-export async function extractTraceEvidenceFromFile(
+export async function extractTraceEvidenceFromFile<
+  TArtifactFamily extends GraphArtifactFamily,
+>(
   sourcePath: string,
-  profile: GraphProfile,
-): Promise<TraceEvidenceResult> {
+  profile: GraphProfile<TArtifactFamily>,
+): Promise<TraceEvidenceResult<TArtifactFamily>> {
   const markdown = await readFile(sourcePath, "utf8");
 
   return extractTraceEvidence(markdown, profile, { sourcePath });
 }
 
-export function extractTraceEvidence(
+export function extractTraceEvidence<TArtifactFamily extends GraphArtifactFamily>(
   markdown: string,
-  profile: GraphProfile,
+  profile: GraphProfile<TArtifactFamily>,
   options: ExtractTraceEvidenceOptions = {},
-): TraceEvidenceResult {
+): TraceEvidenceResult<TArtifactFamily> {
   const sourcePath = options.sourcePath ?? "document.md";
   const parsed = parse(markdown, { path: sourcePath });
   const normalized = normalize(parsed.parsed);
