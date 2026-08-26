@@ -16,6 +16,7 @@ import {
   type GraphProfile,
   type GraphTableRole,
 } from "../graph-profile/index.js";
+import { runtimeMetadata } from "../runtime-metadata.js";
 import type {
   TraceEvidenceAnchor,
   TraceEvidenceCandidateEdge,
@@ -110,11 +111,7 @@ export function extractTraceEvidence<TArtifactFamily extends GraphArtifactFamily
       profileVersion: profile.profileVersion,
       sha256: profileSha256,
     },
-    run: {
-      packageVersion: "0.1.0",
-      markdownEngineVersion: "2.0.0",
-      runtimeVersion: process.version,
-    },
+    run: runtimeMetadata(),
     definitions: definitionFacts,
     supplementalDefinitions: [],
     coverageRows,

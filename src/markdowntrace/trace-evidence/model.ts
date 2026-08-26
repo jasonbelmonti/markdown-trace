@@ -4,6 +4,7 @@ import type {
   GraphArtifactFamily,
   GraphRelationshipClass,
 } from "../graph-profile/index.js";
+import type { RuntimeMetadata } from "../runtime-metadata.js";
 
 export type TraceEvidenceRole =
   | "primary_definition"
@@ -68,11 +69,7 @@ export interface TraceEvidenceResult<
     readonly profileVersion: string;
     readonly sha256: string;
   };
-  readonly run: {
-    readonly packageVersion: "0.1.0";
-    readonly markdownEngineVersion: "2.0.0";
-    readonly runtimeVersion: string;
-  };
+  readonly run: RuntimeMetadata;
   readonly definitions: readonly TraceEvidenceOccurrence[];
   readonly supplementalDefinitions: readonly TraceEvidenceOccurrence[];
   readonly coverageRows: readonly TraceEvidenceCoverageRow[];

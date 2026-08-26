@@ -1,0 +1,237 @@
+import { access, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { afterEach, describe, expect, it } from "vitest";
+
+import {
+  main,
+  validateGraphDocument,
+  type GraphValidationRunResult,
+} from "../src/markdowntrace/index.js";
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const fixtureRoot = path.join(repoRoot, "fixtures/profile-aware-graph-validation");
+const positiveDocument = path.join(
+  fixtureRoot,
+  "first-slice/positive-execution-spec.md",
+);
+const negativeDocument = path.join(
+  fixtureRoot,
+  "first-slice/missing-required-path.md",
+);
+const validProfile = path.join(fixtureRoot, "profiles/valid-execution-spec.yaml");
+const malformedProfile = path.join(fixtureRoot, "profiles/malformed-profile.yaml");
+const temporaryDirectories: string[] = [];
+
+afterEach(async () => {
+  await Promise.all(
+    temporaryDirectories.splice(0).map((directory) => rm(directory, { recursive: true })),
+  );
+});
+
+describe("file-backed graph validation API", () => {
+  it("loads the profile, extracts evidence, and returns the public result envelope", async () => {
+    const result: GraphValidationRunResult = await validateGraphDocument({
+      documentPath: positiveDocument,
+      profilePath: validProfile,
+    });
+
+    expect(result).toMatchObject({
+      schemaVersion: "markdown-trace.graph-validation-result.v1",
+      status: "pass",
+      source: { path: positiveDocument },
+      profile: {
+        profileId: "markdown-trace.execution-spec.contract-fixture",
+        artifactFamily: "execution-spec",
+      },
+      summary: {
+        nodes: 4,
+        relationships: 3,
+        requiredPaths: 1,
+        satisfiedRequiredPaths: 1,
+        diagnostics: 0,
+      },
+    });
+  });
+
+  it("returns graph failures as normal validation results", async () => {
+    const result = await validateGraphDocument({
+      documentPath: negativeDocument,
+      profilePath: validProfile,
+    });
+
+    expect(result.status).toBe("fail");
+    expect(result.diagnostics).toEqual([
+      expect.objectContaining({
+        code: "markdown-trace.graph.missing_required_path",
+        profileRuleId: "exec.objective_to_evidence",
+        blocking: true,
+      }),
+    ]);
+  });
+
+  it("contains malformed profiles and unreadable documents as operational results", async () => {
+    const profileFailure = await validateGraphDocument({
+      documentPath: positiveDocument,
+      profilePath: malformedProfile,
+    });
+    const missingDocument = path.join(repoRoot, "missing-graph-document.md");
+    const documentFailure = await validateGraphDocument({
+      documentPath: missingDocument,
+      profilePath: validProfile,
+    });
+
+    expect(profileFailure).toMatchObject({
+      schemaVersion: "markdown-trace.graph-validation-result.v1",
+      status: "operational-error",
+      source: { path: positiveDocument, sha256: null, lineCount: null },
+      profile: { path: malformedProfile, profileId: null, sha256: null },
+      diagnostics: [
+        {
+          code: "markdown-trace.graph.profile_error",
+          stage: "profile-load",
+          blocking: true,
+          sourceRanges: [],
+        },
+      ],
+    });
+    expect(documentFailure).toMatchObject({
+      schemaVersion: "markdown-trace.graph-validation-result.v1",
+      status: "operational-error",
+      source: { path: missingDocument, sha256: null, lineCount: null },
+      profile: {
+        path: validProfile,
+        profileId: "markdown-trace.execution-spec.contract-fixture",
+        artifactFamily: "execution-spec",
+        sha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+      },
+      diagnostics: [
+        {
+          code: "markdown-trace.graph.operational_error",
+          stage: "document-read",
+          source: missingDocument,
+          blocking: true,
+        },
+      ],
+    });
+  });
+});
+
+describe("graph-validate CLI", () => {
+  it("emits deterministic JSON and writes the complete requested output on pass", async () => {
+    const temporaryDirectory = await createTemporaryDirectory();
+    const outputPath = path.join(temporaryDirectory, "graph-validation.json");
+    const first = await runCli([
+      "graph-validate",
+      "--file",
+      positiveDocument,
+      "--profile",
+      validProfile,
+      "--output",
+      outputPath,
+      "--format",
+      "json",
+    ]);
+    const second = await runCli([
+      "graph-validate",
+      "--file",
+      positiveDocument,
+      "--profile",
+      validProfile,
+    ]);
+
+    expect(first.exitCode).toBe(0);
+    expect(first.stderr).toBe("");
+    expect(JSON.parse(first.stdout)).toMatchObject({
+      schemaVersion: "markdown-trace.graph-validation-result.v1",
+      status: "pass",
+    });
+    expect(await readFile(outputPath, "utf8")).toBe(first.stdout);
+    expect(second).toEqual({ exitCode: 0, stdout: first.stdout, stderr: "" });
+  });
+
+  it("uses exit 1 for blocking graph diagnostics", async () => {
+    const result = await runCli([
+      "graph-validate",
+      "--file",
+      negativeDocument,
+      "--profile",
+      validProfile,
+    ]);
+
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toBe("");
+    expect(JSON.parse(result.stdout)).toMatchObject({
+      schemaVersion: "markdown-trace.graph-validation-result.v1",
+      status: "fail",
+      diagnostics: [
+        { code: "markdown-trace.graph.missing_required_path", blocking: true },
+      ],
+    });
+  });
+
+  it("uses exit 2 and avoids output artifacts for operational failures", async () => {
+    const temporaryDirectory = await createTemporaryDirectory();
+    const outputPath = path.join(temporaryDirectory, "should-not-exist.json");
+    const result = await runCli([
+      "graph-validate",
+      "--file",
+      positiveDocument,
+      "--profile",
+      malformedProfile,
+      "--output",
+      outputPath,
+    ]);
+
+    expect(result.exitCode).toBe(2);
+    expect(result.stdout).toBe("");
+    expect(JSON.parse(result.stderr)).toMatchObject({
+      schemaVersion: "markdown-trace.graph-validation-result.v1",
+      status: "operational-error",
+      diagnostics: [{ code: "markdown-trace.graph.profile_error" }],
+    });
+    await expect(access(outputPath)).rejects.toThrow();
+  });
+
+  it("rejects formats that are not yet part of the command contract", async () => {
+    const result = await runCli([
+      "graph-validate",
+      "--file",
+      positiveDocument,
+      "--profile",
+      validProfile,
+      "--format",
+      "markdown",
+    ]);
+
+    expect(result.exitCode).toBe(2);
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toBe(
+      "unsupported graph-validate format markdown; expected json\n",
+    );
+  });
+});
+
+async function runCli(args: readonly string[]): Promise<{
+  readonly exitCode: number;
+  readonly stdout: string;
+  readonly stderr: string;
+}> {
+  const stdout: string[] = [];
+  const stderr: string[] = [];
+  const exitCode = await main([...args], {
+    cwd: repoRoot,
+    stdout: (text) => stdout.push(text),
+    stderr: (text) => stderr.push(text),
+  });
+
+  return { exitCode, stdout: stdout.join(""), stderr: stderr.join("") };
+}
+
+async function createTemporaryDirectory(): Promise<string> {
+  const directory = await mkdtemp(path.join(tmpdir(), "markdown-trace-graph-cli-"));
+  temporaryDirectories.push(directory);
+  return directory;
+}
