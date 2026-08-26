@@ -1,4 +1,4 @@
-import { access, mkdtemp, readFile, rm } from "node:fs/promises";
+import { access, copyFile, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -23,6 +23,11 @@ const negativeDocument = path.join(
 );
 const validProfile = path.join(fixtureRoot, "profiles/valid-execution-spec.yaml");
 const malformedProfile = path.join(fixtureRoot, "profiles/malformed-profile.yaml");
+const designProfile = path.join(fixtureRoot, "profiles/valid-design-spec.yaml");
+const directValidationDocument = path.join(
+  fixtureRoot,
+  "design-spec/direct-validation-path.md",
+);
 const temporaryDirectories: string[] = [];
 
 afterEach(async () => {
@@ -69,6 +74,24 @@ describe("file-backed graph validation API", () => {
         profileRuleId: "exec.objective_to_evidence",
         blocking: true,
       }),
+    ]);
+  });
+
+  it("satisfies a required path through a declared relationship alternative", async () => {
+    const result = await validateGraphDocument({
+      documentPath: directValidationDocument,
+      profilePath: designProfile,
+    });
+
+    expect(result.status).toBe("pass");
+    expect(result.requiredPathResults).toEqual([
+      {
+        pathId: "design.requirement_to_validation",
+        sourceId: "REQ-1",
+        status: "satisfied",
+        nodeIds: ["REQ-1", "VAL-1"],
+        relationshipClasses: ["requirement_validated_by"],
+      },
     ]);
   });
 
@@ -193,6 +216,34 @@ describe("graph-validate CLI", () => {
       diagnostics: [{ code: "markdown-trace.graph.profile_error" }],
     });
     await expect(access(outputPath)).rejects.toThrow();
+  });
+
+  it("rejects output paths that alias either input without modifying them", async () => {
+    const temporaryDirectory = await createTemporaryDirectory();
+    const documentPath = path.join(temporaryDirectory, "document.md");
+    const profilePath = path.join(temporaryDirectory, "profile.yaml");
+    await copyFile(positiveDocument, documentPath);
+    await copyFile(validProfile, profilePath);
+    const originalDocument = await readFile(documentPath, "utf8");
+    const originalProfile = await readFile(profilePath, "utf8");
+
+    for (const outputPath of [documentPath, profilePath]) {
+      const result = await runCli([
+        "graph-validate",
+        "--file",
+        documentPath,
+        "--profile",
+        profilePath,
+        "--output",
+        outputPath,
+      ]);
+
+      expect(result.exitCode).toBe(2);
+      expect(result.stdout).toBe("");
+      expect(result.stderr).toContain("graph-validate output path aliases input path");
+      expect(await readFile(documentPath, "utf8")).toBe(originalDocument);
+      expect(await readFile(profilePath, "utf8")).toBe(originalProfile);
+    }
   });
 
   it("rejects formats that are not yet part of the command contract", async () => {

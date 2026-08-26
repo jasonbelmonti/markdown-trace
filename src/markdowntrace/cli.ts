@@ -5,6 +5,7 @@ import { pathToFileURL } from "node:url";
 
 import { stringify } from "yaml";
 
+import { rejectGraphOutputInputAlias } from "./cli/graph-output.js";
 import { deriveGraphFromRegistry } from "./graph/index.js";
 import { validateGraphDocument } from "./graph-validation/index.js";
 import { scanMarkdown } from "./markdown/index.js";
@@ -233,9 +234,19 @@ async function runGraphValidate(
   options: GraphValidateOptions,
   environment: CliEnvironment,
 ): Promise<number> {
+  const documentPath = path.resolve(environment.cwd, options.documentPath);
+  const profilePath = path.resolve(environment.cwd, options.profilePath);
+
+  if (options.outputPath !== undefined) {
+    await rejectGraphOutputInputAlias({
+      outputPath: path.resolve(environment.cwd, options.outputPath),
+      inputPaths: [documentPath, profilePath],
+    });
+  }
+
   const result = await validateGraphDocument({
-    documentPath: path.resolve(environment.cwd, options.documentPath),
-    profilePath: path.resolve(environment.cwd, options.profilePath),
+    documentPath,
+    profilePath,
   });
   const output = `${JSON.stringify(result, null, 2)}\n`;
 

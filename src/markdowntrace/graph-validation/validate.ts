@@ -21,6 +21,12 @@ interface EvaluatedPath {
   readonly diagnostic?: GraphDiagnostic;
 }
 
+interface EvaluatedStepSequence {
+  readonly nodeIds: readonly string[];
+  readonly relationshipClasses: readonly GraphRelationshipClass[];
+  readonly missingRelationshipClass?: GraphRelationshipClass;
+}
+
 export function validateGraphEvidence(
   evidence: TraceEvidenceResult,
   profile: GraphProfile,
@@ -114,11 +120,63 @@ function evaluateRequiredPath(
   relationships: readonly GraphValidationRelationship[],
   nodeById: ReadonlyMap<string, GraphValidationNode>,
 ): EvaluatedPath {
+  const primaryEvaluation = evaluateStepSequence(
+    requiredPath.steps,
+    sourceNode,
+    relationships,
+    nodeById,
+  );
+  const alternativeEvaluations = requiredPath.alternativeSteps.map((steps) =>
+    evaluateStepSequence(steps, sourceNode, relationships, nodeById)
+  );
+  const evaluation = [primaryEvaluation, ...alternativeEvaluations].find(
+    ({ missingRelationshipClass }) => missingRelationshipClass === undefined,
+  ) ?? alternativeEvaluations.reduce(moreCompleteSequence, primaryEvaluation);
+  const status = evaluation.missingRelationshipClass === undefined
+    ? "satisfied"
+    : "missing";
+  const result: RequiredPathResult = {
+    pathId: requiredPath.pathId,
+    sourceId: sourceNode.id,
+    status,
+    nodeIds: evaluation.nodeIds,
+    relationshipClasses: evaluation.relationshipClasses,
+    ...(evaluation.missingRelationshipClass === undefined
+      ? {}
+      : { missingRelationshipClass: evaluation.missingRelationshipClass }),
+  };
+
+  if (evaluation.missingRelationshipClass === undefined) {
+    return { result };
+  }
+
+  return {
+    result,
+    diagnostic: {
+      code: requiredPath.diagnosticCode,
+      severity: requiredPath.severity,
+      message: `${sourceNode.id} is missing required relationship '${evaluation.missingRelationshipClass}' in path '${requiredPath.pathId}'.`,
+      profileRuleId: requiredPath.pathId,
+      affectedIds: evaluation.nodeIds,
+      sourceRanges: uniqueRanges(
+        evaluation.nodeIds.map((nodeId) => nodeById.get(nodeId)?.sourceRange),
+      ),
+      blocking: true,
+    },
+  };
+}
+
+function evaluateStepSequence(
+  steps: GraphRequiredPath["steps"],
+  sourceNode: GraphValidationNode,
+  relationships: readonly GraphValidationRelationship[],
+  nodeById: ReadonlyMap<string, GraphValidationNode>,
+): EvaluatedStepSequence {
   let paths: readonly (readonly string[])[] = [[sourceNode.id]];
   const completedRelationships: GraphRelationshipClass[] = [];
   let missingRelationshipClass: GraphRelationshipClass | undefined;
 
-  for (const step of requiredPath.steps) {
+  for (const step of steps) {
     const nextPaths = paths.flatMap((path) => {
       const tail = path.at(-1);
 
@@ -141,33 +199,20 @@ function evaluateRequiredPath(
     completedRelationships.push(step.relationshipClass);
   }
 
-  const nodeIds = paths[0] ?? [sourceNode.id];
-  const status = missingRelationshipClass === undefined ? "satisfied" : "missing";
-  const result: RequiredPathResult = {
-    pathId: requiredPath.pathId,
-    sourceId: sourceNode.id,
-    status,
-    nodeIds,
+  return {
+    nodeIds: paths[0] ?? [sourceNode.id],
     relationshipClasses: completedRelationships,
     ...(missingRelationshipClass === undefined ? {} : { missingRelationshipClass }),
   };
+}
 
-  if (missingRelationshipClass === undefined) {
-    return { result };
-  }
-
-  return {
-    result,
-    diagnostic: {
-      code: requiredPath.diagnosticCode,
-      severity: requiredPath.severity,
-      message: `${sourceNode.id} is missing required relationship '${missingRelationshipClass}' in path '${requiredPath.pathId}'.`,
-      profileRuleId: requiredPath.pathId,
-      affectedIds: nodeIds,
-      sourceRanges: uniqueRanges(nodeIds.map((nodeId) => nodeById.get(nodeId)?.sourceRange)),
-      blocking: true,
-    },
-  };
+function moreCompleteSequence(
+  best: EvaluatedStepSequence,
+  candidate: EvaluatedStepSequence,
+): EvaluatedStepSequence {
+  return candidate.relationshipClasses.length > best.relationshipClasses.length
+    ? candidate
+    : best;
 }
 
 function uniqueRanges(ranges: readonly (SourceRange | undefined)[]): readonly SourceRange[] {
