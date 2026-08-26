@@ -5,7 +5,9 @@ import { pathToFileURL } from "node:url";
 
 import { stringify } from "yaml";
 
+import { rejectGraphOutputInputAlias } from "./cli/graph-output.js";
 import { deriveGraphFromRegistry } from "./graph/index.js";
+import { validateGraphDocument } from "./graph-validation/index.js";
 import { scanMarkdown } from "./markdown/index.js";
 import { runMigrationCheck, type MigrationCheckResult } from "./migration/check.js";
 import { formatMigrationComparisonReport, formatValidationReport } from "./reporting/index.js";
@@ -56,19 +58,29 @@ interface MigrationCheckOptions {
   readonly typeProfilePath?: string;
 }
 
+interface GraphValidateOptions {
+  readonly command: "graph-validate";
+  readonly documentPath: string;
+  readonly profilePath: string;
+  readonly outputPath?: string;
+  readonly format: "json";
+}
+
 type CliOptions =
   | ValidateOptions
   | DeriveOptions
   | DeriveSidecarOptions
-  | MigrationCheckOptions;
+  | MigrationCheckOptions
+  | GraphValidateOptions;
 
 const USAGE = [
   "Usage: markdown-trace validate --registry <path> --document <path> [--report <path>]",
   "       markdown-trace derive --document <path> [--namespace <namespace>] [--type-profile <path>] [--output <path>]",
   "       markdown-trace derive-sidecar --document <path> [--type-profile <path>] [--check]",
   "       markdown-trace migration-check --document <path> --manual-registry <path> [--type-profile <path>]",
+  "       markdown-trace graph-validate --file <markdown> --profile <graph-profile> [--output <path>] [--format json]",
   "",
-  "Runs local Markdown Trace validation, derives registry data, writes/checks a generated sidecar artifact, or checks migration parity.",
+  "Runs local Markdown Trace validation, graph validation, registry derivation, generated sidecar operations, or migration checks.",
 ].join("\n");
 
 export async function main(
@@ -97,6 +109,10 @@ export async function main(
 
     if (options.command === "migration-check") {
       return await runMigrationCheckCommand(options, environment);
+    }
+
+    if (options.command === "graph-validate") {
+      return await runGraphValidate(options, environment);
     }
 
     return options.command === "derive-sidecar"
@@ -214,6 +230,40 @@ async function runMigrationCheckCommand(
   return result.exitCode;
 }
 
+async function runGraphValidate(
+  options: GraphValidateOptions,
+  environment: CliEnvironment,
+): Promise<number> {
+  const documentPath = path.resolve(environment.cwd, options.documentPath);
+  const profilePath = path.resolve(environment.cwd, options.profilePath);
+
+  if (options.outputPath !== undefined) {
+    await rejectGraphOutputInputAlias({
+      outputPath: path.resolve(environment.cwd, options.outputPath),
+      inputPaths: [documentPath, profilePath],
+    });
+  }
+
+  const result = await validateGraphDocument({
+    documentPath,
+    profilePath,
+  });
+  const output = `${JSON.stringify(result, null, 2)}\n`;
+
+  if (result.status === "operational-error") {
+    environment.stderr(output);
+    return 2;
+  }
+
+  environment.stdout(output);
+
+  if (options.outputPath !== undefined) {
+    await writeOutput(environment.cwd, options.outputPath, output);
+  }
+
+  return result.status === "pass" ? 0 : 1;
+}
+
 function parseArguments(argv: readonly string[]): CliOptions | "help" {
   if (argv.includes("--help") || argv.includes("-h")) {
     return "help";
@@ -223,7 +273,8 @@ function parseArguments(argv: readonly string[]): CliOptions | "help" {
     argv[0] === "derive" ||
     argv[0] === "validate" ||
     argv[0] === "derive-sidecar" ||
-    argv[0] === "migration-check"
+    argv[0] === "migration-check" ||
+    argv[0] === "graph-validate"
       ? argv[0]
       : "validate";
   const args = command === argv[0] ? argv.slice(1) : argv;
@@ -232,11 +283,38 @@ function parseArguments(argv: readonly string[]): CliOptions | "help" {
     return parseDeriveArguments(args);
   }
 
+  if (command === "graph-validate") {
+    return parseGraphValidateArguments(args);
+  }
+
   return command === "derive-sidecar"
     ? parseDeriveSidecarArguments(args)
     : command === "migration-check"
       ? parseMigrationCheckArguments(args)
       : parseValidateArguments(args);
+}
+
+function parseGraphValidateArguments(args: readonly string[]): GraphValidateOptions {
+  const values = parseFlagValues(args, ["--file", "--profile", "--output", "--format"]);
+  const documentPath = values.get("--file");
+  const profilePath = values.get("--profile");
+  const format = values.get("--format") ?? "json";
+
+  if (documentPath === undefined || profilePath === undefined) {
+    throw new Error(USAGE);
+  }
+
+  if (format !== "json") {
+    throw new Error(`unsupported graph-validate format ${format}; expected json`);
+  }
+
+  return {
+    command: "graph-validate",
+    documentPath,
+    profilePath,
+    outputPath: values.get("--output"),
+    format,
+  };
 }
 
 function parseValidateArguments(args: readonly string[]): ValidateOptions {

@@ -35,6 +35,28 @@ tableRoles:
     effects: [create_relationships, create_coverage_rows]
     relationshipClass: objective_implemented_by
     relationshipDirection: source-to-target
+  - selectorId: exec.work_validation_table
+    match:
+      headingIncludes: [Work Packages]
+      requiredColumns: [ID, Validation checkpoint]
+    sourceFamilies: [WP]
+    sourceColumns: [ID]
+    targetColumns: [Validation checkpoint]
+    role: coverage_reference
+    effects: [create_relationships, create_coverage_rows]
+    relationshipClass: work_validated_by
+    relationshipDirection: source-to-target
+  - selectorId: exec.validation_evidence_table
+    match:
+      headingIncludes: [Validation]
+      requiredColumns: [ID, Evidence]
+    sourceFamilies: [VAL]
+    sourceColumns: [ID]
+    targetColumns: [Evidence]
+    role: coverage_reference
+    effects: [create_relationships, create_coverage_rows]
+    relationshipClass: validation_supported_by
+    relationshipDirection: source-to-target
 rangePolicy:
   syntax: '<FAMILY>-<n> through <FAMILY>-<m>'
   sameFamilyOnly: true
