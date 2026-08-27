@@ -1,24 +1,26 @@
-import { createHash } from "node:crypto";
-
-import type { SourceRange } from "@jasonbelmonti/markdown-engine";
-
 import type {
   GraphProfile,
   GraphRelationshipClass,
   GraphRequiredPath,
 } from "../graph-profile/index.js";
 import type { TraceEvidenceResult } from "../trace-evidence/index.js";
+import { traceEvidenceHash } from "../trace-evidence/serialization.js";
 import type {
   GraphDiagnostic,
   GraphValidationNode,
   GraphValidationRelationship,
   GraphValidationResult,
+  GraphValidationSourceRange,
   RequiredPathResult,
-} from "./model.js";
+} from "../public.js";
 
 interface EvaluatedPath {
   readonly result: RequiredPathResult;
   readonly diagnostic?: GraphDiagnostic;
+}
+
+interface GraphValidationContext {
+  readonly profilePath?: string;
 }
 
 interface EvaluatedStepSequence {
@@ -30,6 +32,7 @@ interface EvaluatedStepSequence {
 export function validateGraphEvidence(
   evidence: TraceEvidenceResult,
   profile: GraphProfile,
+  context: GraphValidationContext = {},
 ): GraphValidationResult {
   const nodes = projectNodes(evidence);
   const nodeById = new Map(nodes.map((node) => [node.id, node]));
@@ -57,7 +60,10 @@ export function validateGraphEvidence(
     schemaVersion: "markdown-trace.graph-validation-result.v1",
     status: diagnostics.length === 0 ? "pass" : "fail",
     source: evidence.source,
-    profile: evidence.profile,
+    profile: {
+      path: context.profilePath ?? "",
+      ...evidence.profile,
+    },
     run: evidence.run,
     nodes,
     relationships,
@@ -74,7 +80,7 @@ export function validateGraphEvidence(
     hashes: {
       sourceSha256: evidence.hashes.sourceSha256,
       profileSha256: evidence.hashes.profileSha256,
-      traceEvidenceSha256: sha256(JSON.stringify(evidence)),
+      traceEvidenceSha256: traceEvidenceHash(evidence),
     },
   };
 }
@@ -215,8 +221,10 @@ function moreCompleteSequence(
     : best;
 }
 
-function uniqueRanges(ranges: readonly (SourceRange | undefined)[]): readonly SourceRange[] {
-  const byOffsets = new Map<string, SourceRange>();
+function uniqueRanges(
+  ranges: readonly (GraphValidationSourceRange | undefined)[],
+): readonly GraphValidationSourceRange[] {
+  const byOffsets = new Map<string, GraphValidationSourceRange>();
 
   for (const range of ranges) {
     if (range !== undefined) {
@@ -265,8 +273,4 @@ function comparePath(left: readonly string[], right: readonly string[]): number 
 
 function pointOffset(offset: number | undefined): number {
   return offset ?? Number.MAX_SAFE_INTEGER;
-}
-
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
 }
