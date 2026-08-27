@@ -1,11 +1,10 @@
-import { createHash } from "node:crypto";
-
 import type {
-  GraphArtifactFamily,
   GraphProfile,
   GraphRelationshipRequiredPath,
 } from "./model.js";
 import { GRAPH_DIAGNOSTIC_RULES } from "./diagnostic-rules.js";
+
+export { graphProfileHash } from "./serialization.js";
 
 export const EXECUTION_SPEC_FIRST_SLICE_PROFILE: GraphProfile<
   "execution-spec",
@@ -133,7 +132,3 @@ export const EXECUTION_SPEC_FIRST_SLICE_PROFILE: GraphProfile<
     },
   },
 };
-
-export function graphProfileHash(profile: GraphProfile<GraphArtifactFamily>): string {
-  return createHash("sha256").update(JSON.stringify(profile)).digest("hex");
-}

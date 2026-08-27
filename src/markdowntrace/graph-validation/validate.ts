@@ -1,11 +1,10 @@
-import { createHash } from "node:crypto";
-
 import type {
   GraphProfile,
   GraphRelationshipClass,
   GraphRequiredPath,
 } from "../graph-profile/index.js";
 import type { TraceEvidenceResult } from "../trace-evidence/index.js";
+import { traceEvidenceHash } from "../trace-evidence/serialization.js";
 import type {
   GraphDiagnostic,
   GraphValidationNode,
@@ -81,7 +80,7 @@ export function validateGraphEvidence(
     hashes: {
       sourceSha256: evidence.hashes.sourceSha256,
       profileSha256: evidence.hashes.profileSha256,
-      traceEvidenceSha256: sha256(JSON.stringify(evidence)),
+      traceEvidenceSha256: traceEvidenceHash(evidence),
     },
   };
 }
@@ -274,8 +273,4 @@ function comparePath(left: readonly string[], right: readonly string[]): number 
 
 function pointOffset(offset: number | undefined): number {
   return offset ?? Number.MAX_SAFE_INTEGER;
-}
-
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
 }

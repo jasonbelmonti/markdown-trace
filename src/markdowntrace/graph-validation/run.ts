@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -20,6 +21,11 @@ import type {
   ValidateGraphDocumentOptions,
 } from "../public.js";
 import { validateGraphEvidence } from "./validate.js";
+
+interface AcquiredSource {
+  readonly sha256: string;
+  readonly lineCount: number;
+}
 
 export async function validateGraphDocument(
   options: ValidateGraphDocumentOptions,
@@ -84,6 +90,7 @@ export async function validateGraphDocument(
         ),
       ],
       profileResult.profile,
+      acquiredSource(markdown),
     );
   }
 }
@@ -138,6 +145,7 @@ function operationalResult(
   options: ValidateGraphDocumentOptions,
   diagnostics: readonly GraphValidationOperationalDiagnostic[],
   profile?: CompleteGraphProfile<GraphArtifactFamily>,
+  source?: AcquiredSource,
 ): GraphValidationOperationalResult {
   const profileSha256 = profile === undefined ? null : graphProfileHash(profile);
 
@@ -146,8 +154,8 @@ function operationalResult(
     status: "operational-error",
     source: {
       path: options.documentPath,
-      sha256: null,
-      lineCount: null,
+      sha256: source?.sha256 ?? null,
+      lineCount: source?.lineCount ?? null,
     },
     profile: {
       path: options.profilePath,
@@ -170,10 +178,17 @@ function operationalResult(
       diagnostics: diagnostics.length,
     },
     hashes: {
-      sourceSha256: null,
+      sourceSha256: source?.sha256 ?? null,
       profileSha256,
       traceEvidenceSha256: null,
     },
+  };
+}
+
+function acquiredSource(markdown: string): AcquiredSource {
+  return {
+    sha256: createHash("sha256").update(markdown).digest("hex"),
+    lineCount: markdown.length === 0 ? 0 : markdown.split(/\r\n|\r|\n/).length,
   };
 }
 
