@@ -111,6 +111,30 @@ describe("public graph-validation DTO and descriptor contract", () => {
     expect(publicSource).not.toContain("./graph-profile/");
   });
 
+  it("preserves baseline literal guarantees for existing DTO consumers", () => {
+    const compileCompatibilityContract = (result: GraphValidationRunResult): void => {
+      const packageVersion: "0.1.0" = result.run.packageVersion;
+      const markdownEngineVersion: "2.0.0" = result.run.markdownEngineVersion;
+
+      if (result.status === "operational-error") {
+        const nodeCount: 0 = result.summary.nodes;
+        const relationshipCount: 0 = result.summary.relationships;
+        const requiredPathCount: 0 = result.summary.requiredPaths;
+        const satisfiedRequiredPathCount: 0 = result.summary.satisfiedRequiredPaths;
+
+        void nodeCount;
+        void relationshipCount;
+        void requiredPathCount;
+        void satisfiedRequiredPathCount;
+      }
+
+      void packageVersion;
+      void markdownEngineVersion;
+    };
+
+    expect(compileCompatibilityContract).toBeTypeOf("function");
+  });
+
   it("resolves relative inputs from explicit cwd without mutating process state", async () => {
     const cwdBefore = process.cwd();
     const result = await validateGraphDocument({

@@ -68,8 +68,8 @@ export interface GraphValidationProfileDescriptor {
 }
 
 export interface GraphValidationRuntimeMetadata {
-  readonly packageVersion: string;
-  readonly markdownEngineVersion: string;
+  readonly packageVersion: "0.1.0";
+  readonly markdownEngineVersion: "2.0.0";
   readonly runtimeVersion: string;
 }
 
@@ -183,7 +183,12 @@ export interface GraphValidationOperationalResult {
   readonly requiredPathResults: readonly never[];
   readonly matrixCoverageResults: readonly never[];
   readonly diagnostics: readonly GraphValidationOperationalDiagnostic[];
-  readonly summary: GraphValidationSummary;
+  readonly summary: GraphValidationSummary & {
+    readonly nodes: 0;
+    readonly relationships: 0;
+    readonly requiredPaths: 0;
+    readonly satisfiedRequiredPaths: 0;
+  };
   readonly hashes: GraphValidationHashes & {
     readonly sourceSha256: null;
     readonly traceEvidenceSha256: null;
