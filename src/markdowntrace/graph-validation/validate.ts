@@ -1,7 +1,5 @@
 import { createHash } from "node:crypto";
 
-import type { SourceRange } from "@jasonbelmonti/markdown-engine";
-
 import type {
   GraphProfile,
   GraphRelationshipClass,
@@ -13,12 +11,17 @@ import type {
   GraphValidationNode,
   GraphValidationRelationship,
   GraphValidationResult,
+  GraphValidationSourceRange,
   RequiredPathResult,
-} from "./model.js";
+} from "../public.js";
 
 interface EvaluatedPath {
   readonly result: RequiredPathResult;
   readonly diagnostic?: GraphDiagnostic;
+}
+
+interface GraphValidationContext {
+  readonly profilePath?: string;
 }
 
 interface EvaluatedStepSequence {
@@ -30,6 +33,7 @@ interface EvaluatedStepSequence {
 export function validateGraphEvidence(
   evidence: TraceEvidenceResult,
   profile: GraphProfile,
+  context: GraphValidationContext = {},
 ): GraphValidationResult {
   const nodes = projectNodes(evidence);
   const nodeById = new Map(nodes.map((node) => [node.id, node]));
@@ -57,7 +61,10 @@ export function validateGraphEvidence(
     schemaVersion: "markdown-trace.graph-validation-result.v1",
     status: diagnostics.length === 0 ? "pass" : "fail",
     source: evidence.source,
-    profile: evidence.profile,
+    profile: {
+      path: context.profilePath ?? "",
+      ...evidence.profile,
+    },
     run: evidence.run,
     nodes,
     relationships,
@@ -215,8 +222,10 @@ function moreCompleteSequence(
     : best;
 }
 
-function uniqueRanges(ranges: readonly (SourceRange | undefined)[]): readonly SourceRange[] {
-  const byOffsets = new Map<string, SourceRange>();
+function uniqueRanges(
+  ranges: readonly (GraphValidationSourceRange | undefined)[],
+): readonly GraphValidationSourceRange[] {
+  const byOffsets = new Map<string, GraphValidationSourceRange>();
 
   for (const range of ranges) {
     if (range !== undefined) {
