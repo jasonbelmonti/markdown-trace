@@ -48,6 +48,7 @@ describe("file-backed graph validation API", () => {
       status: "pass",
       source: { path: positiveDocument },
       profile: {
+        path: validProfile,
         profileId: "markdown-trace.execution-spec.contract-fixture",
         artifactFamily: "execution-spec",
       },
@@ -173,6 +174,23 @@ describe("graph-validate CLI", () => {
     });
     expect(await readFile(outputPath, "utf8")).toBe(first.stdout);
     expect(second).toEqual({ exitCode: 0, stdout: first.stdout, stderr: "" });
+  });
+
+  it("serializes the same public result payload as the file-backed API", async () => {
+    const apiResult = await validateGraphDocument({
+      documentPath: positiveDocument,
+      profilePath: validProfile,
+    });
+    const cliResult = await runCli([
+      "graph-validate",
+      "--file",
+      positiveDocument,
+      "--profile",
+      validProfile,
+    ]);
+
+    expect(cliResult.exitCode).toBe(0);
+    expect(JSON.parse(cliResult.stdout)).toEqual(apiResult);
   });
 
   it("uses exit 1 for blocking graph diagnostics", async () => {

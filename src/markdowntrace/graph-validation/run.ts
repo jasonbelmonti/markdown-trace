@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 import {
   graphProfileHash,
@@ -16,34 +17,31 @@ import type {
   GraphValidationOperationalDiagnostic,
   GraphValidationOperationalResult,
   GraphValidationRunResult,
-} from "./model.js";
+  ValidateGraphDocumentOptions,
+} from "../public.js";
 import { validateGraphEvidence } from "./validate.js";
-
-export interface ValidateGraphDocumentOptions {
-  readonly documentPath: string;
-  readonly profilePath: string;
-}
 
 export async function validateGraphDocument(
   options: ValidateGraphDocumentOptions,
 ): Promise<GraphValidationRunResult> {
-  const profileResult = await loadGraphProfile(options.profilePath);
+  const resolvedOptions = resolveOptions(options);
+  const profileResult = await loadGraphProfile(resolvedOptions.profilePath);
 
   if (!profileResult.ok) {
     return operationalResult(
-      options,
+      resolvedOptions,
       profileResult.diagnostics.map(profileDiagnostic),
     );
   }
 
   if (!isRelationshipGraphProfile(profileResult.profile)) {
     return operationalResult(
-      options,
+      resolvedOptions,
       [
         operationalDiagnostic(
           "profile-compatibility",
-          `${options.profilePath} contains required-path rules that this validator does not support`,
-          options.profilePath,
+          `${resolvedOptions.profilePath} contains required-path rules that this validator does not support`,
+          resolvedOptions.profilePath,
         ),
       ],
       profileResult.profile,
@@ -52,15 +50,15 @@ export async function validateGraphDocument(
 
   let markdown: string;
   try {
-    markdown = await readFile(options.documentPath, "utf8");
+    markdown = await readFile(resolvedOptions.documentPath, "utf8");
   } catch {
     return operationalResult(
-      options,
+      resolvedOptions,
       [
         operationalDiagnostic(
           "document-read",
-          `${options.documentPath} cannot be read`,
-          options.documentPath,
+          `${resolvedOptions.documentPath} cannot be read`,
+          resolvedOptions.documentPath,
         ),
       ],
       profileResult.profile,
@@ -69,23 +67,37 @@ export async function validateGraphDocument(
 
   try {
     const evidence = extractTraceEvidence(markdown, profileResult.profile, {
-      sourcePath: options.documentPath,
+      sourcePath: resolvedOptions.documentPath,
     });
 
-    return validateGraphEvidence(evidence, profileResult.profile);
+    return validateGraphEvidence(evidence, profileResult.profile, {
+      profilePath: resolvedOptions.profilePath,
+    });
   } catch (error) {
     return operationalResult(
-      options,
+      resolvedOptions,
       [
         operationalDiagnostic(
           "evidence-extraction",
           error instanceof Error ? error.message : String(error),
-          options.documentPath,
+          resolvedOptions.documentPath,
         ),
       ],
       profileResult.profile,
     );
   }
+}
+
+function resolveOptions(
+  options: ValidateGraphDocumentOptions,
+): Required<ValidateGraphDocumentOptions> {
+  const cwd = path.resolve(process.cwd(), options.cwd ?? ".");
+
+  return {
+    documentPath: path.resolve(cwd, options.documentPath),
+    profilePath: path.resolve(cwd, options.profilePath),
+    cwd,
+  };
 }
 
 function profileDiagnostic(

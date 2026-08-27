@@ -1,7 +1,6 @@
 export { validateGraphEvidence } from "./validate.js";
 export {
   validateGraphDocument,
-  type ValidateGraphDocumentOptions,
 } from "./run.js";
 export type {
   GraphDiagnostic,
@@ -13,4 +12,5 @@ export type {
   GraphValidationResult,
   GraphValidationRunResult,
   RequiredPathResult,
-} from "./model.js";
+  ValidateGraphDocumentOptions,
+} from "../public.js";
