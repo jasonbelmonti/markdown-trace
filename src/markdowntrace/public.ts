@@ -172,10 +172,7 @@ export interface GraphValidationResult {
 export interface GraphValidationOperationalResult {
   readonly schemaVersion: "markdown-trace.graph-validation-result.v1";
   readonly status: "operational-error";
-  readonly source: GraphValidationSourceDescriptor & {
-    readonly sha256: null;
-    readonly lineCount: null;
-  };
+  readonly source: GraphValidationSourceDescriptor;
   readonly profile: GraphValidationProfileDescriptor;
   readonly run: GraphValidationRuntimeMetadata;
   readonly nodes: readonly never[];
@@ -190,7 +187,6 @@ export interface GraphValidationOperationalResult {
     readonly satisfiedRequiredPaths: 0;
   };
   readonly hashes: GraphValidationHashes & {
-    readonly sourceSha256: null;
     readonly traceEvidenceSha256: null;
   };
 }

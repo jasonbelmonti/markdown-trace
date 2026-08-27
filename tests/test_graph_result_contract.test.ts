@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -7,6 +8,11 @@ import { stringify } from "yaml";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { EXECUTION_SPEC_FIRST_SLICE_PROFILE } from "../src/markdowntrace/graph-profile/index.js";
+import type { GraphProfile } from "../src/markdowntrace/graph-profile/model.js";
+import {
+  graphProfileHash,
+  serializeGraphProfile,
+} from "../src/markdowntrace/graph-profile/serialization.js";
 import {
   validateGraphDocument,
   type GraphArtifactFamily,
@@ -30,6 +36,11 @@ import {
   type RequiredPathResult,
   type ValidateGraphDocumentOptions,
 } from "../src/markdowntrace/public.js";
+import type { TraceEvidenceResult } from "../src/markdowntrace/trace-evidence/model.js";
+import {
+  serializeTraceEvidence,
+  traceEvidenceHash,
+} from "../src/markdowntrace/trace-evidence/serialization.js";
 
 const extractionControl = vi.hoisted(() => ({ failureMessage: null as string | null }));
 
@@ -148,6 +159,11 @@ describe("public graph-validation DTO and descriptor contract", () => {
     expect(result.source.path).toBe(positiveDocument);
     expect(result.profile.path).toBe(validProfile);
     expectDescriptorKeys(result);
+    expect(result.hashes).toEqual({
+      sourceSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+      profileSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+      traceEvidenceSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+    });
   });
 
   it("uses uniform absolute descriptors for completed pass and fail results", async () => {
@@ -158,6 +174,11 @@ describe("public graph-validation DTO and descriptor contract", () => {
       expect(result.source.path).toBe(documentPath);
       expect(result.profile.path).toBe(validProfile);
       expectDescriptorKeys(result);
+      expect(result.hashes).toEqual({
+        sourceSha256: result.source.sha256,
+        profileSha256: result.profile.sha256,
+        traceEvidenceSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+      });
     }
   });
 
@@ -177,11 +198,21 @@ describe("public graph-validation DTO and descriptor contract", () => {
     expect(profileFailure.source.path).toBe(positiveDocument);
     expect(profileFailure.profile.path).toBe(malformedProfile);
     expectDescriptorKeys(profileFailure);
+    expect(profileFailure.hashes).toEqual({
+      sourceSha256: null,
+      profileSha256: null,
+      traceEvidenceSha256: null,
+    });
 
     expectOperationalStage(documentFailure, "document-read");
     expect(documentFailure.source.path).toBe(missingDocument);
     expect(documentFailure.profile.path).toBe(validProfile);
     expectDescriptorKeys(documentFailure);
+    expect(documentFailure.hashes).toEqual({
+      sourceSha256: null,
+      profileSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+      traceEvidenceSha256: null,
+    });
   });
 
   it("uses uniform descriptors for profile-compatibility failures", async () => {
@@ -198,19 +229,128 @@ describe("public graph-validation DTO and descriptor contract", () => {
     expect(result.source.path).toBe(positiveDocument);
     expect(result.profile.path).toBe(profilePath);
     expectDescriptorKeys(result);
+    expect(result.hashes).toEqual({
+      sourceSha256: null,
+      profileSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+      traceEvidenceSha256: null,
+    });
   });
 
-  it("uses uniform descriptors for evidence-extraction failures", async () => {
+  it("retains acquired source identity for evidence-extraction failures", async () => {
     extractionControl.failureMessage = "synthetic extraction boundary failure";
+    const markdown = await readFile(positiveDocument, "utf8");
     const result = await validateGraphDocument({
       documentPath: positiveDocument,
       profilePath: validProfile,
     });
 
     expectOperationalStage(result, "evidence-extraction");
-    expect(result.source.path).toBe(positiveDocument);
+    expect(result.source).toEqual({
+      path: positiveDocument,
+      sha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+      lineCount: markdown.split(/\r\n|\r|\n/).length,
+    });
     expect(result.profile.path).toBe(validProfile);
     expectDescriptorKeys(result);
+    expect(result.hashes).toEqual({
+      sourceSha256: createHash("sha256").update(markdown).digest("hex"),
+      profileSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+      traceEvidenceSha256: null,
+    });
+  });
+
+  it("uses the normative semantic profile preimage and golden digest", () => {
+    const profile = minimalProfile();
+    const expectedPreimage = '{"schemaVersion":"markdown-trace.graph-profile.v1","profileId":"example.profile","artifactFamily":"execution-spec","profileVersion":"1.0.0","idFamilies":[],"definitionPolicies":{"primaryColumns":[],"supplementalColumns":[],"repeatedIdPolicy":{}},"tableRoles":[],"rangePolicy":{"syntax":"<FAMILY>-<n> through <FAMILY>-<m>","sameFamilyOnly":true,"requireDefinedEndpoints":true,"endpointRoles":["primary_definition"],"diagnosticCode":"markdown-trace.graph.invalid_range_endpoint"},"matrixSemantics":{"authority":"coverage-only","rowRole":"matrix_coverage","firstColumnMaySourceRelationships":true,"definitionsFromCells":false},"relationshipClasses":[],"requiredPaths":[],"diagnosticRules":[],"serialization":{"ordering":{"definitions":[],"coverageRows":[],"ranges":[],"relationships":[],"diagnostics":[],"repairActions":[]}}}';
+
+    expect(serializeGraphProfile(profile)).toBe(expectedPreimage);
+    expect(graphProfileHash(profile)).toBe(
+      "4900a73ce81ec0910580ab2a8f97c2743e8d30cbfa8c07d42e9900bc101a76e3",
+    );
+  });
+
+  it("uses the normative stable evidence preimage and golden digest", () => {
+    const evidence = minimalEvidence();
+    const expectedPreimage = '{"schemaVersion":"markdown-trace.trace-evidence.v1","authority":"trace-evidence","source":{"sha256":"source-hash","lineCount":1},"profile":{"profileId":"example.profile","artifactFamily":"execution-spec","profileVersion":"1.0.0","sha256":"profile-hash"},"definitions":[{"occurrenceId":"definition-0001","label":"OBJ-1","family":"OBJ","role":"primary_definition","sourceKind":"table_cell","sourceRange":{"start":{"line":1,"column":1,"offset":0},"end":{"line":1,"column":6,"offset":5}}}],"supplementalDefinitions":[],"coverageRows":[],"mentions":[],"ranges":[],"candidateEdges":[],"diagnostics":[]}';
+
+    expect(serializeTraceEvidence(evidence)).toBe(expectedPreimage);
+    expect(traceEvidenceHash(evidence)).toBe(
+      "367f0f864d46210e4c0d07c32ba7fc51c84273dde4c82c16c5819c51285510dc",
+    );
+  });
+
+  it("ignores object insertion order and non-semantic path/runtime/hash metadata", () => {
+    const profile = {
+      ...minimalProfile(),
+      definitionPolicies: {
+        primaryColumns: [],
+        supplementalColumns: [],
+        repeatedIdPolicy: {
+          WP: "single_primary_with_references" as const,
+          OBJ: "single_primary_with_references" as const,
+        },
+      },
+    };
+    const reorderedProfile = {
+      ...Object.fromEntries(Object.entries(profile).reverse()),
+      definitionPolicies: {
+        repeatedIdPolicy: {
+          OBJ: "single_primary_with_references",
+          WP: "single_primary_with_references",
+        },
+        supplementalColumns: [],
+        primaryColumns: [],
+      },
+    } as unknown as GraphProfile;
+    const evidence = minimalEvidence();
+    const reorderedEvidence = Object.fromEntries(
+      Object.entries(evidence).reverse(),
+    ) as unknown as TraceEvidenceResult;
+    const relocatedEvidence: TraceEvidenceResult = {
+      ...evidence,
+      source: { ...evidence.source, path: "/another/location.md" },
+      run: {
+        packageVersion: "0.1.0",
+        markdownEngineVersion: "2.0.0",
+        runtimeVersion: "another-runtime",
+      },
+      hashes: {
+        sourceSha256: "redundant-source-value",
+        profileSha256: "redundant-profile-value",
+      },
+    };
+
+    expect(graphProfileHash(reorderedProfile)).toBe(graphProfileHash(profile));
+    expect(traceEvidenceHash(reorderedEvidence)).toBe(traceEvidenceHash(evidence));
+    expect(traceEvidenceHash(relocatedEvidence)).toBe(traceEvidenceHash(evidence));
+  });
+
+  it("preserves declared array-order significance", () => {
+    const profile = structuredClone(EXECUTION_SPEC_FIRST_SLICE_PROFILE);
+    const reversedProfile = {
+      ...profile,
+      idFamilies: [...profile.idFamilies].reverse(),
+    };
+    const evidence = minimalEvidence();
+    const secondDefinition = {
+      ...evidence.definitions[0]!,
+      occurrenceId: "definition-0002",
+      label: "WP-1",
+      family: "WP",
+    };
+    const forwardEvidence = {
+      ...evidence,
+      definitions: [evidence.definitions[0]!, secondDefinition],
+    };
+    const reversedEvidence = {
+      ...forwardEvidence,
+      definitions: [...forwardEvidence.definitions].reverse(),
+    };
+
+    expect(graphProfileHash(reversedProfile)).not.toBe(graphProfileHash(profile));
+    expect(traceEvidenceHash(reversedEvidence)).not.toBe(
+      traceEvidenceHash(forwardEvidence),
+    );
   });
 });
 
@@ -262,4 +402,92 @@ async function createTemporaryDirectory(): Promise<string> {
   const directory = await mkdtemp(path.join(tmpdir(), "markdown-trace-result-contract-"));
   temporaryDirectories.push(directory);
   return directory;
+}
+
+function minimalProfile(): GraphProfile {
+  return {
+    schemaVersion: "markdown-trace.graph-profile.v1",
+    profileId: "example.profile",
+    artifactFamily: "execution-spec",
+    profileVersion: "1.0.0",
+    idFamilies: [],
+    definitionPolicies: {
+      primaryColumns: [],
+      supplementalColumns: [],
+      repeatedIdPolicy: {},
+    },
+    tableRoles: [],
+    rangePolicy: {
+      syntax: "<FAMILY>-<n> through <FAMILY>-<m>",
+      sameFamilyOnly: true,
+      requireDefinedEndpoints: true,
+      endpointRoles: ["primary_definition"],
+      diagnosticCode: "markdown-trace.graph.invalid_range_endpoint",
+    },
+    matrixSemantics: {
+      authority: "coverage-only",
+      rowRole: "matrix_coverage",
+      firstColumnMaySourceRelationships: true,
+      definitionsFromCells: false,
+    },
+    relationshipClasses: [],
+    requiredPaths: [],
+    diagnosticRules: [],
+    serialization: {
+      ordering: {
+        definitions: [],
+        coverageRows: [],
+        ranges: [],
+        relationships: [],
+        diagnostics: [],
+        repairActions: [],
+      },
+    },
+  };
+}
+
+function minimalEvidence(): TraceEvidenceResult {
+  return {
+    schemaVersion: "markdown-trace.trace-evidence.v1",
+    authority: "trace-evidence",
+    source: {
+      path: "/ignored/document.md",
+      sha256: "source-hash",
+      lineCount: 1,
+    },
+    profile: {
+      profileId: "example.profile",
+      artifactFamily: "execution-spec",
+      profileVersion: "1.0.0",
+      sha256: "profile-hash",
+    },
+    run: {
+      packageVersion: "0.1.0",
+      markdownEngineVersion: "2.0.0",
+      runtimeVersion: "v22",
+    },
+    definitions: [
+      {
+        occurrenceId: "definition-0001",
+        label: "OBJ-1",
+        family: "OBJ",
+        role: "primary_definition",
+        sourceKind: "table_cell",
+        sourceRange: {
+          start: { line: 1, column: 1, offset: 0 },
+          end: { line: 1, column: 6, offset: 5 },
+        },
+      },
+    ],
+    supplementalDefinitions: [],
+    coverageRows: [],
+    mentions: [],
+    ranges: [],
+    candidateEdges: [],
+    diagnostics: [],
+    hashes: {
+      sourceSha256: "source-hash",
+      profileSha256: "profile-hash",
+    },
+  };
 }
