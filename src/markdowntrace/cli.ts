@@ -5,6 +5,7 @@ import { pathToFileURL } from "node:url";
 
 import { stringify } from "yaml";
 
+import { writeOutputAtomically } from "./cli/atomic-output.js";
 import { rejectGraphOutputInputAlias } from "./cli/graph-output.js";
 import { deriveGraphFromRegistry } from "./graph/index.js";
 import { validateGraphDocument } from "./graph-validation/index.js";
@@ -21,6 +22,7 @@ import {
   writeGeneratedSidecarArtifact,
 } from "./registry/index.js";
 import { TypeProfileLoadError } from "./profiles/model.js";
+import { runtimeMetadata } from "./runtime-metadata.js";
 import { validate } from "./validation/index.js";
 
 interface CliEnvironment {
@@ -73,12 +75,29 @@ type CliOptions =
   | MigrationCheckOptions
   | GraphValidateOptions;
 
-const USAGE = [
-  "Usage: markdown-trace validate --registry <path> --document <path> [--report <path>]",
-  "       markdown-trace derive --document <path> [--namespace <namespace>] [--type-profile <path>] [--output <path>]",
-  "       markdown-trace derive-sidecar --document <path> [--type-profile <path>] [--check]",
-  "       markdown-trace migration-check --document <path> --manual-registry <path> [--type-profile <path>]",
-  "       markdown-trace graph-validate --file <markdown> --profile <graph-profile> [--output <path>] [--format json]",
+const VALIDATE_USAGE =
+  "Usage: markdown-trace validate --registry <path> --document <path> [--report <path>]";
+const DERIVE_USAGE =
+  "Usage: markdown-trace derive --document <path> [--namespace <namespace>] [--type-profile <path>] [--output <path>]";
+const DERIVE_SIDECAR_USAGE =
+  "Usage: markdown-trace derive-sidecar --document <path> [--type-profile <path>] [--check]";
+const MIGRATION_CHECK_USAGE =
+  "Usage: markdown-trace migration-check --document <path> --manual-registry <path> [--type-profile <path>]";
+const GRAPH_VALIDATE_USAGE =
+  "Usage: markdown-trace graph-validate --file <markdown> --profile <graph-profile> [--output <path>] [--format json]";
+const PACKAGE_HELP = [
+  "Usage: markdown-trace <command> [options]",
+  "",
+  "Stable commands:",
+  "  graph-validate --file <markdown> --profile <graph-profile> [--output <path>] [--format json]",
+  "  --help, -h       Show this help.",
+  "  --version        Print the package version.",
+  "",
+  "Experimental commands (0.x):",
+  "  validate --registry <path> --document <path> [--report <path>]",
+  "  derive --document <path> [--namespace <namespace>] [--type-profile <path>] [--output <path>]",
+  "  derive-sidecar --document <path> [--type-profile <path>] [--check]",
+  "  migration-check --document <path> --manual-registry <path> [--type-profile <path>]",
   "",
   "Runs local Markdown Trace validation, graph validation, registry derivation, generated sidecar operations, or migration checks.",
 ].join("\n");
@@ -97,7 +116,12 @@ export async function main(
     const options = parseArguments(argv);
 
     if (options === "help") {
-      environment.stdout(`${USAGE}\n`);
+      environment.stdout(`${PACKAGE_HELP}\n`);
+      return 0;
+    }
+
+    if (options === "version") {
+      environment.stdout(`${runtimeMetadata().packageVersion}\n`);
       return 0;
     }
 
@@ -255,18 +279,25 @@ async function runGraphValidate(
     return 2;
   }
 
-  environment.stdout(output);
-
   if (options.outputPath !== undefined) {
-    await writeOutput(environment.cwd, options.outputPath, output);
+    await writeOutputAtomically(
+      path.resolve(environment.cwd, options.outputPath),
+      output,
+    );
   }
+
+  environment.stdout(output);
 
   return result.status === "pass" ? 0 : 1;
 }
 
-function parseArguments(argv: readonly string[]): CliOptions | "help" {
+function parseArguments(argv: readonly string[]): CliOptions | "help" | "version" {
   if (argv.includes("--help") || argv.includes("-h")) {
     return "help";
+  }
+
+  if (argv.length === 1 && argv[0] === "--version") {
+    return "version";
   }
 
   const command =
@@ -301,7 +332,7 @@ function parseGraphValidateArguments(args: readonly string[]): GraphValidateOpti
   const format = values.get("--format") ?? "json";
 
   if (documentPath === undefined || profilePath === undefined) {
-    throw new Error(USAGE);
+    throw new Error(GRAPH_VALIDATE_USAGE);
   }
 
   if (format !== "json") {
@@ -323,7 +354,7 @@ function parseValidateArguments(args: readonly string[]): ValidateOptions {
   const documentPath = values.get("--document");
 
   if (registryPath === undefined || documentPath === undefined) {
-    throw new Error(USAGE);
+    throw new Error(VALIDATE_USAGE);
   }
 
   return {
@@ -344,7 +375,7 @@ function parseDeriveArguments(args: readonly string[]): DeriveOptions {
   const documentPath = values.get("--document");
 
   if (documentPath === undefined) {
-    throw new Error(USAGE);
+    throw new Error(DERIVE_USAGE);
   }
 
   return {
@@ -365,7 +396,7 @@ function parseDeriveSidecarArguments(args: readonly string[]): DeriveSidecarOpti
   const documentPath = values.get("--document");
 
   if (documentPath === undefined) {
-    throw new Error(USAGE);
+    throw new Error(DERIVE_SIDECAR_USAGE);
   }
 
   return {
@@ -382,7 +413,7 @@ function parseMigrationCheckArguments(args: readonly string[]): MigrationCheckOp
   const manualRegistryPath = values.get("--manual-registry");
 
   if (documentPath === undefined || manualRegistryPath === undefined) {
-    throw new Error(USAGE);
+    throw new Error(MIGRATION_CHECK_USAGE);
   }
 
   return {

@@ -1,4 +1,15 @@
-import { access, copyFile, mkdtemp, readFile, rm } from "node:fs/promises";
+import { readFileSync } from "node:fs";
+import {
+  access,
+  chmod,
+  copyFile,
+  link,
+  mkdtemp,
+  readFile,
+  readdir,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -144,20 +155,51 @@ describe("file-backed graph validation API", () => {
 });
 
 describe("graph-validate CLI", () => {
+  it("reports the stable package version with no additional output", async () => {
+    await expect(runCli(["--version"])).resolves.toEqual({
+      exitCode: 0,
+      stdout: "0.1.0\n",
+      stderr: "",
+    });
+  });
+
+  it("classifies the stable and experimental command surfaces in package help", async () => {
+    const result = await runCli(["--help"]);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe("");
+    expect(result.stdout).toContain("Stable commands:\n  graph-validate");
+    expect(result.stdout).toContain("Experimental commands (0.x):\n  validate");
+    expect(result.stdout).toContain("\n  derive ");
+    expect(result.stdout).toContain("\n  derive-sidecar ");
+    expect(result.stdout).toContain("\n  migration-check ");
+  });
+
   it("emits deterministic JSON and writes the complete requested output on pass", async () => {
     const temporaryDirectory = await createTemporaryDirectory();
     const outputPath = path.join(temporaryDirectory, "graph-validation.json");
-    const first = await runCli([
-      "graph-validate",
-      "--file",
-      positiveDocument,
-      "--profile",
-      validProfile,
-      "--output",
-      outputPath,
-      "--format",
-      "json",
-    ]);
+    const originalDocument = await readFile(positiveDocument, "utf8");
+    const originalProfile = await readFile(validProfile, "utf8");
+    await writeFile(outputPath, "prior destination bytes", "utf8");
+    let outputObservedAtStdout: string | undefined;
+    const first = await runCli(
+      [
+        "graph-validate",
+        "--file",
+        positiveDocument,
+        "--profile",
+        validProfile,
+        "--output",
+        outputPath,
+        "--format",
+        "json",
+      ],
+      {
+        onStdout: () => {
+          outputObservedAtStdout = readFileSync(outputPath, "utf8");
+        },
+      },
+    );
     const second = await runCli([
       "graph-validate",
       "--file",
@@ -173,6 +215,10 @@ describe("graph-validate CLI", () => {
       status: "pass",
     });
     expect(await readFile(outputPath, "utf8")).toBe(first.stdout);
+    expect(outputObservedAtStdout).toBe(first.stdout);
+    expect(await readdir(temporaryDirectory)).toEqual(["graph-validation.json"]);
+    expect(await readFile(positiveDocument, "utf8")).toBe(originalDocument);
+    expect(await readFile(validProfile, "utf8")).toBe(originalProfile);
     expect(second).toEqual({ exitCode: 0, stdout: first.stdout, stderr: "" });
   });
 
@@ -194,12 +240,16 @@ describe("graph-validate CLI", () => {
   });
 
   it("uses exit 1 for blocking graph diagnostics", async () => {
+    const temporaryDirectory = await createTemporaryDirectory();
+    const outputPath = path.join(temporaryDirectory, "graph-validation.json");
     const result = await runCli([
       "graph-validate",
       "--file",
       negativeDocument,
       "--profile",
       validProfile,
+      "--output",
+      outputPath,
     ]);
 
     expect(result.exitCode).toBe(1);
@@ -211,6 +261,7 @@ describe("graph-validate CLI", () => {
         { code: "markdown-trace.graph.missing_required_path", blocking: true },
       ],
     });
+    expect(await readFile(outputPath, "utf8")).toBe(result.stdout);
   });
 
   it("uses exit 2 and avoids output artifacts for operational failures", async () => {
@@ -232,6 +283,29 @@ describe("graph-validate CLI", () => {
       schemaVersion: "markdown-trace.graph-validation-result.v1",
       status: "operational-error",
       diagnostics: [{ code: "markdown-trace.graph.profile_error" }],
+    });
+    await expect(access(outputPath)).rejects.toThrow();
+  });
+
+  it("routes unreadable documents as operational JSON without creating output", async () => {
+    const temporaryDirectory = await createTemporaryDirectory();
+    const outputPath = path.join(temporaryDirectory, "should-not-exist.json");
+    const result = await runCli([
+      "graph-validate",
+      "--file",
+      path.join(temporaryDirectory, "missing.md"),
+      "--profile",
+      validProfile,
+      "--output",
+      outputPath,
+    ]);
+
+    expect(result.exitCode).toBe(2);
+    expect(result.stdout).toBe("");
+    expect(JSON.parse(result.stderr)).toMatchObject({
+      schemaVersion: "markdown-trace.graph-validation-result.v1",
+      status: "operational-error",
+      diagnostics: [{ stage: "document-read" }],
     });
     await expect(access(outputPath)).rejects.toThrow();
   });
@@ -262,6 +336,106 @@ describe("graph-validate CLI", () => {
       expect(await readFile(documentPath, "utf8")).toBe(originalDocument);
       expect(await readFile(profilePath, "utf8")).toBe(originalProfile);
     }
+
+    const documentHardLink = path.join(temporaryDirectory, "document-hard-link.md");
+    await link(documentPath, documentHardLink);
+    const hardLinkResult = await runCli([
+      "graph-validate",
+      "--file",
+      documentPath,
+      "--profile",
+      profilePath,
+      "--output",
+      documentHardLink,
+    ]);
+
+    expect(hardLinkResult.exitCode).toBe(2);
+    expect(hardLinkResult.stdout).toBe("");
+    expect(hardLinkResult.stderr).toContain(
+      "graph-validate output path aliases input path",
+    );
+    expect(await readFile(documentPath, "utf8")).toBe(originalDocument);
+    expect(await readFile(documentHardLink, "utf8")).toBe(originalDocument);
+    expect(await readFile(profilePath, "utf8")).toBe(originalProfile);
+  });
+
+  it("preserves a prior destination and suppresses stdout when persistence fails", async () => {
+    const temporaryDirectory = await createTemporaryDirectory();
+    const outputPath = path.join(temporaryDirectory, "graph-validation.json");
+    const priorOutput = "prior destination bytes\n";
+    await writeFile(outputPath, priorOutput, "utf8");
+    await chmod(temporaryDirectory, 0o500);
+
+    let result: Awaited<ReturnType<typeof runCli>>;
+
+    try {
+      result = await runCli([
+        "graph-validate",
+        "--file",
+        positiveDocument,
+        "--profile",
+        validProfile,
+        "--output",
+        outputPath,
+      ]);
+    } finally {
+      await chmod(temporaryDirectory, 0o700);
+    }
+
+    expect(result.exitCode).toBe(2);
+    expect(result.stdout).toBe("");
+    expect(result.stderr).not.toContain(
+      '"schemaVersion":"markdown-trace.graph-validation-result.v1"',
+    );
+    expect(() => JSON.parse(result.stderr)).toThrow();
+    expect(await readFile(outputPath, "utf8")).toBe(priorOutput);
+    expect(await readdir(temporaryDirectory)).toEqual(["graph-validation.json"]);
+  });
+
+  it("routes output-directory failures as human-readable transport errors", async () => {
+    const temporaryDirectory = await createTemporaryDirectory();
+    const blockingPath = path.join(temporaryDirectory, "not-a-directory");
+    await writeFile(blockingPath, "blocking file", "utf8");
+    const result = await runCli([
+      "graph-validate",
+      "--file",
+      positiveDocument,
+      "--profile",
+      validProfile,
+      "--output",
+      path.join(blockingPath, "graph-validation.json"),
+    ]);
+
+    expect(result.exitCode).toBe(2);
+    expect(result.stdout).toBe("");
+    expect(() => JSON.parse(result.stderr)).toThrow();
+    expect(await readFile(blockingPath, "utf8")).toBe("blocking file");
+  });
+
+  it("routes missing flags and unsupported options as invocation prose", async () => {
+    const missingFlag = await runCli([
+      "graph-validate",
+      "--file",
+      positiveDocument,
+    ]);
+    const unsupportedOption = await runCli([
+      "graph-validate",
+      "--file",
+      positiveDocument,
+      "--profile",
+      validProfile,
+      "--unexpected",
+      "value",
+    ]);
+
+    for (const result of [missingFlag, unsupportedOption]) {
+      expect(result.exitCode).toBe(2);
+      expect(result.stdout).toBe("");
+      expect(() => JSON.parse(result.stderr)).toThrow();
+    }
+
+    expect(missingFlag.stderr).toContain("Usage: markdown-trace");
+    expect(unsupportedOption.stderr).toBe("unknown argument --unexpected\n");
   });
 
   it("rejects formats that are not yet part of the command contract", async () => {
@@ -283,7 +457,11 @@ describe("graph-validate CLI", () => {
   });
 });
 
-async function runCli(args: readonly string[]): Promise<{
+interface RunCliOptions {
+  readonly onStdout?: (text: string) => void;
+}
+
+async function runCli(args: readonly string[], options: RunCliOptions = {}): Promise<{
   readonly exitCode: number;
   readonly stdout: string;
   readonly stderr: string;
@@ -292,7 +470,10 @@ async function runCli(args: readonly string[]): Promise<{
   const stderr: string[] = [];
   const exitCode = await main([...args], {
     cwd: repoRoot,
-    stdout: (text) => stdout.push(text),
+    stdout: (text) => {
+      options.onStdout?.(text);
+      stdout.push(text);
+    },
     stderr: (text) => stderr.push(text),
   });
 
