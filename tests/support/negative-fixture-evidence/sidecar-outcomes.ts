@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 
 import { expect } from "vitest";
 
+import { MARKDOWN_ENGINE_PACKAGE_VERSION } from "../../../src/markdowntrace/generated/release-metadata.js";
 import { scanMarkdown } from "../../../src/markdowntrace/markdown/index.js";
 import { EntityRegistry } from "../../../src/markdowntrace/registry/index.js";
 import { validate, type ValidationFinding } from "../../../src/markdowntrace/validation/index.js";
@@ -147,7 +148,7 @@ async function validateDocumentText(
       const result = validate(registry, adapterFacts);
 
       expect(result.valid).toBe(false);
-      expect(result.metadata.enginePackage.version).toBe("2.0.0");
+      expect(result.metadata.enginePackage.version).toBe(MARKDOWN_ENGINE_PACKAGE_VERSION);
       expect(result.metadata.documentVersion).toBe("1.0.0");
 
       return { findings: result.findings };

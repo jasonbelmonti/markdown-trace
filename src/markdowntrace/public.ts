@@ -68,8 +68,8 @@ export interface GraphValidationProfileDescriptor {
 }
 
 export interface GraphValidationRuntimeMetadata {
-  readonly packageVersion: "0.1.0";
-  readonly markdownEngineVersion: "2.0.0";
+  readonly packageVersion: string;
+  readonly markdownEngineVersion: string;
   readonly runtimeVersion: string;
 }
 

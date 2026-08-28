@@ -10,7 +10,9 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "npm run generate:release-metadata --silent && tsc -p tsconfig.build.json",
+    "generate:release-metadata": "node scripts/generate-release-metadata.mjs",
+    "check:release-metadata": "node scripts/generate-release-metadata.mjs --check",
     "test": "vitest run \"--exclude=.worktrees/**\"",
     "typecheck": "tsc --noEmit",
     "ci:enforcement": "bash scripts/ci-enforcement.sh",

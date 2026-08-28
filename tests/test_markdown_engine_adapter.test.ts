@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
+import { MARKDOWN_ENGINE_PACKAGE_VERSION } from "../src/markdowntrace/generated/release-metadata.js";
 import { scanMarkdown } from "../src/markdowntrace/markdown/index.js";
 import { loadRegistry } from "../src/markdowntrace/registry/index.js";
 
@@ -21,7 +22,7 @@ describe("scanMarkdown", () => {
     expect(facts.metadata).toEqual({
       enginePackage: {
         name: "@jasonbelmonti/markdown-engine",
-        version: "2.0.0",
+        version: MARKDOWN_ENGINE_PACKAGE_VERSION,
       },
       documentVersion: "1.0.0",
       sourcePath: documentPath,
