@@ -1,8 +1,10 @@
 import type { SourceRange } from "@jasonbelmonti/markdown-engine";
 
+import { MARKDOWN_ENGINE_PACKAGE_VERSION } from "../generated/release-metadata.js";
+
 export const MARKDOWN_ENGINE_PACKAGE = {
   name: "@jasonbelmonti/markdown-engine",
-  version: "2.0.0",
+  version: MARKDOWN_ENGINE_PACKAGE_VERSION,
 } as const;
 
 export interface MarkdownAdapterMetadata {

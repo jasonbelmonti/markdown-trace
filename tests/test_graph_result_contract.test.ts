@@ -7,6 +7,10 @@ import { fileURLToPath } from "node:url";
 import { stringify } from "yaml";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import {
+  MARKDOWN_ENGINE_PACKAGE_VERSION,
+  MARKDOWN_TRACE_PACKAGE_VERSION,
+} from "../src/markdowntrace/generated/release-metadata.js";
 import { EXECUTION_SPEC_FIRST_SLICE_PROFILE } from "../src/markdowntrace/graph-profile/index.js";
 import type { GraphProfile } from "../src/markdowntrace/graph-profile/model.js";
 import {
@@ -86,6 +90,13 @@ type PublicContractClosure = {
   summary: GraphValidationSummary;
 };
 
+type Equal<Left, Right> =
+  (<Value>() => Value extends Left ? 1 : 2) extends <Value>() =>
+    Value extends Right ? 1 : 2
+    ? true
+    : false;
+type Expect<Value extends true> = Value;
+
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fixtureRoot = path.join(repoRoot, "fixtures/profile-aware-graph-validation");
 const positiveDocument = path.join(
@@ -120,12 +131,17 @@ describe("public graph-validation DTO and descriptor contract", () => {
     expect(publicSource).not.toContain("./graph-validation/model");
     expect(publicSource).not.toContain("./trace-evidence/");
     expect(publicSource).not.toContain("./graph-profile/");
+    expect(publicSource).not.toContain("./generated/");
   });
 
-  it("preserves baseline literal guarantees for existing DTO consumers", () => {
+  it("keeps public runtime version fields release-independent", () => {
+    const exactStringContract: [
+      Expect<Equal<GraphValidationRuntimeMetadata["packageVersion"], string>>,
+      Expect<Equal<GraphValidationRuntimeMetadata["markdownEngineVersion"], string>>,
+    ] = [true, true];
     const compileCompatibilityContract = (result: GraphValidationRunResult): void => {
-      const packageVersion: "0.1.0" = result.run.packageVersion;
-      const markdownEngineVersion: "2.0.0" = result.run.markdownEngineVersion;
+      const packageVersion: string = result.run.packageVersion;
+      const markdownEngineVersion: string = result.run.markdownEngineVersion;
 
       if (result.status === "operational-error") {
         const nodeCount: 0 = result.summary.nodes;
@@ -143,6 +159,7 @@ describe("public graph-validation DTO and descriptor contract", () => {
       void markdownEngineVersion;
     };
 
+    expect(exactStringContract).toEqual([true, true]);
     expect(compileCompatibilityContract).toBeTypeOf("function");
   });
 
@@ -163,6 +180,10 @@ describe("public graph-validation DTO and descriptor contract", () => {
       sourceSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
       profileSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
       traceEvidenceSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
+    });
+    expect(result.run).toMatchObject({
+      packageVersion: MARKDOWN_TRACE_PACKAGE_VERSION,
+      markdownEngineVersion: MARKDOWN_ENGINE_PACKAGE_VERSION,
     });
   });
 
@@ -310,8 +331,8 @@ describe("public graph-validation DTO and descriptor contract", () => {
       ...evidence,
       source: { ...evidence.source, path: "/another/location.md" },
       run: {
-        packageVersion: "0.1.0",
-        markdownEngineVersion: "2.0.0",
+        packageVersion: MARKDOWN_TRACE_PACKAGE_VERSION,
+        markdownEngineVersion: MARKDOWN_ENGINE_PACKAGE_VERSION,
         runtimeVersion: "another-runtime",
       },
       hashes: {
@@ -462,8 +483,8 @@ function minimalEvidence(): TraceEvidenceResult {
       sha256: "profile-hash",
     },
     run: {
-      packageVersion: "0.1.0",
-      markdownEngineVersion: "2.0.0",
+      packageVersion: MARKDOWN_TRACE_PACKAGE_VERSION,
+      markdownEngineVersion: MARKDOWN_ENGINE_PACKAGE_VERSION,
       runtimeVersion: "v22",
     },
     definitions: [

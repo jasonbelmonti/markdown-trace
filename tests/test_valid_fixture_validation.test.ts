@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
+import { MARKDOWN_ENGINE_PACKAGE_VERSION } from "../src/markdowntrace/generated/release-metadata.js";
 import { scanMarkdown } from "../src/markdowntrace/markdown/index.js";
 import { EntityRegistry, loadRegistry } from "../src/markdowntrace/registry/index.js";
 import { validate } from "../src/markdowntrace/validation/index.js";
@@ -34,7 +35,7 @@ describe("validate", () => {
       edgesResolved: registry.edges.length,
       findings: 0,
     });
-    expect(firstResult.metadata.enginePackage.version).toBe("2.0.0");
+    expect(firstResult.metadata.enginePackage.version).toBe(MARKDOWN_ENGINE_PACKAGE_VERSION);
     expect(firstResult.metadata.documentVersion).toBe("1.0.0");
   });
 

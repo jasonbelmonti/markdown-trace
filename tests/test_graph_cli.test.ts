@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
+import { MARKDOWN_TRACE_PACKAGE_VERSION } from "../src/markdowntrace/generated/release-metadata.js";
 import {
   main,
   validateGraphDocument,
@@ -158,7 +159,7 @@ describe("graph-validate CLI", () => {
   it("reports the stable package version with no additional output", async () => {
     await expect(runCli(["--version"])).resolves.toEqual({
       exitCode: 0,
-      stdout: "0.1.0\n",
+      stdout: `${MARKDOWN_TRACE_PACKAGE_VERSION}\n`,
       stderr: "",
     });
   });
