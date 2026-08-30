@@ -27,7 +27,7 @@ The negative proof covers sidecar validation for missing registered definitions,
 | Document | `fixtures/r0-document-local-registry/execution-spec.md` |
 | Fixture family | `r0-document-local-registry` |
 | Registry version | `markdown-trace.r0.document-local-registry.v0` |
-| Markdown Engine package | `@jasonbelmonti/markdown-engine@2.0.0` |
+| Markdown Engine package | `@jasonbelmonti/markdown-engine@3.5.0` |
 | Document contract version | `1.0.0` |
 
 ## Variant Results

@@ -14,7 +14,7 @@ This local-safety proof covers the selected MS-2 command paths: sidecar validati
 | --- | --- |
 | Registry | `fixtures/r0-document-local-registry/entity-registry.yaml` |
 | Document | `fixtures/r0-document-local-registry/execution-spec.md` |
-| Markdown Engine package | `@jasonbelmonti/markdown-engine@2.0.0` |
+| Markdown Engine package | `@jasonbelmonti/markdown-engine@3.5.0` |
 | Document contract version | `1.0.0` |
 
 ## Safety Results
