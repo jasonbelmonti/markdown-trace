@@ -15,7 +15,7 @@ The fixture document contains the Linear-style issue key `BEL-858` as source con
 | Registry | `fixtures/r0-document-local-registry/entity-registry.yaml` |
 | Document | `fixtures/r0-document-local-registry/execution-spec.md` |
 | Registry version | `markdown-trace.r0.document-local-registry.v0` |
-| Markdown Engine package | `@jasonbelmonti/markdown-engine@2.0.0` |
+| Markdown Engine package | `@jasonbelmonti/markdown-engine@3.5.0` |
 | Document contract version | `1.0.0` |
 
 ## Collision Results

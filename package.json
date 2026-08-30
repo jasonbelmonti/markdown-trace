@@ -21,7 +21,7 @@
     "migration:check": "npm run build --silent && node dist/markdowntrace/cli.js migration-check --document fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md --manual-registry fixtures/r1-link-backed-entity-syntax/minimal-link-backed-manual-registry.yaml --type-profile fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml"
   },
   "dependencies": {
-    "@jasonbelmonti/markdown-engine": "2.0.0",
+    "@jasonbelmonti/markdown-engine": "3.5.0",
     "yaml": "^2.8.3"
   },
   "devDependencies": {

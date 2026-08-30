@@ -14,12 +14,12 @@ This repeat proof covers both selected MS-2 command paths: sidecar validation th
 | --- | --- |
 | Registry | `fixtures/r0-document-local-registry/entity-registry.yaml` |
 | Document | `fixtures/r0-document-local-registry/execution-spec.md` |
-| Markdown Engine package | `@jasonbelmonti/markdown-engine@2.0.0` |
+| Markdown Engine package | `@jasonbelmonti/markdown-engine@3.5.0` |
 | Document contract version | `1.0.0` |
 
 ## Repeat Results
 
 | Command path | Command | Covered surface | Run exit codes | Ordered stdout hashes | Identical ordered output |
 | --- | --- | --- | --- | --- | --- |
-| sidecar validation | `markdown-trace validate --registry fixtures/r0-document-local-registry/entity-registry.yaml --document fixtures/r0-document-local-registry/execution-spec.md` | sidecar validation | `0`, `0`, `0` | `7427c8ffabb57596142c4f3b57bc4f269e73eaa649d87b333cf66a735cb7a93d`<br>`7427c8ffabb57596142c4f3b57bc4f269e73eaa649d87b333cf66a735cb7a93d`<br>`7427c8ffabb57596142c4f3b57bc4f269e73eaa649d87b333cf66a735cb7a93d` | `YES` |
+| sidecar validation | `markdown-trace validate --registry fixtures/r0-document-local-registry/entity-registry.yaml --document fixtures/r0-document-local-registry/execution-spec.md` | sidecar validation | `0`, `0`, `0` | `4d659f6a1671ef948740c441a6b0cdf71ba1b3d9490d57f4291d8c72dffeba32`<br>`4d659f6a1671ef948740c441a6b0cdf71ba1b3d9490d57f4291d8c72dffeba32`<br>`4d659f6a1671ef948740c441a6b0cdf71ba1b3d9490d57f4291d8c72dffeba32` | `YES` |
 | derived registry generation | `markdown-trace derive --document fixtures/r0-document-local-registry/execution-spec.md --namespace exec` | derived registry generation | `0`, `0`, `0` | `281044204f256bcb21124f7f129af007f19d4b05fea29b6ace1c1b04e482feca`<br>`281044204f256bcb21124f7f129af007f19d4b05fea29b6ace1c1b04e482feca`<br>`281044204f256bcb21124f7f129af007f19d4b05fea29b6ace1c1b04e482feca` | `YES` |
