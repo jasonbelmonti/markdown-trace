@@ -19,7 +19,7 @@ const scriptPath = fileURLToPath(import.meta.url);
 const repositoryRoot = path.resolve(path.dirname(scriptPath), "..");
 const consumerFixture = path.join(
   repositoryRoot,
-  "tests/fixtures/public-package/consumer.ts",
+  "tests/fixtures/public-package/consumer.ts.fixture",
 );
 const passingDocument = path.join(
   repositoryRoot,
