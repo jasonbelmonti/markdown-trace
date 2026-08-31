@@ -1,8 +1,20 @@
 {
-  "name": "markdown-trace",
+  "name": "@jasonbelmonti/markdown-trace",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
+  "sideEffects": false,
+  "types": "./dist/markdowntrace/public.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/markdowntrace/public.d.ts",
+      "import": "./dist/markdowntrace/public.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "bin": {
     "markdown-trace": "./dist/markdowntrace/cli.js"
   },
@@ -11,6 +23,7 @@
   },
   "scripts": {
     "build": "npm run generate:release-metadata --silent && tsc -p tsconfig.build.json",
+    "check:package-exports": "node scripts/check-package-exports.mjs",
     "generate:release-metadata": "node scripts/generate-release-metadata.mjs",
     "check:release-metadata": "node scripts/generate-release-metadata.mjs --check",
     "test": "vitest run \"--exclude=.worktrees/**\"",
