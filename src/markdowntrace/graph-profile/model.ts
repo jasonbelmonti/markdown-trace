@@ -1,3 +1,5 @@
+// Existing v1 table-profile contract. Its closed vocabulary is a compatibility
+// boundary, not the intended domain vocabulary of the future document graph.
 export const GRAPH_PROFILE_SCHEMA_VERSION = "markdown-trace.graph-profile.v1";
 
 export const GRAPH_ARTIFACT_FAMILIES = Object.freeze([
