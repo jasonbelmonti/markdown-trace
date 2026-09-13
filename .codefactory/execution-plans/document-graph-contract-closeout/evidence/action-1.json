@@ -10,7 +10,7 @@
     "file": ".codefactory/execution-plans/document-graph-contract-closeout/execution-plan.md",
     "sha256": "dc0b178d6f3d7069675be0d99bdb148974ccd6683b3fc6909febc716721ca220",
     "routeRevisionRequired": false,
-    "reason": "EP-SRC-3 revision 2 to revision 3 is the expected output of EP-ACT-1. Controlling task, overview and operating manual are unchanged; no outcome, scope, proof obligation or approval boundary changed."
+    "reason": "Packet revision 2 to 3 records EP-ACT-1 output; revision 4 repairs F1/F2 under the subsequent owner request. These are expected recommendation progress. The controlling task, overview, operating manual and prospective route remain unchanged; full corpus proof is still required."
   },
   "sources": [
     {
@@ -33,33 +33,33 @@
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.md",
-      "sha256": "84c2394df01dc8474bd41a535c7cae594af50baa1ff1add5fc6997c8023852de",
+      "sha256": "567ba9152edc78c0d2d18101677cc17eb2cf346c623de5cbf4cf7465cf81abd5",
       "beforeSha256": "b99969954c79843b4995cd10393a7e2cc2734cb96da204b0e8f77277b8c91e3f",
-      "disposition": "expected EP-ACT-1 authoring progress"
+      "disposition": "expected EP-ACT-1 output and authorized PR review remediation"
     },
     {
       "file": "docs/design/document-graph-api/examples/cases.md",
-      "sha256": "1d7a568161a64a29ce2ea517a0b71aa694353132225fd1d8c71b9e79b2e443e8",
+      "sha256": "b97d553eb6bac2fe6f71a363d0532a471e541c1e3ccc68f0cd3556a5097111bd",
       "beforeSha256": "6f75aed0331cf6059b1d96f124c90d6fc0d0b07bc9ea5e89f084eee490a092ba",
-      "disposition": "expected EP-ACT-1 authoring progress"
+      "disposition": "expected EP-ACT-1 output and authorized PR review remediation"
     },
     {
       "file": "docs/design/document-graph-api/validation.json",
-      "sha256": "51643029b05822d8cf7b3c123a165c59c1853dae9b90393e1b5d4e2f7b0f6906",
+      "sha256": "f9efd5eee39da304da3e165add5137333b862b0b049cf23aa12fbc253733e3ab",
       "beforeSha256": "bd1de920a92d3f360b7e1233ce229d93458eb87ed94ac15b7f3ff2316aab65e2",
-      "disposition": "expected EP-ACT-1 authoring progress"
+      "disposition": "expected EP-ACT-1 output and authorized PR review remediation"
     }
   ],
   "completed": [
     "Eight lexical and seven ownership recommendations, including exact source spelling, brace shielding, malformed recovery, literal handling and container exits.",
-    "48 exact Markdown examples with independently authored interpretations and complete rule-to-case index.",
+    "54 exact Markdown examples with independently authored interpretations and complete rule-to-case index; focused three-scenario ambiguous-context oracle.",
     "Language errors fail validation while unsupported parser coverage alone is indeterminate; invalid facts remain queryable."
   ],
   "checks": {
     "languageIndex": {
       "status": "pass",
       "ruleCount": 15,
-      "caseCount": 48
+      "caseCount": 54
     },
     "structure": {
       "valid": true,
@@ -68,25 +68,16 @@
     },
     "parser": {
       "status": "pass",
-      "caseCount": 48,
-      "verifiedRawSlices": 244
+      "caseCount": 54,
+      "verifiedRawSlices": 272
     },
     "reusedEvidence": {
       "checks": [
-        "declarations",
         "initial mixed-layout ledger",
         "initial parser probe"
       ],
       "originalValidatedAt": "2026-09-13T14:01:09.477Z",
       "verifiedUnchangedArtifacts": [
-        {
-          "file": "docs/README.md",
-          "sha256": "99c92a244ba40d6a1bedd2dd6421c50cc214cb26bb9fc02c36d59aa1837a0ae5"
-        },
-        {
-          "file": "docs/design/document-graph-api/README.md",
-          "sha256": "92a03ed6bee9fdf3ea275aac7208c136d27d1efb4f5779fcac131d1f3d245702"
-        },
         {
           "file": "docs/design/document-graph-api/checks/check-examples.mjs",
           "sha256": "5414b28e3c677db292d0b31e941840bfa0fd5bf6c323f477ffb786a65189c2f4"
@@ -96,86 +87,72 @@
           "sha256": "4b53dc6b71b37370dc035a92c7e3f035fe0563cbf3b66603e359c5025a52b67b"
         },
         {
-          "file": "docs/design/document-graph-api/contracts/analysis.d.ts",
-          "sha256": "03aeddcafa0401dc855941c56ce74b0e9eda92ce5cb590c49d8dde4491e54622"
-        },
-        {
-          "file": "docs/design/document-graph-api/contracts/context.d.ts",
-          "sha256": "bdbd8a10c35a8e042c30563b69452c331bdb27f24f917193e3e941b8c5cfe440"
-        },
-        {
-          "file": "docs/design/document-graph-api/contracts/index.d.ts",
-          "sha256": "342c2da2f11979346710c87c7ba44259529b57a8ac9e49edb730dfa4fd885adb"
-        },
-        {
-          "file": "docs/design/document-graph-api/contracts/profile.d.ts",
-          "sha256": "665c90f5c3224f37deb33f0411d38dba9f7013033301817313ed8bf284a6118b"
-        },
-        {
-          "file": "docs/design/document-graph-api/contracts/query.d.ts",
-          "sha256": "621d34688871136dd2da4ab0eee2b9ff2b8534185d4f60f948454e41b35b04c0"
-        },
-        {
-          "file": "docs/design/document-graph-api/contracts/source.d.ts",
-          "sha256": "cd0dda4bcc36f71aba9733dd7b14530feb536e2155c40d700b3d170cd4159675"
-        },
-        {
-          "file": "docs/design/document-graph-api/contracts/validation.d.ts",
-          "sha256": "e75c128bf023791aae522eb54b08a1fa656ea14d693b4d2034e69420132397f0"
-        },
-        {
-          "file": "docs/design/document-graph-api/examples/consumer.ts",
-          "sha256": "df1ef9e15510b35300c850eb3005dac29c05775e21cc28666777c465a6b522a1"
-        },
-        {
-          "file": "docs/design/document-graph-api/examples/expectations.json",
-          "sha256": "95ab794b366ce8f5898242a1195edbfc1c0606d00278b5819856c5576e62ebbe"
-        },
-        {
           "file": "docs/design/document-graph-api/examples/mixed-layout.md",
           "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"
         },
         {
-          "file": "docs/design/document-graph-api/examples/profile.ts",
-          "sha256": "49e84106681eea7bb1e086df79df2a27f2254d46acc6a53e211122aa7a4b2ab7"
-        },
-        {
-          "file": "docs/design/document-graph-api/examples/source-inventory.json",
-          "sha256": "6bcce5823d0c56c2b459cf5afee6cadd9ef867739242c1370802bdd867503584"
-        },
-        {
-          "file": "docs/design/document-graph-api/tsconfig.json",
-          "sha256": "937d7a0bf083605c526bbcf216d0f2254753ed97e2422a3d33330138df5e4043"
+          "file": "docs/design/document-graph-api/examples/expectations.json",
+          "sha256": "95ab794b366ce8f5898242a1195edbfc1c0606d00278b5819856c5576e62ebbe"
         }
-      ]
+      ],
+      "lockSha256": "26e452e55dcf64866f840fbdc732c24522ea54508d90e8bef0bc3d25c9ee1cb0",
+      "versions": {
+        "node": "v22.20.0",
+        "parser": "3.5.0",
+        "typescript": "6.0.3",
+        "structuralValidator": "3.6.0"
+      }
     },
-    "productionSurfacesChanged": false
+    "productionSurfacesChanged": false,
+    "declarations": {
+      "command": "./node_modules/.bin/tsc -p docs/design/document-graph-api/tsconfig.json",
+      "exitCode": 0,
+      "checkedAt": "2026-09-13T17:05:20.528Z",
+      "scope": "Fresh strict typecheck of changed declarations and consumer example; no API executed."
+    },
+    "contextOracle": {
+      "status": "pass",
+      "scenarioCount": 3,
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/review-context.json"
+    }
   },
   "reviewNotes": [
-    "Removed an erroneous LEX-7 membership from the HTML-block case after exact rule-index comparison found it.",
-    "The link feasibility assertion uses the public Engine attributes.title field; the original fixture title was already correct.",
-    "No independent language reviewer or complete graph/coordinate oracle was run."
+    "F1/F2 were independently reproduced in the prior PR review. The current repair has supporting declaration, index, oracle, parser and structural checks.",
+    "A one-off parser assertion initially used the wrong expected LANG-10 title; reading its unchanged fixture established REQ-3. Corrected only that assertion and reran the check successfully.",
+    "Full paired graph/coordinate expectations and EP-GATE-1 remain outstanding; the PR re-review is not that corpus gate."
   ],
   "artifacts": [
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.md",
-      "sha256": "84c2394df01dc8474bd41a535c7cae594af50baa1ff1add5fc6997c8023852de"
+      "sha256": "567ba9152edc78c0d2d18101677cc17eb2cf346c623de5cbf4cf7465cf81abd5"
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.sha256",
-      "sha256": "6dd9ea02c459fd3b8715fd54e5c0e5ee112cdcb1977bd0810a785dd56829a0ca"
+      "sha256": "259fd974ccf4d30414dbf45cbf20b2d246c589fc8dd392e97ac644fcdc5daca2"
     },
     {
       "file": "docs/design/document-graph-api/examples/cases.md",
-      "sha256": "1d7a568161a64a29ce2ea517a0b71aa694353132225fd1d8c71b9e79b2e443e8"
+      "sha256": "b97d553eb6bac2fe6f71a363d0532a471e541c1e3ccc68f0cd3556a5097111bd"
     },
     {
       "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
-      "sha256": "87193f09d311812413638948a70ed201ad53fff66d6e8d0f7d5a38154828890e"
+      "sha256": "ee49deb63cbd089411a5c8ea9138481fb37e78618856ddafb5ba6b90c381970c"
     },
     {
       "file": "docs/design/document-graph-api/validation.json",
-      "sha256": "51643029b05822d8cf7b3c123a165c59c1853dae9b90393e1b5d4e2f7b0f6906"
+      "sha256": "f9efd5eee39da304da3e165add5137333b862b0b049cf23aa12fbc253733e3ab"
+    },
+    {
+      "file": "docs/design/document-graph-api/contracts/context.d.ts",
+      "sha256": "3a4e94e011451e25974c47f0fe05f029b0247370bd643c1d58be2565706bbbf3"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/consumer.ts",
+      "sha256": "6cbcf300036fefd013b03032534adfd6a35d307ffbb723bd6537781da7289e99"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/ambiguous-context.json",
+      "sha256": "20d74beadcfdd964105a0990b9cdfa39d98ce718de7d3aac459b2170d580bece"
     }
   ],
   "evidenceFiles": [
@@ -185,15 +162,19 @@
     },
     {
       "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-1-index.json",
-      "sha256": "780abc0656c72215141f05098e240c3a1efbf1261070c9d9fa7f0b3ff56bd8c2"
+      "sha256": "df7f3219ae95cc94d66ee1a573c24b6cb3ee0be97f58c7efdc34b0e3854ee4ca"
     },
     {
       "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-1-parser.json",
-      "sha256": "12ce6acee5ac005b1908da4b1f009eb179ccef1f97fdb870099dd6245bfe1e43"
+      "sha256": "172103e2114f708fcbab4672cc3ce8c0c8cc14034ebc908f8cbcbb8f9fcf3a2a"
     },
     {
       "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-1-structure.json",
-      "sha256": "727f9596ce5e261a5653380059f5fdd670f60969fda03df30e71cd052244c875"
+      "sha256": "0ab59e8ecec5e2e0fec73ec106aa631e1c106b29a43103b8e7290add2dbad02e"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/review-context.json",
+      "sha256": "c363fb2adf479ab3f0137082ace74be25a491f1fa1a90f50c2b8f3296f19e509"
     }
   ],
   "nextAction": "EP-ACT-2: materialize paired Markdown/expected-JSON fixtures with independently annotated occurrences, owners, diagnostics and source coordinates.",
@@ -203,5 +184,16 @@
     "Q-1 authoring-language selection and Q-2 authoring-fit/full-corpus proof",
     "Q-3 package-surface acceptance before public exports; Q-4 later pilot evidence"
   ],
-  "runtimeReadiness": "Production implementation prerequisites remain BLOCKED. Recording recommendations completes this action; it does not approve the language or satisfy the corpus gates."
+  "runtimeReadiness": "Production implementation prerequisites remain BLOCKED. Recording recommendations completes this action; it does not approve the language or satisfy the corpus gates.",
+  "updatedAt": "2026-09-13T17:05:20.528Z",
+  "reviewRemediation": {
+    "instruction": "lets fix these issues and review again",
+    "baseline": "712767680596f5dd8bf9ce4a8a73b67048073a9b",
+    "revision": "4",
+    "changes": [
+      "F1: formatting-transparent raw-text classification diagnoses malformed marker prefixes without relaxing exact-source recognition.",
+      "F2: typed ambiguous-ownership context omission with source range and candidate declaration IDs; whole-entity omission precedes budgets."
+    ],
+    "scope": "Repair recommendation and regression examples; no owner syntax selection, production implementation or full-corpus gate completion."
+  }
 }

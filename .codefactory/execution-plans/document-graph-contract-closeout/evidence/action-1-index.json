@@ -1,10 +1,10 @@
 {
   "status": "pass",
-  "checkedAt": "2026-09-13T14:54:52.128Z",
-  "procedure": "Parse the JSON index; require 48 sequential unique case IDs, 15 unique packet rule rows, nonempty Markdown and interpretation per case, valid rule references, and exact agreement between expanded cases.md ranges and manifest case-to-rule membership.",
+  "checkedAt": "2026-09-13T17:04:09.637Z",
+  "procedure": "Parse the JSON index; require 54 sequential unique case IDs, 15 unique packet rule rows, nonempty Markdown and interpretation per case, valid rule references, and exact agreement between expanded cases.md ranges and manifest case-to-rule membership.",
   "scope": "Index shape, named-rule coverage, and cases.md mapping only; no expected graph or language semantics computed",
   "ruleCount": 15,
-  "caseCount": 48,
+  "caseCount": 54,
   "coverage": {
     "LEX-1": [
       "LANG-01",
@@ -15,7 +15,8 @@
     ],
     "LEX-2": [
       "LANG-05",
-      "LANG-06"
+      "LANG-06",
+      "LANG-53"
     ],
     "LEX-3": [
       "LANG-07",
@@ -28,7 +29,8 @@
       "LANG-11",
       "LANG-12",
       "LANG-13",
-      "LANG-46"
+      "LANG-46",
+      "LANG-53"
     ],
     "LEX-5": [
       "LANG-14",
@@ -38,7 +40,11 @@
       "LANG-18",
       "LANG-19",
       "LANG-29",
-      "LANG-30"
+      "LANG-30",
+      "LANG-49",
+      "LANG-50",
+      "LANG-51",
+      "LANG-52"
     ],
     "LEX-6": [
       "LANG-20",
@@ -58,7 +64,11 @@
       "LANG-18",
       "LANG-29",
       "LANG-30",
-      "LANG-45"
+      "LANG-45",
+      "LANG-49",
+      "LANG-50",
+      "LANG-51",
+      "LANG-52"
     ],
     "OWN-1": [
       "LANG-01",
@@ -85,7 +95,8 @@
     "OWN-5": [
       "LANG-41",
       "LANG-42",
-      "LANG-43"
+      "LANG-43",
+      "LANG-54"
     ],
     "OWN-6": [
       "LANG-33",
@@ -96,21 +107,22 @@
     ],
     "OWN-7": [
       "LANG-26",
-      "LANG-44"
+      "LANG-44",
+      "LANG-54"
     ]
   },
   "inputs": [
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.md",
-      "sha256": "84c2394df01dc8474bd41a535c7cae594af50baa1ff1add5fc6997c8023852de"
+      "sha256": "567ba9152edc78c0d2d18101677cc17eb2cf346c623de5cbf4cf7465cf81abd5"
     },
     {
       "file": "docs/design/document-graph-api/examples/cases.md",
-      "sha256": "1d7a568161a64a29ce2ea517a0b71aa694353132225fd1d8c71b9e79b2e443e8"
+      "sha256": "b97d553eb6bac2fe6f71a363d0532a471e541c1e3ccc68f0cd3556a5097111bd"
     },
     {
       "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
-      "sha256": "87193f09d311812413638948a70ed201ad53fff66d6e8d0f7d5a38154828890e"
+      "sha256": "ee49deb63cbd089411a5c8ea9138481fb37e78618856ddafb5ba6b90c381970c"
     }
   ]
 }

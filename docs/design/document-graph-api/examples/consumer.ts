@@ -32,5 +32,10 @@ export function inspectSpec(markdown: string) {
     ? backlinks.value.items.map(({ occurrence }) => occurrence.range)
     : [];
   const inclusionPaths = context.ok ? context.value.selection.nodes : [];
-  return { validation, definition, backlinks, dependencies, context, referenceLocations, inclusionPaths };
+  const ownershipOmissions = context.ok
+    ? context.value.omittedIdentifiers.flatMap(omission => omission.reason === "ambiguous-ownership"
+      ? [{ identifier: omission.identifier, range: omission.sourceRange, declarations: omission.declarationIds }]
+      : [])
+    : [];
+  return { validation, definition, backlinks, dependencies, context, referenceLocations, inclusionPaths, ownershipOmissions };
 }

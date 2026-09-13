@@ -1,7 +1,7 @@
 {
   "schemaVersion": "markdown-trace.design-language-cases.v1",
   "language": "markdown-trace.identity.draft1",
-  "provenance": "EP-ACT-1: source examples and expected interpretations authored independently of an extractor. Full source-range/graph/query/context oracle files are EP-ACT-2 outputs.",
+  "provenance": "EP-ACT-1 plus PR #75 F1/F2 remediation: source examples and expected interpretations authored independently of an extractor. Full corpus source-range/graph/query/context expectations remain EP-ACT-2 outputs; the focused ambiguous-context oracle accompanies the review fix.",
   "decisionStatus": "maintainer-recommendation; owner syntax selection not recorded",
   "fixtureStatus": "interpretations-authored; paired-fixtures-not-yet-materialized",
   "ruleSource": "docs/design/markdown-trace-document-graph-interfaces.md#5-materialized-contracts",
@@ -403,6 +403,60 @@
       ],
       "markdown": "> # {#WP-1} Inside quote\n>\n> REQ-1.\n\nREQ-2.\n",
       "expectedInterpretation": "REQ-1 belongs to the quote-contained heading owner; scope does not escape the quote, so REQ-2 is unowned."
+    },
+    {
+      "id": "LANG-49",
+      "rules": [
+        "LEX-5",
+        "LEX-8"
+      ],
+      "markdown": "{#WP-1} {**implements**:REQ-1}.\n\n{#REQ-1} Requirement.\n",
+      "expectedInterpretation": "Two definitions; no relationship. Formatting-transparent raw-text classification recognizes a marker-like prefix; exact raw recognition fails. One malformed-expression error, partial coverage and validation fail, even under a profile with no required relationships."
+    },
+    {
+      "id": "LANG-50",
+      "rules": [
+        "LEX-5",
+        "LEX-8"
+      ],
+      "markdown": "{#WP-1} {imple**ments**:REQ-1}.\n",
+      "expectedInterpretation": "The prefix may be assembled across transparent formatting only for diagnostic classification. One malformed-expression error; no REQ-1 occurrence or relationship."
+    },
+    {
+      "id": "LANG-51",
+      "rules": [
+        "LEX-5",
+        "LEX-8"
+      ],
+      "markdown": "{#WP-1} {**#**REQ-1}.\n",
+      "expectedInterpretation": "Formatting-transparent classification sees the declaration sigil; exact raw recognition fails. One malformed-expression error; no REQ-1 declaration or reference."
+    },
+    {
+      "id": "LANG-52",
+      "rules": [
+        "LEX-5",
+        "LEX-8"
+      ],
+      "markdown": "{#WP-1} {**note** REQ-1} {`implements`:REQ-2} {&#35;REQ-3}.\n",
+      "expectedInterpretation": "Only WP-1 is declared. All three other groups are ordinary literal groups without language errors: note has no colon, inline code is an opaque classification barrier, and encoded hash is not decoded. No inner REQ references leak."
+    },
+    {
+      "id": "LANG-53",
+      "rules": [
+        "LEX-2",
+        "LEX-4"
+      ],
+      "markdown": "{#WP-1} **{implements:REQ-1}**.\n",
+      "expectedInterpretation": "The complete marker occupies one original text leaf. Preserve one implements relationship to REQ-1 owned by WP-1; its occurrence range excludes the strong delimiters."
+    },
+    {
+      "id": "LANG-54",
+      "rules": [
+        "OWN-5",
+        "OWN-7"
+      ],
+      "markdown": "{#WP-1} {#WP-2} Shared text.\n",
+      "expectedInterpretation": "Both work labels have unique definitions. The paragraph owner is ambiguous; no reference is present, so this ambiguity alone does not change graph coverage or fail relationship integrity. Traversal may select either root. Context omits each selected candidate with ambiguous-ownership and the paragraph range/declaration IDs, before budget checks; it never calls the shared paragraph uniquely owned. See ../ambiguous-context.json."
     }
   ]
 }

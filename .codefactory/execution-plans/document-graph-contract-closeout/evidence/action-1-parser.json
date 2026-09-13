@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "checkedAt": "2026-09-13T14:57:27.309Z",
+  "checkedAt": "2026-09-13T17:04:09.637Z",
   "procedure": "Parse and normalize each manifest source through Markdown Engine public APIs; require no diagnostics and verify every located node raw text against its original offset range. Confirm LANG-10 is parsed as a link with its intended title.",
   "versions": {
     "node": "v22.20.0",
@@ -9,7 +9,7 @@
   "inputs": [
     {
       "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
-      "sha256": "87193f09d311812413638948a70ed201ad53fff66d6e8d0f7d5a38154828890e"
+      "sha256": "ee49deb63cbd089411a5c8ea9138481fb37e78618856ddafb5ba6b90c381970c"
     }
   ],
   "scope": "Parser/source feasibility only; no Trace recognition, ownership or expected graph computed",
@@ -481,6 +481,65 @@
       "kinds": [
         "blockquote",
         "heading",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-49",
+      "nodeCount": 7,
+      "verifiedRawSlices": 7,
+      "kinds": [
+        "paragraph",
+        "strong",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-50",
+      "nodeCount": 5,
+      "verifiedRawSlices": 5,
+      "kinds": [
+        "paragraph",
+        "strong",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-51",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-52",
+      "nodeCount": 7,
+      "verifiedRawSlices": 7,
+      "kinds": [
+        "inlineCode",
+        "paragraph",
+        "strong",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-53",
+      "nodeCount": 5,
+      "verifiedRawSlices": 5,
+      "kinds": [
+        "paragraph",
+        "strong",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-54",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
         "paragraph",
         "text"
       ]
