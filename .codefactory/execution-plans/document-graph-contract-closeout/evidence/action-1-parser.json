@@ -1,0 +1,489 @@
+{
+  "status": "pass",
+  "checkedAt": "2026-09-13T14:57:27.309Z",
+  "procedure": "Parse and normalize each manifest source through Markdown Engine public APIs; require no diagnostics and verify every located node raw text against its original offset range. Confirm LANG-10 is parsed as a link with its intended title.",
+  "versions": {
+    "node": "v22.20.0",
+    "parser": "3.5.0"
+  },
+  "inputs": [
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
+      "sha256": "87193f09d311812413638948a70ed201ad53fff66d6e8d0f7d5a38154828890e"
+    }
+  ],
+  "scope": "Parser/source feasibility only; no Trace recognition, ownership or expected graph computed",
+  "cases": [
+    {
+      "id": "LANG-01",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-02",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-03",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-04",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-05",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-06",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-07",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-08",
+      "nodeCount": 8,
+      "verifiedRawSlices": 8,
+      "kinds": [
+        "paragraph",
+        "strong",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-09",
+      "nodeCount": 5,
+      "verifiedRawSlices": 5,
+      "kinds": [
+        "paragraph",
+        "strong",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-10",
+      "nodeCount": 5,
+      "verifiedRawSlices": 5,
+      "kinds": [
+        "link",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-11",
+      "nodeCount": 7,
+      "verifiedRawSlices": 7,
+      "kinds": [
+        "image",
+        "link",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-12",
+      "nodeCount": 6,
+      "verifiedRawSlices": 6,
+      "kinds": [
+        "html",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-13",
+      "nodeCount": 1,
+      "verifiedRawSlices": 1,
+      "kinds": [
+        "html"
+      ]
+    },
+    {
+      "id": "LANG-14",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-15",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-16",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-17",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-18",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-19",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-20",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-21",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-22",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-23",
+      "nodeCount": 6,
+      "verifiedRawSlices": 6,
+      "kinds": [
+        "inlineCode",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-24",
+      "nodeCount": 6,
+      "verifiedRawSlices": 6,
+      "kinds": [
+        "inlineCode",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-25",
+      "nodeCount": 4,
+      "verifiedRawSlices": 4,
+      "kinds": [
+        "inlineCode",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-26",
+      "nodeCount": 3,
+      "verifiedRawSlices": 3,
+      "kinds": [
+        "code",
+        "heading",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-27",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-28",
+      "nodeCount": 4,
+      "verifiedRawSlices": 4,
+      "kinds": [
+        "heading",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-29",
+      "nodeCount": 5,
+      "verifiedRawSlices": 5,
+      "kinds": [
+        "paragraph",
+        "strong",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-30",
+      "nodeCount": 4,
+      "verifiedRawSlices": 4,
+      "kinds": [
+        "inlineCode",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-31",
+      "nodeCount": 4,
+      "verifiedRawSlices": 4,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-32",
+      "nodeCount": 8,
+      "verifiedRawSlices": 8,
+      "kinds": [
+        "heading",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-33",
+      "nodeCount": 10,
+      "verifiedRawSlices": 10,
+      "kinds": [
+        "heading",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-34",
+      "nodeCount": 7,
+      "verifiedRawSlices": 7,
+      "kinds": [
+        "list",
+        "listItem",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-35",
+      "nodeCount": 13,
+      "verifiedRawSlices": 13,
+      "kinds": [
+        "list",
+        "listItem",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-36",
+      "nodeCount": 8,
+      "verifiedRawSlices": 8,
+      "kinds": [
+        "list",
+        "listItem",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-37",
+      "nodeCount": 5,
+      "verifiedRawSlices": 5,
+      "kinds": [
+        "blockquote",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-38",
+      "nodeCount": 8,
+      "verifiedRawSlices": 8,
+      "kinds": [
+        "heading",
+        "list",
+        "listItem",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-39",
+      "nodeCount": 16,
+      "verifiedRawSlices": 16,
+      "kinds": [
+        "table",
+        "tableCell",
+        "tableRow",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-40",
+      "nodeCount": 11,
+      "verifiedRawSlices": 11,
+      "kinds": [
+        "table",
+        "tableCell",
+        "tableRow",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-41",
+      "nodeCount": 11,
+      "verifiedRawSlices": 11,
+      "kinds": [
+        "table",
+        "tableCell",
+        "tableRow",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-42",
+      "nodeCount": 4,
+      "verifiedRawSlices": 4,
+      "kinds": [
+        "heading",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-43",
+      "nodeCount": 2,
+      "verifiedRawSlices": 2,
+      "kinds": [
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-44",
+      "nodeCount": 8,
+      "verifiedRawSlices": 8,
+      "kinds": [
+        "heading",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-45",
+      "nodeCount": 15,
+      "verifiedRawSlices": 15,
+      "kinds": [
+        "table",
+        "tableCell",
+        "tableRow",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-46",
+      "nodeCount": 6,
+      "verifiedRawSlices": 6,
+      "kinds": [
+        "definition",
+        "linkReference",
+        "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-47",
+      "nodeCount": 3,
+      "verifiedRawSlices": 3,
+      "kinds": [
+        "code",
+        "heading",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-48",
+      "nodeCount": 7,
+      "verifiedRawSlices": 7,
+      "kinds": [
+        "blockquote",
+        "heading",
+        "paragraph",
+        "text"
+      ]
+    }
+  ]
+}

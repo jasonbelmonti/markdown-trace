@@ -1,0 +1,521 @@
+{
+  "validatedAt": "2026-09-13T14:57:27.840Z",
+  "implementationBaseline": "dce4ac19f8f25f4add7c38898e31934eb70de592",
+  "versions": {
+    "node": "v22.20.0",
+    "parser": "3.5.0",
+    "typescript": "6.0.3",
+    "structuralValidator": "3.6.0"
+  },
+  "profile": {
+    "skill": "interface-design",
+    "resource": "references/interface-design-validation-profile.yaml",
+    "rawSha256": "55bbfbe9a1f5adebdd47027e0cccaba9d6907199c9e8e94e01d82b1bcd247eec"
+  },
+  "hashes": "Artifact SHA-256 values identify raw file bytes. Engine inputHash/profileHash use the engine identity scheme.",
+  "productionSurfacesChanged": false,
+  "checks": {
+    "scope": "Design artifact, independent ledger consistency and parser feasibility checks only. The proposed API has no runtime implementation.",
+    "declarations": {
+      "command": "./node_modules/.bin/tsc -p docs/design/document-graph-api/tsconfig.json",
+      "exitCode": 0,
+      "reuse": {
+        "checkedAt": "2026-09-13T14:01:09.477Z",
+        "reusedAt": "2026-09-13T14:57:27.840Z",
+        "basis": "All previously recorded declaration/example/checker/config inputs remain byte-identical; locked dependency and installed Node/parser/TypeScript versions verified. This evidence does not cover the new language cases."
+      }
+    },
+    "examples": {
+      "command": "node docs/design/document-graph-api/checks/check-examples.mjs",
+      "status": "pass",
+      "identifiers": 6,
+      "occurrences": 10,
+      "relationships": 4,
+      "fragments": 10,
+      "contextUtf8Bytes": 169,
+      "scope": "Hand-authored ledger consistency only; no proposed API executed",
+      "reuse": {
+        "checkedAt": "2026-09-13T14:01:09.477Z",
+        "reusedAt": "2026-09-13T14:57:27.840Z",
+        "basis": "All previously recorded declaration/example/checker/config inputs remain byte-identical; locked dependency and installed Node/parser/TypeScript versions verified. This evidence does not cover the new language cases."
+      }
+    },
+    "parser": {
+      "command": "node docs/design/document-graph-api/checks/probe-engine.mjs",
+      "status": "pass",
+      "sourceSha256": "c34644f332d03feafc7397db388e57378c1eec662c9d96620a68921a81aecd90",
+      "sourceUtf8Bytes": 238,
+      "nodeCount": 29,
+      "verifiedRawSlices": 29,
+      "kinds": [
+        "blockquote",
+        "code",
+        "heading",
+        "inlineCode",
+        "list",
+        "listItem",
+        "paragraph",
+        "table",
+        "tableCell",
+        "tableRow",
+        "text"
+      ],
+      "diagnostics": [],
+      "scope": "Public parser nodes/raw slices only; no graph extraction executed",
+      "reuse": {
+        "checkedAt": "2026-09-13T14:01:09.477Z",
+        "reusedAt": "2026-09-13T14:57:27.840Z",
+        "basis": "All previously recorded declaration/example/checker/config inputs remain byte-identical; locked dependency and installed Node/parser/TypeScript versions verified. This evidence does not cover the new language cases."
+      }
+    },
+    "structure": {
+      "command": "/Users/jasonbelmonti/.local/bin/markdown-engine validate --file docs/design/markdown-trace-document-graph-interfaces.md --profile /Users/jasonbelmonti/.codex/skills/interface-design/references/interface-design-validation-profile.yaml --format json",
+      "valid": true,
+      "diagnostics": [],
+      "evidence": {
+        "diagnostics": [],
+        "engineVersion": "3.6.0",
+        "inputHash": "4e049eae9a32b321fde97f6a05d45c4d29b2d01a6390917111c9de88b9196a68",
+        "profileHash": "20e664060a8b483398cd055ba7f26259cbbf5eb99986ba2c7d6d2a521a6b777b",
+        "ruleResults": [
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "actors.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "boundary-map.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "capabilities.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "compatibility.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "contract-inventory.ids.unique"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "contract-inventory.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "contract.traceability.validation"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "document-control.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "domain-vocabulary.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "evaluation-findings.ids.unique"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "evaluation-findings.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "evidence.references.in-rubric"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "existing-interface-constraints.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "fault-contracts.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "findings.references.in-rubric"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "grounding-evidence.ids.unique"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "grounding-evidence.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "integration-strategy.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "internal-review.grounding-result.present"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "internal-review.readiness.present"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "internal-review.rubric-result.present"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "internal-review.validation-result.present"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "open-questions.ids.unique"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "open-questions.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "rubric-scores.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.0"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.1"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.10"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.11"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.2"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.3"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.3a"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.4"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.5"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.6"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.7"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.8"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "section.status.9"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "sections.required"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "source-requirements.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "traceability.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "validation-plan.ids.unique"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "validation-plan.table.columns"
+          },
+          {
+            "diagnostics": [],
+            "passed": true,
+            "ruleId": "validation.references.defined"
+          }
+        ],
+        "runtimeVersion": "v22.20.0"
+      }
+    },
+    "languageIndex": {
+      "status": "pass",
+      "checkedAt": "2026-09-13T14:54:52.128Z",
+      "procedure": "Parse the JSON index; require 48 sequential unique case IDs, 15 unique packet rule rows, nonempty Markdown and interpretation per case, valid rule references, and exact agreement between expanded cases.md ranges and manifest case-to-rule membership.",
+      "scope": "Index shape, named-rule coverage, and cases.md mapping only; no expected graph or language semantics computed",
+      "ruleCount": 15,
+      "caseCount": 48,
+      "coverage": {
+        "LEX-1": [
+          "LANG-01",
+          "LANG-02",
+          "LANG-03",
+          "LANG-04",
+          "LANG-09"
+        ],
+        "LEX-2": [
+          "LANG-05",
+          "LANG-06"
+        ],
+        "LEX-3": [
+          "LANG-07",
+          "LANG-08"
+        ],
+        "LEX-4": [
+          "LANG-08",
+          "LANG-09",
+          "LANG-10",
+          "LANG-11",
+          "LANG-12",
+          "LANG-13",
+          "LANG-46"
+        ],
+        "LEX-5": [
+          "LANG-14",
+          "LANG-15",
+          "LANG-16",
+          "LANG-17",
+          "LANG-18",
+          "LANG-19",
+          "LANG-29",
+          "LANG-30"
+        ],
+        "LEX-6": [
+          "LANG-20",
+          "LANG-21",
+          "LANG-22"
+        ],
+        "LEX-7": [
+          "LANG-23",
+          "LANG-24",
+          "LANG-25",
+          "LANG-26",
+          "LANG-27",
+          "LANG-28",
+          "LANG-47"
+        ],
+        "LEX-8": [
+          "LANG-18",
+          "LANG-29",
+          "LANG-30",
+          "LANG-45"
+        ],
+        "OWN-1": [
+          "LANG-01",
+          "LANG-05",
+          "LANG-31"
+        ],
+        "OWN-2": [
+          "LANG-32",
+          "LANG-33",
+          "LANG-38"
+        ],
+        "OWN-3": [
+          "LANG-34",
+          "LANG-35",
+          "LANG-36",
+          "LANG-37"
+        ],
+        "OWN-4": [
+          "LANG-39",
+          "LANG-40",
+          "LANG-41",
+          "LANG-45"
+        ],
+        "OWN-5": [
+          "LANG-41",
+          "LANG-42",
+          "LANG-43"
+        ],
+        "OWN-6": [
+          "LANG-33",
+          "LANG-35",
+          "LANG-36",
+          "LANG-38",
+          "LANG-48"
+        ],
+        "OWN-7": [
+          "LANG-26",
+          "LANG-44"
+        ]
+      },
+      "inputs": [
+        {
+          "file": "docs/design/markdown-trace-document-graph-interfaces.md",
+          "sha256": "84c2394df01dc8474bd41a535c7cae594af50baa1ff1add5fc6997c8023852de"
+        },
+        {
+          "file": "docs/design/document-graph-api/examples/cases.md",
+          "sha256": "1d7a568161a64a29ce2ea517a0b71aa694353132225fd1d8c71b9e79b2e443e8"
+        },
+        {
+          "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
+          "sha256": "87193f09d311812413638948a70ed201ad53fff66d6e8d0f7d5a38154828890e"
+        }
+      ]
+    },
+    "languageParser": {
+      "status": "pass",
+      "checkedAt": "2026-09-13T14:57:27.309Z",
+      "caseCount": 48,
+      "verifiedRawSlices": 244,
+      "scope": "Parser/source feasibility only; no Trace recognition, ownership or expected graph computed",
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-1-parser.json"
+    }
+  },
+  "artifacts": [
+    {
+      "file": "docs/README.md",
+      "sha256": "99c92a244ba40d6a1bedd2dd6421c50cc214cb26bb9fc02c36d59aa1837a0ae5"
+    },
+    {
+      "file": "docs/design/document-graph-api/README.md",
+      "sha256": "92a03ed6bee9fdf3ea275aac7208c136d27d1efb4f5779fcac131d1f3d245702"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/check-examples.mjs",
+      "sha256": "5414b28e3c677db292d0b31e941840bfa0fd5bf6c323f477ffb786a65189c2f4"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/probe-engine.mjs",
+      "sha256": "4b53dc6b71b37370dc035a92c7e3f035fe0563cbf3b66603e359c5025a52b67b"
+    },
+    {
+      "file": "docs/design/document-graph-api/contracts/analysis.d.ts",
+      "sha256": "03aeddcafa0401dc855941c56ce74b0e9eda92ce5cb590c49d8dde4491e54622"
+    },
+    {
+      "file": "docs/design/document-graph-api/contracts/context.d.ts",
+      "sha256": "bdbd8a10c35a8e042c30563b69452c331bdb27f24f917193e3e941b8c5cfe440"
+    },
+    {
+      "file": "docs/design/document-graph-api/contracts/index.d.ts",
+      "sha256": "342c2da2f11979346710c87c7ba44259529b57a8ac9e49edb730dfa4fd885adb"
+    },
+    {
+      "file": "docs/design/document-graph-api/contracts/profile.d.ts",
+      "sha256": "665c90f5c3224f37deb33f0411d38dba9f7013033301817313ed8bf284a6118b"
+    },
+    {
+      "file": "docs/design/document-graph-api/contracts/query.d.ts",
+      "sha256": "621d34688871136dd2da4ab0eee2b9ff2b8534185d4f60f948454e41b35b04c0"
+    },
+    {
+      "file": "docs/design/document-graph-api/contracts/source.d.ts",
+      "sha256": "cd0dda4bcc36f71aba9733dd7b14530feb536e2155c40d700b3d170cd4159675"
+    },
+    {
+      "file": "docs/design/document-graph-api/contracts/validation.d.ts",
+      "sha256": "e75c128bf023791aae522eb54b08a1fa656ea14d693b4d2034e69420132397f0"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/cases.md",
+      "sha256": "1d7a568161a64a29ce2ea517a0b71aa694353132225fd1d8c71b9e79b2e443e8"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/consumer.ts",
+      "sha256": "df1ef9e15510b35300c850eb3005dac29c05775e21cc28666777c465a6b522a1"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/expectations.json",
+      "sha256": "95ab794b366ce8f5898242a1195edbfc1c0606d00278b5819856c5576e62ebbe"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/mixed-layout.md",
+      "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/profile.ts",
+      "sha256": "49e84106681eea7bb1e086df79df2a27f2254d46acc6a53e211122aa7a4b2ab7"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/source-inventory.json",
+      "sha256": "6bcce5823d0c56c2b459cf5afee6cadd9ef867739242c1370802bdd867503584"
+    },
+    {
+      "file": "docs/design/document-graph-api/tsconfig.json",
+      "sha256": "937d7a0bf083605c526bbcf216d0f2254753ed97e2422a3d33330138df5e4043"
+    },
+    {
+      "file": "docs/design/markdown-trace-document-graph-interfaces.md",
+      "sha256": "84c2394df01dc8474bd41a535c7cae594af50baa1ff1add5fc6997c8023852de"
+    },
+    {
+      "file": "docs/design/markdown-trace-document-graph-interfaces.sha256",
+      "sha256": "6dd9ea02c459fd3b8715fd54e5c0e5ee112cdcb1977bd0810a785dd56829a0ca"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
+      "sha256": "87193f09d311812413638948a70ed201ad53fff66d6e8d0f7d5a38154828890e"
+    }
+  ],
+  "remainingGates": [
+    "Q-1/Q-2: owner authoring-language selection, paired lexical/ownership/fragment fixtures and independent interpretation before extraction; EP-ACT-1 recommendation and case index complete",
+    "Q-3: public export/schema review before implementation of the new package surface",
+    "Q-4: representative context oracle and measured scale targets before pilot/release claims"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "operation": "CREATE",
+  "state": "READY",
+  "revision": 1,
+  "validatedAt": "2026-09-13T14:29:48.278Z",
+  "baseline": "dce4ac19f8f25f4add7c38898e31934eb70de592",
+  "sourceContract": {
+    "file": "docs/tasks/document-graph-contract.md",
+    "sha256": "f9f7132321ed0e8664a0e4f906074e7302de8dfc03d5c94df39033e2a3e52057"
+  },
+  "plan": {
+    "file": ".codefactory/execution-plans/document-graph-contract-closeout/execution-plan.md",
+    "sha256": "dc0b178d6f3d7069675be0d99bdb148974ccd6683b3fc6909febc716721ca220"
+  },
+  "semanticAudit": "PASS: contract/corpus recommendation only",
+  "structural": {
+    "file": ".codefactory/execution-plans/document-graph-contract-closeout/structure-validation.json",
+    "sha256": "723f52f1d0aa093200fe05d8b924e19c92a41d736a06fb83f0807ea08ad00b5c",
+    "exitCode": 0,
+    "valid": true,
+    "engineVersion": "3.6.0",
+    "rules": 38,
+    "diagnostics": []
+  },
+  "route": {
+    "file": ".codefactory/execution-plans/document-graph-contract-closeout/route-validation.json",
+    "sha256": "58b28adaf7f01d2fa7b5f98b67d61ddd6067c3725d0950d210e03b2a35c2011b",
+    "exitCode": 0,
+    "valid": true,
+    "diagnostics": [],
+    "artifactType": "ExecutionPlan",
+    "phaseCount": 3,
+    "actionCount": 5,
+    "gateCount": 3,
+    "stepCount": 8,
+    "phaseOrder": [
+      "EP-PH-1",
+      "EP-PH-2",
+      "EP-PH-3"
+    ],
+    "routeOrder": [
+      "EP-ACT-1",
+      "EP-ACT-2",
+      "EP-GATE-1",
+      "EP-ACT-3",
+      "EP-ACT-4",
+      "EP-GATE-2",
+      "EP-ACT-5",
+      "EP-GATE-3"
+    ]
+  },
+  "implementationExecuted": false
+}

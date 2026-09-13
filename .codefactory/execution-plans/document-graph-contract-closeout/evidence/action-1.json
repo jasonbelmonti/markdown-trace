@@ -1,0 +1,207 @@
+{
+  "action": "EP-ACT-1",
+  "status": "complete-as-recommendation",
+  "recordedAt": "2026-09-13T14:57:27.840Z",
+  "instruction": "ok lets take the fist action - is that unblocking by recording decisions?",
+  "authorityDisposition": "Execute the first action. No explicit owner selection between marker and structural declaration languages has been received. The existing explicit-marker recommendation and credible alternative remain unapproved.",
+  "readFirst": "Read .codefactory/execution-plans/document-graph-contract-closeout/execution-plan.md and verify execution-plan.sha256; then read this record, the current API packet and its validation.json before dependent work.",
+  "baseline": "dce4ac19f8f25f4add7c38898e31934eb70de592",
+  "plan": {
+    "file": ".codefactory/execution-plans/document-graph-contract-closeout/execution-plan.md",
+    "sha256": "dc0b178d6f3d7069675be0d99bdb148974ccd6683b3fc6909febc716721ca220",
+    "routeRevisionRequired": false,
+    "reason": "EP-SRC-3 revision 2 to revision 3 is the expected output of EP-ACT-1. Controlling task, overview and operating manual are unchanged; no outcome, scope, proof obligation or approval boundary changed."
+  },
+  "sources": [
+    {
+      "file": "AGENTS.md",
+      "sha256": "77b026a173e0193e9d77b16a2682afdf282beaa211091671c741f4c7aa963755",
+      "beforeSha256": "77b026a173e0193e9d77b16a2682afdf282beaa211091671c741f4c7aa963755",
+      "disposition": "unchanged"
+    },
+    {
+      "file": "docs/tasks/document-graph-contract.md",
+      "sha256": "f9f7132321ed0e8664a0e4f906074e7302de8dfc03d5c94df39033e2a3e52057",
+      "beforeSha256": "f9f7132321ed0e8664a0e4f906074e7302de8dfc03d5c94df39033e2a3e52057",
+      "disposition": "unchanged"
+    },
+    {
+      "file": "docs/design/markdown-trace-document-graph-overview.md",
+      "sha256": "e08a88780dc60179cba0042dd0aa97655178b8d7b38a9540d541add5dba93cf5",
+      "beforeSha256": "e08a88780dc60179cba0042dd0aa97655178b8d7b38a9540d541add5dba93cf5",
+      "disposition": "unchanged"
+    },
+    {
+      "file": "docs/design/markdown-trace-document-graph-interfaces.md",
+      "sha256": "84c2394df01dc8474bd41a535c7cae594af50baa1ff1add5fc6997c8023852de",
+      "beforeSha256": "b99969954c79843b4995cd10393a7e2cc2734cb96da204b0e8f77277b8c91e3f",
+      "disposition": "expected EP-ACT-1 authoring progress"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/cases.md",
+      "sha256": "1d7a568161a64a29ce2ea517a0b71aa694353132225fd1d8c71b9e79b2e443e8",
+      "beforeSha256": "6f75aed0331cf6059b1d96f124c90d6fc0d0b07bc9ea5e89f084eee490a092ba",
+      "disposition": "expected EP-ACT-1 authoring progress"
+    },
+    {
+      "file": "docs/design/document-graph-api/validation.json",
+      "sha256": "51643029b05822d8cf7b3c123a165c59c1853dae9b90393e1b5d4e2f7b0f6906",
+      "beforeSha256": "bd1de920a92d3f360b7e1233ce229d93458eb87ed94ac15b7f3ff2316aab65e2",
+      "disposition": "expected EP-ACT-1 authoring progress"
+    }
+  ],
+  "completed": [
+    "Eight lexical and seven ownership recommendations, including exact source spelling, brace shielding, malformed recovery, literal handling and container exits.",
+    "48 exact Markdown examples with independently authored interpretations and complete rule-to-case index.",
+    "Language errors fail validation while unsupported parser coverage alone is indeterminate; invalid facts remain queryable."
+  ],
+  "checks": {
+    "languageIndex": {
+      "status": "pass",
+      "ruleCount": 15,
+      "caseCount": 48
+    },
+    "structure": {
+      "valid": true,
+      "ruleCount": 44,
+      "diagnostics": []
+    },
+    "parser": {
+      "status": "pass",
+      "caseCount": 48,
+      "verifiedRawSlices": 244
+    },
+    "reusedEvidence": {
+      "checks": [
+        "declarations",
+        "initial mixed-layout ledger",
+        "initial parser probe"
+      ],
+      "originalValidatedAt": "2026-09-13T14:01:09.477Z",
+      "verifiedUnchangedArtifacts": [
+        {
+          "file": "docs/README.md",
+          "sha256": "99c92a244ba40d6a1bedd2dd6421c50cc214cb26bb9fc02c36d59aa1837a0ae5"
+        },
+        {
+          "file": "docs/design/document-graph-api/README.md",
+          "sha256": "92a03ed6bee9fdf3ea275aac7208c136d27d1efb4f5779fcac131d1f3d245702"
+        },
+        {
+          "file": "docs/design/document-graph-api/checks/check-examples.mjs",
+          "sha256": "5414b28e3c677db292d0b31e941840bfa0fd5bf6c323f477ffb786a65189c2f4"
+        },
+        {
+          "file": "docs/design/document-graph-api/checks/probe-engine.mjs",
+          "sha256": "4b53dc6b71b37370dc035a92c7e3f035fe0563cbf3b66603e359c5025a52b67b"
+        },
+        {
+          "file": "docs/design/document-graph-api/contracts/analysis.d.ts",
+          "sha256": "03aeddcafa0401dc855941c56ce74b0e9eda92ce5cb590c49d8dde4491e54622"
+        },
+        {
+          "file": "docs/design/document-graph-api/contracts/context.d.ts",
+          "sha256": "bdbd8a10c35a8e042c30563b69452c331bdb27f24f917193e3e941b8c5cfe440"
+        },
+        {
+          "file": "docs/design/document-graph-api/contracts/index.d.ts",
+          "sha256": "342c2da2f11979346710c87c7ba44259529b57a8ac9e49edb730dfa4fd885adb"
+        },
+        {
+          "file": "docs/design/document-graph-api/contracts/profile.d.ts",
+          "sha256": "665c90f5c3224f37deb33f0411d38dba9f7013033301817313ed8bf284a6118b"
+        },
+        {
+          "file": "docs/design/document-graph-api/contracts/query.d.ts",
+          "sha256": "621d34688871136dd2da4ab0eee2b9ff2b8534185d4f60f948454e41b35b04c0"
+        },
+        {
+          "file": "docs/design/document-graph-api/contracts/source.d.ts",
+          "sha256": "cd0dda4bcc36f71aba9733dd7b14530feb536e2155c40d700b3d170cd4159675"
+        },
+        {
+          "file": "docs/design/document-graph-api/contracts/validation.d.ts",
+          "sha256": "e75c128bf023791aae522eb54b08a1fa656ea14d693b4d2034e69420132397f0"
+        },
+        {
+          "file": "docs/design/document-graph-api/examples/consumer.ts",
+          "sha256": "df1ef9e15510b35300c850eb3005dac29c05775e21cc28666777c465a6b522a1"
+        },
+        {
+          "file": "docs/design/document-graph-api/examples/expectations.json",
+          "sha256": "95ab794b366ce8f5898242a1195edbfc1c0606d00278b5819856c5576e62ebbe"
+        },
+        {
+          "file": "docs/design/document-graph-api/examples/mixed-layout.md",
+          "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"
+        },
+        {
+          "file": "docs/design/document-graph-api/examples/profile.ts",
+          "sha256": "49e84106681eea7bb1e086df79df2a27f2254d46acc6a53e211122aa7a4b2ab7"
+        },
+        {
+          "file": "docs/design/document-graph-api/examples/source-inventory.json",
+          "sha256": "6bcce5823d0c56c2b459cf5afee6cadd9ef867739242c1370802bdd867503584"
+        },
+        {
+          "file": "docs/design/document-graph-api/tsconfig.json",
+          "sha256": "937d7a0bf083605c526bbcf216d0f2254753ed97e2422a3d33330138df5e4043"
+        }
+      ]
+    },
+    "productionSurfacesChanged": false
+  },
+  "reviewNotes": [
+    "Removed an erroneous LEX-7 membership from the HTML-block case after exact rule-index comparison found it.",
+    "The link feasibility assertion uses the public Engine attributes.title field; the original fixture title was already correct.",
+    "No independent language reviewer or complete graph/coordinate oracle was run."
+  ],
+  "artifacts": [
+    {
+      "file": "docs/design/markdown-trace-document-graph-interfaces.md",
+      "sha256": "84c2394df01dc8474bd41a535c7cae594af50baa1ff1add5fc6997c8023852de"
+    },
+    {
+      "file": "docs/design/markdown-trace-document-graph-interfaces.sha256",
+      "sha256": "6dd9ea02c459fd3b8715fd54e5c0e5ee112cdcb1977bd0810a785dd56829a0ca"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/cases.md",
+      "sha256": "1d7a568161a64a29ce2ea517a0b71aa694353132225fd1d8c71b9e79b2e443e8"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
+      "sha256": "87193f09d311812413638948a70ed201ad53fff66d6e8d0f7d5a38154828890e"
+    },
+    {
+      "file": "docs/design/document-graph-api/validation.json",
+      "sha256": "51643029b05822d8cf7b3c123a165c59c1853dae9b90393e1b5d4e2f7b0f6906"
+    }
+  ],
+  "evidenceFiles": [
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-1-before.json",
+      "sha256": "d259f06009341ca19fb4ee92b852d5e5848b7b4873c3b68b3c303bdf16afa528"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-1-index.json",
+      "sha256": "780abc0656c72215141f05098e240c3a1efbf1261070c9d9fa7f0b3ff56bd8c2"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-1-parser.json",
+      "sha256": "12ce6acee5ac005b1908da4b1f009eb179ccef1f97fdb870099dd6245bfe1e43"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-1-structure.json",
+      "sha256": "727f9596ce5e261a5653380059f5fdd670f60969fda03df30e71cd052244c875"
+    }
+  ],
+  "nextAction": "EP-ACT-2: materialize paired Markdown/expected-JSON fixtures with independently annotated occurrences, owners, diagnostics and source coordinates.",
+  "pending": [
+    "EP-GATE-1 independent full-corpus interpretation",
+    "EP-ACT-3 through EP-ACT-5 and EP-GATE-2/EP-GATE-3",
+    "Q-1 authoring-language selection and Q-2 authoring-fit/full-corpus proof",
+    "Q-3 package-surface acceptance before public exports; Q-4 later pilot evidence"
+  ],
+  "runtimeReadiness": "Production implementation prerequisites remain BLOCKED. Recording recommendations completes this action; it does not approve the language or satisfy the corpus gates."
+}

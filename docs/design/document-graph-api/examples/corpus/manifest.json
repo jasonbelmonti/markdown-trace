@@ -1,0 +1,408 @@
+{
+  "schemaVersion": "markdown-trace.design-language-cases.v1",
+  "language": "markdown-trace.identity.draft1",
+  "provenance": "EP-ACT-1: source examples and expected interpretations authored independently of an extractor. Full source-range/graph/query/context oracle files are EP-ACT-2 outputs.",
+  "decisionStatus": "maintainer-recommendation; owner syntax selection not recorded",
+  "fixtureStatus": "interpretations-authored; paired-fixtures-not-yet-materialized",
+  "ruleSource": "docs/design/markdown-trace-document-graph-interfaces.md#5-materialized-contracts",
+  "cases": [
+    {
+      "id": "LANG-01",
+      "rules": [
+        "LEX-1",
+        "OWN-1"
+      ],
+      "markdown": "{#WP-1} See REQ-1 and REQ-A2-7.",
+      "expectedInterpretation": "Declare WP-1; two generic references owned by WP-1: REQ-1 and REQ-A2-7."
+    },
+    {
+      "id": "LANG-02",
+      "rules": [
+        "LEX-1"
+      ],
+      "markdown": "{#WP-1} xREQ-1 REQ-1x REQ-1_extra éREQ-1 REQ-1é.",
+      "expectedInterpretation": "Declare WP-1 only; none of the longer words contributes a partial ID."
+    },
+    {
+      "id": "LANG-03",
+      "rules": [
+        "LEX-1"
+      ],
+      "markdown": "{#WP-1} REQ-1..REQ-3; REQ-1-3.",
+      "expectedInterpretation": "References are REQ-1, REQ-3 and the single label REQ-1-3. No intermediate IDs are expanded."
+    },
+    {
+      "id": "LANG-04",
+      "rules": [
+        "LEX-1"
+      ],
+      "markdown": "{#WP-1} req-1 Req-1.",
+      "expectedInterpretation": "Declare WP-1 only; lowercase or mixed-case bare spellings are ordinary text."
+    },
+    {
+      "id": "LANG-05",
+      "rules": [
+        "LEX-2",
+        "OWN-1"
+      ],
+      "markdown": "{#WP-1} {implements:REQ-1}.",
+      "expectedInterpretation": "One work declaration and one implements relationship to REQ-1; no duplicate generic occurrence inside either marker."
+    },
+    {
+      "id": "LANG-06",
+      "rules": [
+        "LEX-2"
+      ],
+      "markdown": "{#WP-1} {custom-edge:NEW-7}.",
+      "expectedInterpretation": "Preserve the well-formed custom-edge relationship and NEW-7 label. Unknown vocabulary is judged by profile validation, not discarded by extraction."
+    },
+    {
+      "id": "LANG-07",
+      "rules": [
+        "LEX-3"
+      ],
+      "markdown": "{#WP-1} REQ&#45;1 and &#82;EQ-2 and REQ-3.",
+      "expectedInterpretation": "Only REQ-3 is a reference; encoded words do not produce REQ-1, EQ-2 or REQ-2."
+    },
+    {
+      "id": "LANG-08",
+      "rules": [
+        "LEX-3",
+        "LEX-4"
+      ],
+      "markdown": "{#WP-1} **REQ-1** and REQ-**2**.",
+      "expectedInterpretation": "REQ-1 is a reference whose range excludes emphasis delimiters; the split REQ-2 spelling produces no occurrence."
+    },
+    {
+      "id": "LANG-09",
+      "rules": [
+        "LEX-1",
+        "LEX-4"
+      ],
+      "markdown": "{#WP-1} X**REQ-1**Y.",
+      "expectedInterpretation": "No reference: adjacent visible letters make one longer word despite the formatting wrapper."
+    },
+    {
+      "id": "LANG-10",
+      "rules": [
+        "LEX-4"
+      ],
+      "markdown": "{#WP-1} [REQ-1](https://example.test/REQ-2 \"REQ-3\").",
+      "expectedInterpretation": "REQ-1 is a reference; destination REQ-2 and title REQ-3 are excluded."
+    },
+    {
+      "id": "LANG-11",
+      "rules": [
+        "LEX-4"
+      ],
+      "markdown": "{#WP-1} ![REQ-1](image-REQ-2.png) <https://example.test/REQ-3>.",
+      "expectedInterpretation": "Image alt text, destination and autolink contribute no occurrences."
+    },
+    {
+      "id": "LANG-12",
+      "rules": [
+        "LEX-4"
+      ],
+      "markdown": "{#WP-1} <span>REQ-1</span> and REQ-2.",
+      "expectedInterpretation": "HTML tag nodes are literal. The Engine text nodes REQ-1 and REQ-2 are references owned by WP-1."
+    },
+    {
+      "id": "LANG-13",
+      "rules": [
+        "LEX-4"
+      ],
+      "markdown": "<div>\n{#REQ-1}\n</div>\n",
+      "expectedInterpretation": "The Engine HTML block is literal; no declaration or reference."
+    },
+    {
+      "id": "LANG-14",
+      "rules": [
+        "LEX-5"
+      ],
+      "markdown": "{#WP-1} { #REQ-1} {implements: REQ-2} {Implements:REQ-3}.",
+      "expectedInterpretation": "Three malformed-expression errors, partial coverage, and no inner REQ references. WP-1 remains declared."
+    },
+    {
+      "id": "LANG-15",
+      "rules": [
+        "LEX-5"
+      ],
+      "markdown": "{#WP-1} {implements:REQ-1,REQ-2}.",
+      "expectedInterpretation": "One malformed-expression error covering the entire group; neither target leaks into generic references."
+    },
+    {
+      "id": "LANG-16",
+      "rules": [
+        "LEX-5"
+      ],
+      "markdown": "{#WP-1} {note REQ-1}.",
+      "expectedInterpretation": "Ordinary brace group is literal with no language error and no REQ-1 occurrence."
+    },
+    {
+      "id": "LANG-17",
+      "rules": [
+        "LEX-5"
+      ],
+      "markdown": "{#WP-1} {#REQ-1 {#REQ-2}}.",
+      "expectedInterpretation": "One malformed outer marker group; no REQ-1 or REQ-2 declaration and no salvaged references."
+    },
+    {
+      "id": "LANG-18",
+      "rules": [
+        "LEX-5",
+        "LEX-8"
+      ],
+      "markdown": "{#WP-1} {implements:REQ-1\nREQ-2.",
+      "expectedInterpretation": "Malformed first-line group ends before the newline; REQ-2 on the next line remains an owned generic reference."
+    },
+    {
+      "id": "LANG-19",
+      "rules": [
+        "LEX-5"
+      ],
+      "markdown": "{#WP-1} REQ-1}.",
+      "expectedInterpretation": "REQ-1 is a generic reference; the stray closing brace is punctuation."
+    },
+    {
+      "id": "LANG-20",
+      "rules": [
+        "LEX-6"
+      ],
+      "markdown": "{#WP-1} \\REQ-1 and \\{#REQ-2}.",
+      "expectedInterpretation": "Both escaped expressions are literal; no REQ occurrences or language errors."
+    },
+    {
+      "id": "LANG-21",
+      "rules": [
+        "LEX-6"
+      ],
+      "markdown": "{#WP-1} \\\\REQ-1 and \\\\{#REQ-2}.",
+      "expectedInterpretation": "Even backslash runs leave REQ-1 as a reference and REQ-2 as a declaration; both declarations share the paragraph scope, making its source references ambiguous."
+    },
+    {
+      "id": "LANG-22",
+      "rules": [
+        "LEX-6"
+      ],
+      "markdown": "{#WP-1} REQ\\-1 and REQ-2.",
+      "expectedInterpretation": "The backslash-containing word is literal; REQ-2 remains a reference."
+    },
+    {
+      "id": "LANG-23",
+      "rules": [
+        "LEX-7"
+      ],
+      "markdown": "{#WP-1} ` REQ-1 ` and ``REQ-2``.",
+      "expectedInterpretation": "Two generic references; each occurrence covers its complete original code span, including padding and delimiters."
+    },
+    {
+      "id": "LANG-24",
+      "rules": [
+        "LEX-7"
+      ],
+      "markdown": "{#WP-1} `REQ-1 REQ-2` and `{#REQ-3}`.",
+      "expectedInterpretation": "Both code spans are literal; no REQ declarations or references."
+    },
+    {
+      "id": "LANG-25",
+      "rules": [
+        "LEX-7"
+      ],
+      "markdown": "{#WP-1} `\nREQ-1\n`.",
+      "expectedInterpretation": "Multiline code span is literal even if Engine normalization yields an identifier."
+    },
+    {
+      "id": "LANG-26",
+      "rules": [
+        "LEX-7",
+        "OWN-7"
+      ],
+      "markdown": "# {#REQ-1} Requirement\n\n```text\n{#REQ-2} REQ-3\n```\n",
+      "expectedInterpretation": "Only REQ-1 is declared. The fenced block contributes no facts but may be owned context of REQ-1."
+    },
+    {
+      "id": "LANG-27",
+      "rules": [
+        "LEX-7"
+      ],
+      "markdown": "---\nexample: REQ-1\n---\n\n{#REQ-2} Body.\n",
+      "expectedInterpretation": "Engine frontmatter contributes no facts; REQ-2 is declared in the body."
+    },
+    {
+      "id": "LANG-28",
+      "rules": [
+        "LEX-7"
+      ],
+      "markdown": "# Example\n\n{#REQ-1} This is ordinary eligible prose.\n",
+      "expectedInterpretation": "The heading text Example does not create a literal zone; REQ-1 is declared."
+    },
+    {
+      "id": "LANG-29",
+      "rules": [
+        "LEX-5",
+        "LEX-8"
+      ],
+      "markdown": "{#WP-1} {implements:**REQ-1**} and REQ-2.",
+      "expectedInterpretation": "One malformed-expression error for the split marker; its inner REQ-1 is suppressed, while REQ-2 is an owned generic reference."
+    },
+    {
+      "id": "LANG-30",
+      "rules": [
+        "LEX-5",
+        "LEX-8"
+      ],
+      "markdown": "{#WP-1} {implements:`REQ-1`} and REQ-2.",
+      "expectedInterpretation": "Crossing the code node makes the marker malformed; no inner code reference is emitted. REQ-2 remains visible."
+    },
+    {
+      "id": "LANG-31",
+      "rules": [
+        "OWN-1"
+      ],
+      "markdown": "REQ-1 before {#WP-1}.\n\n{#REQ-1} Definition later.\n",
+      "expectedInterpretation": "WP-1 owns the preceding reference in its paragraph; REQ-1 resolves after collection."
+    },
+    {
+      "id": "LANG-32",
+      "rules": [
+        "OWN-2"
+      ],
+      "markdown": "# {#REQ-1} First\n\nWP-1.\n\n# Unlabelled peer\n\nWP-2.\n",
+      "expectedInterpretation": "WP-1 is owned by REQ-1. The unlabelled equal-level heading closes that scope; WP-2 is unowned."
+    },
+    {
+      "id": "LANG-33",
+      "rules": [
+        "OWN-2",
+        "OWN-6"
+      ],
+      "markdown": "# {#REQ-1} Parent\n\n## {#WP-1} Child\n\nREQ-2.\n\n## Unlabelled peer\n\nREQ-3.\n",
+      "expectedInterpretation": "REQ-2 is owned by WP-1; after the child heading scope closes, REQ-3 is owned by still-active REQ-1."
+    },
+    {
+      "id": "LANG-34",
+      "rules": [
+        "OWN-3"
+      ],
+      "markdown": "- {#WP-1} First REQ-1.\n- Second REQ-2.\n",
+      "expectedInterpretation": "REQ-1 is owned by WP-1; the sibling's REQ-2 is unowned."
+    },
+    {
+      "id": "LANG-35",
+      "rules": [
+        "OWN-3",
+        "OWN-6"
+      ],
+      "markdown": "- {#WP-1} Parent.\n  - REQ-1.\n  - {#WP-2} Child REQ-2.\n\nOutside REQ-3.\n",
+      "expectedInterpretation": "Nested undeclared item inherits WP-1 for REQ-1; declared child owns REQ-2; outside REQ-3 is unowned."
+    },
+    {
+      "id": "LANG-36",
+      "rules": [
+        "OWN-3",
+        "OWN-6"
+      ],
+      "markdown": "- Intro.\n\n  {#WP-1} Later paragraph REQ-1.\n\n  Another paragraph REQ-2.\n",
+      "expectedInterpretation": "The later paragraph's declaration owns only that paragraph; REQ-1 belongs to WP-1 and REQ-2 is unowned."
+    },
+    {
+      "id": "LANG-37",
+      "rules": [
+        "OWN-3"
+      ],
+      "markdown": "> {#VAL-1} Check WP-1.\n>\n> Another paragraph WP-2.\n",
+      "expectedInterpretation": "VAL-1 owns WP-1 in the declaration paragraph only; WP-2 is unowned."
+    },
+    {
+      "id": "LANG-38",
+      "rules": [
+        "OWN-2",
+        "OWN-6"
+      ],
+      "markdown": "- ## {#WP-1} Nested heading\n\n  REQ-1.\n\nOutside REQ-2.\n",
+      "expectedInterpretation": "REQ-1 is owned by WP-1 inside the item; container exit ends the heading scope, leaving REQ-2 unowned."
+    },
+    {
+      "id": "LANG-39",
+      "rules": [
+        "OWN-4"
+      ],
+      "markdown": "| ID | Reference |\n| --- | --- |\n| {#WP-1} | REQ-1 |\n| text | REQ-2 |\n",
+      "expectedInterpretation": "The declaration owns only its data row: REQ-1 belongs to WP-1; REQ-2 is unowned."
+    },
+    {
+      "id": "LANG-40",
+      "rules": [
+        "OWN-4"
+      ],
+      "markdown": "| {#WP-1} | REQ-1 |\n| --- | --- |\n| text | REQ-2 |\n",
+      "expectedInterpretation": "Header declaration owns the header row, including REQ-1. It does not own REQ-2 in a later data row; delimiter is structural."
+    },
+    {
+      "id": "LANG-41",
+      "rules": [
+        "OWN-4",
+        "OWN-5"
+      ],
+      "markdown": "| ID | Reference |\n| --- | --- |\n| {#WP-1} {#WP-2} | REQ-1 |\n",
+      "expectedInterpretation": "Both declarations retained; REQ-1 source is ambiguous with both declaration IDs."
+    },
+    {
+      "id": "LANG-42",
+      "rules": [
+        "OWN-5"
+      ],
+      "markdown": "# {#REQ-1} Outer\n\n{#WP-1} {#WP-2} REQ-2.\n",
+      "expectedInterpretation": "REQ-2 remains ambiguous between WP-1/WP-2; it does not fall back to the outer REQ-1 owner."
+    },
+    {
+      "id": "LANG-43",
+      "rules": [
+        "OWN-5"
+      ],
+      "markdown": "{#WP-1} {#WP-1} REQ-1.\n",
+      "expectedInterpretation": "WP-1 has duplicate definition occurrences; REQ-1 ownership remains ambiguous between those occurrences, even though labels match."
+    },
+    {
+      "id": "LANG-44",
+      "rules": [
+        "OWN-7"
+      ],
+      "markdown": "# {#REQ-1} Parent\n\nParent text.\n\n{#REQ-2} Child paragraph.\n\nParent continuation.\n",
+      "expectedInterpretation": "REQ-1 owns its heading and both parent paragraphs. REQ-2 owns only its declaration paragraph; selecting REQ-1 excludes that child body."
+    },
+    {
+      "id": "LANG-45",
+      "rules": [
+        "LEX-8",
+        "OWN-4"
+      ],
+      "markdown": "| ID | First | Second |\n| --- | --- | --- |\n| {#WP-1} | {implements:REQ-1 | REQ-2 |\n",
+      "expectedInterpretation": "Malformed group stops at its cell boundary; REQ-2 in the next cell is still owned by WP-1."
+    },
+    {
+      "id": "LANG-46",
+      "rules": [
+        "LEX-4"
+      ],
+      "markdown": "{#WP-1} See [REQ-1][label].\n\n[label]: https://example.test/REQ-2 \"REQ-3\"\n",
+      "expectedInterpretation": "Visible reference-link label REQ-1 is eligible; definition destination/title contribute no occurrences."
+    },
+    {
+      "id": "LANG-47",
+      "rules": [
+        "LEX-7"
+      ],
+      "markdown": "# {#WP-1} Work\n\n    REQ-1\n",
+      "expectedInterpretation": "Indented code is literal; it contributes no reference and may remain source context owned by WP-1."
+    },
+    {
+      "id": "LANG-48",
+      "rules": [
+        "OWN-6"
+      ],
+      "markdown": "> # {#WP-1} Inside quote\n>\n> REQ-1.\n\nREQ-2.\n",
+      "expectedInterpretation": "REQ-1 belongs to the quote-contained heading owner; scope does not escape the quote, so REQ-2 is unowned."
+    }
+  ]
+}
