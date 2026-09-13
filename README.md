@@ -1,162 +1,66 @@
 # Markdown Trace
 
-Markdown Trace is a local CLI for making entity-rich Markdown documents traceable. It validates document-local registries, derives registry and graph data from `ctx://trace` links, writes or checks generated sidecar registries, and compares manual YAML registries against generated Markdown-derived output during migration.
+Markdown Trace is being developed into a document graph engine for complex Markdown specifications: discover identities and relationships throughout a document under a constrained syntax, validate relationships against developer-owned profiles, and query the graph for relevant source context.
 
-## Current Status
+**The complete document graph is not implemented yet.** Today the repository provides a table-based graph validator and separate registry/trace-link compatibility tools. The package is version `0.1.0`, guarded by `private: true`, and in development.
 
-This repository is a local prototype and migration tool. Hand-authored YAML registries remain a valid compatibility path. Generated sidecars are checked artifacts and must not be edited by hand. A source-authority flip from YAML to generated sidecars requires a separate approval record.
+## Start here
 
-## Requirements
+1. [Current product direction](docs/design/markdown-trace-document-graph-overview.md)
+2. [Implemented capabilities and limitations](docs/current-implementation.md)
+3. [Next task: document graph contract and corpus](docs/tasks/document-graph-contract.md)
 
-- Node.js `^20.19.0 || >=22.12.0`
-- npm
+The [documentation map](docs/README.md) identifies current guidance and retained test data. Superseded plans were removed; Git history retains them. Earlier YAML migration, automated-authoring, and release-only plans do not define the current objective.
 
-## Setup
+## Intended product
 
-```bash
+- A source-backed graph discovered across headings, paragraphs, lists, quotes, and tables.
+- An explicit identity/declaration/reference language with deterministic ownership.
+- Profile validation that preserves invalid or unresolved evidence for inspection.
+- Queries for definitions, occurrences, incoming/outgoing references, and bounded traversal.
+- Context extraction with source locations, inclusion reasons, and visible size limits.
+
+Markdown Engine supplies Markdown structure and source locations. Markdown Trace owns graph interpretation, integrity, validation, and querying. Exact syntax, ownership rules, and new API/schema versions remain decisions in the next task.
+
+## What runs today
+
+| Surface | Implemented boundary |
+| --- | --- |
+| `graph-validate` / `validateGraphDocument` | YAML profile loading, table-based relationship extraction, required-path checks, and JSON results. |
+| `validate` | Registry-driven document validation. |
+| `derive` | Registry/graph derivation using existing heading and `ctx://trace` conventions. |
+| `derive-sidecar` | Generated registry writing and read-only stale/missing checks. |
+| `migration-check` | Manual-versus-generated registry comparison. |
+| Document-wide graph, backlinks, context API | Planned; unavailable in the current public package. |
+
+A graph-validation pass covers only implemented checks. Empty/unrecognized documents can pass; duplicate definitions, dangling references, and ranges are not comprehensively validated. This is not a complete spec-validity verdict.
+
+## Development setup
+
+Requires Node.js `^20.19.0 || >=22.12.0` and npm. Install from the lockfile in the worktree where checks will run:
+
+```sh
 npm ci
 npm run build
-```
-
-Run the full local gate before opening or updating a pull request:
-
-```bash
-npm run ci:enforcement
-```
-
-That gate runs typecheck, tests, build, fixture validation, derivation, migration parity checks, generated sidecar check mode, and repository mutation detection.
-
-## CLI Usage
-
-After `npm run build`, run the CLI through the built entrypoint:
-
-```bash
 node dist/markdowntrace/cli.js --help
 ```
 
-Available commands:
+Run the existing table-profile demonstration:
 
-```text
-markdown-trace validate --registry <path> --document <path> [--report <path>]
-markdown-trace derive --document <path> [--namespace <namespace>] [--type-profile <path>] [--output <path>]
-markdown-trace derive-sidecar --document <path> [--type-profile <path>] [--check]
-markdown-trace migration-check --document <path> --manual-registry <path> [--type-profile <path>]
+```sh
+node dist/markdowntrace/cli.js graph-validate \
+  --file fixtures/profile-aware-graph-validation/first-slice/positive-execution-spec.md \
+  --profile fixtures/profile-aware-graph-validation/profiles/valid-execution-spec.yaml
 ```
 
-### Validate a YAML Registry
+The package-root export is `validateGraphDocument({ documentPath, profilePath, cwd? })`. A built checkout can import it from `./dist/markdowntrace/public.js`. It returns the existing `pass`, `fail`, or `operational-error` result; it is not the proposed graph/query API.
 
-Use this when a hand-authored registry is the input authority:
+## Validation and contribution
 
-```bash
-node dist/markdowntrace/cli.js validate \
-  --registry fixtures/r0-document-local-registry/entity-registry.yaml \
-  --document fixtures/r0-document-local-registry/execution-spec.md \
-  --report docs/evidence/valid-fixture-report.md
+```sh
+npm run ci:enforcement
 ```
 
-### Derive Registry and Graph Data
+This gate checks types, tests, build, registry/migration behavior, generated sidecars, and unintended repository changes. Use `npm run check:package-exports` when changing the package boundary. Passing existing tests does not prove the planned product is implemented.
 
-Use this to read `ctx://trace` links from a Markdown document and emit derived registry diagnostics, registry data, and graph data:
-
-```bash
-node dist/markdowntrace/cli.js derive \
-  --document fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md \
-  --type-profile fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml
-```
-
-Write the derived output to a file with `--output <path>` when you need an artifact.
-
-### Write a Generated Sidecar
-
-Use write mode only when the Markdown source or type profile intentionally changed:
-
-```bash
-node dist/markdowntrace/cli.js derive-sidecar \
-  --document fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md \
-  --type-profile fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml
-```
-
-The command prints the generated sidecar path, for example:
-
-```text
-fixtures/r1-link-backed-entity-syntax/.markdown-trace/generated/minimal-link-backed-execution-spec--profile-minimal-type-profile-378211c9.entity-registry.yaml
-```
-
-### Check a Generated Sidecar
-
-Use check mode in review and CI. Check mode fails on missing or stale generated bytes and does not rewrite the artifact:
-
-```bash
-node dist/markdowntrace/cli.js derive-sidecar \
-  --document fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md \
-  --type-profile fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml \
-  --check
-```
-
-### Check Manual-vs-Generated Migration Parity
-
-Use this while YAML and generated sidecars coexist:
-
-```bash
-node dist/markdowntrace/cli.js migration-check \
-  --document fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md \
-  --manual-registry fixtures/r1-link-backed-entity-syntax/minimal-link-backed-manual-registry.yaml \
-  --type-profile fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml
-```
-
-## Authoring Trace Links
-
-Markdown Trace uses ordinary Markdown links. The link text is the human label, and the `ctx://trace` URL carries machine-readable identity.
-
-Entity definition in a heading:
-
-```md
-### [WP-1](ctx://trace/entity/exec.wp.1?type=work_package): Prove minimal link path
-```
-
-Entity reference in body prose:
-
-```md
-WP-1 depends on [CON-1](ctx://trace/entity/exec.con.1).
-```
-
-Range reference:
-
-```md
-This satisfies [VAL-3 through VAL-5](ctx://trace/range/VAL-3/VAL-5).
-```
-
-Definition links must include `type=<entity-type>`. Reference links may omit `type` after the entity is defined. Type names and optional label/canonical-ID constraints come from the active type profile:
-
-```yaml
-profileVersion: markdown-trace.type-profile.v1
-entityTypes:
-  work_package:
-    labelPrefixes: [WP]
-    canonicalPattern: "^exec\\.wp\\.\\d+$"
-  constraint:
-    labelPrefixes: [CON]
-    canonicalPattern: "^exec\\.con\\.\\d+$"
-```
-
-## Generated Sidecar Rules
-
-- Do not hand-edit files under `.markdown-trace/generated/`.
-- Regenerate sidecars with `derive-sidecar` write mode after intentional Markdown or type profile changes.
-- Use `derive-sidecar --check` to prove checked generated bytes are current.
-- Keep hand-authored YAML compatibility unless a later approved task changes source authority.
-
-## Fixture Map
-
-- `fixtures/r0-document-local-registry/`: YAML-first compatibility fixture.
-- `fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md`: minimal `ctx://trace` fixture.
-- `fixtures/r1-link-backed-entity-syntax/codefactory-link-backed-spec.md`: domain type-profile fixture.
-- `fixtures/r1-link-backed-entity-syntax/.markdown-trace/generated/`: checked generated registry sidecars.
-- `docs/evidence/`: validation, migration, and R3 gate evidence.
-
-## Contributor Checklist
-
-1. Build with `npm run build`.
-2. Run the specific command or fixture check for your change.
-3. Run `npm run ci:enforcement`.
-4. Inspect `git diff --check` before review.
+Read [AGENTS.md](AGENTS.md) and the [source map](src/markdowntrace/README.md) before implementation. Keep modules focused, work under `.worktrees/`, and never hand-edit generated sidecars. See [current implementation](docs/current-implementation.md) for compatibility command examples.

@@ -26,6 +26,7 @@ import type {
   TraceEvidenceResult,
 } from "./model.js";
 
+// Existing table-extraction grammar; not the finalized document-wide language.
 const ID_TOKEN_PATTERN = /\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b/g;
 
 interface ExtractTraceEvidenceOptions {
@@ -57,6 +58,8 @@ export async function extractTraceEvidenceFromFile<
   return extractTraceEvidence(markdown, profile, { sourcePath });
 }
 
+// Compatibility extractor: only table cells contribute graph evidence here.
+// Other Markdown structures and general ownership need the new graph contract.
 export function extractTraceEvidence<TArtifactFamily extends GraphArtifactFamily>(
   markdown: string,
   profile: GraphProfile<TArtifactFamily>,

@@ -6,6 +6,12 @@ export interface ValidateGraphDocumentOptions {
   readonly cwd?: string;
 }
 
+/**
+ * Runs the existing table/profile required-path validator.
+ * A pass covers implemented checks only, including possibly zero paths.
+ * Document-wide analysis, backlinks, and context queries are not provided by
+ * this operation. See the repository's current-implementation documentation.
+ */
 export function validateGraphDocument(
   options: ValidateGraphDocumentOptions,
 ): Promise<GraphValidationRunResult> {
