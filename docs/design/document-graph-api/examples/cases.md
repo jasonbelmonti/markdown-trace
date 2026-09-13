@@ -45,7 +45,7 @@ The current parser probe proves the required basic nodes and raw offsets exist i
 
 ## Recorded language decisions
 
-EP-ACT-1 records the recommended lexical and ownership rules in the interface packet. Following PR review remediation, the [rule/case index](corpus/manifest.json) contains 54 exact Markdown examples and independently authored interpretations. The focused [ambiguous-context oracle](ambiguous-context.json) covers the new ownership omission. These do not complete the full graph/coordinate corpus; EP-ACT-2 materializes the remaining paired fixtures and expectations.
+EP-ACT-1 records the recommended lexical and ownership rules in the interface packet. Following PR review remediation, the [rule/case index](corpus/manifest.json) contains 55 exact Markdown examples and independently authored interpretations. The focused [ambiguous-context oracle](ambiguous-context.json) covers the new ownership omission. These do not complete the full graph/coordinate corpus; EP-ACT-2 materializes the remaining paired fixtures and expectations.
 
 | Rule | Decision demonstrated | Example IDs |
 | --- | --- | --- |
@@ -53,10 +53,10 @@ EP-ACT-1 records the recommended lexical and ownership rules in the interface pa
 | LEX-2 | Explicit markers and preservation of unknown vocabulary | LANG-05, LANG-06, LANG-53 |
 | LEX-3 | Exact raw source, no encoded or split-token reconstruction | LANG-07, LANG-08 |
 | LEX-4 | Complete formatted tokens and visible labels; explicit HTML/metadata boundary | LANG-08 through LANG-13; LANG-46, LANG-53 |
-| LEX-5 | Brace shielding, formatting-transparent candidate classification and local malformed recovery | LANG-14 through LANG-19; LANG-29, LANG-30; LANG-49 through LANG-52 |
+| LEX-5 | Brace shielding, formatting-transparent candidate classification and local malformed recovery | LANG-14 through LANG-19; LANG-29, LANG-30; LANG-49 through LANG-52; LANG-55 |
 | LEX-6 | Backslash parity and literal escaped words/groups | LANG-20 through LANG-22 |
 | LEX-7 | Single-ID inline code, other code/frontmatter literal, no heading-name magic | LANG-23 through LANG-28; LANG-47 |
-| LEX-8 | Malformed groups do not leak inner references or cross line/cell boundaries | LANG-18, LANG-29, LANG-30, LANG-45; LANG-49 through LANG-52 |
+| LEX-8 | Malformed groups do not leak inner references or cross line/cell boundaries | LANG-18, LANG-29, LANG-30, LANG-45; LANG-49 through LANG-52; LANG-55 |
 | OWN-1 | Declaration position and forward references do not change identity/ownership | LANG-01, LANG-05, LANG-31 |
 | OWN-2 | Heading boundaries, including unlabelled peers | LANG-32, LANG-33, LANG-38 |
 | OWN-3 | List introduction scope and paragraph-local declarations | LANG-34 through LANG-37 |

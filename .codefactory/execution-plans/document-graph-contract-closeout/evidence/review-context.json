@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "checkedAt": "2026-09-13T17:04:09.637Z",
+  "checkedAt": "2026-09-13T17:13:42.132Z",
   "procedure": "Verify independent ambiguous-context oracle source hash/length, UTF-16 points and exact declaration/paragraph slices; join fragment/declaration IDs; verify complete analysis with no references, exhaustive root omissions, original selection metadata and ownership precedence in single-root, both-roots and zero-budget scenarios.",
   "scope": "Hand-authored design-oracle consistency only; no Trace extraction, validation or context implementation executed.",
   "scenarioCount": 3,
@@ -11,7 +11,7 @@
     },
     {
       "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
-      "sha256": "ee49deb63cbd089411a5c8ea9138481fb37e78618856ddafb5ba6b90c381970c"
+      "sha256": "316361b4871773c74eb402ee920ce8497ba39bce9049ada0ab3212f16d6d14d8"
     }
   ]
 }

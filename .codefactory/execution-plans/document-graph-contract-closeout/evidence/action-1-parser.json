@@ -1,7 +1,7 @@
 {
   "status": "pass",
-  "checkedAt": "2026-09-13T17:04:09.637Z",
-  "procedure": "Parse and normalize each manifest source through Markdown Engine public APIs; require no diagnostics and verify every located node raw text against its original offset range. Confirm LANG-10 is parsed as a link with its intended title.",
+  "checkedAt": "2026-09-13T17:13:42.132Z",
+  "procedure": "Parse and normalize each manifest source through Markdown Engine public APIs; require no diagnostics and verify every located node raw text against its original offset range. Confirm LANG-10 is parsed as a link with its intended title. Confirm LANG-51 contains only a paragraph/text leaf and LANG-55 contains the strong wrapper with raw source **#REQ**.",
   "versions": {
     "node": "v22.20.0",
     "parser": "3.5.0"
@@ -9,7 +9,7 @@
   "inputs": [
     {
       "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
-      "sha256": "ee49deb63cbd089411a5c8ea9138481fb37e78618856ddafb5ba6b90c381970c"
+      "sha256": "316361b4871773c74eb402ee920ce8497ba39bce9049ada0ab3212f16d6d14d8"
     }
   ],
   "scope": "Parser/source feasibility only; no Trace recognition, ownership or expected graph computed",
@@ -541,6 +541,16 @@
       "verifiedRawSlices": 2,
       "kinds": [
         "paragraph",
+        "text"
+      ]
+    },
+    {
+      "id": "LANG-55",
+      "nodeCount": 5,
+      "verifiedRawSlices": 5,
+      "kinds": [
+        "paragraph",
+        "strong",
         "text"
       ]
     }
