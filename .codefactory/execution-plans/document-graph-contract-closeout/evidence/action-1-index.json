@@ -1,0 +1,130 @@
+{
+  "status": "pass",
+  "checkedAt": "2026-09-13T17:13:42.132Z",
+  "procedure": "Parse the JSON index; require 55 sequential unique case IDs, 15 unique packet rule rows, nonempty Markdown and interpretation per case, valid rule references, and exact agreement between expanded cases.md ranges and manifest case-to-rule membership.",
+  "scope": "Index shape, named-rule coverage, and cases.md mapping only; no expected graph or language semantics computed",
+  "ruleCount": 15,
+  "caseCount": 55,
+  "coverage": {
+    "LEX-1": [
+      "LANG-01",
+      "LANG-02",
+      "LANG-03",
+      "LANG-04",
+      "LANG-09"
+    ],
+    "LEX-2": [
+      "LANG-05",
+      "LANG-06",
+      "LANG-53"
+    ],
+    "LEX-3": [
+      "LANG-07",
+      "LANG-08"
+    ],
+    "LEX-4": [
+      "LANG-08",
+      "LANG-09",
+      "LANG-10",
+      "LANG-11",
+      "LANG-12",
+      "LANG-13",
+      "LANG-46",
+      "LANG-53"
+    ],
+    "LEX-5": [
+      "LANG-14",
+      "LANG-15",
+      "LANG-16",
+      "LANG-17",
+      "LANG-18",
+      "LANG-19",
+      "LANG-29",
+      "LANG-30",
+      "LANG-49",
+      "LANG-50",
+      "LANG-51",
+      "LANG-52",
+      "LANG-55"
+    ],
+    "LEX-6": [
+      "LANG-20",
+      "LANG-21",
+      "LANG-22"
+    ],
+    "LEX-7": [
+      "LANG-23",
+      "LANG-24",
+      "LANG-25",
+      "LANG-26",
+      "LANG-27",
+      "LANG-28",
+      "LANG-47"
+    ],
+    "LEX-8": [
+      "LANG-18",
+      "LANG-29",
+      "LANG-30",
+      "LANG-45",
+      "LANG-49",
+      "LANG-50",
+      "LANG-51",
+      "LANG-52",
+      "LANG-55"
+    ],
+    "OWN-1": [
+      "LANG-01",
+      "LANG-05",
+      "LANG-31"
+    ],
+    "OWN-2": [
+      "LANG-32",
+      "LANG-33",
+      "LANG-38"
+    ],
+    "OWN-3": [
+      "LANG-34",
+      "LANG-35",
+      "LANG-36",
+      "LANG-37"
+    ],
+    "OWN-4": [
+      "LANG-39",
+      "LANG-40",
+      "LANG-41",
+      "LANG-45"
+    ],
+    "OWN-5": [
+      "LANG-41",
+      "LANG-42",
+      "LANG-43",
+      "LANG-54"
+    ],
+    "OWN-6": [
+      "LANG-33",
+      "LANG-35",
+      "LANG-36",
+      "LANG-38",
+      "LANG-48"
+    ],
+    "OWN-7": [
+      "LANG-26",
+      "LANG-44",
+      "LANG-54"
+    ]
+  },
+  "inputs": [
+    {
+      "file": "docs/design/markdown-trace-document-graph-interfaces.md",
+      "sha256": "7543892d83ce85848b58bae613276b970137ddb305a547d77a159b16e71c499d"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/cases.md",
+      "sha256": "1ede9e905c2ce455aab2189713303999f4aecfd9e996520245e7dc66cf8f9c99"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
+      "sha256": "316361b4871773c74eb402ee920ce8497ba39bce9049ada0ab3212f16d6d14d8"
+    }
+  ]
+}

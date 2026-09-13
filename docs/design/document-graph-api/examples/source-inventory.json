@@ -1,0 +1,14 @@
+{
+  "sources": [
+    {
+      "file": "docs/evidence/generated-design-spec-demo.md",
+      "sha256": "0b6c209d3a48bdabd12e8dded19e5a174f01a0fa7c17c1178a29d9a1a7c9cf24",
+      "utf8Bytes": 15228,
+      "lines": 305,
+      "role": "Repository-owned historical design-spec candidate for the full proving corpus, not current design authority.",
+      "adaptation": "None. Not rewritten or used as an API semantic oracle yet.",
+      "annotationStatus": "Inventory only; full identifier/ownership/context annotation remains Q-2/Q-4."
+    }
+  ],
+  "limitations": "The 22-line mixed-layout example retires API representation questions; it is not a large-spec or performance proof."
+}

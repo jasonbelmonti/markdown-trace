@@ -1,0 +1,460 @@
+{
+  "diagnostics": [],
+  "evidence": {
+    "diagnostics": [],
+    "engineVersion": "3.6.0",
+    "inputHash": "d3a6c22f6c089fa0730d71d6d3c5b186cb31d762675050904af4588fdfdcd7f4",
+    "profileHash": "20e664060a8b483398cd055ba7f26259cbbf5eb99986ba2c7d6d2a521a6b777b",
+    "ruleResults": [
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "actors.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "boundary-map.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "capabilities.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "compatibility.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "contract-inventory.ids.unique"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "contract-inventory.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "contract.traceability.validation"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "document-control.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "domain-vocabulary.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "evaluation-findings.ids.unique"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "evaluation-findings.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "evidence.references.in-rubric"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "existing-interface-constraints.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "fault-contracts.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "findings.references.in-rubric"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "grounding-evidence.ids.unique"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "grounding-evidence.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "integration-strategy.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "internal-review.grounding-result.present"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "internal-review.readiness.present"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "internal-review.rubric-result.present"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "internal-review.validation-result.present"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "open-questions.ids.unique"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "open-questions.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "rubric-scores.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.0"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.1"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.10"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.11"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.2"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.3"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.3a"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.4"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.5"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.6"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.7"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.8"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "section.status.9"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "sections.required"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "source-requirements.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "traceability.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "validation-plan.ids.unique"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "validation-plan.table.columns"
+      },
+      {
+        "diagnostics": [],
+        "passed": true,
+        "ruleId": "validation.references.defined"
+      }
+    ],
+    "runtimeVersion": "v22.20.0"
+  },
+  "profile": {
+    "documentVersion": "1.0.0",
+    "ruleCount": 44,
+    "syntaxVersion": "markdown-engine.validation@v1"
+  },
+  "ruleResults": [
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "actors.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "boundary-map.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "capabilities.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "compatibility.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "contract-inventory.ids.unique"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "contract-inventory.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "contract.traceability.validation"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "document-control.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "domain-vocabulary.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "evaluation-findings.ids.unique"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "evaluation-findings.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "evidence.references.in-rubric"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "existing-interface-constraints.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "fault-contracts.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "findings.references.in-rubric"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "grounding-evidence.ids.unique"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "grounding-evidence.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "integration-strategy.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "internal-review.grounding-result.present"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "internal-review.readiness.present"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "internal-review.rubric-result.present"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "internal-review.validation-result.present"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "open-questions.ids.unique"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "open-questions.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "rubric-scores.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.0"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.1"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.10"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.11"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.2"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.3"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.3a"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.4"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.5"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.6"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.7"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.8"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "section.status.9"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "sections.required"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "source-requirements.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "traceability.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "validation-plan.ids.unique"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "validation-plan.table.columns"
+    },
+    {
+      "diagnostics": [],
+      "passed": true,
+      "ruleId": "validation.references.defined"
+    }
+  ],
+  "valid": true
+}

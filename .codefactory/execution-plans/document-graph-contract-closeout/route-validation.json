@@ -1,0 +1,26 @@
+{
+  "valid": true,
+  "diagnostics": [],
+  "evidence": {
+    "artifactType": "ExecutionPlan",
+    "phaseCount": 3,
+    "actionCount": 5,
+    "gateCount": 3,
+    "stepCount": 8,
+    "phaseOrder": [
+      "EP-PH-1",
+      "EP-PH-2",
+      "EP-PH-3"
+    ],
+    "routeOrder": [
+      "EP-ACT-1",
+      "EP-ACT-2",
+      "EP-GATE-1",
+      "EP-ACT-3",
+      "EP-ACT-4",
+      "EP-GATE-2",
+      "EP-ACT-5",
+      "EP-GATE-3"
+    ]
+  }
+}

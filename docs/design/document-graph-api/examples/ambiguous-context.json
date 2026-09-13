@@ -1,0 +1,351 @@
+{
+  "provenance": "Independent hand-authored review oracle for PR #75 F2. Coordinates are original UTF-16 offsets; O1/O2/F1 and analysisId are design aliases, not a runtime identity algorithm. No Trace API produced these results.",
+  "source": {
+    "documentId": "ambiguous-context.md",
+    "sha256": "b83dbc7ae7f2c2d7e9fc76e3fba5d0c55337711adb2316977e7c42e66a0b5b93",
+    "utf8Bytes": 29,
+    "utf16Length": 29,
+    "text": "{#WP-1} {#WP-2} Shared text.\n"
+  },
+  "profile": {
+    "schemaVersion": "markdown-trace.document-profile.v1",
+    "profileId": "ambiguous-context",
+    "interpretation": {
+      "language": "markdown-trace.identity.draft1",
+      "entityKinds": [
+        {
+          "name": "work",
+          "prefixes": [
+            "WP"
+          ]
+        }
+      ]
+    },
+    "validation": {
+      "minEntities": 0,
+      "allowedRelations": [],
+      "rules": []
+    }
+  },
+  "expectedGraph": {
+    "coverage": "complete",
+    "diagnostics": [],
+    "definitions": [
+      {
+        "id": "O1",
+        "identifier": "WP-1",
+        "range": {
+          "start": {
+            "offset": 0,
+            "line": 1,
+            "column": 1
+          },
+          "end": {
+            "offset": 7,
+            "line": 1,
+            "column": 8
+          }
+        },
+        "fragmentId": "F1"
+      },
+      {
+        "id": "O2",
+        "identifier": "WP-2",
+        "range": {
+          "start": {
+            "offset": 8,
+            "line": 1,
+            "column": 9
+          },
+          "end": {
+            "offset": 15,
+            "line": 1,
+            "column": 16
+          }
+        },
+        "fragmentId": "F1"
+      }
+    ],
+    "relationships": [],
+    "fragment": {
+      "id": "F1",
+      "range": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 28,
+          "line": 1,
+          "column": 29
+        }
+      },
+      "owner": {
+        "status": "ambiguous",
+        "declarationIds": [
+          "O1",
+          "O2"
+        ]
+      },
+      "structure": "paragraph",
+      "requiredContext": []
+    },
+    "validationStatus": "pass"
+  },
+  "scenarios": [
+    {
+      "id": "single-root",
+      "query": {
+        "roots": [
+          "WP-1"
+        ],
+        "direction": "outgoing",
+        "maxDepth": 0,
+        "maxNodes": 1
+      },
+      "budget": {
+        "maxUtf8Bytes": 1000,
+        "maxFragments": 10
+      },
+      "expected": {
+        "schemaVersion": "markdown-trace.document-context.v1",
+        "analysisId": "design:ambiguous-context",
+        "coverage": "complete",
+        "diagnosticCount": 0,
+        "source": {
+          "documentId": "ambiguous-context.md",
+          "sha256": "b83dbc7ae7f2c2d7e9fc76e3fba5d0c55337711adb2316977e7c42e66a0b5b93",
+          "utf8Bytes": 29,
+          "utf16Length": 29
+        },
+        "parts": [],
+        "includedIdentifiers": [],
+        "omittedIdentifiers": [
+          {
+            "identifier": "WP-1",
+            "reason": "ambiguous-ownership",
+            "fragmentId": "F1",
+            "sourceRange": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 28,
+                "line": 1,
+                "column": 29
+              }
+            },
+            "declarationIds": [
+              "O1",
+              "O2"
+            ]
+          }
+        ],
+        "usedUtf8Bytes": 0,
+        "selection": {
+          "query": {
+            "roots": [
+              "WP-1"
+            ],
+            "direction": "outgoing",
+            "maxDepth": 0,
+            "maxNodes": 1
+          },
+          "nodes": [
+            {
+              "identifier": "WP-1",
+              "depth": 0,
+              "via": null
+            }
+          ],
+          "boundary": {
+            "depthLimited": false,
+            "nodeLimited": false,
+            "unresolvedRelationships": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "both-roots",
+      "query": {
+        "roots": [
+          "WP-1",
+          "WP-2"
+        ],
+        "direction": "outgoing",
+        "maxDepth": 0,
+        "maxNodes": 2
+      },
+      "budget": {
+        "maxUtf8Bytes": 1000,
+        "maxFragments": 10
+      },
+      "expected": {
+        "schemaVersion": "markdown-trace.document-context.v1",
+        "analysisId": "design:ambiguous-context",
+        "coverage": "complete",
+        "diagnosticCount": 0,
+        "source": {
+          "documentId": "ambiguous-context.md",
+          "sha256": "b83dbc7ae7f2c2d7e9fc76e3fba5d0c55337711adb2316977e7c42e66a0b5b93",
+          "utf8Bytes": 29,
+          "utf16Length": 29
+        },
+        "parts": [],
+        "includedIdentifiers": [],
+        "omittedIdentifiers": [
+          {
+            "identifier": "WP-1",
+            "reason": "ambiguous-ownership",
+            "fragmentId": "F1",
+            "sourceRange": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 28,
+                "line": 1,
+                "column": 29
+              }
+            },
+            "declarationIds": [
+              "O1",
+              "O2"
+            ]
+          },
+          {
+            "identifier": "WP-2",
+            "reason": "ambiguous-ownership",
+            "fragmentId": "F1",
+            "sourceRange": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 28,
+                "line": 1,
+                "column": 29
+              }
+            },
+            "declarationIds": [
+              "O1",
+              "O2"
+            ]
+          }
+        ],
+        "usedUtf8Bytes": 0,
+        "selection": {
+          "query": {
+            "roots": [
+              "WP-1",
+              "WP-2"
+            ],
+            "direction": "outgoing",
+            "maxDepth": 0,
+            "maxNodes": 2
+          },
+          "nodes": [
+            {
+              "identifier": "WP-1",
+              "depth": 0,
+              "via": null
+            },
+            {
+              "identifier": "WP-2",
+              "depth": 0,
+              "via": null
+            }
+          ],
+          "boundary": {
+            "depthLimited": false,
+            "nodeLimited": false,
+            "unresolvedRelationships": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "zero-budget",
+      "query": {
+        "roots": [
+          "WP-1"
+        ],
+        "direction": "outgoing",
+        "maxDepth": 0,
+        "maxNodes": 1
+      },
+      "budget": {
+        "maxUtf8Bytes": 0,
+        "maxFragments": 0
+      },
+      "expected": {
+        "schemaVersion": "markdown-trace.document-context.v1",
+        "analysisId": "design:ambiguous-context",
+        "coverage": "complete",
+        "diagnosticCount": 0,
+        "source": {
+          "documentId": "ambiguous-context.md",
+          "sha256": "b83dbc7ae7f2c2d7e9fc76e3fba5d0c55337711adb2316977e7c42e66a0b5b93",
+          "utf8Bytes": 29,
+          "utf16Length": 29
+        },
+        "parts": [],
+        "includedIdentifiers": [],
+        "omittedIdentifiers": [
+          {
+            "identifier": "WP-1",
+            "reason": "ambiguous-ownership",
+            "fragmentId": "F1",
+            "sourceRange": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 28,
+                "line": 1,
+                "column": 29
+              }
+            },
+            "declarationIds": [
+              "O1",
+              "O2"
+            ]
+          }
+        ],
+        "usedUtf8Bytes": 0,
+        "selection": {
+          "query": {
+            "roots": [
+              "WP-1"
+            ],
+            "direction": "outgoing",
+            "maxDepth": 0,
+            "maxNodes": 1
+          },
+          "nodes": [
+            {
+              "identifier": "WP-1",
+              "depth": 0,
+              "via": null
+            }
+          ],
+          "boundary": {
+            "depthLimited": false,
+            "nodeLimited": false,
+            "unresolvedRelationships": 0
+          }
+        }
+      }
+    }
+  ]
+}
