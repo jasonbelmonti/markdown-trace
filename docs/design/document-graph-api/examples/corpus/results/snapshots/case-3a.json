@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:7a064090e9a6dfff577bfeb4f52f28da24dfaecc4c99395baf1149021b4db4cf",
+  "source": {"documentId": "scenarios/case-3a.md", "sha256": "7a064090e9a6dfff577bfeb4f52f28da24dfaecc4c99395baf1149021b4db4cf", "utf8Bytes": 59, "utf16Length": 59},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O4"}},
+    {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+    {"identifier": "WP-2", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O2"}}
+  ],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "WP-1",
+      "role": "definition",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 7, "line": 1, "column": 8}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O2",
+      "identifier": "WP-2",
+      "role": "definition",
+      "range": {"start": {"offset": 8, "line": 1, "column": 9}, "end": {"offset": 15, "line": 1, "column": 16}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O3",
+      "identifier": "REQ-1",
+      "role": "reference",
+      "range": {"start": {"offset": 16, "line": 1, "column": 17}, "end": {"offset": 34, "line": 1, "column": 35}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O4",
+      "identifier": "REQ-1",
+      "role": "definition",
+      "range": {"start": {"offset": 37, "line": 3, "column": 1}, "end": {"offset": 45, "line": 3, "column": 9}},
+      "fragmentId": "F2"
+    }
+  ],
+  "relationships": [{"id": "R1", "kind": "implements", "source": {"status": "ambiguous", "declarationIds": ["O1", "O2"]}, "target": "REQ-1", "occurrenceId": "O3"}],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 35, "line": 1, "column": 36}},
+      "owner": {"status": "ambiguous", "declarationIds": ["O1", "O2"]},
+      "structure": "paragraph",
+      "requiredContext": []
+    },
+    {
+      "id": "F2",
+      "range": {"start": {"offset": 37, "line": 3, "column": 1}, "end": {"offset": 58, "line": 3, "column": 22}},
+      "owner": {"status": "owned", "identifier": "REQ-1", "declarationId": "O4"},
+      "structure": "paragraph",
+      "requiredContext": []
+    }
+  ],
+  "exclusions": [],
+  "diagnostics": [
+    {
+      "code": "markdown-trace.language.ambiguous-reference",
+      "severity": "error",
+      "message": "ambiguous-reference",
+      "identifiers": ["REQ-1"],
+      "sourceRanges": [{"start": {"offset": 16, "line": 1, "column": 17}, "end": {"offset": 34, "line": 1, "column": 35}}]
+    }
+  ]
+}

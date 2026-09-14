@@ -45,7 +45,7 @@ The current parser probe proves the required basic nodes and raw offsets exist i
 
 ## Recorded language decisions
 
-EP-ACT-1 records the recommended lexical and ownership rules in the interface packet. Following PR review remediation, the [rule/case index](corpus/manifest.json) maps 55 paired Markdown/annotation fixtures. The focused [ambiguous-context oracle](ambiguous-context.json) covers the new ownership omission. EP-ACT-2 also materializes all 24 API scenario inputs and their source interpretations, including shared-source references and a separate after-edit source. EP-GATE-1 records two independent interpretations and their comparison; complete executable API-result expectations remain EP-ACT-3.
+EP-ACT-1 records the recommended lexical and ownership rules in the interface packet. Following PR review remediation, the [rule/case index](corpus/manifest.json) maps 55 paired Markdown/annotation fixtures. The focused [ambiguous-context oracle](ambiguous-context.json) covers the new ownership omission. EP-ACT-2 also materializes all 24 API scenario inputs and their source interpretations, including shared-source references and a separate after-edit source. EP-GATE-1 records two independent interpretations and their comparison; EP-ACT-3 adds [complete API result images](corpus/results/README.md) and the generalized checker for all 79 cases. EP-ACT-4 consumer/compatibility reconciliation is next.
 
 | Rule | Decision demonstrated | Example IDs |
 | --- | --- | --- |

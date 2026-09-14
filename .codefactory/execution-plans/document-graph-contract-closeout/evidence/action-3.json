@@ -1,0 +1,98 @@
+{
+  "action": "EP-ACT-3",
+  "status": "complete",
+  "completedAt": "2026-09-14T21:39:13.079976+00:00",
+  "baseline": "9155cdd65bffdd5afad299deeb28abd5b0a9eb9c",
+  "branch": "codex/document-graph-api-oracles",
+  "task": {
+    "file": "docs/tasks/document-graph-contract.md",
+    "sha256": "f9f7132321ed0e8664a0e4f906074e7302de8dfc03d5c94df39033e2a3e52057"
+  },
+  "plan": {
+    "file": ".codefactory/execution-plans/document-graph-contract-closeout/execution-plan.md",
+    "sha256": "dc0b178d6f3d7069675be0d99bdb148974ccd6683b3fc6909febc716721ca220"
+  },
+  "packet": {
+    "file": "docs/design/markdown-trace-document-graph-interfaces.md",
+    "sha256": "2aece305cfa9b08ff0befcb667aca3a544f12484d62c449e87a7042ae080dbfd"
+  },
+  "scope": "Complete expected API results and generalized corpus consistency checker. Advances TD-SC-2/TD-SC-3 without completing the parent task.",
+  "counts": {
+    "caseCount": 79,
+    "annotationCount": 81,
+    "sourceCount": 66,
+    "modelStateCount": 2,
+    "operationCount": 1183
+  },
+  "dtoValuesChecked": 1442,
+  "checkerTests": 38,
+  "compatibilityTests": 219,
+  "inputEvidence": [
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-inputs-before.json",
+      "sha256": "5fc3dcd8d0469f2d0aa2f4ac805ef6d67b1af06b0501d8ed90a93fff472f6012"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-inputs-after.json",
+      "sha256": "5fc3dcd8d0469f2d0aa2f4ac805ef6d67b1af06b0501d8ed90a93fff472f6012"
+    }
+  ],
+  "inputsStable": true,
+  "commands": [
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-corpus.json",
+      "sha256": "4e40dcec22d09f89ade23aeb03351312b58bd98e9cf64e1e02640250ba49346b"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-result-types.json",
+      "sha256": "46c31eda9ab453f0d8f8fe7f457a8d86ce53f1159585e0743511b58f1c2fae65"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-checker-tests.json",
+      "sha256": "27364e97cd55884663f1f79f6a864db64f42c5361e65c3b24f276d93aae403c2"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-declarations.json",
+      "sha256": "685f4f433670e69ff1784ab4f30d282d8d9330575c93418e7cf415fe24f5c34a"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-parser.json",
+      "sha256": "273ada7d6b726b274fa9fdb7ba899fcb9558407116866e898dba5a6b6c82a7c3"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-materialization.json",
+      "sha256": "b4bc01ec3caf0180e31b8aa22355033e47edcf811c9fdf9016b1efaca66bfb3d"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-corpus-parser.json",
+      "sha256": "f0f01d274841ff9806c79d7ec03be4dbdd7e7504a586ea751d7a470f3107edfa"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-structure.json",
+      "sha256": "3feded84e3c353a2b2681ad651a57bf4e47993e39994025bab94c985636b87ff"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-compatibility.json",
+      "sha256": "4b65b5b5b920bb7084f557c7f8106fbbe9bce44ac078dc135d79e3f620a8655f"
+    }
+  ],
+  "interpretationReuse": {
+    "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-interpretation-reuse.json",
+    "sha256": "a73f2daa2765beb8f42f5d79228bd5ee48ee8579d7e687061a9bedc399220289"
+  },
+  "resultWalk": {
+    "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-result-walk.json",
+    "sha256": "c5436aab50e2713726fc2009e70c8fd5e243f5cc1803448b02f12fad8b107371"
+  },
+  "authoringProvenance": "Frozen independently reviewed source facts; temporary Python serializer for redundant result joins/accounting; explicitly enumerated scenario traversal answers; separately authored JavaScript consistency checks and maintainer result walk. No extractor generated expected source facts.",
+  "executionNote": "An initial concurrent compatibility attempt detected evidence-file creation in its git-status guard. That result was not admitted. The final compatibility command ran alone after other captures completed and passed.",
+  "protectedSurfaces": "src/tests/scripts/schemas/.github/package and lock unchanged from baseline; inventory original unchanged.",
+  "remaining": [
+    "EP-ACT-4: declaration/consumer and first-delivery compatibility reconciliation",
+    "EP-GATE-2 after EP-ACT-4",
+    "EP-ACT-5/EP-GATE-3 final parent-task handoff",
+    "Q-1/Q-2 owner syntax and authoring-fit decisions",
+    "Q-3 public surface acceptance; Q-4 real-spec context/scale pilot"
+  ],
+  "handoff": "First read docs/tasks/document-graph-contract.md and the execution-plan.md path above, verifying adjacent checksums. Then read the current packet, validation.json and examples/corpus/results/README.md; verify all current artifact hashes. Continue at EP-ACT-4."
+}

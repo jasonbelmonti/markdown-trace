@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:25f777a186f242e9865b4ef4a80fbc7a51b00a7fabe371aee3f1a5dbcb2135db",
+  "source": {"documentId": "language/lang-13.md", "sha256": "25f777a186f242e9865b4ef4a80fbc7a51b00a7fabe371aee3f1a5dbcb2135db", "utf8Bytes": 22, "utf16Length": 22},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "complete",
+  "identifiers": [],
+  "occurrences": [],
+  "relationships": [],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 21, "line": 3, "column": 7}},
+      "owner": {"status": "unowned"},
+      "structure": "other",
+      "requiredContext": []
+    }
+  ],
+  "exclusions": [{"range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 21, "line": 3, "column": 7}}, "reason": "html-block"}],
+  "diagnostics": []
+}

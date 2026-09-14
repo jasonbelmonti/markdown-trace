@@ -1,0 +1,168 @@
+{
+  "reviewer": "Codex implementation maintainer; not an independent reviewer or owner acceptance",
+  "method": "Read current task/packet and frozen source evidence. Inspect all 79 result summaries for coverage, report statuses/non-pass obligations and selected/omitted context ranges and byte counts. Inspect every scenario traversal and pagination/filter variant. Re-read raw mixed-layout, forward/dangling/duplicate/unowned/ambiguous/repeated/cyclic/edited/CRLF sources and parent-child/ambiguous context fixtures. Compare the following outcomes with contract clauses and source facts. Automated consistency and complete DTO checks support this bounded walk.",
+  "caseIds": [
+    "LANG-01",
+    "LANG-02",
+    "LANG-03",
+    "LANG-04",
+    "LANG-05",
+    "LANG-06",
+    "LANG-07",
+    "LANG-08",
+    "LANG-09",
+    "LANG-10",
+    "LANG-11",
+    "LANG-12",
+    "LANG-13",
+    "LANG-14",
+    "LANG-15",
+    "LANG-16",
+    "LANG-17",
+    "LANG-18",
+    "LANG-19",
+    "LANG-20",
+    "LANG-21",
+    "LANG-22",
+    "LANG-23",
+    "LANG-24",
+    "LANG-25",
+    "LANG-26",
+    "LANG-27",
+    "LANG-28",
+    "LANG-29",
+    "LANG-30",
+    "LANG-31",
+    "LANG-32",
+    "LANG-33",
+    "LANG-34",
+    "LANG-35",
+    "LANG-36",
+    "LANG-37",
+    "LANG-38",
+    "LANG-39",
+    "LANG-40",
+    "LANG-41",
+    "LANG-42",
+    "LANG-43",
+    "LANG-44",
+    "LANG-45",
+    "LANG-46",
+    "LANG-47",
+    "LANG-48",
+    "LANG-49",
+    "LANG-50",
+    "LANG-51",
+    "LANG-52",
+    "LANG-53",
+    "LANG-54",
+    "LANG-55",
+    "CASE-1",
+    "CASE-2",
+    "CASE-2D",
+    "CASE-3",
+    "CASE-3A",
+    "CASE-4",
+    "CASE-5",
+    "CASE-5A",
+    "CASE-6",
+    "CASE-7",
+    "CASE-8",
+    "CASE-9",
+    "CASE-9D",
+    "CASE-9N",
+    "CASE-9C",
+    "CASE-10",
+    "CASE-11",
+    "CASE-11H",
+    "CASE-11Z",
+    "CASE-11A",
+    "CASE-11AZ",
+    "CASE-12",
+    "CASE-13",
+    "CASE-14"
+  ],
+  "observations": [
+    {
+      "cases": [
+        "LANG-01 through LANG-55"
+      ],
+      "result": "Every language case has validation, lookup/incoming/outgoing for each observed label plus absent label, root admission and context for usable roots. Missing targets fail validation with complete scan coverage; malformed and owner failures make coverage partial. Literal exclusions do not invent facts."
+    },
+    {
+      "cases": [
+        "CASE-1",
+        "CASE-2",
+        "CASE-2D"
+      ],
+      "result": "Forward WP-1 implements REQ-1 resolves after collection. Missing REQ-2 retains two backlinks and four total relationships. Duplicate REQ-1 retains both declarations and rejects traversal root admission without losing direct evidence."
+    },
+    {
+      "cases": [
+        "CASE-3",
+        "CASE-3A"
+      ],
+      "result": "Incoming evidence retains unowned/ambiguous owners. Traversal reports one unresolved incident edge; incoming depth-one CASE-3 also reports the unvisited VAL-1 depth boundary. Overall validation fails owner integrity."
+    },
+    {
+      "cases": [
+        "CASE-4",
+        "CASE-7",
+        "CASE-8"
+      ],
+      "result": "Empty allowlist fails four observed edges while graph/query/traversal facts remain the mixed snapshot. Interpretation change yields profile-mismatch. Symbolic bindings distinguish policy identity from analysis identity."
+    },
+    {
+      "cases": [
+        "CASE-5",
+        "CASE-5A",
+        "CASE-6"
+      ],
+      "result": "Empty example fails minEntities/entity-count and reports zero-source require-relation as not-applicable; explicit empty policy passes. Unsupported rule/schema fail compilation and identify the field/rule in diagnostics."
+    },
+    {
+      "cases": [
+        "CASE-9",
+        "CASE-9D",
+        "CASE-9N",
+        "CASE-9C"
+      ],
+      "result": "Repeated REQ-2 backlinks page as R2/R3/R5 with offsets 1/2/null; exhausted pages stay empty. Empty/unknown filters match none. Depth-zero and two-node bounds are visible. Three cyclic/self edges remain but traversal selects two nodes with canonical R1 predecessor."
+    },
+    {
+      "cases": [
+        "CASE-10",
+        "CASE-12",
+        "CASE-14"
+      ],
+      "result": "After-edit identity rejects earlier selection. Either analysis admission limit returns failure without a snapshot. Post-compilation input mutation leaves identity, interpretation and validation unchanged; JSON copies are rejected as handles. These are expected images, not an executed runtime immutability test."
+    },
+    {
+      "cases": [
+        "CASE-11",
+        "CASE-11H",
+        "CASE-11Z",
+        "CASE-13"
+      ],
+      "result": "WP-1 context totals 169 bytes; WP-2 heading/header/row total 127 bytes and three parts. Exact fit admits; 126 bytes or two parts omits whole bundle. Zero budget returns no parts. CRLF/emoji variant preserves exact source offsets and totals 175 context bytes."
+    },
+    {
+      "cases": [
+        "LANG-44",
+        "LANG-54",
+        "CASE-11A",
+        "CASE-11AZ"
+      ],
+      "result": "Parent context excludes the child paragraph; child includes heading support. Ambiguous definition fragments omit each entity, including both selected owners and zero budget, without creating a source-analysis diagnostic when there is no reference."
+    },
+    {
+      "cases": [
+        "CASE-13 injected partial",
+        "CASE-13 injected warning"
+      ],
+      "result": "Unsupported-node model yields overall indeterminate and partial query metadata; warning-only model yields pass/complete. Both are explicitly injected API states, not parser outputs of the CRLF fixture."
+    }
+  ],
+  "findingResolved": "CASE-6 initially lacked compiler field/rule diagnostics; complete diagnostics and a checker corruption test were added before final verification.",
+  "verdict": "No unresolved inconsistency found within EP-ACT-3. EP-ACT-4/EP-GATE-2 consumer and compatibility reconciliation remain; no production acceptance claimed."
+}

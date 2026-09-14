@@ -1,0 +1,434 @@
+{
+  "schemaVersion": "markdown-trace.design-api-results.v1",
+  "caseId": "LANG-32",
+  "annotation": "language/lang-32.expected.json",
+  "snapshot": "snapshots/lang-32.json",
+  "sourceSha256": "71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+  "operations": [
+    {
+      "id": "validateGraph",
+      "operation": "validateGraph",
+      "arguments": {"profile": "language"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "schemaVersion": "markdown-trace.document-validation.v1",
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "profileId": "language-integrity",
+          "interpretationHash": "@interpretation:standard",
+          "validationHash": "@validation:language",
+          "status": "fail",
+          "diagnostics": [
+            {
+              "code": "markdown-trace.integrity.unresolved-target",
+              "severity": "error",
+              "message": "unresolved-target",
+              "identifiers": ["WP-1"],
+              "sourceRanges": [{"start": {"offset": 18, "line": 3, "column": 1}, "end": {"offset": 22, "line": 3, "column": 5}}],
+              "ruleId": "integrity.targets"
+            },
+            {
+              "code": "markdown-trace.integrity.unresolved-owner",
+              "severity": "error",
+              "message": "unresolved-owner",
+              "identifiers": ["WP-2"],
+              "sourceRanges": [{"start": {"offset": 44, "line": 7, "column": 1}, "end": {"offset": 48, "line": 7, "column": 5}}],
+              "ruleId": "integrity.owners"
+            },
+            {
+              "code": "markdown-trace.integrity.unresolved-target",
+              "severity": "error",
+              "message": "unresolved-target",
+              "identifiers": ["WP-2"],
+              "sourceRanges": [{"start": {"offset": 44, "line": 7, "column": 1}, "end": {"offset": 48, "line": 7, "column": 5}}],
+              "ruleId": "integrity.targets"
+            }
+          ],
+          "ruleResults": [
+            {"ruleId": "integrity.language", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "integrity.definitions", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {
+              "ruleId": "integrity.targets",
+              "status": "fail",
+              "matchedSubjects": 2,
+              "evaluatedSubjects": 2,
+              "diagnostics": [
+                {
+                  "code": "markdown-trace.integrity.unresolved-target",
+                  "severity": "error",
+                  "message": "unresolved-target",
+                  "identifiers": ["WP-1"],
+                  "sourceRanges": [{"start": {"offset": 18, "line": 3, "column": 1}, "end": {"offset": 22, "line": 3, "column": 5}}],
+                  "ruleId": "integrity.targets"
+                },
+                {
+                  "code": "markdown-trace.integrity.unresolved-target",
+                  "severity": "error",
+                  "message": "unresolved-target",
+                  "identifiers": ["WP-2"],
+                  "sourceRanges": [{"start": {"offset": 44, "line": 7, "column": 1}, "end": {"offset": 48, "line": 7, "column": 5}}],
+                  "ruleId": "integrity.targets"
+                }
+              ]
+            },
+            {"ruleId": "integrity.kinds", "status": "pass", "matchedSubjects": 3, "evaluatedSubjects": 3, "diagnostics": []},
+            {
+              "ruleId": "integrity.owners",
+              "status": "fail",
+              "matchedSubjects": 2,
+              "evaluatedSubjects": 2,
+              "diagnostics": [
+                {
+                  "code": "markdown-trace.integrity.unresolved-owner",
+                  "severity": "error",
+                  "message": "unresolved-owner",
+                  "identifiers": ["WP-2"],
+                  "sourceRanges": [{"start": {"offset": 44, "line": 7, "column": 1}, "end": {"offset": 48, "line": 7, "column": 5}}],
+                  "ruleId": "integrity.owners"
+                }
+              ]
+            },
+            {"ruleId": "policy.minEntities", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {"ruleId": "policy.allowedRelations", "status": "indeterminate", "matchedSubjects": 2, "evaluatedSubjects": 2, "diagnostics": []}
+          ]
+        }
+      }
+    },
+    {
+      "id": "lookup:REQ-1",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "REQ-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "record": {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "definitions": [
+            {
+              "id": "O1",
+              "identifier": "REQ-1",
+              "role": "definition",
+              "range": {"start": {"offset": 2, "line": 1, "column": 3}, "end": {"offset": 10, "line": 1, "column": 11}},
+              "fragmentId": "F1"
+            }
+          ],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:REQ-1",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "REQ-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "identifier": "REQ-1",
+          "record": {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:REQ-1",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "REQ-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "identifier": "REQ-1",
+          "record": {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "items": [
+            {
+              "relationship": {"id": "R1", "kind": "references", "source": {"status": "owned", "identifier": "REQ-1", "declarationId": "O1"}, "target": "WP-1", "occurrenceId": "O2"},
+              "occurrence": {
+                "id": "O2",
+                "identifier": "WP-1",
+                "role": "reference",
+                "range": {"start": {"offset": 18, "line": 3, "column": 1}, "end": {"offset": 22, "line": 3, "column": 5}},
+                "fragmentId": "F2"
+              }
+            }
+          ],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 1,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "lookup:WP-1",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "WP-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "record": {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "missing"}},
+          "definitions": [],
+          "referenceCount": 1
+        }
+      }
+    },
+    {
+      "id": "incoming:WP-1",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "WP-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "identifier": "WP-1",
+          "record": {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "missing"}},
+          "items": [
+            {
+              "relationship": {"id": "R1", "kind": "references", "source": {"status": "owned", "identifier": "REQ-1", "declarationId": "O1"}, "target": "WP-1", "occurrenceId": "O2"},
+              "occurrence": {
+                "id": "O2",
+                "identifier": "WP-1",
+                "role": "reference",
+                "range": {"start": {"offset": 18, "line": 3, "column": 1}, "end": {"offset": 22, "line": 3, "column": 5}},
+                "fragmentId": "F2"
+              }
+            }
+          ],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 1,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:WP-1",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "WP-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "identifier": "WP-1",
+          "record": {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "missing"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "lookup:WP-2",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "WP-2"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "record": {"identifier": "WP-2", "entityKind": "work", "definition": {"status": "missing"}},
+          "definitions": [],
+          "referenceCount": 1
+        }
+      }
+    },
+    {
+      "id": "incoming:WP-2",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "WP-2"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "identifier": "WP-2",
+          "record": {"identifier": "WP-2", "entityKind": "work", "definition": {"status": "missing"}},
+          "items": [
+            {
+              "relationship": {"id": "R2", "kind": "references", "source": {"status": "unowned"}, "target": "WP-2", "occurrenceId": "O3"},
+              "occurrence": {
+                "id": "O3",
+                "identifier": "WP-2",
+                "role": "reference",
+                "range": {"start": {"offset": 44, "line": 7, "column": 1}, "end": {"offset": 48, "line": 7, "column": 5}},
+                "fragmentId": "F4"
+              }
+            }
+          ],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 1,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:WP-2",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "WP-2"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "identifier": "WP-2",
+          "record": {"identifier": "WP-2", "entityKind": "work", "definition": {"status": "missing"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "lookup:ABSENT-0",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "record": null,
+          "definitions": [],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:ABSENT-0",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "identifier": "ABSENT-0",
+          "record": null,
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:ABSENT-0",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "identifier": "ABSENT-0",
+          "record": null,
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "root:REQ-1",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["REQ-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "query": {"roots": ["REQ-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+          "nodes": [{"identifier": "REQ-1", "depth": 0, "via": null}],
+          "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 1}
+        }
+      }
+    },
+    {
+      "id": "context:REQ-1",
+      "operation": "extractContext",
+      "arguments": {"selection": "root:REQ-1", "budget": {"maxUtf8Bytes": 100000, "maxFragments": 1000}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82",
+          "coverage": "partial",
+          "diagnosticCount": 1,
+          "schemaVersion": "markdown-trace.document-context.v1",
+          "source": {"documentId": "language/lang-32.md", "sha256": "71b61054cdb0c623ec87b7dd37edd12defd56cfc6fbfb73239d69507d35d9c82", "utf8Bytes": 50, "utf16Length": 50},
+          "parts": [
+            {
+              "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 16, "line": 1, "column": 17}},
+              "text": "# {#REQ-1} First",
+              "forIdentifiers": ["REQ-1"],
+              "roles": ["owned-content"]
+            },
+            {
+              "range": {"start": {"offset": 18, "line": 3, "column": 1}, "end": {"offset": 23, "line": 3, "column": 6}},
+              "text": "WP-1.",
+              "forIdentifiers": ["REQ-1"],
+              "roles": ["owned-content"]
+            }
+          ],
+          "includedIdentifiers": ["REQ-1"],
+          "omittedIdentifiers": [],
+          "usedUtf8Bytes": 21,
+          "selection": {
+            "query": {"roots": ["REQ-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+            "nodes": [{"identifier": "REQ-1", "depth": 0, "via": null}],
+            "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 1}
+          }
+        }
+      }
+    },
+    {
+      "id": "root:WP-1",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["WP-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {"ok": false, "error": {"code": "unresolved-root", "message": "unresolved-root", "diagnostics": []}}
+    },
+    {
+      "id": "root:WP-2",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["WP-2"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {"ok": false, "error": {"code": "unresolved-root", "message": "unresolved-root", "diagnostics": []}}
+    },
+    {
+      "id": "root:ABSENT-0",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["ABSENT-0"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {"ok": false, "error": {"code": "unresolved-root", "message": "unresolved-root", "diagnostics": []}}
+    }
+  ]
+}

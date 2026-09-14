@@ -1,0 +1,26 @@
+{
+  "status": "pass",
+  "reviewedGate": {
+    "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1.json",
+    "sha256": "8c479d5c18bc7c3184c0ade33093225dcdd58c54594b4ff0b54f625da2064052"
+  },
+  "reviewedInputs": {
+    "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1/final-inputs.json",
+    "sha256": "b5046093940e182172c1f299a2364b61ef281b5701cb608e4e68420a924e944d"
+  },
+  "unchangedSourceAndAnnotationFiles": 147,
+  "interpretationLock": {
+    "file": "docs/design/document-graph-api/examples/corpus/results/interpretation-lock.json",
+    "sha256": "9ef4b5a2f893277d52340c04955fdf6dddb7525771ac2af6eb69b8a4cb0ad341"
+  },
+  "changedOtherGateInputs": [
+    "docs/design/document-graph-api/README.md",
+    "docs/design/document-graph-api/checks/check-examples.mjs",
+    "docs/design/document-graph-api/examples/cases.md",
+    "docs/design/document-graph-api/examples/corpus/README.md",
+    "docs/design/document-graph-api/examples/corpus/manifest.json",
+    "docs/design/markdown-trace-document-graph-interfaces.md",
+    "docs/design/markdown-trace-document-graph-interfaces.sha256"
+  ],
+  "disposition": "The 66 source files and 81 annotations remain byte-identical. Other differences are expected API-result expansion, checker replacement, documentation/revision/evidence navigation. The packet retains the independently reviewed lexical and ownership rules; result-report and context-part details are now explicit recommendations. EP-GATE-1 is reused only for source interpretation, not as independent approval of the new API results."
+}

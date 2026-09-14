@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "markdown-trace.design-api-results.v1",
+  "caseId": "CASE-8",
+  "annotation": "scenarios/mixed-layout.expected.json",
+  "snapshot": "snapshots/mixed-layout.json",
+  "sourceSha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901",
+  "operations": [
+    {
+      "id": "validateGraph",
+      "operation": "validateGraph",
+      "arguments": {"profile": "changed"},
+      "expected": {"ok": false, "error": {"code": "profile-mismatch", "message": "profile-mismatch", "diagnostics": []}}
+    }
+  ]
+}

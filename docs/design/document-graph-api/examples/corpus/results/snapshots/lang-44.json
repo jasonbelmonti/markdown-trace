@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+  "source": {"documentId": "language/lang-44.md", "sha256": "993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31", "utf8Bytes": 81, "utf16Length": 81},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+    {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O2"}}
+  ],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "REQ-1",
+      "role": "definition",
+      "range": {"start": {"offset": 2, "line": 1, "column": 3}, "end": {"offset": 10, "line": 1, "column": 11}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O2",
+      "identifier": "REQ-2",
+      "role": "definition",
+      "range": {"start": {"offset": 33, "line": 5, "column": 1}, "end": {"offset": 41, "line": 5, "column": 9}},
+      "fragmentId": "F3"
+    }
+  ],
+  "relationships": [],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 17, "line": 1, "column": 18}},
+      "owner": {"status": "owned", "identifier": "REQ-1", "declarationId": "O1"},
+      "structure": "heading",
+      "requiredContext": []
+    },
+    {
+      "id": "F2",
+      "range": {"start": {"offset": 19, "line": 3, "column": 1}, "end": {"offset": 31, "line": 3, "column": 13}},
+      "owner": {"status": "owned", "identifier": "REQ-1", "declarationId": "O1"},
+      "structure": "paragraph",
+      "requiredContext": ["F1"]
+    },
+    {
+      "id": "F3",
+      "range": {"start": {"offset": 33, "line": 5, "column": 1}, "end": {"offset": 58, "line": 5, "column": 26}},
+      "owner": {"status": "owned", "identifier": "REQ-2", "declarationId": "O2"},
+      "structure": "paragraph",
+      "requiredContext": ["F1"]
+    },
+    {
+      "id": "F4",
+      "range": {"start": {"offset": 60, "line": 7, "column": 1}, "end": {"offset": 80, "line": 7, "column": 21}},
+      "owner": {"status": "owned", "identifier": "REQ-1", "declarationId": "O1"},
+      "structure": "paragraph",
+      "requiredContext": ["F1"]
+    }
+  ],
+  "exclusions": [],
+  "diagnostics": []
+}

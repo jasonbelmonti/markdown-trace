@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:dd34cbcbf4b6c3d74c75d2563a386e0209b1127e4ce2737c923966357ec61d9c",
+  "source": {"documentId": "language/lang-47.md", "sha256": "dd34cbcbf4b6c3d74c75d2563a386e0209b1127e4ce2737c923966357ec61d9c", "utf8Bytes": 26, "utf16Length": 26},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "complete",
+  "identifiers": [{"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}}],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "WP-1",
+      "role": "definition",
+      "range": {"start": {"offset": 2, "line": 1, "column": 3}, "end": {"offset": 9, "line": 1, "column": 10}},
+      "fragmentId": "F1"
+    }
+  ],
+  "relationships": [],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 14, "line": 1, "column": 15}},
+      "owner": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"},
+      "structure": "heading",
+      "requiredContext": []
+    },
+    {
+      "id": "F2",
+      "range": {"start": {"offset": 16, "line": 3, "column": 1}, "end": {"offset": 25, "line": 3, "column": 10}},
+      "owner": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"},
+      "structure": "code",
+      "requiredContext": ["F1"]
+    }
+  ],
+  "exclusions": [{"range": {"start": {"offset": 16, "line": 3, "column": 1}, "end": {"offset": 25, "line": 3, "column": 10}}, "reason": "literal-indented-code"}],
+  "diagnostics": []
+}

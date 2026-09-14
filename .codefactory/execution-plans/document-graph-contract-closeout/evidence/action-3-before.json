@@ -1,0 +1,51 @@
+{
+  "action": "EP-ACT-3",
+  "baseline": "9155cdd65bffdd5afad299deeb28abd5b0a9eb9c",
+  "worktree": "/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/document-graph-api-oracles",
+  "branch": "codex/document-graph-api-oracles",
+  "authorization": "Owner: let's execute the next coding target; EP-ACT-3 expected API results and generalized corpus checker.",
+  "prerequisite": "EP-ACT-2 and EP-GATE-1 merged in PR76. All 189 validation artifacts and 170 gate inputs verified before changes.",
+  "sourceReconciliation": "Same task/plan and recommended semantics; merge and new worktree are expected progress. This action does not close EP-ACT-4/5, GATE-2/3, owner acceptance or runtime implementation.",
+  "inputs": [
+    {
+      "file": "AGENTS.md",
+      "sha256": "77b026a173e0193e9d77b16a2682afdf282beaa211091671c741f4c7aa963755"
+    },
+    {
+      "file": "docs/tasks/document-graph-contract.md",
+      "sha256": "f9f7132321ed0e8664a0e4f906074e7302de8dfc03d5c94df39033e2a3e52057"
+    },
+    {
+      "file": "docs/design/markdown-trace-document-graph-overview.md",
+      "sha256": "e08a88780dc60179cba0042dd0aa97655178b8d7b38a9540d541add5dba93cf5"
+    },
+    {
+      "file": "docs/design/markdown-trace-document-graph-interfaces.md",
+      "sha256": "14fb396a2a5927ecfb3fdd8863a14cbf90b9a1ce295c02df3e40d794af13273d"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/execution-plan.md",
+      "sha256": "dc0b178d6f3d7069675be0d99bdb148974ccd6683b3fc6909febc716721ca220"
+    },
+    {
+      "file": "docs/design/document-graph-api/validation.json",
+      "sha256": "d5fe0142303aece925a61884c3b2d8bafeca939707bb46565307f7dd68e372c3"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
+      "sha256": "8819f1f7c8b7d83e226a5803f25652390196ad923dffbb6bd654cd03ba3eb448"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1.json",
+      "sha256": "8c479d5c18bc7c3184c0ade33093225dcdd58c54594b4ff0b54f625da2064052"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1/final-inputs.json",
+      "sha256": "b5046093940e182172c1f299a2364b61ef281b5701cb608e4e68420a924e944d"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "26e452e55dcf64866f840fbdc732c24522ea54508d90e8bef0bc3d25c9ee1cb0"
+    }
+  ]
+}

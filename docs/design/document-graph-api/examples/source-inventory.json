@@ -7,8 +7,8 @@
       "lines": 305,
       "role": "Repository-owned historical design-spec candidate for the full proving corpus, not current design authority.",
       "adaptation": "None. Not rewritten or used as an API semantic oracle yet.",
-      "annotationStatus": "Inventory only; full identifier/ownership/context annotation remains Q-2/Q-4."
+      "annotationStatus": "Inventory only; required-context annotation and performance pilot acceptance remain Q-4."
     }
   ],
-  "limitations": "The 22-line mixed-layout example retires API representation questions; it is not a large-spec or performance proof."
+  "limitations": "The 79-case corpus contains 66 source snapshots, 1,183 expected operation outcomes and two explicitly injected API model states. It proves design-result consistency, not runtime correctness, large-spec context completeness or performance. The inventoried original spec is unchanged and has no adaptation."
 }

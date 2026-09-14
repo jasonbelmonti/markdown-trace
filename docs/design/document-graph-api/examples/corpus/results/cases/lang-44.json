@@ -1,0 +1,337 @@
+{
+  "schemaVersion": "markdown-trace.design-api-results.v1",
+  "caseId": "LANG-44",
+  "annotation": "language/lang-44.expected.json",
+  "snapshot": "snapshots/lang-44.json",
+  "sourceSha256": "993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+  "operations": [
+    {
+      "id": "validateGraph",
+      "operation": "validateGraph",
+      "arguments": {"profile": "language"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "schemaVersion": "markdown-trace.document-validation.v1",
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "profileId": "language-integrity",
+          "interpretationHash": "@interpretation:standard",
+          "validationHash": "@validation:language",
+          "status": "pass",
+          "diagnostics": [],
+          "ruleResults": [
+            {"ruleId": "integrity.language", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "integrity.definitions", "status": "pass", "matchedSubjects": 2, "evaluatedSubjects": 2, "diagnostics": []},
+            {"ruleId": "integrity.targets", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "integrity.kinds", "status": "pass", "matchedSubjects": 2, "evaluatedSubjects": 2, "diagnostics": []},
+            {"ruleId": "integrity.owners", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "policy.minEntities", "status": "pass", "matchedSubjects": 2, "evaluatedSubjects": 2, "diagnostics": []},
+            {"ruleId": "policy.allowedRelations", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []}
+          ]
+        }
+      }
+    },
+    {
+      "id": "lookup:REQ-1",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "REQ-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "record": {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "definitions": [
+            {
+              "id": "O1",
+              "identifier": "REQ-1",
+              "role": "definition",
+              "range": {"start": {"offset": 2, "line": 1, "column": 3}, "end": {"offset": 10, "line": 1, "column": 11}},
+              "fragmentId": "F1"
+            }
+          ],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:REQ-1",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "REQ-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "REQ-1",
+          "record": {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:REQ-1",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "REQ-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "REQ-1",
+          "record": {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "lookup:REQ-2",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "REQ-2"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "record": {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O2"}},
+          "definitions": [
+            {
+              "id": "O2",
+              "identifier": "REQ-2",
+              "role": "definition",
+              "range": {"start": {"offset": 33, "line": 5, "column": 1}, "end": {"offset": 41, "line": 5, "column": 9}},
+              "fragmentId": "F3"
+            }
+          ],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:REQ-2",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "REQ-2"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "REQ-2",
+          "record": {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O2"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:REQ-2",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "REQ-2"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "REQ-2",
+          "record": {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O2"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "lookup:ABSENT-0",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "record": null,
+          "definitions": [],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:ABSENT-0",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "ABSENT-0",
+          "record": null,
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:ABSENT-0",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "ABSENT-0",
+          "record": null,
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "root:REQ-1",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["REQ-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "query": {"roots": ["REQ-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+          "nodes": [{"identifier": "REQ-1", "depth": 0, "via": null}],
+          "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 0}
+        }
+      }
+    },
+    {
+      "id": "context:REQ-1",
+      "operation": "extractContext",
+      "arguments": {"selection": "root:REQ-1", "budget": {"maxUtf8Bytes": 100000, "maxFragments": 1000}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "schemaVersion": "markdown-trace.document-context.v1",
+          "source": {"documentId": "language/lang-44.md", "sha256": "993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31", "utf8Bytes": 81, "utf16Length": 81},
+          "parts": [
+            {
+              "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 17, "line": 1, "column": 18}},
+              "text": "# {#REQ-1} Parent",
+              "forIdentifiers": ["REQ-1"],
+              "roles": ["owned-content"]
+            },
+            {
+              "range": {"start": {"offset": 19, "line": 3, "column": 1}, "end": {"offset": 31, "line": 3, "column": 13}},
+              "text": "Parent text.",
+              "forIdentifiers": ["REQ-1"],
+              "roles": ["owned-content"]
+            },
+            {
+              "range": {"start": {"offset": 60, "line": 7, "column": 1}, "end": {"offset": 80, "line": 7, "column": 21}},
+              "text": "Parent continuation.",
+              "forIdentifiers": ["REQ-1"],
+              "roles": ["owned-content"]
+            }
+          ],
+          "includedIdentifiers": ["REQ-1"],
+          "omittedIdentifiers": [],
+          "usedUtf8Bytes": 49,
+          "selection": {
+            "query": {"roots": ["REQ-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+            "nodes": [{"identifier": "REQ-1", "depth": 0, "via": null}],
+            "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 0}
+          }
+        }
+      }
+    },
+    {
+      "id": "root:REQ-2",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["REQ-2"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "query": {"roots": ["REQ-2"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+          "nodes": [{"identifier": "REQ-2", "depth": 0, "via": null}],
+          "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 0}
+        }
+      }
+    },
+    {
+      "id": "context:REQ-2",
+      "operation": "extractContext",
+      "arguments": {"selection": "root:REQ-2", "budget": {"maxUtf8Bytes": 100000, "maxFragments": 1000}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "schemaVersion": "markdown-trace.document-context.v1",
+          "source": {"documentId": "language/lang-44.md", "sha256": "993f6bd8cad190b2065fbaef6e1268e37879d0c8640c67c4528abea2973eac31", "utf8Bytes": 81, "utf16Length": 81},
+          "parts": [
+            {
+              "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 17, "line": 1, "column": 18}},
+              "text": "# {#REQ-1} Parent",
+              "forIdentifiers": ["REQ-2"],
+              "roles": ["heading"]
+            },
+            {
+              "range": {"start": {"offset": 33, "line": 5, "column": 1}, "end": {"offset": 58, "line": 5, "column": 26}},
+              "text": "{#REQ-2} Child paragraph.",
+              "forIdentifiers": ["REQ-2"],
+              "roles": ["owned-content"]
+            }
+          ],
+          "includedIdentifiers": ["REQ-2"],
+          "omittedIdentifiers": [],
+          "usedUtf8Bytes": 42,
+          "selection": {
+            "query": {"roots": ["REQ-2"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+            "nodes": [{"identifier": "REQ-2", "depth": 0, "via": null}],
+            "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 0}
+          }
+        }
+      }
+    },
+    {
+      "id": "root:ABSENT-0",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["ABSENT-0"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {"ok": false, "error": {"code": "unresolved-root", "message": "unresolved-root", "diagnostics": []}}
+    }
+  ]
+}

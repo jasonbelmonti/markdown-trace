@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:94d2e5d1af7c3d4b802e82b4ad6b614aac4540b01bd41a7b78f73186f7c8e162",
+  "source": {"documentId": "language/lang-45.md", "sha256": "94d2e5d1af7c3d4b802e82b4ad6b614aac4540b01bd41a7b78f73186f7c8e162", "utf8Bytes": 84, "utf16Length": 84},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "missing"}},
+    {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}}
+  ],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "WP-1",
+      "role": "definition",
+      "range": {"start": {"offset": 46, "line": 3, "column": 3}, "end": {"offset": 53, "line": 3, "column": 10}},
+      "fragmentId": "F2"
+    },
+    {
+      "id": "O2",
+      "identifier": "REQ-2",
+      "role": "reference",
+      "range": {"start": {"offset": 76, "line": 3, "column": 33}, "end": {"offset": 81, "line": 3, "column": 38}},
+      "fragmentId": "F2"
+    }
+  ],
+  "relationships": [{"id": "R1", "kind": "references", "source": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"}, "target": "REQ-2", "occurrenceId": "O2"}],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 43, "line": 2, "column": 20}},
+      "owner": {"status": "unowned"},
+      "structure": "other",
+      "requiredContext": []
+    },
+    {
+      "id": "F2",
+      "range": {"start": {"offset": 44, "line": 3, "column": 1}, "end": {"offset": 83, "line": 3, "column": 40}},
+      "owner": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"},
+      "structure": "table-row",
+      "requiredContext": ["F1"]
+    }
+  ],
+  "exclusions": [],
+  "diagnostics": [
+    {
+      "code": "markdown-trace.language.malformed-expression",
+      "severity": "error",
+      "message": "Malformed reserved expression",
+      "identifiers": ["WP-1"],
+      "sourceRanges": [{"start": {"offset": 56, "line": 3, "column": 13}, "end": {"offset": 74, "line": 3, "column": 31}}]
+    }
+  ]
+}

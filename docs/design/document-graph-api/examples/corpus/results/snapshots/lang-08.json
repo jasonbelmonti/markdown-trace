@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:f67fb698347ff91732fe6cc1a6e5ed318cd4d2a04b1da0404d5607aaa761eeb8",
+  "source": {"documentId": "language/lang-08.md", "sha256": "f67fb698347ff91732fe6cc1a6e5ed318cd4d2a04b1da0404d5607aaa761eeb8", "utf8Bytes": 32, "utf16Length": 32},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "missing"}},
+    {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}}
+  ],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "WP-1",
+      "role": "definition",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 7, "line": 1, "column": 8}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O2",
+      "identifier": "REQ-1",
+      "role": "reference",
+      "range": {"start": {"offset": 10, "line": 1, "column": 11}, "end": {"offset": 15, "line": 1, "column": 16}},
+      "fragmentId": "F1"
+    }
+  ],
+  "relationships": [{"id": "R1", "kind": "references", "source": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"}, "target": "REQ-1", "occurrenceId": "O2"}],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 32, "line": 1, "column": 33}},
+      "owner": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"},
+      "structure": "paragraph",
+      "requiredContext": []
+    }
+  ],
+  "exclusions": [{"range": {"start": {"offset": 22, "line": 1, "column": 23}, "end": {"offset": 31, "line": 1, "column": 32}}, "reason": "split-word"}],
+  "diagnostics": []
+}

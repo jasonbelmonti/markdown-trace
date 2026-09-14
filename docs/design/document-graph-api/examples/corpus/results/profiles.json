@@ -1,0 +1,72 @@
+{
+  "example": {
+    "schemaVersion": "markdown-trace.document-profile.v1",
+    "profileId": "implementation-spec",
+    "interpretation": {
+      "language": "markdown-trace.identity.draft1",
+      "entityKinds": [{"name": "requirement", "prefixes": ["REQ"]}, {"name": "work", "prefixes": ["WP"]}, {"name": "validation", "prefixes": ["VAL"]}]
+    },
+    "validation": {
+      "minEntities": 1,
+      "allowedRelations": [
+        {"kind": "references", "from": ["work"], "to": ["requirement"]},
+        {"kind": "implements", "from": ["work"], "to": ["requirement"]},
+        {"kind": "verifies", "from": ["validation"], "to": ["work"]}
+      ],
+      "rules": [
+        {"id": "work-exists", "op": "entity-count", "kinds": ["work"], "min": 1, "max": null},
+        {"id": "work-has-requirement", "op": "require-relation", "sourceKinds": ["work"], "relation": "implements", "targetKinds": ["requirement"], "minTargets": 1, "maxTargets": null}
+      ]
+    }
+  },
+  "language": {
+    "schemaVersion": "markdown-trace.document-profile.v1",
+    "profileId": "language-integrity",
+    "interpretation": {
+      "language": "markdown-trace.identity.draft1",
+      "entityKinds": [{"name": "requirement", "prefixes": ["REQ"]}, {"name": "work", "prefixes": ["WP"]}, {"name": "validation", "prefixes": ["VAL"]}]
+    },
+    "validation": {
+      "minEntities": 0,
+      "allowedRelations": [
+        {"kind": "references", "from": ["requirement", "work", "validation"], "to": ["requirement", "work", "validation"]},
+        {"kind": "implements", "from": ["requirement", "work", "validation"], "to": ["requirement", "work", "validation"]},
+        {"kind": "verifies", "from": ["requirement", "work", "validation"], "to": ["requirement", "work", "validation"]},
+        {"kind": "custom-edge", "from": ["requirement", "work", "validation"], "to": ["requirement", "work", "validation"]}
+      ],
+      "rules": []
+    }
+  },
+  "forbidden": {
+    "schemaVersion": "markdown-trace.document-profile.v1",
+    "profileId": "implementation-spec",
+    "interpretation": {
+      "language": "markdown-trace.identity.draft1",
+      "entityKinds": [{"name": "requirement", "prefixes": ["REQ"]}, {"name": "work", "prefixes": ["WP"]}, {"name": "validation", "prefixes": ["VAL"]}]
+    },
+    "validation": {"minEntities": 1, "allowedRelations": [], "rules": []}
+  },
+  "empty": {
+    "schemaVersion": "markdown-trace.document-profile.v1",
+    "profileId": "implementation-spec",
+    "interpretation": {
+      "language": "markdown-trace.identity.draft1",
+      "entityKinds": [{"name": "requirement", "prefixes": ["REQ"]}, {"name": "work", "prefixes": ["WP"]}, {"name": "validation", "prefixes": ["VAL"]}]
+    },
+    "validation": {
+      "minEntities": 0,
+      "allowedRelations": [
+        {"kind": "references", "from": ["work"], "to": ["requirement"]},
+        {"kind": "implements", "from": ["work"], "to": ["requirement"]},
+        {"kind": "verifies", "from": ["validation"], "to": ["work"]}
+      ],
+      "rules": []
+    }
+  },
+  "changed": {
+    "schemaVersion": "markdown-trace.document-profile.v1",
+    "profileId": "changed-interpretation",
+    "interpretation": {"language": "markdown-trace.identity.draft1", "entityKinds": [{"name": "requirement", "prefixes": ["REQ", "WP"]}, {"name": "validation", "prefixes": ["VAL"]}]},
+    "validation": {"minEntities": 0, "allowedRelations": [], "rules": []}
+  }
+}

@@ -7,7 +7,7 @@
 | Title | Markdown Trace Document Graph APIs |
 | Contract depth | ID2 Standard |
 | Status | Draft for interface review |
-| Revision | 6 |
+| Revision | 7 |
 | Source authority | Owner's document-graph vision and API-design request; merged direction in PR #74; source baseline dce4ac19f8f25f4add7c38898e31934eb70de592 |
 | Author | Codex |
 | Reviewers | Codex internal evaluation; project owner for authoring fit and API acceptance |
@@ -17,7 +17,7 @@
 
 ## 0. Executive Contract Summary
 
-- Decision requested: Review the API boundaries and recommended authoring rules below. Revision 6 materializes the complete language/scenario source corpus and records its independent interpretation gate; full API-result proof and owner authoring-fit acceptance remain before extraction.
+- Decision requested: Review the API boundaries and recommended authoring rules below. Revision 7 adds complete expected API results and the generalized checker to the independently interpreted source corpus. Consumer/compatibility reconciliation and owner authoring-fit acceptance remain before extraction.
 - Source design summary: Recognize constrained identities and relationships throughout a spec, build one graph with source evidence, validate its relationships, and retrieve related implementation context.
 - Highest-risk boundaries: Declaration versus mention and source ownership (RISK-1); policy accidentally changing graph facts (RISK-2); context exceeding its selection or hiding omissions (RISK-3).
 - Implementation slice covered: An in-memory analysis handle, extensible profile data, validation results, identifier lookup, direct reference queries, bounded traversal, and source context. Declaration files are design artifacts, not installed APIs.
@@ -233,7 +233,7 @@ Candidate interpretation input for API examples, pending Q-1/Q-2 acceptance:
 
 Bare identifiers preserve low annotation overhead for references. Explicit declarations avoid first-occurrence-wins. The credible alternative is a leading "ID:" declaration inferred from structural position, including table ID columns. It is less visible but reintroduces layout-dependent ambiguity. This packet recommends explicit markers for the proving corpus; it does not claim existing specs already follow that language.
 
-The following decisions complete the recommended language for the proving corpus. They remain maintainer recommendations pending Jason's syntax selection and authoring-fit acceptance; the corpus proof is recorded separately. The [rule/case index](document-graph-api/examples/corpus/manifest.json) maps 55 paired language fixtures and 24 API scenarios to independently authored source annotations. The [corpus guide](document-graph-api/examples/corpus/README.md) defines annotation conventions and the boundary before EP-ACT-3 full API-result expansion.
+The following decisions complete the recommended language for the proving corpus. They remain maintainer recommendations pending Jason's syntax selection and authoring-fit acceptance; the corpus proof is recorded separately. The [rule/case index](document-graph-api/examples/corpus/manifest.json) maps 55 paired language fixtures and 24 API scenarios to independently authored source annotations. The [corpus guide](document-graph-api/examples/corpus/README.md) defines annotation conventions; its [API results guide](document-graph-api/examples/corpus/results/README.md) defines complete result images and fixture bindings.
 
 | Rule ID | Recommended decision | Observable boundary |
 | --- | --- | --- |
@@ -285,7 +285,7 @@ Recommended ownership rules are structural and order-independent within a declar
 | OWN-6 | A heading's container is its nearest ancestor list item, blockquote or document. Container exit ends its scope. Child declarations shadow only their own bounded content. | Reference ownership resumes in the still-active outer scope after a child scope ends. A paragraph declaration does not own later paragraphs. A declaration does not leak out of its list/quote merely because its heading has no following peer. |
 | OWN-7 | Context ownership follows the resolved scopes, independently of validation permission. Partition parent context around descendant-owned content rather than including its entire enclosing section. | Keep source fragments contiguous and preserve required list/quote syntax; headings and table headers may be supporting fragments. Structural support without a source reference does not fail ownership integrity. Literal code may belong to an entity's context while contributing no graph occurrences. |
 
-Row/paragraph scopes take precedence over a containing section; a nested heading scope takes precedence over its enclosing list-item scope. A header carrying no graph facts is unowned support, as in the initial mixed-layout ledger. Supporting header/delimiter ranges remain available to selected table rows regardless of whether a header also has semantic ownership. The paired occurrence/fragment annotations and EP-GATE-1 independent interpretations record the source-level proof for these recommendations. Complete validation/query/context result expectations and their generalized checker remain EP-ACT-3; owner authoring-fit acceptance is separate.
+Row/paragraph scopes take precedence over a containing section; a nested heading scope takes precedence over its enclosing list-item scope. A header carrying no graph facts is unowned support, as in the initial mixed-layout ledger. Supporting header/delimiter ranges remain available to selected table rows regardless of whether a header also has semantic ownership. The paired occurrence/fragment annotations and EP-GATE-1 independent interpretations record the source-level proof for these recommendations. EP-ACT-3 adds complete validation/query/context result images and the generalized checker without changing the independently reviewed source interpretations. Owner authoring-fit acceptance is separate.
 
 ### C-4: validateGraph
 
@@ -305,6 +305,8 @@ Row/paragraph scopes take precedence over a containing section; a nested heading
 - Validation evidence: VAL-2, VAL-3; EVD-3, EVD-4.
 
 Report precedence is fail when any definite language/integrity/policy violation exists; otherwise indeterminate when partial analysis prevents a conclusion; otherwise pass. Malformed reserved expressions are definite language violations. Unsupported-node or parser incompleteness alone yields indeterminate, not a claim that relationships are invalid. Per-rule results follow the same distinction. Partial analysis cannot produce an overall pass. Duplicate/dangling evidence remains available through C-5 even after validation fails. Requirement checks do not count unresolved or ambiguous endpoints as successful targets.
+
+The [API results guide](document-graph-api/examples/corpus/results/README.md#validation-report-recommendations) supplies the recommended builtin order, selected/evaluated subject sets, diagnostic codes and partial-analysis count behavior used by the full result images. Analysis diagnostics cover language/dependency and unresolved-owner findings; validation adds definition, target and kind integrity findings. These are explicit recommendation details, not inferred runtime behavior.
 
 ### C-5: Lookup and direct reference queries
 
@@ -362,6 +364,8 @@ maxDepth zero selects roots only. A depth/node boundary makes no claim about the
 - Validation evidence: VAL-5, VAL-6; EVD-5.
 
 The bundle retains the selection's predecessor relationships so its inclusion reasons survive JSON export; parts explain which selected identifiers need each source range. This is source-context selection, not a guarantee that an agent has every fact necessary for implementation.
+
+The corpus adopts its annotated contiguous fragment partition. An identity-free table header and delimiter are one support fragment including their joining newline; final line terminators are excluded. Strictly overlapping ranges merge, touching ranges remain separate, and maxFragments counts final merged parts including support. The [API results guide](document-graph-api/examples/corpus/results/README.md#context-recommendations) records exact accounting and ordering; CASE-11H proves the three-part, 127-byte WP-2 bundle.
 
 Selecting all candidate owners does not turn ambiguous ownership into joint ownership: each such entity is omitted independently. Lookup and direct-reference queries remain available. An omitted entity never appears in part.forIdentifiers or includedIdentifiers; a shared range may still appear solely as required heading/table-header support for a different, admitted entity, labelled with the supporting role rather than asserted ownership. With no admitted entities, parts and includedIdentifiers are empty and usedUtf8Bytes is zero. The [ambiguous-context oracle](document-graph-api/examples/ambiguous-context.json) records the reviewed counterexample, zero-budget precedence and selection of both candidates.
 
@@ -431,7 +435,7 @@ Section status: Complete.
 | VAL-7 | C-2, C-8 | Existing compatibility and new package consumer checks | Existing root behavior retained, old schema rejected by new API, intentional graph subpath declaration closure | Maintainer |
 | VAL-8 | C-2, C-8 | Type-check proposed consumer and structural artifact validation | Compilable signatures/profile, Markdown Engine profile pass, source/checksum evidence | Codex/maintainer |
 
-Current evidence establishes type compatibility, structural document validity, full-corpus parser/source feasibility and independently reviewed source interpretations. It does not establish runtime correctness for these unimplemented APIs. The [case ledger](document-graph-api/examples/cases.md) is independently authored design evidence; production tests must later execute those expectations.
+Current evidence establishes full expected-result consistency and DTO shape compatibility across 79 cases, structural document validity, full-corpus parser/source feasibility and independently reviewed source interpretations. EP-ACT-4 still owns consumer/compatibility reconciliation before EP-GATE-2. It does not establish runtime correctness for these unimplemented APIs. The [case ledger](document-graph-api/examples/cases.md) is independently authored design evidence; production tests must later execute those expectations.
 
 Section status: Complete as a validation plan.
 
@@ -453,12 +457,12 @@ Section status: Complete.
 
 | Question ID | Question | Owner | Due date or decision point | Impact if unresolved |
 | --- | --- | --- | --- | --- |
-| Q-1 | Select explicit declaration/typed-reference markers or the structural alternative. Revision 6 recommends LEX-1 through LEX-8; no explicit owner selection has been recorded. | Jason with maintainer recommendation | Before implementing extraction or freezing the language identifier | The recommendation and case index can proceed; selection is not inferred from authorization to execute or repair the recommendation |
-| Q-2 | Independently prove and review the recorded LEX-1 through LEX-8 and OWN-1 through OWN-7 recommendations. | Maintainer; Jason judges authoring fit | Paired lexical/fragment corpus and independent interpretation before extractor implementation | Paired source/owner annotations and their independent interpretation gate are recorded; full API-result/context proof and owner authoring-fit acceptance remain FND-1 |
+| Q-1 | Select explicit declaration/typed-reference markers or the structural alternative. Revision 7 recommends LEX-1 through LEX-8; no explicit owner selection has been recorded. | Jason with maintainer recommendation | Before implementing extraction or freezing the language identifier | The recommendation and case index can proceed; selection is not inferred from authorization to execute or repair the recommendation |
+| Q-2 | Independently prove and review the recorded LEX-1 through LEX-8 and OWN-1 through OWN-7 recommendations. | Maintainer; Jason judges authoring fit | Paired lexical/fragment corpus and independent interpretation before extractor implementation | Paired source/owner annotations and their independent interpretation gate are recorded; API result/checker proof is complete, while consumer reconciliation and owner authoring-fit acceptance remain FND-1 |
 | Q-3 | Accept the additive graph package subpath and reserved new schema names? | Maintainer and Jason | Before public export implementation | Existing package unchanged; draft import path remains a recommendation |
 | Q-4 | Which real spec and required context define adoption success, and what latency/memory limits apply? | Jason supplies target; maintainer measures | Corpus/consumer pilot, before release readiness | No production scale or agent-context-completeness claim; FND-3 |
 
-This packet begins the existing contract/corpus task. It does not mark that task complete. The immediate review can settle API shapes and the candidate authoring choice; the remaining full API-result proof and owner authoring-fit decision are required before production extraction.
+This packet begins the existing contract/corpus task. It does not mark that task complete. The immediate review can settle API shapes and the candidate authoring choice; consumer/compatibility reconciliation, the final contract gates and owner authoring-fit decisions remain required before production extraction.
 
 Section status: Complete; questions have explicit decision gates.
 
@@ -474,13 +478,13 @@ Section status: Complete; questions have explicit decision gates.
 | EVD-4 | src/markdowntrace/public.ts; package.json; tests/test_package_exports.test.ts; tests/fixtures/public-package/consumer.ts.fixture | Producer/consumer inspection | Root-only self-contained public boundary and consumer expectations | C-2, C-4, C-8 |
 | EVD-5 | src/markdowntrace/markdown/scanner.ts, source-slices.ts, definition-facts.ts, reference-facts.ts; [parser probe](document-graph-api/checks/probe-engine.mjs) | Source/runtime probe | Current whole-section ownership; public nodes include exact raw slices and nested list/table/quote structure; inline-code source includes delimiters | C-1, C-3, C-7 |
 | EVD-6 | src/markdowntrace/registry/derived.ts; markdown/trace-links.ts; existing CI and package checks from merged PR #74 | Source and GitHub evidence | Existing link/registry derivation and compatibility work cannot be treated as the new graph | C-8 |
-| EVD-7 | Companion declarations, consumer/profile examples, independent case ledger and current validation record | Local design checks | Consumer type fit and initial oracle; no new API runtime exists | C-1 through C-8 |
+| EVD-7 | Companion declarations, consumer/profile examples, independent case ledger and current validation record | Local design checks | Consumer type fit and full 79-case result corpus; no new API runtime exists | C-1 through C-8 |
 
 ### Rubric Scores
 
 | Axis | Score | Evidence IDs | Finding IDs | Notes |
 | --- | --- | --- | --- | --- |
-| Behavioral fitness | Concern | EVD-2, EVD-5, EVD-7 | FND-1 | APIs retain invalid evidence; source interpretation proven, full API-result proof still required |
+| Behavioral fitness | Concern | EVD-2, EVD-5, EVD-7 | FND-1 | APIs retain invalid evidence; source interpretation and result consistency proven; consumer reconciliation remains |
 | Consumer fitness | Pass | EVD-4, EVD-7 | FND-2 | Memory-first flow, reusable analysis and narrow query functions |
 | Integration realism | Concern | EVD-1, EVD-5 | FND-1 | Full corpus public-parser source probes pass; production adapter proof remains |
 | Change safety | Pass | EVD-3, EVD-4, EVD-6 | none | Additive recommendation, old schemas and commands preserved |
@@ -488,14 +492,14 @@ Section status: Complete; questions have explicit decision gates.
 | Data and invariant protection | Pass | EVD-1, EVD-5, EVD-7 | FND-4 | Explicit identities, offset units, owner states, immutable runtime handles; exported context retains selection provenance |
 | Operational fitness | Concern | EVD-5, EVD-7 | FND-3 | Caller limits and synchronous operation are explicit; scale thresholds unmeasured |
 | Security and trust handling | Pass | EVD-4, EVD-6, EVD-7 | none | Host owns file access; no remote fetch, executable profile, or automatic agent action |
-| Testability | Concern | EVD-5, EVD-7 | FND-1, FND-3 | Independent source corpus exists; full API-result and real-spec oracle proof remain |
+| Testability | Concern | EVD-5, EVD-7 | FND-1, FND-3 | Independent source corpus and complete result images exist; consumer reconciliation and real-spec proof remain |
 | Implementation proportionality | Pass | EVD-2, EVD-4, EVD-7 | none | No storage/service framework; private indexes and concrete adapter remain internal |
 
 ### Evaluation Findings
 
 | Finding ID | Severity | Axis | Affected contracts | Evidence IDs | Required action | Validation target |
 | --- | --- | --- | --- | --- | --- | --- |
-| FND-1 | Major | Behavioral fitness/integration/testability | C-1, C-2, C-3, C-7 | EVD-1, EVD-5, EVD-7 | Source annotations and independent lexical/ownership interpretation are complete; maintainer finishes full API-result/checker proof and Jason accepts authoring fit before extractor implementation. Production risk is wrong owners or offsets. | VAL-1, VAL-5, VAL-6; Q-1/Q-2 |
+| FND-1 | Major | Behavioral fitness/integration/testability | C-1, C-2, C-3, C-7 | EVD-1, EVD-5, EVD-7 | Source annotations, independent lexical/ownership interpretation and API-result/checker proof are complete; maintainer reconciles consumer/compatibility contracts and final gates, and Jason accepts authoring fit before extractor implementation. Production risk is wrong owners or offsets. | VAL-1, VAL-5, VAL-6; Q-1/Q-2 |
 | FND-2 | Minor | Consumer fitness | C-5 | EVD-7 | Addressed in revision 2: lookup returns definitions and a reference count; paged reference items include source occurrences. Avoids large reference payloads on simple lookup and manual source joins. | VAL-4, VAL-8 |
 | FND-3 | Major | Operational fitness/testability | C-3, C-6, C-7 | EVD-5, EVD-7 | Jason selects pilot spec/context oracle; maintainer measures time/memory and agrees budgets before release. Production risk is unusable latency or missing implementer context. | VAL-5, VAL-6; Q-4 |
 | FND-4 | Major | Data and invariant protection | C-7 | EVD-7 | Addressed in revision 2: ContextBundle includes selection query, nodes, predecessors and boundaries. Prevents exported context losing the relationship path explaining inclusion. | VAL-5, VAL-8 |
@@ -507,9 +511,9 @@ Section status: Complete; concerns are bounded by explicit implementation/releas
 - Contract depth calibration: ID2 is appropriate for a durable library boundary across analysis, profiles, queries and context; no ID3 operational or remote system is introduced.
 - Grounding result: Inspected actual producers, consumers, source adapters, profiles, exports and tests at the merged baseline. A current public-API parser probe verified basic mixed layouts, raw slices and UTF-16/CRLF offsets.
 - Rubric result: Approve with constraints for interface review. FND-1 gates extractor implementation; FND-3 gates pilot/release claims. No existing runtime behavior is changed.
-- Findings addressed: Revision 6 materializes 55 language and 24 scenario inputs and independently annotated roles, owners, fragments, diagnostics and exclusions. Both independent reviewers identified the same LANG-45 padding question; the explicit container-boundary range above resolves it. CASE-14 now names the unchanged hashes, entity-kind interpretation and validation result after input mutation. Revision 2 resolved FND-2 and FND-4. Revision 3 recorded EP-ACT-1's eight lexical and seven ownership recommendations. Revision 4 addresses PR review findings F1/F2: formatting-transparent diagnostic-candidate classification with exact raw recognition, and explicit context omissions for ambiguous definition ownership. Regression examples and consumer handling accompany both changes. Revision 5 reconciles LANG-51 with Engine's plain-text parse and adds LANG-55 as the actual formatted declaration-prefix case; it addresses the first re-review's remaining F1 contradiction.
-- Validation result: Revision 6 records EP-ACT-2 and EP-GATE-1 in the [companion validation record](document-graph-api/validation.json), with exact input fingerprints and two independent case-by-case interpretations. Supporting checks cover 81 annotation records, 416 source slices, 66 distinct public-parser sources, declaration/consumer types and the retained initial ledger. All 219 existing tests and repository enforcement pass. These are design, source and compatibility checks; no proposed runtime API is executed.
-- Remaining findings: FND-1 still requires full API-result/checker proof and Q-1/Q-2 owner decisions before extraction. FND-3 and Q-4 remain before pilot/release claims. This corpus gate does not complete the parent contract task.
+- Findings addressed: Revision 7 completes EP-ACT-3 with full validation, direct-query, traversal and context DTO images, explicit report/count and context-part conventions, and separate injected incomplete/warning states. It preserves all reviewed source/annotation bytes. Revision 6 materializes 55 language and 24 scenario inputs and independently annotated roles, owners, fragments, diagnostics and exclusions. Both independent reviewers identified the same LANG-45 padding question; the explicit container-boundary range above resolves it. CASE-14 now names the unchanged hashes, entity-kind interpretation and validation result after input mutation. Revision 2 resolved FND-2 and FND-4. Revision 3 recorded EP-ACT-1's eight lexical and seven ownership recommendations. Revision 4 addresses PR review findings F1/F2: formatting-transparent diagnostic-candidate classification with exact raw recognition, and explicit context omissions for ambiguous definition ownership. Regression examples and consumer handling accompany both changes. Revision 5 reconciles LANG-51 with Engine's plain-text parse and adds LANG-55 as the actual formatted declaration-prefix case; it addresses the first re-review's remaining F1 contradiction.
+- Validation result: Revision 7 records EP-ACT-3 in the [companion validation record](document-graph-api/validation.json): 79 cases, 1,183 operation outcomes, 66 source snapshots, two injected API states and corruption checks, with full DTO typechecking. Supporting checks cover the retained 81 annotations, 416 source slices, full-source parser probes, initial consumer and ledger. EP-GATE-1 remains applicable to unchanged source interpretations; it does not independently approve the new API results. These are design/source checks; no proposed runtime API is executed.
+- Remaining findings: FND-1 requires EP-ACT-4 consumer/compatibility reconciliation, final contract gates and Q-1/Q-2 owner decisions before extraction. FND-3 and Q-4 remain before pilot/release claims. This corpus gate does not complete the parent contract task.
 - Readiness verdict: Concrete API draft for review. It is not production implementation acceptance or completion of the contract/corpus task.
 
-Revision history: Revision 1 materialized the API boundaries from the merged direction and inspected implementation. Revision 2 incorporated the internal review corrections. Revision 3 recorded EP-ACT-1 language/ownership recommendations and examples. Revision 4 repairs the two PR review findings under the owner's request to fix and review again. Revision 5 resolves the first re-review's LANG-51 contradiction using the public parser's actual structure and a separate formatted declaration case. Revision 6 completes source fixture materialization and independent interpretation, clarifies the unclosed table-cell diagnostic range, and refreshes source/evidence navigation. These revisions do not record syntax acceptance, complete API-result proof or implementation. The adjacent checksum and companion validation record identify the current bytes.
+Revision history: Revision 1 materialized the API boundaries from the merged direction and inspected implementation. Revision 2 incorporated the internal review corrections. Revision 3 recorded EP-ACT-1 language/ownership recommendations and examples. Revision 4 repairs the two PR review findings under the owner's request to fix and review again. Revision 5 resolves the first re-review's LANG-51 contradiction using the public parser's actual structure and a separate formatted declaration case. Revision 6 completes source fixture materialization and independent interpretation, clarifies the unclosed table-cell diagnostic range, and refreshes source/evidence navigation. Revision 7 completes expected API results and the generalized checker, fixes report/context accounting conventions and preserves independent source evidence. These revisions do not record syntax acceptance, completion of the parent contract task or runtime implementation. The adjacent checksum and companion validation record identify the current bytes.

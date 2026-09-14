@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "markdown-trace.design-api-results.v1",
+  "caseId": "CASE-12",
+  "annotation": "scenarios/mixed-layout.expected.json",
+  "snapshot": "snapshots/mixed-layout.json",
+  "sourceSha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901",
+  "operations": [
+    {
+      "id": "limit:0",
+      "operation": "analyzeDocument",
+      "arguments": {"profile": "example", "limits": {"maxSourceUtf8Bytes": 412, "maxOccurrences": 100}},
+      "expected": {"ok": false, "error": {"code": "analysis-limit", "message": "analysis-limit", "diagnostics": []}}
+    },
+    {
+      "id": "limit:1",
+      "operation": "analyzeDocument",
+      "arguments": {"profile": "example", "limits": {"maxSourceUtf8Bytes": 1000, "maxOccurrences": 9}},
+      "expected": {"ok": false, "error": {"code": "analysis-limit", "message": "analysis-limit", "diagnostics": []}}
+    }
+  ]
+}

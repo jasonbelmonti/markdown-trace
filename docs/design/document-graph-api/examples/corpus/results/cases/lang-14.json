@@ -1,0 +1,264 @@
+{
+  "schemaVersion": "markdown-trace.design-api-results.v1",
+  "caseId": "LANG-14",
+  "annotation": "language/lang-14.expected.json",
+  "snapshot": "snapshots/lang-14.json",
+  "sourceSha256": "5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd",
+  "operations": [
+    {
+      "id": "validateGraph",
+      "operation": "validateGraph",
+      "arguments": {"profile": "language"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "schemaVersion": "markdown-trace.document-validation.v1",
+          "analysisId": "@analysis:5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd",
+          "profileId": "language-integrity",
+          "interpretationHash": "@interpretation:standard",
+          "validationHash": "@validation:language",
+          "status": "fail",
+          "diagnostics": [
+            {
+              "code": "markdown-trace.language.malformed-expression",
+              "severity": "error",
+              "message": "malformed-expression",
+              "identifiers": ["WP-1"],
+              "sourceRanges": [{"start": {"offset": 8, "line": 1, "column": 9}, "end": {"offset": 17, "line": 1, "column": 18}}],
+              "ruleId": "integrity.language"
+            },
+            {
+              "code": "markdown-trace.language.malformed-expression",
+              "severity": "error",
+              "message": "malformed-expression",
+              "identifiers": ["WP-1"],
+              "sourceRanges": [{"start": {"offset": 18, "line": 1, "column": 19}, "end": {"offset": 37, "line": 1, "column": 38}}],
+              "ruleId": "integrity.language"
+            },
+            {
+              "code": "markdown-trace.language.malformed-expression",
+              "severity": "error",
+              "message": "malformed-expression",
+              "identifiers": ["WP-1"],
+              "sourceRanges": [{"start": {"offset": 38, "line": 1, "column": 39}, "end": {"offset": 56, "line": 1, "column": 57}}],
+              "ruleId": "integrity.language"
+            }
+          ],
+          "ruleResults": [
+            {
+              "ruleId": "integrity.language",
+              "status": "fail",
+              "matchedSubjects": 3,
+              "evaluatedSubjects": 3,
+              "diagnostics": [
+                {
+                  "code": "markdown-trace.language.malformed-expression",
+                  "severity": "error",
+                  "message": "malformed-expression",
+                  "identifiers": ["WP-1"],
+                  "sourceRanges": [{"start": {"offset": 8, "line": 1, "column": 9}, "end": {"offset": 17, "line": 1, "column": 18}}],
+                  "ruleId": "integrity.language"
+                },
+                {
+                  "code": "markdown-trace.language.malformed-expression",
+                  "severity": "error",
+                  "message": "malformed-expression",
+                  "identifiers": ["WP-1"],
+                  "sourceRanges": [{"start": {"offset": 18, "line": 1, "column": 19}, "end": {"offset": 37, "line": 1, "column": 38}}],
+                  "ruleId": "integrity.language"
+                },
+                {
+                  "code": "markdown-trace.language.malformed-expression",
+                  "severity": "error",
+                  "message": "malformed-expression",
+                  "identifiers": ["WP-1"],
+                  "sourceRanges": [{"start": {"offset": 38, "line": 1, "column": 39}, "end": {"offset": 56, "line": 1, "column": 57}}],
+                  "ruleId": "integrity.language"
+                }
+              ]
+            },
+            {"ruleId": "integrity.definitions", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {"ruleId": "integrity.targets", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "integrity.kinds", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {"ruleId": "integrity.owners", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "policy.minEntities", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {"ruleId": "policy.allowedRelations", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []}
+          ]
+        }
+      }
+    },
+    {
+      "id": "lookup:WP-1",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "WP-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd",
+          "coverage": "partial",
+          "diagnosticCount": 3,
+          "record": {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "definitions": [
+            {
+              "id": "O1",
+              "identifier": "WP-1",
+              "role": "definition",
+              "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 7, "line": 1, "column": 8}},
+              "fragmentId": "F1"
+            }
+          ],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:WP-1",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "WP-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd",
+          "coverage": "partial",
+          "diagnosticCount": 3,
+          "identifier": "WP-1",
+          "record": {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:WP-1",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "WP-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd",
+          "coverage": "partial",
+          "diagnosticCount": 3,
+          "identifier": "WP-1",
+          "record": {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "lookup:ABSENT-0",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd",
+          "coverage": "partial",
+          "diagnosticCount": 3,
+          "record": null,
+          "definitions": [],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:ABSENT-0",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd",
+          "coverage": "partial",
+          "diagnosticCount": 3,
+          "identifier": "ABSENT-0",
+          "record": null,
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:ABSENT-0",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd",
+          "coverage": "partial",
+          "diagnosticCount": 3,
+          "identifier": "ABSENT-0",
+          "record": null,
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "root:WP-1",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["WP-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd",
+          "coverage": "partial",
+          "diagnosticCount": 3,
+          "query": {"roots": ["WP-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+          "nodes": [{"identifier": "WP-1", "depth": 0, "via": null}],
+          "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 0}
+        }
+      }
+    },
+    {
+      "id": "context:WP-1",
+      "operation": "extractContext",
+      "arguments": {"selection": "root:WP-1", "budget": {"maxUtf8Bytes": 100000, "maxFragments": 1000}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd",
+          "coverage": "partial",
+          "diagnosticCount": 3,
+          "schemaVersion": "markdown-trace.document-context.v1",
+          "source": {"documentId": "language/lang-14.md", "sha256": "5573a863752aaeb5dc9447ad04ffb7da14fc00a9b3d2a99e0fddef7d9219c8fd", "utf8Bytes": 57, "utf16Length": 57},
+          "parts": [
+            {
+              "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 57, "line": 1, "column": 58}},
+              "text": "{#WP-1} { #REQ-1} {implements: REQ-2} {Implements:REQ-3}.",
+              "forIdentifiers": ["WP-1"],
+              "roles": ["owned-content"]
+            }
+          ],
+          "includedIdentifiers": ["WP-1"],
+          "omittedIdentifiers": [],
+          "usedUtf8Bytes": 57,
+          "selection": {
+            "query": {"roots": ["WP-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+            "nodes": [{"identifier": "WP-1", "depth": 0, "via": null}],
+            "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 0}
+          }
+        }
+      }
+    },
+    {
+      "id": "root:ABSENT-0",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["ABSENT-0"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {"ok": false, "error": {"code": "unresolved-root", "message": "unresolved-root", "diagnostics": []}}
+    }
+  ]
+}

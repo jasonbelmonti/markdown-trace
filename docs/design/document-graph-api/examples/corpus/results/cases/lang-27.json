@@ -1,0 +1,208 @@
+{
+  "schemaVersion": "markdown-trace.design-api-results.v1",
+  "caseId": "LANG-27",
+  "annotation": "language/lang-27.expected.json",
+  "snapshot": "snapshots/lang-27.json",
+  "sourceSha256": "6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038",
+  "operations": [
+    {
+      "id": "validateGraph",
+      "operation": "validateGraph",
+      "arguments": {"profile": "language"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "schemaVersion": "markdown-trace.document-validation.v1",
+          "analysisId": "@analysis:6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038",
+          "profileId": "language-integrity",
+          "interpretationHash": "@interpretation:standard",
+          "validationHash": "@validation:language",
+          "status": "pass",
+          "diagnostics": [],
+          "ruleResults": [
+            {"ruleId": "integrity.language", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "integrity.definitions", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {"ruleId": "integrity.targets", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "integrity.kinds", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {"ruleId": "integrity.owners", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "policy.minEntities", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {"ruleId": "policy.allowedRelations", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []}
+          ]
+        }
+      }
+    },
+    {
+      "id": "lookup:REQ-2",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "REQ-2"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "record": {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "definitions": [
+            {
+              "id": "O1",
+              "identifier": "REQ-2",
+              "role": "definition",
+              "range": {"start": {"offset": 24, "line": 5, "column": 1}, "end": {"offset": 32, "line": 5, "column": 9}},
+              "fragmentId": "F2"
+            }
+          ],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:REQ-2",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "REQ-2"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "REQ-2",
+          "record": {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:REQ-2",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "REQ-2"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "REQ-2",
+          "record": {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "lookup:ABSENT-0",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "record": null,
+          "definitions": [],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:ABSENT-0",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "ABSENT-0",
+          "record": null,
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:ABSENT-0",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "ABSENT-0",
+          "record": null,
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "root:REQ-2",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["REQ-2"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "query": {"roots": ["REQ-2"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+          "nodes": [{"identifier": "REQ-2", "depth": 0, "via": null}],
+          "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 0}
+        }
+      }
+    },
+    {
+      "id": "context:REQ-2",
+      "operation": "extractContext",
+      "arguments": {"selection": "root:REQ-2", "budget": {"maxUtf8Bytes": 100000, "maxFragments": 1000}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "schemaVersion": "markdown-trace.document-context.v1",
+          "source": {"documentId": "language/lang-27.md", "sha256": "6035fc00b68f98efc4e45d3b98096200cfb87ceaa8a0217ade3fd1aadd261038", "utf8Bytes": 39, "utf16Length": 39},
+          "parts": [
+            {
+              "range": {"start": {"offset": 24, "line": 5, "column": 1}, "end": {"offset": 38, "line": 5, "column": 15}},
+              "text": "{#REQ-2} Body.",
+              "forIdentifiers": ["REQ-2"],
+              "roles": ["owned-content"]
+            }
+          ],
+          "includedIdentifiers": ["REQ-2"],
+          "omittedIdentifiers": [],
+          "usedUtf8Bytes": 14,
+          "selection": {
+            "query": {"roots": ["REQ-2"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+            "nodes": [{"identifier": "REQ-2", "depth": 0, "via": null}],
+            "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 0}
+          }
+        }
+      }
+    },
+    {
+      "id": "root:ABSENT-0",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["ABSENT-0"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {"ok": false, "error": {"code": "unresolved-root", "message": "unresolved-root", "diagnostics": []}}
+    }
+  ]
+}

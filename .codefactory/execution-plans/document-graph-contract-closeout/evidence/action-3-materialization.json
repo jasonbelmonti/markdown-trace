@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    ".codefactory/execution-plans/document-graph-contract-closeout/evidence/verify-materialization.mjs"
+  ],
+  "cwd": "/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/document-graph-api-oracles",
+  "startedAt": "2026-09-14T21:37:09.710673+00:00",
+  "finishedAt": "2026-09-14T21:37:09.771560+00:00",
+  "exitCode": 0,
+  "stdout": "{\n  \"status\": \"pass\",\n  \"cases\": [\n    \"LANG-01\",\n    \"LANG-02\",\n    \"LANG-03\",\n    \"LANG-04\",\n    \"LANG-05\",\n    \"LANG-06\",\n    \"LANG-07\",\n    \"LANG-08\",\n    \"LANG-09\",\n    \"LANG-10\",\n    \"LANG-11\",\n    \"LANG-12\",\n    \"LANG-13\",\n    \"LANG-14\",\n    \"LANG-15\",\n    \"LANG-16\",\n    \"LANG-17\",\n    \"LANG-18\",\n    \"LANG-19\",\n    \"LANG-20\",\n    \"LANG-21\",\n    \"LANG-22\",\n    \"LANG-23\",\n    \"LANG-24\",\n    \"LANG-25\",\n    \"LANG-26\",\n    \"LANG-27\",\n    \"LANG-28\",\n    \"LANG-29\",\n    \"LANG-30\",\n    \"LANG-31\",\n    \"LANG-32\",\n    \"LANG-33\",\n    \"LANG-34\",\n    \"LANG-35\",\n    \"LANG-36\",\n    \"LANG-37\",\n    \"LANG-38\",\n    \"LANG-39\",\n    \"LANG-40\",\n    \"LANG-41\",\n    \"LANG-42\",\n    \"LANG-43\",\n    \"LANG-44\",\n    \"LANG-45\",\n    \"LANG-46\",\n    \"LANG-47\",\n    \"LANG-48\",\n    \"LANG-49\",\n    \"LANG-50\",\n    \"LANG-51\",\n    \"LANG-52\",\n    \"LANG-53\",\n    \"LANG-54\",\n    \"LANG-55\",\n    \"CASE-1\",\n    \"CASE-2\",\n    \"CASE-2D\",\n    \"CASE-3\",\n    \"CASE-3A\",\n    \"CASE-4\",\n    \"CASE-5\",\n    \"CASE-5A\",\n    \"CASE-6\",\n    \"CASE-7\",\n    \"CASE-8\",\n    \"CASE-9\",\n    \"CASE-9D\",\n    \"CASE-9N\",\n    \"CASE-9C\",\n    \"CASE-10\",\n    \"CASE-11\",\n    \"CASE-11H\",\n    \"CASE-11Z\",\n    \"CASE-11A\",\n    \"CASE-11AZ\",\n    \"CASE-12\",\n    \"CASE-13\",\n    \"CASE-14\"\n  ],\n  \"annotations\": 81,\n  \"exactSlices\": 416,\n  \"scope\": \"Materialization integrity only; no semantic extraction or API execution\"\n}\n",
+  "stderr": ""
+}

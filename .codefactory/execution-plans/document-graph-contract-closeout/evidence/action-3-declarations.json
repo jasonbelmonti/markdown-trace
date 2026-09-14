@@ -1,0 +1,13 @@
+{
+  "command": [
+    "./node_modules/.bin/tsc",
+    "-p",
+    "docs/design/document-graph-api/tsconfig.json"
+  ],
+  "cwd": "/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/document-graph-api-oracles",
+  "startedAt": "2026-09-14T21:37:09.419676+00:00",
+  "finishedAt": "2026-09-14T21:37:10.756706+00:00",
+  "exitCode": 0,
+  "stdout": "",
+  "stderr": ""
+}
