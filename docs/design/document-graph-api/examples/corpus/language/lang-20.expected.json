@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-20",
+  "source": {"file": "language/lang-20.md", "sha256": "d889e897ed233519cdd880a8c89f4b7dcb083544593ee6296ba639e2ccc0bd1c", "utf8Bytes": 29, "utf16Length": 29},
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O1"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 7,"line": 1,"column": 8}},"sourceText": "{#WP-1}","fragmentId": "F1"}
+  ],
+  "relationships": [],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 29,"line": 1,"column": 30}},"sourceText": "{#WP-1} \\REQ-1 and \\{#REQ-2}.","owners": ["O1"],"requiredContext": []}
+  ],
+  "exclusions": [
+    {"range": {"start": {"offset": 8,"line": 1,"column": 9},"end": {"offset": 14,"line": 1,"column": 15}},"sourceText": "\\REQ-1","reason": "escaped-expression"},
+    {"range": {"start": {"offset": 19,"line": 1,"column": 20},"end": {"offset": 28,"line": 1,"column": 29}},"sourceText": "\\{#REQ-2}","reason": "escaped-group"}
+  ],
+  "languageDiagnostics": [],
+  "integrityObservations": [],
+  "notes": []
+}

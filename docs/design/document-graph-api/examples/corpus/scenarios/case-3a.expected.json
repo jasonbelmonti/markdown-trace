@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "CASE-3A",
+  "source": {"file": "scenarios/case-3a.md", "sha256": "7a064090e9a6dfff577bfeb4f52f28da24dfaecc4c99395baf1149021b4db4cf", "utf8Bytes": 59, "utf16Length": 59},
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "REQ-1","entityKind": "requirement","definitionStatus": "resolved","declarations": ["O4"]},
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O1"]},
+    {"identifier": "WP-2","entityKind": "work","definitionStatus": "resolved","declarations": ["O2"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 7,"line": 1,"column": 8}},"sourceText": "{#WP-1}","fragmentId": "F1"},
+    {"id": "O2","identifier": "WP-2","role": "definition","range": {"start": {"offset": 8,"line": 1,"column": 9},"end": {"offset": 15,"line": 1,"column": 16}},"sourceText": "{#WP-2}","fragmentId": "F1"},
+    {"id": "O3","identifier": "REQ-1","role": "reference","range": {"start": {"offset": 16,"line": 1,"column": 17},"end": {"offset": 34,"line": 1,"column": 35}},"sourceText": "{implements:REQ-1}","fragmentId": "F1"},
+    {"id": "O4","identifier": "REQ-1","role": "definition","range": {"start": {"offset": 37,"line": 3,"column": 1},"end": {"offset": 45,"line": 3,"column": 9}},"sourceText": "{#REQ-1}","fragmentId": "F2"}
+  ],
+  "relationships": [
+    {"id": "R1","kind": "implements","owners": ["O1","O2"],"target": "REQ-1","occurrenceId": "O3"}
+  ],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 35,"line": 1,"column": 36}},"sourceText": "{#WP-1} {#WP-2} {implements:REQ-1}.","owners": ["O1","O2"],"requiredContext": []},
+    {"id": "F2","structure": "paragraph","range": {"start": {"offset": 37,"line": 3,"column": 1},"end": {"offset": 58,"line": 3,"column": 22}},"sourceText": "{#REQ-1} Requirement.","owners": ["O4"],"requiredContext": []}
+  ],
+  "exclusions": [],
+  "languageDiagnostics": [],
+  "integrityObservations": [
+    {"condition": "ambiguous-reference","occurrenceIds": ["O3"],"declarationIds": ["O1","O2"]}
+  ],
+  "notes": [],
+  "input": "Paragraph source: \"{#WP-1} {#WP-2} {implements:REQ-1}.\" followed by a separate REQ-1 declaration",
+  "operationExpectations": {"validation": "fail", "incoming": {"REQ-1": ["R1"]}, "sourceOwners": ["O1", "O2"]},
+  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
+}

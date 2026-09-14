@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-48",
+  "source": {"file": "language/lang-48.md", "sha256": "8dd227acc694446d923c290bc98276669a250e994326a628eb04438469a10d46", "utf8Bytes": 44, "utf16Length": 44},
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "REQ-1","entityKind": "requirement","definitionStatus": "missing","declarations": []},
+    {"identifier": "REQ-2","entityKind": "requirement","definitionStatus": "missing","declarations": []},
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O1"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 4,"line": 1,"column": 5},"end": {"offset": 11,"line": 1,"column": 12}},"sourceText": "{#WP-1}","fragmentId": "F1"},
+    {"id": "O2","identifier": "REQ-1","role": "reference","range": {"start": {"offset": 29,"line": 3,"column": 3},"end": {"offset": 34,"line": 3,"column": 8}},"sourceText": "REQ-1","fragmentId": "F2"},
+    {"id": "O3","identifier": "REQ-2","role": "reference","range": {"start": {"offset": 37,"line": 5,"column": 1},"end": {"offset": 42,"line": 5,"column": 6}},"sourceText": "REQ-2","fragmentId": "F3"}
+  ],
+  "relationships": [
+    {"id": "R1","kind": "references","owners": ["O1"],"target": "REQ-1","occurrenceId": "O2"},
+    {"id": "R2","kind": "references","owners": [],"target": "REQ-2","occurrenceId": "O3"}
+  ],
+  "fragments": [
+    {"id": "F1","structure": "heading","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 24,"line": 1,"column": 25}},"sourceText": "> # {#WP-1} Inside quote","owners": ["O1"],"requiredContext": []},
+    {"id": "F2","structure": "paragraph","range": {"start": {"offset": 27,"line": 3,"column": 1},"end": {"offset": 35,"line": 3,"column": 9}},"sourceText": "> REQ-1.","owners": ["O1"],"requiredContext": ["F1"]},
+    {"id": "F3","structure": "paragraph","range": {"start": {"offset": 37,"line": 5,"column": 1},"end": {"offset": 43,"line": 5,"column": 7}},"sourceText": "REQ-2.","owners": [],"requiredContext": []}
+  ],
+  "exclusions": [],
+  "languageDiagnostics": [],
+  "integrityObservations": [
+    {"condition": "missing-definition","identifier": "REQ-1","occurrenceIds": ["O2"]},
+    {"condition": "missing-definition","identifier": "REQ-2","occurrenceIds": ["O3"]},
+    {"condition": "unowned-reference","occurrenceIds": ["O3"],"declarationIds": []}
+  ],
+  "notes": []
+}

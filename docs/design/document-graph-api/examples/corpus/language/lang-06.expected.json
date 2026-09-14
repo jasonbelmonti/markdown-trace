@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-06",
+  "source": {"file": "language/lang-06.md", "sha256": "10a81f79d28175d1a7e3d15d3c95af7295537f5640cbd4f5c9682a60307200bc", "utf8Bytes": 28, "utf16Length": 28},
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "NEW-7","entityKind": null,"definitionStatus": "missing","declarations": []},
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O1"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 7,"line": 1,"column": 8}},"sourceText": "{#WP-1}","fragmentId": "F1"},
+    {"id": "O2","identifier": "NEW-7","role": "reference","range": {"start": {"offset": 8,"line": 1,"column": 9},"end": {"offset": 27,"line": 1,"column": 28}},"sourceText": "{custom-edge:NEW-7}","fragmentId": "F1"}
+  ],
+  "relationships": [
+    {"id": "R1","kind": "custom-edge","owners": ["O1"],"target": "NEW-7","occurrenceId": "O2"}
+  ],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 28,"line": 1,"column": 29}},"sourceText": "{#WP-1} {custom-edge:NEW-7}.","owners": ["O1"],"requiredContext": []}
+  ],
+  "exclusions": [],
+  "languageDiagnostics": [],
+  "integrityObservations": [
+    {"condition": "missing-definition","identifier": "NEW-7","occurrenceIds": ["O2"]},
+    {"condition": "unknown-entity-kind","identifier": "NEW-7","occurrenceIds": ["O2"]}
+  ],
+  "notes": [
+    "NEW-7 is retained with null kind; custom-edge remains a fact and fails a closed allowlist that omits it."
+  ]
+}

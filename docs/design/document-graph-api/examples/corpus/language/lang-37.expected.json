@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-37",
+  "source": {"file": "language/lang-37.md", "sha256": "cb1ca2d2b8cc6d5eb68e19a4d6633800a0b263b25753f178bbe2ceeafcda5088", "utf8Bytes": 51, "utf16Length": 51},
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "VAL-1","entityKind": "validation","definitionStatus": "resolved","declarations": ["O1"]},
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "missing","declarations": []},
+    {"identifier": "WP-2","entityKind": "work","definitionStatus": "missing","declarations": []}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "VAL-1","role": "definition","range": {"start": {"offset": 2,"line": 1,"column": 3},"end": {"offset": 10,"line": 1,"column": 11}},"sourceText": "{#VAL-1}","fragmentId": "F1"},
+    {"id": "O2","identifier": "WP-1","role": "reference","range": {"start": {"offset": 17,"line": 1,"column": 18},"end": {"offset": 21,"line": 1,"column": 22}},"sourceText": "WP-1","fragmentId": "F1"},
+    {"id": "O3","identifier": "WP-2","role": "reference","range": {"start": {"offset": 45,"line": 3,"column": 21},"end": {"offset": 49,"line": 3,"column": 25}},"sourceText": "WP-2","fragmentId": "F2"}
+  ],
+  "relationships": [
+    {"id": "R1","kind": "references","owners": ["O1"],"target": "WP-1","occurrenceId": "O2"},
+    {"id": "R2","kind": "references","owners": [],"target": "WP-2","occurrenceId": "O3"}
+  ],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 22,"line": 1,"column": 23}},"sourceText": "> {#VAL-1} Check WP-1.","owners": ["O1"],"requiredContext": []},
+    {"id": "F2","structure": "paragraph","range": {"start": {"offset": 25,"line": 3,"column": 1},"end": {"offset": 50,"line": 3,"column": 26}},"sourceText": "> Another paragraph WP-2.","owners": [],"requiredContext": []}
+  ],
+  "exclusions": [],
+  "languageDiagnostics": [],
+  "integrityObservations": [
+    {"condition": "missing-definition","identifier": "WP-1","occurrenceIds": ["O2"]},
+    {"condition": "missing-definition","identifier": "WP-2","occurrenceIds": ["O3"]},
+    {"condition": "unowned-reference","occurrenceIds": ["O3"],"declarationIds": []}
+  ],
+  "notes": []
+}

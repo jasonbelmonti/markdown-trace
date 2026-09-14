@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "markdown-trace.design-scenario.v1",
+  "caseId": "CASE-11A",
+  "source": {"file": "language/lang-54.md", "sha256": "b83dbc7ae7f2c2d7e9fc76e3fba5d0c55337711adb2316977e7c42e66a0b5b93"},
+  "annotationRef": "language/lang-54.expected.json",
+  "input": "[Ambiguous paragraph oracle](ambiguous-context.json): select WP-1 from \"{#WP-1} {#WP-2} Shared text.\" with ample budget",
+  "operationExpectations": {"roots": ["WP-1"], "budget": {"maxUtf8Bytes": 1000, "maxFragments": 10}, "omissions": [{"identifier": "WP-1", "reason": "ambiguous-ownership", "fragmentId": "F1", "declarationIds": ["O1", "O2"]}], "parts": [], "includedIdentifiers": [], "usedUtf8Bytes": 0, "coverage": "complete", "analysisDiagnosticCount": 0},
+  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
+}

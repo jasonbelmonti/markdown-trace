@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-26",
+  "source": {"file": "language/lang-26.md", "sha256": "9a4f8c783bda717e5b3a5729d1e3fde6944983186ed3592ff7380b100bac9df4", "utf8Bytes": 51, "utf16Length": 51},
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "REQ-1","entityKind": "requirement","definitionStatus": "resolved","declarations": ["O1"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "REQ-1","role": "definition","range": {"start": {"offset": 2,"line": 1,"column": 3},"end": {"offset": 10,"line": 1,"column": 11}},"sourceText": "{#REQ-1}","fragmentId": "F1"}
+  ],
+  "relationships": [],
+  "fragments": [
+    {"id": "F1","structure": "heading","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 22,"line": 1,"column": 23}},"sourceText": "# {#REQ-1} Requirement","owners": ["O1"],"requiredContext": []},
+    {"id": "F2","structure": "code","range": {"start": {"offset": 24,"line": 3,"column": 1},"end": {"offset": 50,"line": 5,"column": 4}},"sourceText": "```text\n{#REQ-2} REQ-3\n```","owners": ["O1"],"requiredContext": ["F1"]}
+  ],
+  "exclusions": [
+    {"range": {"start": {"offset": 24,"line": 3,"column": 1},"end": {"offset": 50,"line": 5,"column": 4}},"sourceText": "```text\n{#REQ-2} REQ-3\n```","reason": "literal-fenced-code"}
+  ],
+  "languageDiagnostics": [],
+  "integrityObservations": [],
+  "notes": []
+}

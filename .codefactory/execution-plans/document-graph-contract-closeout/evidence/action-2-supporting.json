@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-09-14T15:43:58.834Z",
+  "versions": {
+    "node": "v22.20.0",
+    "parser": "3.5.0",
+    "typescript": "6.0.3"
+  },
+  "checks": [
+    {
+      "command": "npm ci",
+      "exitCode": 0
+    },
+    {
+      "command": "./node_modules/.bin/tsc -p docs/design/document-graph-api/tsconfig.json",
+      "exitCode": 0,
+      "stdout": ""
+    },
+    {
+      "command": "node docs/design/document-graph-api/checks/check-examples.mjs",
+      "exitCode": 0,
+      "identifiers": 6,
+      "occurrences": 10,
+      "relationships": 4,
+      "fragments": 10,
+      "contextUtf8Bytes": 169
+    },
+    {
+      "command": "node docs/design/document-graph-api/checks/probe-engine.mjs",
+      "exitCode": 0,
+      "verifiedRawSlices": 29
+    },
+    {
+      "command": "npm run ci:enforcement",
+      "exitCode": 0,
+      "stdoutSummary": "30 test files, 219 tests passed. Package, compatibility, generated sidecar and migration enforcement passed."
+    }
+  ],
+  "protectedSurfaces": "src, tests, scripts, package.json, package-lock.json and .github byte-identical to baseline 155a915; no production API executed by the design checks."
+}

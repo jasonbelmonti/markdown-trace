@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-43",
+  "source": {"file": "language/lang-43.md", "sha256": "c3c0bfb74d3277b5fd26ba110b7f5edd0dc04385a64962232380cd0a826d4c4e", "utf8Bytes": 23, "utf16Length": 23},
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "REQ-1","entityKind": "requirement","definitionStatus": "missing","declarations": []},
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "duplicate","declarations": ["O1","O2"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 7,"line": 1,"column": 8}},"sourceText": "{#WP-1}","fragmentId": "F1"},
+    {"id": "O2","identifier": "WP-1","role": "definition","range": {"start": {"offset": 8,"line": 1,"column": 9},"end": {"offset": 15,"line": 1,"column": 16}},"sourceText": "{#WP-1}","fragmentId": "F1"},
+    {"id": "O3","identifier": "REQ-1","role": "reference","range": {"start": {"offset": 16,"line": 1,"column": 17},"end": {"offset": 21,"line": 1,"column": 22}},"sourceText": "REQ-1","fragmentId": "F1"}
+  ],
+  "relationships": [
+    {"id": "R1","kind": "references","owners": ["O1","O2"],"target": "REQ-1","occurrenceId": "O3"}
+  ],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 22,"line": 1,"column": 23}},"sourceText": "{#WP-1} {#WP-1} REQ-1.","owners": ["O1","O2"],"requiredContext": []}
+  ],
+  "exclusions": [],
+  "languageDiagnostics": [],
+  "integrityObservations": [
+    {"condition": "missing-definition","identifier": "REQ-1","occurrenceIds": ["O3"]},
+    {"condition": "duplicate-definition","identifier": "WP-1","occurrenceIds": ["O1","O2"]},
+    {"condition": "ambiguous-reference","occurrenceIds": ["O3"],"declarationIds": ["O1","O2"]}
+  ],
+  "notes": []
+}

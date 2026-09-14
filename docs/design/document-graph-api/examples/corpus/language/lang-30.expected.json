@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-30",
+  "source": {"file": "language/lang-30.md", "sha256": "2164bc69f0f15c1e1e7dc71eb0764062f3e44c39927b042ad1ad3b5f58376503", "utf8Bytes": 39, "utf16Length": 39},
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "REQ-2","entityKind": "requirement","definitionStatus": "missing","declarations": []},
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O1"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 7,"line": 1,"column": 8}},"sourceText": "{#WP-1}","fragmentId": "F1"},
+    {"id": "O2","identifier": "REQ-2","role": "reference","range": {"start": {"offset": 33,"line": 1,"column": 34},"end": {"offset": 38,"line": 1,"column": 39}},"sourceText": "REQ-2","fragmentId": "F1"}
+  ],
+  "relationships": [
+    {"id": "R1","kind": "references","owners": ["O1"],"target": "REQ-2","occurrenceId": "O2"}
+  ],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 39,"line": 1,"column": 40}},"sourceText": "{#WP-1} {implements:`REQ-1`} and REQ-2.","owners": ["O1"],"requiredContext": []}
+  ],
+  "exclusions": [],
+  "languageDiagnostics": [
+    {"code": "markdown-trace.language.malformed-expression","severity": "error","range": {"start": {"offset": 8,"line": 1,"column": 9},"end": {"offset": 28,"line": 1,"column": 29}},"sourceText": "{implements:`REQ-1`}","owners": ["O1"]}
+  ],
+  "integrityObservations": [
+    {"condition": "missing-definition","identifier": "REQ-2","occurrenceIds": ["O2"]}
+  ],
+  "notes": []
+}

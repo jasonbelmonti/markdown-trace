@@ -1,0 +1,179 @@
+{
+  "reviewer": "Codex reviewer B",
+  "gate": "EP-GATE-1",
+  "verdict": "PASS",
+  "recordedAt": "2026-09-14T15:58:49.673897+00:00",
+  "boundary": "Final narrow semantic recheck for EP-ACT-2 and EP-GATE-1. Full executable API DTOs/checker remain EP-ACT-3; production and parent-task acceptance are not claimed.",
+  "evidence": {
+    "independentReport": {
+      "path": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1/reviewer-b-independent.json",
+      "sha256": "a278582b01811e2d01b53cb24f893766ee59b1eec01fb756c5ecafe3399e57f4"
+    },
+    "comparisonReport": {
+      "path": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1/reviewer-b-comparison.json",
+      "sha256": "d78dbf350248210473a4d13b77fbc08d796c9f0f2bdc8bad11f18c7634c23d71"
+    },
+    "finalInputs": {
+      "path": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1/final-inputs.json",
+      "sha256": "b5046093940e182172c1f299a2364b61ef281b5701cb608e4e68420a924e944d"
+    },
+    "initialInputs": {
+      "path": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1/inputs.json",
+      "sha256": "a702e0a105727d5464e09f26508d0da2a8b8d02350db567af6b8f169e1655a74"
+    },
+    "annotationsBefore": {
+      "path": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1/annotations-before.json",
+      "sha256": "81c2268b2a952b491d2dc8a077adc73d4ceba64816af33c62a729a0d97179e7c"
+    },
+    "packet": {
+      "path": "docs/design/markdown-trace-document-graph-interfaces.md",
+      "sha256": "14fb396a2a5927ecfb3fdd8863a14cbf90b9a1ce295c02df3e40d794af13273d",
+      "revision": 6
+    },
+    "packetChecksum": {
+      "path": "docs/design/markdown-trace-document-graph-interfaces.sha256",
+      "sha256": "8448bb6a39a59ddb31a14c7337df454abca6a706e40da56f3e8665a7bb1d8515"
+    }
+  },
+  "verification": {
+    "finalInputFingerprintsVerified": 170,
+    "fingerprintMismatches": [],
+    "frozenReportsRereadAndHashesVerified": true,
+    "earlierReportsUnmodified": true,
+    "distinctSourceFilesVerifiedUnchanged": 66,
+    "caseCount": 79,
+    "languageCases": 55,
+    "scenarioCases": 24,
+    "manifestCaseIdsSourcePathsSourceHashesExpectedPaths": "All 79 agree with frozen inventories and case-by-case comparison.",
+    "annotationInventoryDelta": {
+      "priorFiles": 161,
+      "unchangedPriorFiles": 159,
+      "changedPriorFiles": [
+        {
+          "path": "docs/design/document-graph-api/examples/corpus/manifest.json",
+          "beforeSha256": "1c6895ac58e87b214dca4e3f0ed024254d2abae9d6d3cad148c7b1e5e784f396",
+          "finalSha256": "8819f1f7c8b7d83e226a5803f25652390196ad923dffbb6bd654cd03ba3eb448"
+        },
+        {
+          "path": "docs/design/document-graph-api/examples/corpus/scenarios/case-14.expected.json",
+          "beforeSha256": "37d33dbf315892dc9a125ccad87ed47d67a80f7e8df81799e56bd98ce5d9aacc",
+          "finalSha256": "aaa920af46021457b30383745af31908650299ef4762c54ffaf26065da3883f9"
+        }
+      ],
+      "additionalFingerprintScopeFiles": 9
+    },
+    "packetDiffBase": {
+      "ref": "origin/main",
+      "commit": "155a9157bf3a48540612c6dcf79266b016deff4f",
+      "packetSha256": "7543892d83ce85848b58bae613276b970137ddb305a547d77a159b16e71c499d"
+    },
+    "packetDiffAssessment": "Reviewed diff from the exact independently interpreted revision-5 bytes. Revision 6 adds the LANG-45 recovery-boundary clarification; other edits update corpus status, proof navigation and remaining-work boundaries. No occurrence, owner, fragment-support or other semantic rule changes were found.",
+    "otherReviewerOutputRead": false
+  },
+  "rechecks": [
+    {
+      "case": "LANG-45",
+      "verdict": "PASS",
+      "question": "Q-B-1",
+      "questionStatus": "CLOSED",
+      "source": {
+        "path": "docs/design/document-graph-api/examples/corpus/language/lang-45.md",
+        "sha256": "94d2e5d1af7c3d4b802e82b4ad6b614aac4540b01bd41a7b78f73186f7c8e162"
+      },
+      "annotation": {
+        "path": "docs/design/document-graph-api/examples/corpus/language/lang-45.expected.json",
+        "sha256": "3f5453127c100bff0c52d3db4a6336e56e28eec4ada997dfb854c1dfc320a1d2"
+      },
+      "authority": {
+        "path": "docs/design/markdown-trace-document-graph-interfaces.md",
+        "lines": [
+          244,
+          247,
+          249
+        ],
+        "rules": [
+          "LEX-5",
+          "LEX-8"
+        ]
+      },
+      "malformedRange": {
+        "range": [
+          56,
+          74
+        ],
+        "sourceText": "{implements:REQ-1 ",
+        "code": "markdown-trace.language.malformed-expression",
+        "severity": "error",
+        "owners": [
+          "O1"
+        ]
+      },
+      "reason": "The explicit earlier physical-line/Engine inline-container boundary includes the one trailing space at offset 73 and excludes the next pipe at 74. Engine tableCell ends at 74 while its last text leaf ends at 73; successful-marker leaf recognition does not trim malformed recovery. This precisely closes Q-B-1 without changing its frozen expected range.",
+      "occurrenceAndOwnerAgreement": "O1 defines WP-1 at [46,53); O2 references REQ-2 at [76,81), owned by O1. REQ-1 remains suppressed. REQ-2 is missing and coverage remains partial.",
+      "fragmentSupportAgreement": "Owned row F2 [44,83) requires unowned header/delimiter F1 [0,43). The permitted REP-1 support grouping is unchanged; malformed-range closure does not change fragments or support.",
+      "otherMalformedCaseImpact": "The physical-line recovery already recorded for LANG-18 remains [8,25), stopping before its newline. The clarification does not change that frozen interpretation."
+    },
+    {
+      "case": "CASE-14",
+      "verdict": "PASS",
+      "source": {
+        "path": "docs/design/document-graph-api/examples/mixed-layout.md",
+        "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"
+      },
+      "annotation": {
+        "path": "docs/design/document-graph-api/examples/corpus/scenarios/case-14.expected.json",
+        "sha256": "aaa920af46021457b30383745af31908650299ef4762c54ffaf26065da3883f9"
+      },
+      "resolvedAnnotation": {
+        "path": "docs/design/document-graph-api/examples/corpus/scenarios/mixed-layout.expected.json",
+        "sha256": "08c87260cf88ad5f96deaa4538f866dc3609cf2eec67a8596d1a8477bb88cbb6"
+      },
+      "authority": {
+        "path": "docs/design/markdown-trace-document-graph-interfaces.md",
+        "lines": [
+          176,
+          178,
+          205,
+          209
+        ],
+        "rules": [
+          "common handle invariants",
+          "C-1",
+          "C-2"
+        ]
+      },
+      "mutation": {
+        "validation.allowedRelations": [],
+        "interpretation.entityKinds[0].prefixes": [
+          "OTHER"
+        ]
+      },
+      "observations": {
+        "compiledInterpretationHash": "unchanged",
+        "compiledValidationHash": "unchanged",
+        "analyzedREQEntityKind": "requirement",
+        "validationWithOriginalCompiledProfile": "pass"
+      },
+      "reason": "Compiling clones and detaches the original input. Mutating its relation allowlist and REQ prefix cannot alter the issued profile hashes or its original REQ-to-requirement interpretation and passing validation for the mixed source. The added observations concretize the already accepted compiled-behavior expectation.",
+      "retainedVariants": "JSON-roundtripped analysis remains invalid-input; a JSON-roundtripped selection used with issued analysis remains invalid-selection.",
+      "sourceInterpretationReuse": "Shared MIXED occurrence roles/ranges, relationship owners, fragments/support, exclusions and diagnostics are byte-for-byte unchanged from the full comparison."
+    }
+  ],
+  "coverageApplicability": {
+    "appliesTo": "All 79 frozen manifest cases: 55 language and 24 scenarios.",
+    "narrowlyRecheckedCases": [
+      "LANG-45",
+      "CASE-14"
+    ],
+    "reusedCases": 77,
+    "reuseBasis": "Every previous case decision is PASS. All 66 source files, all 79 manifest mappings, all resolved annotations and every expected annotation except the reviewed CASE-14 amendment match their frozen fingerprints. Unchanged semantic rules retain the prior occurrence/owner/exclusion/malformed-range/fragment-support decisions. No independent pass was repeated.",
+    "caseByCaseProof": {
+      "path": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1/reviewer-b-comparison.json",
+      "sha256": "d78dbf350248210473a4d13b77fbc08d796c9f0f2bdc8bad11f18c7634c23d71"
+    },
+    "includesSharedAndAfterSources": "The unchanged shared mixed-layout annotation and CASE-10 after source/annotation remain covered by the frozen comparison, including its explicit additionalSourceComparisons entry.",
+    "representationResolutions": "REP-1 through REP-4 remain permitted annotation representation decisions, not semantic discrepancies."
+  },
+  "blockingDiscrepancies": [],
+  "finalDecision": "PASS for all 79 cases at final-inputs.json fingerprints. Q-B-1 is closed by revision 6; no additional blocker was found."
+}

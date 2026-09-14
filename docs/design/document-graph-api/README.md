@@ -14,4 +14,11 @@ node docs/design/document-graph-api/checks/probe-engine.mjs
 
 The example check verifies source hashes, coordinates, ledger references and byte totals. It checks internal consistency of the hand-authored oracle, not extraction correctness. The Engine probe checks public tree/source feasibility on mixed Markdown, CRLF and emoji. Neither executes the proposed graph API.
 
-[validation.json](validation.json) records the checks and artifact hashes. Recompute its artifact hashes before relying on a handoff; read the packet and its questions first. The packet also has an adjacent .sha256 file. The full lexical/ownership corpus and real-spec context/scale evidence remain outstanding.
+[validation.json](validation.json) records the checks and artifact hashes. Recompute its artifact hashes before relying on a handoff; read the packet and its questions first. The packet also has an adjacent .sha256 file. The [materialized corpus](examples/corpus/README.md) contains all 55 language cases and 24 API scenarios, with source hashes, exhaustive occurrence/owner annotations and explicit diagnostics/exclusions. Its independent interpretation status is recorded in the gate evidence. EP-ACT-3 still owns complete executable API-result expectations and the generalized checker; real-spec context/scale evidence remains outstanding.
+
+The corpus materialization and full-source parser checks are separately reproducible:
+
+```sh
+node .codefactory/execution-plans/document-graph-contract-closeout/evidence/verify-materialization.mjs
+node .codefactory/execution-plans/document-graph-contract-closeout/evidence/probe-corpus-sources.mjs
+```

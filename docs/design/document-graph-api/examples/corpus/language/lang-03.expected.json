@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-03",
+  "source": {"file": "language/lang-03.md", "sha256": "08b5af51200f310eb50afb16b321f2dc1eba45a317e99d5684ce5052db0bcaff", "utf8Bytes": 30, "utf16Length": 30},
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "REQ-1","entityKind": "requirement","definitionStatus": "missing","declarations": []},
+    {"identifier": "REQ-1-3","entityKind": "requirement","definitionStatus": "missing","declarations": []},
+    {"identifier": "REQ-3","entityKind": "requirement","definitionStatus": "missing","declarations": []},
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O1"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 7,"line": 1,"column": 8}},"sourceText": "{#WP-1}","fragmentId": "F1"},
+    {"id": "O2","identifier": "REQ-1","role": "reference","range": {"start": {"offset": 8,"line": 1,"column": 9},"end": {"offset": 13,"line": 1,"column": 14}},"sourceText": "REQ-1","fragmentId": "F1"},
+    {"id": "O3","identifier": "REQ-3","role": "reference","range": {"start": {"offset": 15,"line": 1,"column": 16},"end": {"offset": 20,"line": 1,"column": 21}},"sourceText": "REQ-3","fragmentId": "F1"},
+    {"id": "O4","identifier": "REQ-1-3","role": "reference","range": {"start": {"offset": 22,"line": 1,"column": 23},"end": {"offset": 29,"line": 1,"column": 30}},"sourceText": "REQ-1-3","fragmentId": "F1"}
+  ],
+  "relationships": [
+    {"id": "R1","kind": "references","owners": ["O1"],"target": "REQ-1","occurrenceId": "O2"},
+    {"id": "R2","kind": "references","owners": ["O1"],"target": "REQ-3","occurrenceId": "O3"},
+    {"id": "R3","kind": "references","owners": ["O1"],"target": "REQ-1-3","occurrenceId": "O4"}
+  ],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 30,"line": 1,"column": 31}},"sourceText": "{#WP-1} REQ-1..REQ-3; REQ-1-3.","owners": ["O1"],"requiredContext": []}
+  ],
+  "exclusions": [],
+  "languageDiagnostics": [],
+  "integrityObservations": [
+    {"condition": "missing-definition","identifier": "REQ-1","occurrenceIds": ["O2"]},
+    {"condition": "missing-definition","identifier": "REQ-1-3","occurrenceIds": ["O4"]},
+    {"condition": "missing-definition","identifier": "REQ-3","occurrenceIds": ["O3"]}
+  ],
+  "notes": [
+    "Dots separate references; REQ-1-3 is one label. No range expansion."
+  ]
+}
