@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "markdown-trace.design-scenario.v1",
+  "caseId": "CASE-8",
+  "source": {"file": "../mixed-layout.md", "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"},
+  "annotationRef": "scenarios/mixed-layout.expected.json",
+  "input": "Change the WP prefix assignment to another entity kind, then call validateGraph on the existing analysis",
+  "operationExpectations": {"changedProfile": {"schemaVersion": "markdown-trace.document-profile.v1", "profileId": "changed-interpretation", "interpretation": {"language": "markdown-trace.identity.draft1", "entityKinds": [{"name": "requirement", "prefixes": ["REQ", "WP"]}, {"name": "validation", "prefixes": ["VAL"]}]}, "validation": {"minEntities": 0, "allowedRelations": [], "rules": []}}, "operation": "validateGraph", "error": "profile-mismatch", "analysis": "original mixed-layout"},
+  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
+}

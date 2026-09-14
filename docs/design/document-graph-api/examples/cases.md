@@ -1,10 +1,10 @@
-# Initial API proving cases
+# API proving cases
 
 These are independently authored expectations for the candidate language in the [interface packet](../../markdown-trace-document-graph-interfaces.md). They are not outputs from a graph extractor. The API runtime does not exist yet.
 
 The [mixed-layout source](mixed-layout.md) has six identifiers, ten occurrences and four relationships under the [example profile](profile.ts). [expectations.json](expectations.json) supplies every occurrence's exact range, owner/edge associations, owned fragments, required supporting context, query answers and explicit exclusions. Ledger IDs such as O1/R1/F1 are aliases; implementations choose their own deterministic IDs. Compact predecessor entries identify a ledger relationship, not an alternative public DTO shape.
 
-The [source inventory](source-inventory.json) records a substantial repository-owned design spec for the later complete corpus. Its historical content is fixture material, not current direction. It has not been adapted or fully annotated. This initial ledger does not satisfy the entire contract/corpus task.
+The [source inventory](source-inventory.json) records a substantial repository-owned design spec for the later complete corpus. Its historical content is fixture material, not current direction. It has not been adapted or fully annotated. The [materialized corpus](corpus/README.md) supplies the complete language/scenario input inventory and independent source annotations. Full API-result expansion remains EP-ACT-3; the corpus does not by itself complete the parent task.
 
 | Case | Concrete input/query | Independently expected result | Contract/validation |
 | --- | --- | --- | --- |
@@ -45,7 +45,7 @@ The current parser probe proves the required basic nodes and raw offsets exist i
 
 ## Recorded language decisions
 
-EP-ACT-1 records the recommended lexical and ownership rules in the interface packet. Following PR review remediation, the [rule/case index](corpus/manifest.json) contains 55 exact Markdown examples and independently authored interpretations. The focused [ambiguous-context oracle](ambiguous-context.json) covers the new ownership omission. These do not complete the full graph/coordinate corpus; EP-ACT-2 materializes the remaining paired fixtures and expectations.
+EP-ACT-1 records the recommended lexical and ownership rules in the interface packet. Following PR review remediation, the [rule/case index](corpus/manifest.json) maps 55 paired Markdown/annotation fixtures. The focused [ambiguous-context oracle](ambiguous-context.json) covers the new ownership omission. EP-ACT-2 also materializes all 24 API scenario inputs and their source interpretations, including shared-source references and a separate after-edit source. EP-GATE-1 records two independent interpretations and their comparison; complete executable API-result expectations remain EP-ACT-3.
 
 | Rule | Decision demonstrated | Example IDs |
 | --- | --- | --- |
@@ -65,4 +65,4 @@ EP-ACT-1 records the recommended lexical and ownership rules in the interface pa
 | OWN-6 | Nested-container exits and resumption of outer ownership | LANG-33, LANG-35, LANG-36, LANG-38, LANG-48 |
 | OWN-7 | Parent/child context partitioning, literal source context and explicit ownership omissions | LANG-26, LANG-44, LANG-54 |
 
-The owner's authorization to execute the first action is recorded as authorization to complete these recommendations. It is not recorded as a selection between the explicit-marker recommendation and the structural alternative. Q-1/Q-2 still require authoring-fit acceptance and independent corpus proof before extraction. A substantial spec is inventoried; its required-context oracle and performance pilot acceptance remain Q-4.
+The owner's authorization to execute the first action and this corpus PR is recorded as authorization to complete these recommendations and their proving fixtures. It is not recorded as a selection between the explicit-marker recommendation and the structural alternative. Q-1/Q-2 still require owner syntax/authoring-fit acceptance and the remaining contract/corpus proof before extraction; consult the current gate record for the independent interpretation result. A substantial spec is inventoried; its required-context oracle and performance pilot acceptance remain Q-4.

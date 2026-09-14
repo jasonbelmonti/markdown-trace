@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-50",
+  "source": {"file": "language/lang-50.md", "sha256": "1eaa4ebab26027131fe99382cccc6a0b835e177b0c7d5d1f095686ff68419438", "utf8Bytes": 32, "utf16Length": 32},
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O1"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 7,"line": 1,"column": 8}},"sourceText": "{#WP-1}","fragmentId": "F1"}
+  ],
+  "relationships": [],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 31,"line": 1,"column": 32}},"sourceText": "{#WP-1} {imple**ments**:REQ-1}.","owners": ["O1"],"requiredContext": []}
+  ],
+  "exclusions": [],
+  "languageDiagnostics": [
+    {"code": "markdown-trace.language.malformed-expression","severity": "error","range": {"start": {"offset": 8,"line": 1,"column": 9},"end": {"offset": 30,"line": 1,"column": 31}},"sourceText": "{imple**ments**:REQ-1}","owners": ["O1"]}
+  ],
+  "integrityObservations": [],
+  "notes": []
+}

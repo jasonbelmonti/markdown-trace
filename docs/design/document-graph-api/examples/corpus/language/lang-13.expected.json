@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-13",
+  "source": {"file": "language/lang-13.md", "sha256": "25f777a186f242e9865b4ef4a80fbc7a51b00a7fabe371aee3f1a5dbcb2135db", "utf8Bytes": 22, "utf16Length": 22},
+  "coverage": "complete",
+  "identifiers": [],
+  "occurrences": [],
+  "relationships": [],
+  "fragments": [
+    {"id": "F1","structure": "other","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 21,"line": 3,"column": 7}},"sourceText": "<div>\n{#REQ-1}\n</div>","owners": [],"requiredContext": []}
+  ],
+  "exclusions": [
+    {"range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 21,"line": 3,"column": 7}},"sourceText": "<div>\n{#REQ-1}\n</div>","reason": "html-block"}
+  ],
+  "languageDiagnostics": [],
+  "integrityObservations": [],
+  "notes": []
+}

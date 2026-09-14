@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "markdown-trace.design-scenario.v1",
+  "caseId": "CASE-5A",
+  "source": {"file": "scenarios/case-5.md", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+  "annotationRef": "scenarios/case-5.expected.json",
+  "input": "Empty text, minEntities 0 and rules empty",
+  "operationExpectations": {"profileChange": {"validation.minEntities": 0, "validation.rules": []}, "validation": "pass", "entityCount": 0},
+  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
+}

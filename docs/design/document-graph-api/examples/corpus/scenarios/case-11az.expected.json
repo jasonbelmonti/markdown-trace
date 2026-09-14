@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "markdown-trace.design-scenario.v1",
+  "caseId": "CASE-11AZ",
+  "source": {"file": "language/lang-54.md", "sha256": "b83dbc7ae7f2c2d7e9fc76e3fba5d0c55337711adb2316977e7c42e66a0b5b93"},
+  "annotationRef": "language/lang-54.expected.json",
+  "input": "CASE-11A with both budgets zero, or select both WP-1/WP-2 with ample budget",
+  "operationExpectations": {"variants": [{"roots": ["WP-1"], "budget": {"maxUtf8Bytes": 0, "maxFragments": 0}, "omittedIdentifiers": ["WP-1"]}, {"roots": ["WP-1", "WP-2"], "budget": {"maxUtf8Bytes": 1000, "maxFragments": 10}, "omittedIdentifiers": ["WP-1", "WP-2"]}], "reason": "ambiguous-ownership", "fragmentId": "F1", "declarationIds": ["O1", "O2"], "parts": [], "includedIdentifiers": [], "usedUtf8Bytes": 0, "selectionMetadata": "retained"},
+  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
+}

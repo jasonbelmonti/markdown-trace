@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-54",
+  "source": {"file": "language/lang-54.md", "sha256": "b83dbc7ae7f2c2d7e9fc76e3fba5d0c55337711adb2316977e7c42e66a0b5b93", "utf8Bytes": 29, "utf16Length": 29},
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O1"]},
+    {"identifier": "WP-2","entityKind": "work","definitionStatus": "resolved","declarations": ["O2"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 7,"line": 1,"column": 8}},"sourceText": "{#WP-1}","fragmentId": "F1"},
+    {"id": "O2","identifier": "WP-2","role": "definition","range": {"start": {"offset": 8,"line": 1,"column": 9},"end": {"offset": 15,"line": 1,"column": 16}},"sourceText": "{#WP-2}","fragmentId": "F1"}
+  ],
+  "relationships": [],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 28,"line": 1,"column": 29}},"sourceText": "{#WP-1} {#WP-2} Shared text.","owners": ["O1","O2"],"requiredContext": []}
+  ],
+  "exclusions": [],
+  "languageDiagnostics": [],
+  "integrityObservations": [],
+  "notes": [
+    "No references: coverage complete and no ownership integrity error. Context omits each selected owner as ambiguous-ownership before budget checks, with F1 range and O1/O2. No joint ownership when both selected."
+  ]
+}

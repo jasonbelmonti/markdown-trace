@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "CASE-5",
+  "source": {"file": "scenarios/case-5.md", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "utf8Bytes": 0, "utf16Length": 0},
+  "coverage": "complete",
+  "identifiers": [],
+  "occurrences": [],
+  "relationships": [],
+  "fragments": [],
+  "exclusions": [],
+  "languageDiagnostics": [],
+  "integrityObservations": [],
+  "notes": [],
+  "input": "Analyze empty text with the example profile",
+  "operationExpectations": {"validation": "fail", "minEntities": "fail", "work-exists": "fail", "work-has-requirement": {"status": "not-applicable", "selectedSubjects": 0, "evaluatedSubjects": 0}},
+  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
+}

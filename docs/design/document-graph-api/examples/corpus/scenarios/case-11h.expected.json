@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "markdown-trace.design-scenario.v1",
+  "caseId": "CASE-11H",
+  "source": {"file": "../mixed-layout.md", "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"},
+  "annotationRef": "scenarios/mixed-layout.expected.json",
+  "input": "Select only WP-2 at depth 0 with ample context budget",
+  "operationExpectations": {"query": {"roots": ["WP-2"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}, "budget": {"maxUtf8Bytes": 1000, "maxFragments": 10}, "context": {"includedIdentifiers": ["WP-2"], "parts": ["F1", "F6", "F7"], "excludedFragments": ["F2", "F3", "F4", "F5", "F8", "F9", "F10"]}},
+  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
+}

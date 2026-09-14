@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-23",
+  "source": {"file": "language/lang-23.md", "sha256": "87890f7747e8ef77106352d4973607f8da1fc8a817dade670be24ff9258d613f", "utf8Bytes": 32, "utf16Length": 32},
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "REQ-1","entityKind": "requirement","definitionStatus": "missing","declarations": []},
+    {"identifier": "REQ-2","entityKind": "requirement","definitionStatus": "missing","declarations": []},
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O1"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 7,"line": 1,"column": 8}},"sourceText": "{#WP-1}","fragmentId": "F1"},
+    {"id": "O2","identifier": "REQ-1","role": "reference","range": {"start": {"offset": 8,"line": 1,"column": 9},"end": {"offset": 17,"line": 1,"column": 18}},"sourceText": "` REQ-1 `","fragmentId": "F1"},
+    {"id": "O3","identifier": "REQ-2","role": "reference","range": {"start": {"offset": 22,"line": 1,"column": 23},"end": {"offset": 31,"line": 1,"column": 32}},"sourceText": "``REQ-2``","fragmentId": "F1"}
+  ],
+  "relationships": [
+    {"id": "R1","kind": "references","owners": ["O1"],"target": "REQ-1","occurrenceId": "O2"},
+    {"id": "R2","kind": "references","owners": ["O1"],"target": "REQ-2","occurrenceId": "O3"}
+  ],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 32,"line": 1,"column": 33}},"sourceText": "{#WP-1} ` REQ-1 ` and ``REQ-2``.","owners": ["O1"],"requiredContext": []}
+  ],
+  "exclusions": [],
+  "languageDiagnostics": [],
+  "integrityObservations": [
+    {"condition": "missing-definition","identifier": "REQ-1","occurrenceIds": ["O2"]},
+    {"condition": "missing-definition","identifier": "REQ-2","occurrenceIds": ["O3"]}
+  ],
+  "notes": []
+}

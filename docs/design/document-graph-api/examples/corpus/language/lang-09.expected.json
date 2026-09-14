@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "LANG-09",
+  "source": {"file": "language/lang-09.md", "sha256": "108466732a954bb0b85129fad5723f17176c902e11d8f4e7d9acf4c404048c52", "utf8Bytes": 20, "utf16Length": 20},
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O1"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "WP-1","role": "definition","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 7,"line": 1,"column": 8}},"sourceText": "{#WP-1}","fragmentId": "F1"}
+  ],
+  "relationships": [],
+  "fragments": [
+    {"id": "F1","structure": "paragraph","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 20,"line": 1,"column": 21}},"sourceText": "{#WP-1} X**REQ-1**Y.","owners": ["O1"],"requiredContext": []}
+  ],
+  "exclusions": [
+    {"range": {"start": {"offset": 8,"line": 1,"column": 9},"end": {"offset": 19,"line": 1,"column": 20}},"sourceText": "X**REQ-1**Y","reason": "longer-visible-word"}
+  ],
+  "languageDiagnostics": [],
+  "integrityObservations": [],
+  "notes": []
+}

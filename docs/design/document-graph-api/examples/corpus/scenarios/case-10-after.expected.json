@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "markdown-trace.design-annotation.v1",
+  "caseId": "CASE-10-AFTER",
+  "source": {"file": "scenarios/case-10-after.md", "sha256": "885266ed7fb2dac107239ab73af6dd85931d99f116e9868ef68c320866b51a7a", "utf8Bytes": 429, "utf16Length": 429},
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "REQ-1","entityKind": "requirement","definitionStatus": "resolved","declarations": ["O1"]},
+    {"identifier": "REQ-2","entityKind": "requirement","definitionStatus": "resolved","declarations": ["O2"]},
+    {"identifier": "REQ-3","entityKind": "requirement","definitionStatus": "resolved","declarations": ["O10"]},
+    {"identifier": "VAL-1","entityKind": "validation","definitionStatus": "resolved","declarations": ["O6"]},
+    {"identifier": "WP-1","entityKind": "work","definitionStatus": "resolved","declarations": ["O3"]},
+    {"identifier": "WP-2","entityKind": "work","definitionStatus": "resolved","declarations": ["O8"]}
+  ],
+  "occurrences": [
+    {"id": "O1","identifier": "REQ-1","role": "definition","range": {"start": {"offset": 2,"line": 1,"column": 3},"end": {"offset": 10,"line": 1,"column": 11}},"sourceText": "{#REQ-1}","fragmentId": "F1"},
+    {"id": "O2","identifier": "REQ-2","role": "definition","range": {"start": {"offset": 70,"line": 5,"column": 1},"end": {"offset": 78,"line": 5,"column": 9}},"sourceText": "{#REQ-2}","fragmentId": "F3"},
+    {"id": "O3","identifier": "WP-1","role": "definition","range": {"start": {"offset": 105,"line": 7,"column": 3},"end": {"offset": 112,"line": 7,"column": 10}},"sourceText": "{#WP-1}","fragmentId": "F4"},
+    {"id": "O4","identifier": "REQ-1","role": "reference","range": {"start": {"offset": 121,"line": 7,"column": 19},"end": {"offset": 139,"line": 7,"column": 37}},"sourceText": "{implements:REQ-1}","fragmentId": "F4"},
+    {"id": "O5","identifier": "REQ-2","role": "reference","range": {"start": {"offset": 151,"line": 8,"column": 11},"end": {"offset": 158,"line": 8,"column": 18}},"sourceText": "`REQ-2`","fragmentId": "F4"},
+    {"id": "O6","identifier": "VAL-1","role": "definition","range": {"start": {"offset": 179,"line": 10,"column": 3},"end": {"offset": 187,"line": 10,"column": 11}},"sourceText": "{#VAL-1}","fragmentId": "F5"},
+    {"id": "O7","identifier": "WP-1","role": "reference","range": {"start": {"offset": 195,"line": 10,"column": 19},"end": {"offset": 210,"line": 10,"column": 34}},"sourceText": "{verifies:WP-1}","fragmentId": "F5"},
+    {"id": "O8","identifier": "WP-2","role": "definition","range": {"start": {"offset": 267,"line": 14,"column": 3},"end": {"offset": 274,"line": 14,"column": 10}},"sourceText": "{#WP-2}","fragmentId": "F7"},
+    {"id": "O9","identifier": "REQ-2","role": "reference","range": {"start": {"offset": 296,"line": 14,"column": 32},"end": {"offset": 314,"line": 14,"column": 50}},"sourceText": "{implements:REQ-2}","fragmentId": "F7"},
+    {"id": "O10","identifier": "REQ-3","role": "definition","range": {"start": {"offset": 321,"line": 16,"column": 4},"end": {"offset": 329,"line": 16,"column": 12}},"sourceText": "{#REQ-3}","fragmentId": "F8"}
+  ],
+  "relationships": [
+    {"id": "R1","kind": "implements","owners": ["O3"],"target": "REQ-1","occurrenceId": "O4"},
+    {"id": "R2","kind": "references","owners": ["O3"],"target": "REQ-2","occurrenceId": "O5"},
+    {"id": "R3","kind": "verifies","owners": ["O6"],"target": "WP-1","occurrenceId": "O7"},
+    {"id": "R4","kind": "implements","owners": ["O8"],"target": "REQ-2","occurrenceId": "O9"}
+  ],
+  "fragments": [
+    {"id": "F1","structure": "heading","range": {"start": {"offset": 0,"line": 1,"column": 1},"end": {"offset": 25,"line": 1,"column": 26}},"sourceText": "# {#REQ-1} Access control","owners": ["O1"],"requiredContext": []},
+    {"id": "F2","structure": "paragraph","range": {"start": {"offset": 27,"line": 3,"column": 1},"end": {"offset": 68,"line": 3,"column": 42}},"sourceText": "Access requires an authenticated session.","owners": ["O1"],"requiredContext": ["F1"]},
+    {"id": "F3","structure": "paragraph","range": {"start": {"offset": 70,"line": 5,"column": 1},"end": {"offset": 101,"line": 5,"column": 32}},"sourceText": "{#REQ-2} Limit failed attempts.","owners": ["O2"],"requiredContext": ["F1"]},
+    {"id": "F4","structure": "list-item","range": {"start": {"offset": 103,"line": 7,"column": 1},"end": {"offset": 175,"line": 8,"column": 35}},"sourceText": "- {#WP-1} Enforce {implements:REQ-1}.\n  - Apply `REQ-2` before retrying.","owners": ["O3"],"requiredContext": ["F1"]},
+    {"id": "F5","structure": "paragraph","range": {"start": {"offset": 177,"line": 10,"column": 1},"end": {"offset": 211,"line": 10,"column": 35}},"sourceText": "> {#VAL-1} Verify {verifies:WP-1}.","owners": ["O6"],"requiredContext": ["F1"]},
+    {"id": "F6","structure": "other","range": {"start": {"offset": 213,"line": 12,"column": 1},"end": {"offset": 264,"line": 13,"column": 20}},"sourceText": "| ID | Behavior | Requirement |\n| --- | --- | --- |","owners": [],"requiredContext": []},
+    {"id": "F7","structure": "table-row","range": {"start": {"offset": 265,"line": 14,"column": 1},"end": {"offset": 316,"line": 14,"column": 52}},"sourceText": "| {#WP-2} | Record failures. | {implements:REQ-2} |","owners": ["O8"],"requiredContext": ["F1","F6"]},
+    {"id": "F8","structure": "heading","range": {"start": {"offset": 318,"line": 16,"column": 1},"end": {"offset": 347,"line": 16,"column": 30}},"sourceText": "## {#REQ-3} Unrelated display","owners": ["O10"],"requiredContext": ["F1"]},
+    {"id": "F9","structure": "paragraph","range": {"start": {"offset": 349,"line": 18,"column": 1},"end": {"offset": 374,"line": 18,"column": 26}},"sourceText": "Display the status label.","owners": ["O10"],"requiredContext": ["F1","F8"]},
+    {"id": "F10","structure": "code","range": {"start": {"offset": 376,"line": 20,"column": 1},"end": {"offset": 412,"line": 22,"column": 4}},"sourceText": "```text\n{#REQ-999} Example only.\n```","owners": ["O10"],"requiredContext": ["F1","F8"]},
+    {"id": "F11","structure": "paragraph","range": {"start": {"offset": 414,"line": 24,"column": 1},"end": {"offset": 428,"line": 24,"column": 15}},"sourceText": "Appended text.","owners": ["O10"],"requiredContext": ["F1","F8"]}
+  ],
+  "exclusions": [
+    {"range": {"start": {"offset": 376,"line": 20,"column": 1},"end": {"offset": 412,"line": 22,"column": 4}},"sourceText": "```text\n{#REQ-999} Example only.\n```","reason": "literal-fenced-code"}
+  ],
+  "languageDiagnostics": [],
+  "integrityObservations": [],
+  "notes": []
+}
