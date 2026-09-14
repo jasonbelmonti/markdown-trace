@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:6dbed16c5c03df9f25717295716c4e4fbb6c8983610493f2e5107c7ff9f41262",
+  "source": {"documentId": "language/lang-29.md", "sha256": "6dbed16c5c03df9f25717295716c4e4fbb6c8983610493f2e5107c7ff9f41262", "utf8Bytes": 41, "utf16Length": 41},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "missing"}},
+    {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}}
+  ],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "WP-1",
+      "role": "definition",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 7, "line": 1, "column": 8}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O2",
+      "identifier": "REQ-2",
+      "role": "reference",
+      "range": {"start": {"offset": 35, "line": 1, "column": 36}, "end": {"offset": 40, "line": 1, "column": 41}},
+      "fragmentId": "F1"
+    }
+  ],
+  "relationships": [{"id": "R1", "kind": "references", "source": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"}, "target": "REQ-2", "occurrenceId": "O2"}],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 41, "line": 1, "column": 42}},
+      "owner": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"},
+      "structure": "paragraph",
+      "requiredContext": []
+    }
+  ],
+  "exclusions": [],
+  "diagnostics": [
+    {
+      "code": "markdown-trace.language.malformed-expression",
+      "severity": "error",
+      "message": "Malformed reserved expression",
+      "identifiers": ["WP-1"],
+      "sourceRanges": [{"start": {"offset": 8, "line": 1, "column": 9}, "end": {"offset": 30, "line": 1, "column": 31}}]
+    }
+  ]
+}

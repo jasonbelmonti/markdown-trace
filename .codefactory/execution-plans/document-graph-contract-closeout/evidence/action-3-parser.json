@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "docs/design/document-graph-api/checks/probe-engine.mjs"
+  ],
+  "cwd": "/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/document-graph-api-oracles",
+  "startedAt": "2026-09-14T21:37:09.534295+00:00",
+  "finishedAt": "2026-09-14T21:37:09.699606+00:00",
+  "exitCode": 0,
+  "stdout": "{\n  \"status\": \"pass\",\n  \"sourceSha256\": \"c34644f332d03feafc7397db388e57378c1eec662c9d96620a68921a81aecd90\",\n  \"sourceUtf8Bytes\": 238,\n  \"nodeCount\": 29,\n  \"verifiedRawSlices\": 29,\n  \"kinds\": [\n    \"blockquote\",\n    \"code\",\n    \"heading\",\n    \"inlineCode\",\n    \"list\",\n    \"listItem\",\n    \"paragraph\",\n    \"table\",\n    \"tableCell\",\n    \"tableRow\",\n    \"text\"\n  ],\n  \"diagnostics\": [],\n  \"scope\": \"Public parser nodes/raw slices only; no graph extraction executed\"\n}\n",
+  "stderr": ""
+}

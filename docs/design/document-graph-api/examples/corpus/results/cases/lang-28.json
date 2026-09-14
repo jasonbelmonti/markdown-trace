@@ -1,0 +1,209 @@
+{
+  "schemaVersion": "markdown-trace.design-api-results.v1",
+  "caseId": "LANG-28",
+  "annotation": "language/lang-28.expected.json",
+  "snapshot": "snapshots/lang-28.json",
+  "sourceSha256": "e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b",
+  "operations": [
+    {
+      "id": "validateGraph",
+      "operation": "validateGraph",
+      "arguments": {"profile": "language"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "schemaVersion": "markdown-trace.document-validation.v1",
+          "analysisId": "@analysis:e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b",
+          "profileId": "language-integrity",
+          "interpretationHash": "@interpretation:standard",
+          "validationHash": "@validation:language",
+          "status": "pass",
+          "diagnostics": [],
+          "ruleResults": [
+            {"ruleId": "integrity.language", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "integrity.definitions", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {"ruleId": "integrity.targets", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "integrity.kinds", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {"ruleId": "integrity.owners", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []},
+            {"ruleId": "policy.minEntities", "status": "pass", "matchedSubjects": 1, "evaluatedSubjects": 1, "diagnostics": []},
+            {"ruleId": "policy.allowedRelations", "status": "pass", "matchedSubjects": 0, "evaluatedSubjects": 0, "diagnostics": []}
+          ]
+        }
+      }
+    },
+    {
+      "id": "lookup:REQ-1",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "REQ-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "record": {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "definitions": [
+            {
+              "id": "O1",
+              "identifier": "REQ-1",
+              "role": "definition",
+              "range": {"start": {"offset": 11, "line": 3, "column": 1}, "end": {"offset": 19, "line": 3, "column": 9}},
+              "fragmentId": "F2"
+            }
+          ],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:REQ-1",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "REQ-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "REQ-1",
+          "record": {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:REQ-1",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "REQ-1"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "REQ-1",
+          "record": {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "lookup:ABSENT-0",
+      "operation": "lookupIdentifier",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "record": null,
+          "definitions": [],
+          "referenceCount": 0
+        }
+      }
+    },
+    {
+      "id": "incoming:ABSENT-0",
+      "operation": "findIncoming",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "ABSENT-0",
+          "record": null,
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "outgoing:ABSENT-0",
+      "operation": "findOutgoing",
+      "arguments": {"identifier": "ABSENT-0"},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "identifier": "ABSENT-0",
+          "record": null,
+          "items": [],
+          "offset": 0,
+          "limit": 100,
+          "totalMatches": 0,
+          "nextOffset": null
+        }
+      }
+    },
+    {
+      "id": "root:REQ-1",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["REQ-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "query": {"roots": ["REQ-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+          "nodes": [{"identifier": "REQ-1", "depth": 0, "via": null}],
+          "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 0}
+        }
+      }
+    },
+    {
+      "id": "context:REQ-1",
+      "operation": "extractContext",
+      "arguments": {"selection": "root:REQ-1", "budget": {"maxUtf8Bytes": 100000, "maxFragments": 1000}},
+      "expected": {
+        "ok": true,
+        "value": {
+          "analysisId": "@analysis:e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b",
+          "coverage": "complete",
+          "diagnosticCount": 0,
+          "schemaVersion": "markdown-trace.document-context.v1",
+          "source": {"documentId": "language/lang-28.md", "sha256": "e714cd0a4c215c98e34bd77563572d39498e62aa39e278888d8dd4884dc7812b", "utf8Bytes": 53, "utf16Length": 53},
+          "parts": [
+            {"range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 9, "line": 1, "column": 10}}, "text": "# Example", "forIdentifiers": ["REQ-1"], "roles": ["heading"]},
+            {
+              "range": {"start": {"offset": 11, "line": 3, "column": 1}, "end": {"offset": 52, "line": 3, "column": 42}},
+              "text": "{#REQ-1} This is ordinary eligible prose.",
+              "forIdentifiers": ["REQ-1"],
+              "roles": ["owned-content"]
+            }
+          ],
+          "includedIdentifiers": ["REQ-1"],
+          "omittedIdentifiers": [],
+          "usedUtf8Bytes": 50,
+          "selection": {
+            "query": {"roots": ["REQ-1"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20},
+            "nodes": [{"identifier": "REQ-1", "depth": 0, "via": null}],
+            "boundary": {"depthLimited": false, "nodeLimited": false, "unresolvedRelationships": 0}
+          }
+        }
+      }
+    },
+    {
+      "id": "root:ABSENT-0",
+      "operation": "traverseGraph",
+      "arguments": {"query": {"roots": ["ABSENT-0"], "direction": "outgoing", "maxDepth": 0, "maxNodes": 20}},
+      "expected": {"ok": false, "error": {"code": "unresolved-root", "message": "unresolved-root", "diagnostics": []}}
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:a71c4f85b3bfeb4255ddb75ea5756a8f6ff05860f0b8ee6864dc8a48405b8185",
+  "source": {"documentId": "language/lang-55.md", "sha256": "a71c4f85b3bfeb4255ddb75ea5756a8f6ff05860f0b8ee6864dc8a48405b8185", "utf8Bytes": 22, "utf16Length": 22},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "partial",
+  "identifiers": [{"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}}],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "WP-1",
+      "role": "definition",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 7, "line": 1, "column": 8}},
+      "fragmentId": "F1"
+    }
+  ],
+  "relationships": [],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 21, "line": 1, "column": 22}},
+      "owner": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"},
+      "structure": "paragraph",
+      "requiredContext": []
+    }
+  ],
+  "exclusions": [],
+  "diagnostics": [
+    {
+      "code": "markdown-trace.language.malformed-expression",
+      "severity": "error",
+      "message": "Malformed reserved expression",
+      "identifiers": ["WP-1"],
+      "sourceRanges": [{"start": {"offset": 8, "line": 1, "column": 9}, "end": {"offset": 20, "line": 1, "column": 21}}]
+    }
+  ]
+}

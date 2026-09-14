@@ -1,0 +1,220 @@
+{
+  "schemaVersion": "markdown-trace.design-api-results.v1",
+  "caseId": "CASE-6",
+  "annotation": "scenarios/mixed-layout.expected.json",
+  "snapshot": "snapshots/mixed-layout.json",
+  "sourceSha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901",
+  "operations": [
+    {
+      "id": "operator",
+      "operation": "compileProfile",
+      "arguments": {
+        "input": {
+          "schemaVersion": "markdown-trace.document-profile.v1",
+          "profileId": "implementation-spec",
+          "interpretation": {
+            "language": "markdown-trace.identity.draft1",
+            "entityKinds": [
+              {
+                "name": "requirement",
+                "prefixes": [
+                  "REQ"
+                ]
+              },
+              {
+                "name": "work",
+                "prefixes": [
+                  "WP"
+                ]
+              },
+              {
+                "name": "validation",
+                "prefixes": [
+                  "VAL"
+                ]
+              }
+            ]
+          },
+          "validation": {
+            "minEntities": 1,
+            "allowedRelations": [
+              {
+                "kind": "references",
+                "from": [
+                  "work"
+                ],
+                "to": [
+                  "requirement"
+                ]
+              },
+              {
+                "kind": "implements",
+                "from": [
+                  "work"
+                ],
+                "to": [
+                  "requirement"
+                ]
+              },
+              {
+                "kind": "verifies",
+                "from": [
+                  "validation"
+                ],
+                "to": [
+                  "work"
+                ]
+              }
+            ],
+            "rules": [
+              {
+                "id": "work-exists",
+                "op": "arbitrary-query",
+                "kinds": [
+                  "work"
+                ],
+                "min": 1,
+                "max": null
+              },
+              {
+                "id": "work-has-requirement",
+                "op": "require-relation",
+                "sourceKinds": [
+                  "work"
+                ],
+                "relation": "implements",
+                "targetKinds": [
+                  "requirement"
+                ],
+                "minTargets": 1,
+                "maxTargets": null
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "code": "invalid-profile",
+          "message": "Unsupported operator at validation.rules[0].op.",
+          "diagnostics": [
+            {
+              "code": "markdown-trace.profile.unsupported-operator",
+              "severity": "error",
+              "message": "validation.rules[0].op: arbitrary-query is not supported.",
+              "identifiers": [],
+              "sourceRanges": [],
+              "ruleId": "work-exists"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "version",
+      "operation": "compileProfile",
+      "arguments": {
+        "input": {
+          "schemaVersion": "markdown-trace.graph-profile.v1",
+          "profileId": "implementation-spec",
+          "interpretation": {
+            "language": "markdown-trace.identity.draft1",
+            "entityKinds": [
+              {
+                "name": "requirement",
+                "prefixes": [
+                  "REQ"
+                ]
+              },
+              {
+                "name": "work",
+                "prefixes": [
+                  "WP"
+                ]
+              },
+              {
+                "name": "validation",
+                "prefixes": [
+                  "VAL"
+                ]
+              }
+            ]
+          },
+          "validation": {
+            "minEntities": 1,
+            "allowedRelations": [
+              {
+                "kind": "references",
+                "from": [
+                  "work"
+                ],
+                "to": [
+                  "requirement"
+                ]
+              },
+              {
+                "kind": "implements",
+                "from": [
+                  "work"
+                ],
+                "to": [
+                  "requirement"
+                ]
+              },
+              {
+                "kind": "verifies",
+                "from": [
+                  "validation"
+                ],
+                "to": [
+                  "work"
+                ]
+              }
+            ],
+            "rules": [
+              {
+                "id": "work-exists",
+                "op": "entity-count",
+                "kinds": [
+                  "work"
+                ],
+                "min": 1,
+                "max": null
+              },
+              {
+                "id": "work-has-requirement",
+                "op": "require-relation",
+                "sourceKinds": [
+                  "work"
+                ],
+                "relation": "implements",
+                "targetKinds": [
+                  "requirement"
+                ],
+                "minTargets": 1,
+                "maxTargets": null
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "code": "unsupported-version",
+          "message": "Unsupported profile schemaVersion.",
+          "diagnostics": [
+            {
+              "code": "markdown-trace.profile.unsupported-version",
+              "severity": "error",
+              "message": "schemaVersion: markdown-trace.graph-profile.v1 is not supported by compileProfile.",
+              "identifiers": [],
+              "sourceRanges": []
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

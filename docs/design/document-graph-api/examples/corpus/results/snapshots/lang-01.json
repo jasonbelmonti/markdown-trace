@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:5be4043ae5a62d93a0ea0cf79e9c5f9ba5c1fdd88a6799a01edb090e82787470",
+  "source": {"documentId": "language/lang-01.md", "sha256": "5be4043ae5a62d93a0ea0cf79e9c5f9ba5c1fdd88a6799a01edb090e82787470", "utf8Bytes": 31, "utf16Length": 31},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "missing"}},
+    {"identifier": "REQ-A2-7", "entityKind": "requirement", "definition": {"status": "missing"}},
+    {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}}
+  ],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "WP-1",
+      "role": "definition",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 7, "line": 1, "column": 8}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O2",
+      "identifier": "REQ-1",
+      "role": "reference",
+      "range": {"start": {"offset": 12, "line": 1, "column": 13}, "end": {"offset": 17, "line": 1, "column": 18}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O3",
+      "identifier": "REQ-A2-7",
+      "role": "reference",
+      "range": {"start": {"offset": 22, "line": 1, "column": 23}, "end": {"offset": 30, "line": 1, "column": 31}},
+      "fragmentId": "F1"
+    }
+  ],
+  "relationships": [
+    {"id": "R1", "kind": "references", "source": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"}, "target": "REQ-1", "occurrenceId": "O2"},
+    {"id": "R2", "kind": "references", "source": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"}, "target": "REQ-A2-7", "occurrenceId": "O3"}
+  ],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 31, "line": 1, "column": 32}},
+      "owner": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"},
+      "structure": "paragraph",
+      "requiredContext": []
+    }
+  ],
+  "exclusions": [],
+  "diagnostics": []
+}

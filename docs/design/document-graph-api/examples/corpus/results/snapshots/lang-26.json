@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:9a4f8c783bda717e5b3a5729d1e3fde6944983186ed3592ff7380b100bac9df4",
+  "source": {"documentId": "language/lang-26.md", "sha256": "9a4f8c783bda717e5b3a5729d1e3fde6944983186ed3592ff7380b100bac9df4", "utf8Bytes": 51, "utf16Length": 51},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "complete",
+  "identifiers": [{"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}}],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "REQ-1",
+      "role": "definition",
+      "range": {"start": {"offset": 2, "line": 1, "column": 3}, "end": {"offset": 10, "line": 1, "column": 11}},
+      "fragmentId": "F1"
+    }
+  ],
+  "relationships": [],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 22, "line": 1, "column": 23}},
+      "owner": {"status": "owned", "identifier": "REQ-1", "declarationId": "O1"},
+      "structure": "heading",
+      "requiredContext": []
+    },
+    {
+      "id": "F2",
+      "range": {"start": {"offset": 24, "line": 3, "column": 1}, "end": {"offset": 50, "line": 5, "column": 4}},
+      "owner": {"status": "owned", "identifier": "REQ-1", "declarationId": "O1"},
+      "structure": "code",
+      "requiredContext": ["F1"]
+    }
+  ],
+  "exclusions": [{"range": {"start": {"offset": 24, "line": 3, "column": 1}, "end": {"offset": 50, "line": 5, "column": 4}}, "reason": "literal-fenced-code"}],
+  "diagnostics": []
+}

@@ -9,12 +9,14 @@ Run these checks from the repository root after npm ci:
 ```sh
 ./node_modules/.bin/tsc -p docs/design/document-graph-api/tsconfig.json
 node docs/design/document-graph-api/checks/check-examples.mjs
+node docs/design/document-graph-api/checks/check-result-types.mjs
+node --test docs/design/document-graph-api/checks/test-corpus.mjs
 node docs/design/document-graph-api/checks/probe-engine.mjs
 ```
 
-The example check verifies source hashes, coordinates, ledger references and byte totals. It checks internal consistency of the hand-authored oracle, not extraction correctness. The Engine probe checks public tree/source feasibility on mixed Markdown, CRLF and emoji. Neither executes the proposed graph API.
+The example check covers all 79 cases and 1,183 operation outcomes, including exact source coordinates, invalid evidence, validation counts, backlinks, traversal bounds and context bytes. DTO checks compare full result images with the declarations; corruption tests exercise checker rejection. The Engine probe checks public tree/source feasibility on mixed Markdown, CRLF and emoji. These checks do not execute the proposed graph API.
 
-[validation.json](validation.json) records the checks and artifact hashes. Recompute its artifact hashes before relying on a handoff; read the packet and its questions first. The packet also has an adjacent .sha256 file. The [materialized corpus](examples/corpus/README.md) contains all 55 language cases and 24 API scenarios, with source hashes, exhaustive occurrence/owner annotations and explicit diagnostics/exclusions. Its independent interpretation status is recorded in the gate evidence. EP-ACT-3 still owns complete executable API-result expectations and the generalized checker; real-spec context/scale evidence remains outstanding.
+[validation.json](validation.json) records the checks and artifact hashes. Recompute its artifact hashes before relying on a handoff; read the packet and its questions first. The packet also has an adjacent .sha256 file. The [materialized corpus](examples/corpus/README.md) contains all 55 language cases and 24 API scenarios, with independently reviewed source interpretations. Its [API results guide](examples/corpus/results/README.md) explains complete result images, symbolic identity bindings, injected states and recommended report/context conventions. EP-ACT-3 is complete; EP-ACT-4 reconciles the consumer and compatibility boundary before EP-GATE-2. Owner decisions and real-spec context/scale evidence remain outstanding.
 
 The corpus materialization and full-source parser checks are separately reproducible:
 

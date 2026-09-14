@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-09-14T15:59:26.762966+00:00",
-  "implementationBaseline": "155a9157bf3a48540612c6dcf79266b016deff4f",
-  "packetRevision": 6,
+  "validatedAt": "2026-09-14T21:39:13.079976+00:00",
+  "implementationBaseline": "9155cdd65bffdd5afad299deeb28abd5b0a9eb9c",
+  "packetRevision": 7,
   "versions": {
     "node": "v22.20.0",
     "parser": "3.5.0",
@@ -16,32 +16,41 @@
   "hashes": "Artifact SHA-256 values identify raw file bytes. Engine inputHash/profileHash use the engine identity scheme.",
   "productionSurfacesChanged": false,
   "checks": {
-    "scope": "Design corpus, independent semantic interpretation, source-map feasibility and retained compatibility checks. No proposed Trace API runtime exists.",
+    "scope": "Design results, DTO consistency, independently reviewed source interpretations, parser feasibility and retained compatibility. No proposed Trace runtime API exists.",
     "declarations": {
       "status": "pass",
-      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-2-supporting.json",
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-declarations.json",
       "command": "./node_modules/.bin/tsc -p docs/design/document-graph-api/tsconfig.json",
       "exitCode": 0
     },
     "examples": {
       "status": "pass",
-      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-2-supporting.json",
-      "identifiers": 6,
-      "occurrences": 10,
-      "relationships": 4,
-      "fragments": 10,
-      "contextUtf8Bytes": 169
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-corpus.json",
+      "caseCount": 79,
+      "annotationCount": 81,
+      "sourceCount": 66,
+      "modelStateCount": 2,
+      "operationCount": 1183,
+      "initialExample": {
+        "status": "pass",
+        "identifiers": 6,
+        "occurrences": 10,
+        "relationships": 4,
+        "fragments": 10,
+        "contextUtf8Bytes": 169,
+        "scope": "Hand-authored ledger consistency only; no proposed API executed"
+      }
     },
     "parser": {
       "status": "pass",
-      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-2-supporting.json",
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-parser.json",
       "verifiedRawSlices": 29
     },
     "structure": {
       "status": "pass",
-      "evidenceFile": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-2-structure.json",
+      "evidenceFile": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-structure.json",
       "engineVersion": "3.6.0",
-      "inputHash": "304add4826a63c152c42f34518263892ca424cefa590c96e7ec128335e162576",
+      "inputHash": "f88ca396d189411a3abe92887b83f850cac66fe9befbb8a7c2f41800bec0d283",
       "profileHash": "20e664060a8b483398cd055ba7f26259cbbf5eb99986ba2c7d6d2a521a6b777b",
       "ruleCount": 44,
       "diagnostics": []
@@ -179,26 +188,28 @@
       "caseCount": 79,
       "annotationRecords": 81,
       "exactSlices": 416,
-      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-2-materialization.json"
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-materialization.json"
     },
     "corpusParser": {
       "status": "pass",
       "sourceCount": 66,
       "verifiedRawSlices": 568,
-      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-2-parser.json",
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-corpus-parser.json",
       "scope": "Public Engine structure/source only; no semantic facts extracted"
     },
     "independentInterpretation": {
       "status": "pass",
       "caseCount": 79,
       "reviewerCount": 2,
-      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1.json"
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1.json",
+      "reuseEvidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-interpretation-reuse.json",
+      "scope": "Original source interpretation only; new API results have separate checker/maintainer evidence."
     },
     "compatibility": {
       "status": "pass",
       "testFiles": 30,
       "tests": 219,
-      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-2-supporting.json"
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-compatibility.json"
     },
     "contextOracle": {
       "status": "reused-unchanged",
@@ -206,7 +217,23 @@
         "file": "docs/design/document-graph-api/examples/ambiguous-context.json",
         "sha256": "20d74beadcfdd964105a0990b9cdfa39d98ce718de7d3aac459b2170d580bece"
       },
-      "basis": "Focused three-scenario oracle and declaration/consumer inputs remain byte-identical to revision 5. LANG-54 and CASE-11A/11AZ were independently reinterpreted in EP-GATE-1. Complete result expansion remains EP-ACT-3."
+      "basis": "Focused original oracle remains unchanged. Full context result DTOs now cover every usable language root and all scenario context/budget/ambiguity variants in the result corpus. Source semantics retain EP-GATE-1 evidence; API result proof is EP-ACT-3."
+    },
+    "resultTypes": {
+      "status": "pass",
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-result-types.json",
+      "checkedValues": 1442,
+      "scope": "DTO shape checks only; opaque runtime brands are deliberately excluded from serialized selection images."
+    },
+    "checkerTests": {
+      "status": "pass",
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-checker-tests.json",
+      "tests": 38
+    },
+    "resultWalk": {
+      "status": "pass",
+      "evidence": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-result-walk.json",
+      "scope": "Bounded maintainer result walk; EP-GATE-2 remains after EP-ACT-4."
     }
   },
   "artifacts": [
@@ -233,6 +260,66 @@
     {
       "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-2.json",
       "sha256": "ef7c245d49a34428706ae151f294e1eed02829320d9b5cd385829d52fc21d96f"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-before.json",
+      "sha256": "b74325500cb326591e756d1c8c86ab02f1d4f4c26ff26f4bcbdb81cee4c3ed9c"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-checker-tests.json",
+      "sha256": "27364e97cd55884663f1f79f6a864db64f42c5361e65c3b24f276d93aae403c2"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-compatibility.json",
+      "sha256": "4b65b5b5b920bb7084f557c7f8106fbbe9bce44ac078dc135d79e3f620a8655f"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-corpus-parser.json",
+      "sha256": "f0f01d274841ff9806c79d7ec03be4dbdd7e7504a586ea751d7a470f3107edfa"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-corpus.json",
+      "sha256": "4e40dcec22d09f89ade23aeb03351312b58bd98e9cf64e1e02640250ba49346b"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-declarations.json",
+      "sha256": "685f4f433670e69ff1784ab4f30d282d8d9330575c93418e7cf415fe24f5c34a"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-inputs-after.json",
+      "sha256": "5fc3dcd8d0469f2d0aa2f4ac805ef6d67b1af06b0501d8ed90a93fff472f6012"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-inputs-before.json",
+      "sha256": "5fc3dcd8d0469f2d0aa2f4ac805ef6d67b1af06b0501d8ed90a93fff472f6012"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-interpretation-reuse.json",
+      "sha256": "a73f2daa2765beb8f42f5d79228bd5ee48ee8579d7e687061a9bedc399220289"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-materialization.json",
+      "sha256": "b4bc01ec3caf0180e31b8aa22355033e47edcf811c9fdf9016b1efaca66bfb3d"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-parser.json",
+      "sha256": "273ada7d6b726b274fa9fdb7ba899fcb9558407116866e898dba5a6b6c82a7c3"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-result-types.json",
+      "sha256": "46c31eda9ab453f0d8f8fe7f457a8d86ce53f1159585e0743511b58f1c2fae65"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-result-walk.json",
+      "sha256": "c5436aab50e2713726fc2009e70c8fd5e243f5cc1803448b02f12fad8b107371"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3-structure.json",
+      "sha256": "3feded84e3c353a2b2681ad651a57bf4e47993e39994025bab94c985636b87ff"
+    },
+    {
+      "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/action-3.json",
+      "sha256": "46f28072bcc0822ae958396a81cb7f14708baa623c7fcbf846df05715b0daf82"
     },
     {
       "file": ".codefactory/execution-plans/document-graph-contract-closeout/evidence/gate-1.json",
@@ -292,15 +379,71 @@
     },
     {
       "file": "docs/design/document-graph-api/README.md",
-      "sha256": "46a44611144e59d00f58852bd318f1c85553d1b55e71ee99888f0cfd86374732"
+      "sha256": "28867c98b820834283ca6061cb2e5bea4dd32e767ba1bfdf01971bc96af06607"
     },
     {
       "file": "docs/design/document-graph-api/checks/check-examples.mjs",
-      "sha256": "5414b28e3c677db292d0b31e941840bfa0fd5bf6c323f477ffb786a65189c2f4"
+      "sha256": "d36b91d3a70e6595df19d36239b69ab5e615e9e8c72e7dad995f60cd916b3e86"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/check-initial-example.mjs",
+      "sha256": "855e13e4879e48dd4a87050be241a43e898441d1101d39ea3a1abdc889910d1a"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/check-result-types.mjs",
+      "sha256": "825e6017396a8b1e335bd6123bfa5d5183da8684dd0dc0fb23c056bc1253abc0"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/annotation.mjs",
+      "sha256": "182a3e2f2bcbb5e920b100cc77e7b9f36f7e15781961950487081b8be7d50d87"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/context.mjs",
+      "sha256": "ca7d4e66e1d99b940264511af38f5baacef98ab4caf9397725fd61e40e445302"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/coverage.mjs",
+      "sha256": "27be74e5e65680810d531d7a6e7f9dc01464b373fbf227f7a2e7beb75407d5ba"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/inventory.mjs",
+      "sha256": "46de63c0c8005ae9a733bc76dbc7234c6cbafb231e9a0ecb64d523bd2602d6e2"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/operations.mjs",
+      "sha256": "385cffc0270d09895082268315531672b2707dad46559035ad17ea349453f026"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/profiles.mjs",
+      "sha256": "43ba0578891bd6feb4189b10a8aa6752661d78ee9255db231e4ec07497d7d016"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/queries.mjs",
+      "sha256": "a712502098b5ccb0d2492f8e2366c4c9c71b69a3ab3a6f503612be2959334504"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/run.mjs",
+      "sha256": "a205a09d032d4385e9efb416bbbee5545e5a3c8d39fee9730b44060c250845e7"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/snapshot.mjs",
+      "sha256": "21d273a640b9e8d9bf26b700498e65ae3f74270b360cbc41e50aae8ec83df781"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/source.mjs",
+      "sha256": "07108ec1672369723658f7f414dc21374995b4fa604125584e9d59058996ada8"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/corpus/validation.mjs",
+      "sha256": "ac2ced39838a5c2c01028adc583351e18a4651e8308b033f095f233ec662f401"
     },
     {
       "file": "docs/design/document-graph-api/checks/probe-engine.mjs",
       "sha256": "4b53dc6b71b37370dc035a92c7e3f035fe0563cbf3b66603e359c5025a52b67b"
+    },
+    {
+      "file": "docs/design/document-graph-api/checks/test-corpus.mjs",
+      "sha256": "e5c4a067965718031699951ed64c32948e95b73f7f2bd4ab430ece0ee7261a38"
     },
     {
       "file": "docs/design/document-graph-api/contracts/analysis.d.ts",
@@ -336,7 +479,7 @@
     },
     {
       "file": "docs/design/document-graph-api/examples/cases.md",
-      "sha256": "938bfa6bbe3e04b59f52d0d67aece1731899964632714ac0b1cfcaef49448232"
+      "sha256": "e04c232064c2934d3ce9d82c785b09c48bf1f4d65e94af645588d3085ce77057"
     },
     {
       "file": "docs/design/document-graph-api/examples/consumer.ts",
@@ -348,7 +491,7 @@
     },
     {
       "file": "docs/design/document-graph-api/examples/corpus/README.md",
-      "sha256": "ac288da980f7a945a3274c2e4a3537bc67dea76653e29e8285eea46165a2431a"
+      "sha256": "a46720eab31d0938ddfe285f678b4f65ad39aa4ac3c85bf1506b4db2e6666be4"
     },
     {
       "file": "docs/design/document-graph-api/examples/corpus/language/lang-01.expected.json",
@@ -792,7 +935,611 @@
     },
     {
       "file": "docs/design/document-graph-api/examples/corpus/manifest.json",
-      "sha256": "8819f1f7c8b7d83e226a5803f25652390196ad923dffbb6bd654cd03ba3eb448"
+      "sha256": "3d46a4a1c50904ae7c7759c2d5bded3256880e7f9d8522772aa3bc22814f1bff"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/README.md",
+      "sha256": "afd11742bf72d2831270290cf6de7ca8894be2fdf5a140d7fc79390c4f957232"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-1.json",
+      "sha256": "61039abc731f0eb81705c08307cd009e4d5b78e42345be608fcd16839010b1c5"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-10.json",
+      "sha256": "8014ff6049d5d1b144b17b1c08a67892aaaaa9a8946d8d7a25087d26bc9d40db"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-11.json",
+      "sha256": "1c25b48631aea5c2973f700bd4ab26245862b4880a781a79cac3c6400edccd54"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-11a.json",
+      "sha256": "fde7e63c7e5ca9c07a7aa6d4e4dbfd0a0c6d87750a22d22fe04bce19c633fd63"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-11az.json",
+      "sha256": "a37560777f14165e7539a485ab0f17ab7e58870099d9136d7cf051a7384eeaab"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-11h.json",
+      "sha256": "472e05ec2fc894b6ce8bdf36d3eac23e9b61f9d6d3dea09ba7f9a9ea944c66ad"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-11z.json",
+      "sha256": "c77566f3701c20ea585fbd929bfa85dd57b61cb5157c6816811b37d972d8f893"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-12.json",
+      "sha256": "e1bada5d3e64ed54369f1a91f3311cd4d7d1aac164d5ed05a164c876b5e9088b"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-13.json",
+      "sha256": "7dde5456fc448c2f53d0ccd1edb42da96ca72a2eaf994bfcc34ca0ca69c0f77a"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-14.json",
+      "sha256": "952533997a219c943e98c20a10a305b74221a361750d033282b27b7ac438b227"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-2.json",
+      "sha256": "67b1b236124b5ceba8eb0f63a692d1e51d542ceccc0412b757f16c0ec1ebdd6d"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-2d.json",
+      "sha256": "9d50b84d8a57082b42834a2cc9c9c6bbd085598a9c66d6d7332130767d8f5234"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-3.json",
+      "sha256": "b564cc3b4b26135cb9855c42c5fdfe4454d0f6295b9fc921978ada15a875fc4b"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-3a.json",
+      "sha256": "0b08b6b6d6a2e6fe6e92e00859f4487e51e1c615c70d7788a4e1fea0cd15cc44"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-4.json",
+      "sha256": "934efe024a13ac1785cbc1c371d195caef0fd8fd295551acec3c7118254dd1e2"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-5.json",
+      "sha256": "b86434cd1bd91e2253cef05980218bcb21cd530ab9afe89ed2ec82c19e88e3d5"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-5a.json",
+      "sha256": "8aca95ea0b7b5d68356ea6b365a8ee05949280cc67d07381da5dbf016dd53480"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-6.json",
+      "sha256": "145950ed862796ed805e445b772ae7798c5ea6aed43c7c7e0f9fc87b9608eaca"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-7.json",
+      "sha256": "ec201fef786b067fdce2a784f982436914799b1e961375c5269f5f0b654a0ced"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-8.json",
+      "sha256": "9651d7f790121c87cdf394c562fc000891883ac89b804e92782b4f4728249f62"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-9.json",
+      "sha256": "913ba8c929d4a1800175780c243294d65d4229e5f6a50f678eeda38dc64fb68a"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-9c.json",
+      "sha256": "1627246b76aeef6051d3c7b3e291875a2d95001990ee615ac9edc2cda7e93a0e"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-9d.json",
+      "sha256": "9b4fb8df16401a8f11998b9c72e8d8b7be97a5a57e8b6e2e64c0fb2979486e0a"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/case-9n.json",
+      "sha256": "2a46232d4f19783ecd06862d7cd2c477aad3e75fd9d38ee690ea8c796b78e8f6"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-01.json",
+      "sha256": "035da5d6472126d4484a13f55b31b942b6c5bd296d7f5696bfedccc7e26fb5fa"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-02.json",
+      "sha256": "6b1d752f24906d3a65bfe018f3828bd8396c2eb827312e3660160cc7df31fea0"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-03.json",
+      "sha256": "4eabaaab82e87f0302ef1166627bfb6a8ea41e4e7dc4e732169f642cc85bb071"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-04.json",
+      "sha256": "75e27db719a1023814dc9d0b7e3ac4e9303686a2eb6da096a35b162bd7ba5bb0"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-05.json",
+      "sha256": "4ee435d953be9e3dacb92e0db5303e98be16eeaee7bfe2efc98986894274cc7d"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-06.json",
+      "sha256": "ebec37f823bb9b5a58bd13d909ce64e49a8dbb6bdfccf46770c8dd37e6042fd9"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-07.json",
+      "sha256": "5c63a58530b2028fa50948bff2e81aa2fe086cd1fd59ac66cb74c14ffc873307"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-08.json",
+      "sha256": "5f87025c605b9e012fe6a5a4b10455433b5152b8abd8e92ca22c2f236cf4dc80"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-09.json",
+      "sha256": "de5500acdd8f18be335aa6034a333df0178a8ad9ac5ed445035b78b59b72c4d1"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-10.json",
+      "sha256": "b63f5e48c5fb8e762767460dc05876ab04c92e1a89040e4109347b62391f2109"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-11.json",
+      "sha256": "86697372f3ee11e14e36cac9709a29304a2fe54033725d61dcea6cac5ff2ed91"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-12.json",
+      "sha256": "76e4ecc7b3d26125cc276725506616ade7e118f4bad04f92dc7de53d2d19ae27"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-13.json",
+      "sha256": "f9fdd940e3f8fbe58037d38121cdafaf34bafcf45c9dcae42c942c7164f5e190"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-14.json",
+      "sha256": "aba7afb0a4506b2f8f96ac5eacbe73c884c0a90bb49f706cfbdca199f99aba64"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-15.json",
+      "sha256": "34edb7b2e2b214e7cdfe084bfd7e3d8ebf0995b513dc94bcb2ee280592c978b9"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-16.json",
+      "sha256": "2ad80edc7ba9e56d4a69bde3774b5483ee965920fa1e70e98760406c70943c34"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-17.json",
+      "sha256": "e8ab579155e4d8cef8d786f49fefe873337ca105bcec34dff6a970a302d874d3"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-18.json",
+      "sha256": "15f27f8ca5e2f834eddbcf5441c3db03dfaecad9ae5772b5f8fc2e73a849df61"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-19.json",
+      "sha256": "878ad1d13f8fe818d81535c2000dd3838b7de31a0573ea935a9e704641687877"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-20.json",
+      "sha256": "d22ecc57452d6d3b264d0f56c867b92837bc7234adbf7c591cc72e9eeaf9f2b2"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-21.json",
+      "sha256": "f79249df3426d2b3f35e1b6bfc1bab1420fdb6cb7d0ec6055c788e86be3e4dd7"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-22.json",
+      "sha256": "d49dd078fffa3d9df0451ff357d08a568b0bafdda7911b3365316bea3bd3f52a"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-23.json",
+      "sha256": "628460ca6171a146cf07407c90af5d7c18d242eaeca20666cbe91638860e2252"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-24.json",
+      "sha256": "d79118bdf59b4b0aa8e7e50e1e8e8a15e1cb4311826783982d4359bd40f32304"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-25.json",
+      "sha256": "ca81c7a67cc6c87ee3a76be51254d8ef22c22e72f1e8894059fffb4ea2294e3c"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-26.json",
+      "sha256": "9d3b99af789d06a1731b8db8a93efdd46d80e2f4947c4a85f1bfd02ec0856088"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-27.json",
+      "sha256": "97f6b37fa14b6aea4832ff7d38646de84a7a1bf0cebbed941752c1fd2bd78580"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-28.json",
+      "sha256": "937ff713b5b388a149304fc30b0826a4f1f9379a8389a2748d6c5978affad646"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-29.json",
+      "sha256": "d381e80ded3f9fca417da6536928cb944bea492560b4092d59b7a8aaa80308f4"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-30.json",
+      "sha256": "e8aa8a846d8897b5deb6decf394999f37c2a54fc15788c237870430519a76050"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-31.json",
+      "sha256": "b251042d31efdf829d07499ee2e32f0c2febaeb73c74a4251bbe9e18a4011523"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-32.json",
+      "sha256": "7d4eca9b6af79c4acfe4511012435a161abc58bff9e77029d71368a71858dc6b"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-33.json",
+      "sha256": "4c922f42d0d6d6292930b222e77c0083a23ec298beee9185db2a043f37dfdcb8"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-34.json",
+      "sha256": "e60d119549942651fb3d06280a06c5d322875c80c327e25dc55a17df8a2f19c3"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-35.json",
+      "sha256": "2db05b7c3b8a3105794ecfb2e65fb64f6b87852b4194d562466a33a9454f3cac"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-36.json",
+      "sha256": "13efb8e86b90b8cba622a7beeaeb2ec7565cf98dabe3626f0d3f0a5a567a4a53"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-37.json",
+      "sha256": "c5ee1e3e8d0944613e34513c137b9e522a00016bd66488c546d71f1ba5f9dac1"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-38.json",
+      "sha256": "8cecdcd0367d17b1794813191b8b50744f8ac97c661b732fb77074c86ce8e1c1"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-39.json",
+      "sha256": "09abeb1b334d6320240548a9b062222feea52bcc7a7730aec75c391ab356d73e"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-40.json",
+      "sha256": "f74dfee9ce3fd26d17640c945dfedecc56f16e8d9091c838a0d3dc09ac3f3f24"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-41.json",
+      "sha256": "d0fed4255c572cc5011777495537fe5adee7741f2565c5cd28bd3c78e48cccfd"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-42.json",
+      "sha256": "b806bda997ff5042c84b949bf70840aa68a1b06139deabfd2051c4b3783ceb4e"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-43.json",
+      "sha256": "fffaa18957c35e129fad47375ecde76db82928a11aefd4a1aa43ca64336347a3"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-44.json",
+      "sha256": "2bde450ae32eab4dd35ef45ba7b27ef570892c6cafb9ee9673f19700b80f6905"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-45.json",
+      "sha256": "a27c1d1820b5d06339b39b7b48aa31df005546559230bf9f10c259f239be8333"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-46.json",
+      "sha256": "57b9f33fdb14f20fed8bc6f8f66310605d29d7b5d95235f582f4402cf93627a1"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-47.json",
+      "sha256": "82def45f32b939774ed81313e08398bf3b4cc6a1cdfcab38c45da432e44f5a11"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-48.json",
+      "sha256": "f3f845fdf5a57db5ca0d306c7920238e1eaaa8da9e7bfc03ef379cb2a7d17d1e"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-49.json",
+      "sha256": "34bc842a89a4960e5c8b002513c32ab2458455b5ba8fb1fb23add12d85994bf1"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-50.json",
+      "sha256": "ed682a70f681191de98038c239042a5a0ada827c09e9fcce9a64fee635f5a6df"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-51.json",
+      "sha256": "5e9437ce5fbeef53c8e05bc0e34ece893acaa0c18a4ceb2f2cc33891632e267c"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-52.json",
+      "sha256": "c0a5ee81bd1336b38eeed50fecaa34c6718dad678f9cf31738bb0fbb8bb7724b"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-53.json",
+      "sha256": "3a1d9747806a2166a5b410d15577fd5a35e9082e01c4d78d1f2df085fd46d27a"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-54.json",
+      "sha256": "8711f358f5d80d132732e64f1c824915238318a680466056f9d218b7443454d6"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/cases/lang-55.json",
+      "sha256": "b1ae9567286f98a230a2825fa84b3720f37d4103f13a44f3857910070c4dc01e"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/index.json",
+      "sha256": "6fd1a245ee797c508278004b34137e3a49e1fa8c6e4e1d888255f70245bf9585"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/interpretation-lock.json",
+      "sha256": "9ef4b5a2f893277d52340c04955fdf6dddb7525771ac2af6eb69b8a4cb0ad341"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/profiles.json",
+      "sha256": "5fbb40a3a1a8fc7ff1e7859e0762172e18b27b544459d0e2ade99100516a9928"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/case-1.json",
+      "sha256": "71498c9e420422196e0be0118d9c76d05de689354ead1fa7a51571129c9afbac"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/case-10-after.json",
+      "sha256": "47a9a4ed84da007f3bb52a70eaff917d04c73075caa2c73ec33cec5ad92ea404"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/case-13.json",
+      "sha256": "35142af475ba185d15429a81264bb7dcdd97221bd96e19637f37c5029c153251"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/case-2.json",
+      "sha256": "a90b298d362442f74876adfe3a8259c4fb4a56319396e990aba8f9ac127b2180"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/case-2d.json",
+      "sha256": "8cd71076583eacd67c4e3b3da52ba3b9583f7e5d2c3cc042526addaa7225354b"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/case-3.json",
+      "sha256": "0f055afee3666a12ba7a5a07e91002b0e90baea22ba626b51e25648c522e628c"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/case-3a.json",
+      "sha256": "b510e68471eb088b0e30be1e58a85f7e33dab36f93fcd3cfd38b28735062c622"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/case-5.json",
+      "sha256": "e4c4cdb303a5101cab00adebc19b3f359473d53695106d8e166e8380a07c5305"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/case-9.json",
+      "sha256": "8e02f0bfaf2c64f8f9719a60d1f2013dff3d939120c2f1eb3466ed2e651cce15"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/case-9c.json",
+      "sha256": "169a8745a5c84a90bd585b09c338582811486d020937f992277950bf9a45adeb"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-01.json",
+      "sha256": "fcfc06b23915b812a707d175854bf77d96a63c069e9d553702b8ae9c8dc2edf3"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-02.json",
+      "sha256": "88fbb05d97d073dac64169353fa4bd13951ce329b06589d54c9a44b9f89fcb4a"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-03.json",
+      "sha256": "108c6c709ab877fe98de5def89fddc15c63e0c167e22bf34f07e91c1239d4ce5"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-04.json",
+      "sha256": "ff69036de7656b1812095e85f5db4e6ed98980f8a8ac4e5b87a5d96bda4a1ec0"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-05.json",
+      "sha256": "1e1db4fc1459a0843ab5eb67d8c73b7ae9b1aef327e5c51d99e61428015e5644"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-06.json",
+      "sha256": "ea6f9be6a70a3576831f2ecf3bc422d3956b7193befed275e29246cc061576cf"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-07.json",
+      "sha256": "fe7bdb233fe618e3c0e4ab4473527b3fdbfe8e487e36c805a5f7ae2e40c7d3ad"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-08.json",
+      "sha256": "4bfc6e0c11eca69ecb66841a0f878fe943491067557ced213595ea5e1a1af8ea"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-09.json",
+      "sha256": "f0e8b5d9cebb0378bbbfc5eb43c172f38e98668b75b34bfaa577a545451c137c"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-10.json",
+      "sha256": "fc35e58bf5ac4acf345f7baa30417f001a4ed9eda41d32d6396b0eb26ff0af1c"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-11.json",
+      "sha256": "b74eadcc184d8a0dee6cec94a87c2b8092fee5f005eba0585c97e48f729d0d20"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-12.json",
+      "sha256": "5ea5a0130892800a8bb348959464a7bbdaee52f3aa866fcf210a4215a1cfb315"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-13.json",
+      "sha256": "10ce9b545fc9802360ebd60b455bc3c4ef797b23d6e759f1d51f21a7497f1299"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-14.json",
+      "sha256": "3f025096a37f9b607a1df6bb29a72e9ad466ee531fbda7126753985918e5be6b"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-15.json",
+      "sha256": "b295589093b7a8555986899e778ea6d510409d45fc809be37d76048c03c97565"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-16.json",
+      "sha256": "bff989dc716fde720d211cb4981a5b968364c5f2b2ccb74ce1dde58eb4e588d0"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-17.json",
+      "sha256": "f8eeea80c63317b4d50044daaba885dbe9299b59639e7975cab1b066ee1d241a"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-18.json",
+      "sha256": "247220a0a1389a006eb724b363bec93e2a6c25a1c995dc0e9684bafabbb32fe0"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-19.json",
+      "sha256": "cbf47ed0ecca9bcc1a281ded157680efefc202fdb58053d943df14e52822238f"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-20.json",
+      "sha256": "81271057a5cb421f7fe8f9f4262dca88a21da3dc58e0809fb099c5f8b3334465"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-21.json",
+      "sha256": "9e15afa4b0826a618dc431f41b88b3ff81a243a83e4ca4fd86cd24b0fc20f363"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-22.json",
+      "sha256": "fc9a2fb623bc55c04c6eebade0be7a8cf2b8b6e66056e95bd757a12276f129ad"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-23.json",
+      "sha256": "9ea0988940d0e41eaa936fc31743fdc972eddf67b1ab87fcc2f2939b09dbb2b8"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-24.json",
+      "sha256": "2b80cb672e32522395e81b8f413e14e7d7ab273cf8ca9c74bc9a3fd418255ec6"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-25.json",
+      "sha256": "5a228a9415a1310f7c07d8e6961b1763df7056d0b8fd0ae28a7595419e427e51"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-26.json",
+      "sha256": "abd24635aed9660c83d4d1a2718ad2371f3fe59c9b6f7fa7d7bbaca265175bb5"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-27.json",
+      "sha256": "b4ea4dd18ea0ea6d0c2820617eb8bfd4427e76b4c26c860bb97788a957cd5163"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-28.json",
+      "sha256": "ef74e170a9d4d5625d0b7171ca59db25bb832f1819e6a28fa2dd47c50b05cd26"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-29.json",
+      "sha256": "a49ff5d805081e833463b944bb0f99e44621e64c2aa54dfdaa89fd1643157014"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-30.json",
+      "sha256": "78d13a6a314d0023d4f7da4077a0db6e647af1a01acfbe7fb04678f7420229f0"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-31.json",
+      "sha256": "96882cb5b547b31148143d92102d16f41a31d505ff54eead76ca9e0656684a07"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-32.json",
+      "sha256": "53c51ddacaa28a605e65a3d55d552575b53c041ad09bcf715b5bfa40a2bafc15"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-33.json",
+      "sha256": "c5228f20664c6aa406d641d43e338b76651a63c8e07651ff43644868380c652e"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-34.json",
+      "sha256": "f618a94ea5390ebd084e9ad3f6d793465bb73c143e75ea856f5625c4835d6bc8"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-35.json",
+      "sha256": "3e13654de19cf08b9787e34c7e7c7a7e1348ec415aa2a90b9ccffed5b72c8ba3"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-36.json",
+      "sha256": "396606c168317491cca82c36e6ac14e3e7753624c0521514d0c7ac3c92dbe213"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-37.json",
+      "sha256": "38b696b7eeecdd136b89aef0e7557bd7807ee5d5440a54c13a73b66722ce2d9e"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-38.json",
+      "sha256": "855207574af227961ff53ed7a4c12f152296442d8344016b089c350a912723c8"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-39.json",
+      "sha256": "8bbfb9a306fa3627d3f85038538db4f7befb1272c1fb5223535079d741b99c73"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-40.json",
+      "sha256": "632943e15c9535c39d6bbf56fceafc8e86a2830b5a95931b5748b5ab81f690ea"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-41.json",
+      "sha256": "be76b14941ca2981055514a99efeacf7c95e3a4cc835e31ca856242b7cb117bb"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-42.json",
+      "sha256": "8ccc3d2dc0ae21b11483e4b8c5d5dd1f14316f1ff79f17a37da7ce23f08137cc"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-43.json",
+      "sha256": "23b6998710ee86ef699320c43dcbca8db5c9981e7253b40b560e9a9438d25717"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-44.json",
+      "sha256": "4bd878ce72d737b7ed61e3ea997baf57b9cc489d32103de1bd8751757619cd73"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-45.json",
+      "sha256": "67b5f8160a4b8d247ba13e87d0ef4c3bfeb50c1d7b3c8032becdb63220828c8d"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-46.json",
+      "sha256": "2a0494d65935da9dc811e944c6a6533b807747aad29a403078ee708ac6df9643"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-47.json",
+      "sha256": "103e243baef246c3f7b7edf5cba0f2bd257804c6ac94abdfb404b09cbf64a10e"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-48.json",
+      "sha256": "02f42516847dce876c23e8f4634b850340426b82e870c54b5485f7ad9d771d3c"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-49.json",
+      "sha256": "3087964ee659bfa772dcfc6891ea0cbd9090e37a166388b20ad2d5394da1425c"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-50.json",
+      "sha256": "eb7fa0bddcf12a9d91112022dcb215c3beaa886043c2d78e72ac28810ecb2a41"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-51.json",
+      "sha256": "60555b18f8a99e110bfe91a4f367b2633a2ebf21b8b555405518b13dca57718c"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-52.json",
+      "sha256": "00c0d6d5c8cd79de5bba7de7b2f481cffcd7ebe7ffc6f2834209e21e0fe0c7e7"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-53.json",
+      "sha256": "5380937c19da907d48007eeb9e16ee7a2b61e0f369519f4b6adce6d0546aca9c"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-54.json",
+      "sha256": "ec46becb931d0f4708bef64486ad9f161b51ecfb1960819ae0e0d1c4b0dff148"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/lang-55.json",
+      "sha256": "b4cd985fc0a57e3e6e855a9068b6834588a7b7d81cad5d6fc3925bffda54ad22"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/snapshots/mixed-layout.json",
+      "sha256": "5b9fbf8d1708d57fb585b4426f9ec267d16ec39c13c4b64302a5952bed1eba83"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/states/partial.json",
+      "sha256": "70ac2c20bab7ce8d9d52ef1721ffd05bdada9fc20999f8bf14512ac02f13e20c"
+    },
+    {
+      "file": "docs/design/document-graph-api/examples/corpus/results/states/warning.json",
+      "sha256": "8a7630c1dd05e9300b90c2b4f68431fb35d5cb413224fbaa651c69350fe2bd09"
     },
     {
       "file": "docs/design/document-graph-api/examples/corpus/scenarios/case-1.expected.json",
@@ -952,7 +1699,7 @@
     },
     {
       "file": "docs/design/document-graph-api/examples/source-inventory.json",
-      "sha256": "6bcce5823d0c56c2b459cf5afee6cadd9ef867739242c1370802bdd867503584"
+      "sha256": "192eb744acf3704e4966432109283fb5c3d0fa69400f8dbea31584b86e30cf67"
     },
     {
       "file": "docs/design/document-graph-api/tsconfig.json",
@@ -960,15 +1707,15 @@
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.md",
-      "sha256": "14fb396a2a5927ecfb3fdd8863a14cbf90b9a1ce295c02df3e40d794af13273d"
+      "sha256": "2aece305cfa9b08ff0befcb667aca3a544f12484d62c449e87a7042ae080dbfd"
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.sha256",
-      "sha256": "8448bb6a39a59ddb31a14c7337df454abca6a706e40da56f3e8665a7bb1d8515"
+      "sha256": "4ff0451b1efcc1291e6158d6ba6f9238439c8f3c8bbb7982e0e03dadb5bd4c04"
     }
   ],
   "remainingGates": [
-    "EP-ACT-3/4 and EP-GATE-2: complete expected validation/query/context results, generalized checker and type/consumer reconciliation.",
+    "EP-ACT-4 and EP-GATE-2: reconcile declarations/consumer and first-delivery compatibility against the complete result corpus.",
     "EP-ACT-5/EP-GATE-3: final parent-task evidence and compatibility handoff.",
     "Q-1/Q-2: owner syntax selection and authoring-fit acceptance before extraction.",
     "Q-3: public export/schema acceptance before the new package surface.",

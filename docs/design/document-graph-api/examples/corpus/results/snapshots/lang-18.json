@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:27dff3e6c0b158d74cd92230cbbeb54b096461266d7f99bdc91bf14d742e79bf",
+  "source": {"documentId": "language/lang-18.md", "sha256": "27dff3e6c0b158d74cd92230cbbeb54b096461266d7f99bdc91bf14d742e79bf", "utf8Bytes": 32, "utf16Length": 32},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "missing"}},
+    {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}}
+  ],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "WP-1",
+      "role": "definition",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 7, "line": 1, "column": 8}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O2",
+      "identifier": "REQ-2",
+      "role": "reference",
+      "range": {"start": {"offset": 26, "line": 2, "column": 1}, "end": {"offset": 31, "line": 2, "column": 6}},
+      "fragmentId": "F1"
+    }
+  ],
+  "relationships": [{"id": "R1", "kind": "references", "source": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"}, "target": "REQ-2", "occurrenceId": "O2"}],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 32, "line": 2, "column": 7}},
+      "owner": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"},
+      "structure": "paragraph",
+      "requiredContext": []
+    }
+  ],
+  "exclusions": [],
+  "diagnostics": [
+    {
+      "code": "markdown-trace.language.malformed-expression",
+      "severity": "error",
+      "message": "Malformed reserved expression",
+      "identifiers": ["WP-1"],
+      "sourceRanges": [{"start": {"offset": 8, "line": 1, "column": 9}, "end": {"offset": 25, "line": 1, "column": 26}}]
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901",
+  "source": {"documentId": "../mixed-layout.md", "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901", "utf8Bytes": 413, "utf16Length": 413},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "complete",
+  "identifiers": [
+    {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O1"}},
+    {"identifier": "REQ-2", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O2"}},
+    {"identifier": "REQ-3", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O10"}},
+    {"identifier": "VAL-1", "entityKind": "validation", "definition": {"status": "resolved", "occurrenceId": "O6"}},
+    {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O3"}},
+    {"identifier": "WP-2", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O8"}}
+  ],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "REQ-1",
+      "role": "definition",
+      "range": {"start": {"offset": 2, "line": 1, "column": 3}, "end": {"offset": 10, "line": 1, "column": 11}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O2",
+      "identifier": "REQ-2",
+      "role": "definition",
+      "range": {"start": {"offset": 70, "line": 5, "column": 1}, "end": {"offset": 78, "line": 5, "column": 9}},
+      "fragmentId": "F3"
+    },
+    {
+      "id": "O3",
+      "identifier": "WP-1",
+      "role": "definition",
+      "range": {"start": {"offset": 105, "line": 7, "column": 3}, "end": {"offset": 112, "line": 7, "column": 10}},
+      "fragmentId": "F4"
+    },
+    {
+      "id": "O4",
+      "identifier": "REQ-1",
+      "role": "reference",
+      "range": {"start": {"offset": 121, "line": 7, "column": 19}, "end": {"offset": 139, "line": 7, "column": 37}},
+      "fragmentId": "F4"
+    },
+    {
+      "id": "O5",
+      "identifier": "REQ-2",
+      "role": "reference",
+      "range": {"start": {"offset": 151, "line": 8, "column": 11}, "end": {"offset": 158, "line": 8, "column": 18}},
+      "fragmentId": "F4"
+    },
+    {
+      "id": "O6",
+      "identifier": "VAL-1",
+      "role": "definition",
+      "range": {"start": {"offset": 179, "line": 10, "column": 3}, "end": {"offset": 187, "line": 10, "column": 11}},
+      "fragmentId": "F5"
+    },
+    {
+      "id": "O7",
+      "identifier": "WP-1",
+      "role": "reference",
+      "range": {"start": {"offset": 195, "line": 10, "column": 19}, "end": {"offset": 210, "line": 10, "column": 34}},
+      "fragmentId": "F5"
+    },
+    {
+      "id": "O8",
+      "identifier": "WP-2",
+      "role": "definition",
+      "range": {"start": {"offset": 267, "line": 14, "column": 3}, "end": {"offset": 274, "line": 14, "column": 10}},
+      "fragmentId": "F7"
+    },
+    {
+      "id": "O9",
+      "identifier": "REQ-2",
+      "role": "reference",
+      "range": {"start": {"offset": 296, "line": 14, "column": 32}, "end": {"offset": 314, "line": 14, "column": 50}},
+      "fragmentId": "F7"
+    },
+    {
+      "id": "O10",
+      "identifier": "REQ-3",
+      "role": "definition",
+      "range": {"start": {"offset": 321, "line": 16, "column": 4}, "end": {"offset": 329, "line": 16, "column": 12}},
+      "fragmentId": "F8"
+    }
+  ],
+  "relationships": [
+    {"id": "R1", "kind": "implements", "source": {"status": "owned", "identifier": "WP-1", "declarationId": "O3"}, "target": "REQ-1", "occurrenceId": "O4"},
+    {"id": "R2", "kind": "references", "source": {"status": "owned", "identifier": "WP-1", "declarationId": "O3"}, "target": "REQ-2", "occurrenceId": "O5"},
+    {"id": "R3", "kind": "verifies", "source": {"status": "owned", "identifier": "VAL-1", "declarationId": "O6"}, "target": "WP-1", "occurrenceId": "O7"},
+    {"id": "R4", "kind": "implements", "source": {"status": "owned", "identifier": "WP-2", "declarationId": "O8"}, "target": "REQ-2", "occurrenceId": "O9"}
+  ],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 25, "line": 1, "column": 26}},
+      "owner": {"status": "owned", "identifier": "REQ-1", "declarationId": "O1"},
+      "structure": "heading",
+      "requiredContext": []
+    },
+    {
+      "id": "F2",
+      "range": {"start": {"offset": 27, "line": 3, "column": 1}, "end": {"offset": 68, "line": 3, "column": 42}},
+      "owner": {"status": "owned", "identifier": "REQ-1", "declarationId": "O1"},
+      "structure": "paragraph",
+      "requiredContext": ["F1"]
+    },
+    {
+      "id": "F3",
+      "range": {"start": {"offset": 70, "line": 5, "column": 1}, "end": {"offset": 101, "line": 5, "column": 32}},
+      "owner": {"status": "owned", "identifier": "REQ-2", "declarationId": "O2"},
+      "structure": "paragraph",
+      "requiredContext": ["F1"]
+    },
+    {
+      "id": "F4",
+      "range": {"start": {"offset": 103, "line": 7, "column": 1}, "end": {"offset": 175, "line": 8, "column": 35}},
+      "owner": {"status": "owned", "identifier": "WP-1", "declarationId": "O3"},
+      "structure": "list-item",
+      "requiredContext": ["F1"]
+    },
+    {
+      "id": "F5",
+      "range": {"start": {"offset": 177, "line": 10, "column": 1}, "end": {"offset": 211, "line": 10, "column": 35}},
+      "owner": {"status": "owned", "identifier": "VAL-1", "declarationId": "O6"},
+      "structure": "paragraph",
+      "requiredContext": ["F1"]
+    },
+    {
+      "id": "F6",
+      "range": {"start": {"offset": 213, "line": 12, "column": 1}, "end": {"offset": 264, "line": 13, "column": 20}},
+      "owner": {"status": "unowned"},
+      "structure": "other",
+      "requiredContext": []
+    },
+    {
+      "id": "F7",
+      "range": {"start": {"offset": 265, "line": 14, "column": 1}, "end": {"offset": 316, "line": 14, "column": 52}},
+      "owner": {"status": "owned", "identifier": "WP-2", "declarationId": "O8"},
+      "structure": "table-row",
+      "requiredContext": ["F1", "F6"]
+    },
+    {
+      "id": "F8",
+      "range": {"start": {"offset": 318, "line": 16, "column": 1}, "end": {"offset": 347, "line": 16, "column": 30}},
+      "owner": {"status": "owned", "identifier": "REQ-3", "declarationId": "O10"},
+      "structure": "heading",
+      "requiredContext": ["F1"]
+    },
+    {
+      "id": "F9",
+      "range": {"start": {"offset": 349, "line": 18, "column": 1}, "end": {"offset": 374, "line": 18, "column": 26}},
+      "owner": {"status": "owned", "identifier": "REQ-3", "declarationId": "O10"},
+      "structure": "paragraph",
+      "requiredContext": ["F1", "F8"]
+    },
+    {
+      "id": "F10",
+      "range": {"start": {"offset": 376, "line": 20, "column": 1}, "end": {"offset": 412, "line": 22, "column": 4}},
+      "owner": {"status": "owned", "identifier": "REQ-3", "declarationId": "O10"},
+      "structure": "code",
+      "requiredContext": ["F1", "F8"]
+    }
+  ],
+  "exclusions": [{"range": {"start": {"offset": 376, "line": 20, "column": 1}, "end": {"offset": 412, "line": 22, "column": 4}}, "reason": "literal-fenced-code"}],
+  "diagnostics": []
+}

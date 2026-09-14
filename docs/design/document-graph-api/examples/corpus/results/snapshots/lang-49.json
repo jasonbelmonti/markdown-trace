@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "markdown-trace.document-graph.v1",
+  "analysisId": "@analysis:24aa0e69df3ea164d43dfbcece38d3caec90c3ba95d8a7fbe1befc2ddc1f8b9c",
+  "source": {"documentId": "language/lang-49.md", "sha256": "24aa0e69df3ea164d43dfbcece38d3caec90c3ba95d8a7fbe1befc2ddc1f8b9c", "utf8Bytes": 55, "utf16Length": 55},
+  "interpretationHash": "@interpretation:standard",
+  "analyzerVersion": "@analyzer-version",
+  "parserVersion": "3.5.0",
+  "coverage": "partial",
+  "identifiers": [
+    {"identifier": "REQ-1", "entityKind": "requirement", "definition": {"status": "resolved", "occurrenceId": "O2"}},
+    {"identifier": "WP-1", "entityKind": "work", "definition": {"status": "resolved", "occurrenceId": "O1"}}
+  ],
+  "occurrences": [
+    {
+      "id": "O1",
+      "identifier": "WP-1",
+      "role": "definition",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 7, "line": 1, "column": 8}},
+      "fragmentId": "F1"
+    },
+    {
+      "id": "O2",
+      "identifier": "REQ-1",
+      "role": "definition",
+      "range": {"start": {"offset": 33, "line": 3, "column": 1}, "end": {"offset": 41, "line": 3, "column": 9}},
+      "fragmentId": "F2"
+    }
+  ],
+  "relationships": [],
+  "fragments": [
+    {
+      "id": "F1",
+      "range": {"start": {"offset": 0, "line": 1, "column": 1}, "end": {"offset": 31, "line": 1, "column": 32}},
+      "owner": {"status": "owned", "identifier": "WP-1", "declarationId": "O1"},
+      "structure": "paragraph",
+      "requiredContext": []
+    },
+    {
+      "id": "F2",
+      "range": {"start": {"offset": 33, "line": 3, "column": 1}, "end": {"offset": 54, "line": 3, "column": 22}},
+      "owner": {"status": "owned", "identifier": "REQ-1", "declarationId": "O2"},
+      "structure": "paragraph",
+      "requiredContext": []
+    }
+  ],
+  "exclusions": [],
+  "diagnostics": [
+    {
+      "code": "markdown-trace.language.malformed-expression",
+      "severity": "error",
+      "message": "Malformed reserved expression",
+      "identifiers": ["WP-1"],
+      "sourceRanges": [{"start": {"offset": 8, "line": 1, "column": 9}, "end": {"offset": 30, "line": 1, "column": 31}}]
+    }
+  ]
+}
