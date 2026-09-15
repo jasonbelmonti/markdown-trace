@@ -72,6 +72,7 @@ async function main() {
         `tarball entries: ${members.length}`,
         "declaration closure: self-contained",
         "root API: pass",
+        "experimental graph API: pass",
         "deep imports: rejected",
         "package exports contract: PASS",
       ].join("\n") + "\n",
@@ -124,8 +125,12 @@ function assertManifest(manifest, lockfile) {
     JSON.stringify(manifest.exports) ===
       JSON.stringify({
         ".": { types: PUBLIC_TYPES, import: PUBLIC_IMPORT },
+        "./experimental/graph": {
+          types: "./dist/markdowntrace/document-graph/index.d.ts",
+          import: "./dist/markdowntrace/document-graph/index.js",
+        },
       }),
-    "package exports must contain only the approved root entry",
+    "package exports must contain the root and experimental graph entries",
   );
   assert(
     JSON.stringify(manifest.files) === JSON.stringify(["dist"]),
@@ -221,6 +226,8 @@ function assertTarballMembers(members) {
     "package/dist/markdowntrace/public.js",
     "package/dist/markdowntrace/public.d.ts",
     "package/dist/markdowntrace/cli.js",
+    "package/dist/markdowntrace/document-graph/index.js",
+    "package/dist/markdowntrace/document-graph/index.d.ts",
   ]) {
     assert(members.includes(required), `tarball must contain ${required}`);
   }
