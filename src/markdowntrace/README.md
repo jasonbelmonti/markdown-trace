@@ -4,6 +4,7 @@ Read the [direction](../../docs/design/markdown-trace-document-graph-overview.md
 
 | Modules | Existing responsibility | Directional boundary |
 | --- | --- | --- |
+| `document-graph/` | Experimental document-wide extraction, immutable graph and direct query indexes | Validation and context projection are follow-up work over these facts. |
 | `markdown/` | Markdown Engine adapter, headings/sections, labels, trace links, source slicing | Reuse parser/source integration; current ownership is compatibility behavior. |
 | `trace-evidence/` | Table-only graph evidence/hashing | Needs document-wide occurrences and ownership. Empty ranges/supplemental definitions are gaps. |
 | `graph-profile/` | Closed v1 schema/vocabulary and examples | Schema acceptance differs from operator support; resolve the new contract first. |
@@ -13,4 +14,4 @@ Read the [direction](../../docs/design/markdown-trace-document-graph-overview.md
 | `reporting/` | Registry-validation and migration reports | These are not graph repair plans or context results. |
 | `runtime-metadata.ts`, `generated/` | Runtime/package identity | Retain deterministic metadata generation. |
 
-The target responsibilities are language/interpretation, shared graph/indexes, validation, query, context projection, and thin public adapters. These describe planned boundaries, not modules that already exist.
+The target responsibilities are language/interpretation, shared graph/indexes, validation, query, context projection, and thin public adapters. The experimental graph implements interpretation and direct queries; validation and context projection remain to be added.

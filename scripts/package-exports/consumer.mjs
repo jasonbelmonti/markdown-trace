@@ -2,6 +2,7 @@ import { copyFile, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { run } from "./process.mjs";
+import { runGraphApiSmoke } from "./graph-consumer.mjs";
 
 export async function checkPackedConsumer({
   consumerDirectory,
@@ -21,6 +22,7 @@ export async function checkPackedConsumer({
     passingDocument,
     passingProfile,
   });
+  runGraphApiSmoke(consumerDirectory, packageName);
   runDeepImportNegatives(consumerDirectory, packageName);
 }
 
@@ -102,6 +104,8 @@ function runRootApiSmoke({
 function runDeepImportNegatives(consumerDirectory, packageName) {
   for (const specifier of [
     `${packageName}/graph-validation`,
+    `${packageName}/graph`,
+    `${packageName}/experimental/graph/analyze`,
     `${packageName}/dist/markdowntrace/public.js`,
   ]) {
     const program = [

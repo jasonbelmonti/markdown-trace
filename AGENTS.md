@@ -6,11 +6,11 @@ Read before planning or implementation:
 
 1. [Document graph direction](docs/design/markdown-trace-document-graph-overview.md)
 2. [Current implementation](docs/current-implementation.md)
-3. The active task; next product work is [document graph contract and corpus](docs/tasks/document-graph-contract.md).
+3. The active implementation boundary: [runnable document graph and backlinks](docs/tasks/runnable-document-graph.md).
 
 The latest explicit user instruction takes precedence. The overview defines direction; source/tests describe implemented behavior. The active task owns completion and review boundaries. Future tasks must cite current contracts rather than resurrecting removed plans.
 
-The target is a document-wide identity/relationship graph with validation and query/context APIs. Current table roles, closed relationship enums, YAML registries, and `ctx://trace` syntax are existing implementation constraints, not the final language or product scope. New syntax and ownership require the contract/corpus work.
+The target is a document-wide identity/relationship graph with validation and query/context APIs. Current table roles, closed relationship enums, YAML registries, and `ctx://trace` syntax are existing implementation constraints, not the final language or product scope. The experimental graph uses the current draft syntax and ownership. The owner authorized a runnable implementation after the contract/corpus work; earlier contract-only gates do not block this slice. Stable syntax and release approval remain separate.
 
 ## Tasks and durable artifacts
 

@@ -288,11 +288,11 @@
     },
     {
       "file": "docs/README.md",
-      "sha256": "99c92a244ba40d6a1bedd2dd6421c50cc214cb26bb9fc02c36d59aa1837a0ae5"
+      "sha256": "673cdc18106b75f72af4ef5d627c17a091a733990376a8138ac3604555b01ca6"
     },
     {
       "file": "docs/design/document-graph-api/README.md",
-      "sha256": "46a44611144e59d00f58852bd318f1c85553d1b55e71ee99888f0cfd86374732"
+      "sha256": "6eb0bf99f79680122039dab2a590e13b2caf4b7724e85b5b14d5657cc8298371"
     },
     {
       "file": "docs/design/document-graph-api/checks/check-examples.mjs",
@@ -973,5 +973,9 @@
     "Q-1/Q-2: owner syntax selection and authoring-fit acceptance before extraction.",
     "Q-3: public export/schema acceptance before the new package surface.",
     "Q-4: representative context oracle and scale targets before pilot/release claims."
-  ]
+  ],
+  "navigationUpdate": {
+    "date": "2026-09-15",
+    "scope": "The documentation map and API README now point to the separately implemented experimental graph/direct-query API. Their artifact hashes are refreshed; the original design-check results and packet bytes are unchanged."
+  }
 }

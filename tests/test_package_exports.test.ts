@@ -11,7 +11,7 @@ const repositoryRoot = path.resolve(
 
 describe("public package exports", () => {
   it(
-    "packs a bounded root-only API for a clean consumer",
+    "packs the legacy root and experimental graph APIs for a clean consumer",
     () => {
       const result = spawnSync(
         "npm",
@@ -30,6 +30,7 @@ describe("public package exports", () => {
       );
       expect(result.stdout).toContain("declaration closure: self-contained");
       expect(result.stdout).toContain("root API: pass");
+      expect(result.stdout).toContain("experimental graph API: pass");
       expect(result.stdout).toContain("deep imports: rejected");
       expect(result.stdout).toContain("package exports contract: PASS");
     },

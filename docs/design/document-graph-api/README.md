@@ -1,8 +1,8 @@
 # Document graph API draft
 
-Start with the [interface packet](../markdown-trace-document-graph-interfaces.md). It defines proposed behavior and distinguishes review decisions from implementation gates. The declaration files under contracts/ are design artifacts; they do not expose runnable package APIs.
+Start with the [interface packet](../markdown-trace-document-graph-interfaces.md). It defines proposed behavior and distinguishes review decisions from implementation gates. The declaration files under contracts/ remain design artifacts. The graph/direct-query subset is now runnable through the separate [experimental API](../../experimental-document-graph.md); validation, traversal and context signatures remain proposed.
 
-The [consumer example](examples/consumer.ts) exercises the proposed analysis, validation, lookup, references, traversal and context signatures. The [profile example](examples/profile.ts) defines vocabulary as data. The [case ledger](examples/cases.md) and [expectations](examples/expectations.json) were authored independently of an extractor, which has not been implemented.
+The [consumer example](examples/consumer.ts) exercises the proposed analysis, validation, lookup, references, traversal and context signatures. The [profile example](examples/profile.ts) defines vocabulary as data. The [case ledger](examples/cases.md) and [expectations](examples/expectations.json) were authored independently of the extractor. Runtime tests now compare real extraction and direct queries to the existing source annotations.
 
 Run these checks from the repository root after npm ci:
 
@@ -14,7 +14,7 @@ node docs/design/document-graph-api/checks/probe-engine.mjs
 
 The example check verifies source hashes, coordinates, ledger references and byte totals. It checks internal consistency of the hand-authored oracle, not extraction correctness. The Engine probe checks public tree/source feasibility on mixed Markdown, CRLF and emoji. Neither executes the proposed graph API.
 
-[validation.json](validation.json) records the checks and artifact hashes. Recompute its artifact hashes before relying on a handoff; read the packet and its questions first. The packet also has an adjacent .sha256 file. The [materialized corpus](examples/corpus/README.md) contains all 55 language cases and 24 API scenarios, with source hashes, exhaustive occurrence/owner annotations and explicit diagnostics/exclusions. Its independent interpretation status is recorded in the gate evidence. EP-ACT-3 still owns complete executable API-result expectations and the generalized checker; real-spec context/scale evidence remains outstanding.
+[validation.json](validation.json) records the checks and artifact hashes. Recompute its artifact hashes before relying on a handoff; read the packet and its questions first. The packet also has an adjacent .sha256 file. The [materialized corpus](examples/corpus/README.md) contains all 55 language cases and 24 API scenarios, with source hashes, exhaustive occurrence/owner annotations and explicit diagnostics/exclusions. Its independent interpretation status is recorded in the gate evidence. The earlier closeout route assigns complete API-result expectations to EP-ACT-3. The owner subsequently authorized the [runnable graph slice](../../tasks/runnable-document-graph.md) independently of that route. Real-spec context/scale evidence remains outstanding.
 
 The corpus materialization and full-source parser checks are separately reproducible:
 

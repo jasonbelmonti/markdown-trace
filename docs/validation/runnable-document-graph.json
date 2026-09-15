@@ -1,0 +1,12 @@
+{
+  "artifact": "docs/tasks/runnable-document-graph.md",
+  "revision": 1,
+  "rawSha256": "4bb14071d8083bcc8ce34839602d69ecd292e37e0897c38a23c959bdd6bf6be9",
+  "validatedAt": "2026-09-15T12:38:26.848462+00:00",
+  "engineVersion": "3.6.0",
+  "inputHash": "41ae630403a249383c205035394be13662c1230270fed771e9c5b4153ed64aca",
+  "profileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d",
+  "valid": true,
+  "diagnostics": [],
+  "scope": "Task structure and criterion/evidence coverage; runtime verification is reported against the implementation commit in the PR."
+}
