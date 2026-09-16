@@ -1,14 +1,14 @@
 import type { SourceFragment } from "./contracts/analysis.js";
 import type { Block } from "./extraction-model.js";
-import { Coordinates } from "./coordinates.js";
+import type { Coordinates } from "./coordinates.js";
 
 // Capture support using Engine block boundaries. Context projection is a separate API.
 export function attachSupport(
   fragments: SourceFragment[],
   blocks: Block[],
-  text: string,
+  coordinates: Coordinates,
 ): SourceFragment[] {
-  const coordinates = new Coordinates(text);
+  const { text } = coordinates;
   const headings = blocks
     .filter((b) => b.node.type === "heading")
     .map((block) => ({
@@ -73,7 +73,10 @@ export function attachSupport(
         start = text.lastIndexOf("\n", Math.max(0, start - 1)) + 1;
       return {
         ...fragment,
-        range: coordinates.range(start, fragment.range.end.offset),
+        range:
+          start === fragment.range.start.offset
+            ? fragment.range
+            : { start: coordinates.position(start), end: fragment.range.end },
         requiredContext: [...new Set(support)],
       };
     }),

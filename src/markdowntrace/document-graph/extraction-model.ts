@@ -5,8 +5,7 @@ export interface Token {
   identifier: string;
   role: "definition" | "reference";
   kind: string;
-  start: number;
-  end: number;
+  range: SourceRange;
 }
 export interface NodeInfo {
   node: EngineNode;
@@ -30,6 +29,6 @@ export interface Atom {
   start: number;
   end: number;
   leaf: number;
-  code?: string;
-  token?: Pick<Token, "identifier" | "role" | "kind">;
+  code?: { text: string; range: SourceRange };
+  token?: Token;
 }

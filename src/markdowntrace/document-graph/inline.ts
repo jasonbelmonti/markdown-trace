@@ -1,27 +1,8 @@
 import type { EngineNode } from "@jasonbelmonti/markdown-engine";
-import { Coordinates } from "./coordinates.js";
 import type { Atom, Extraction } from "./extraction-model.js";
-import { AnalysisFailure } from "./value.js";
+import { sourceRange } from "./source-range.js";
 import { traceDestination } from "./trace-destination.js";
 
-export function sourceRange(node: EngineNode, coordinates: Coordinates) {
-  const start = node.source?.range.start.offset,
-    end = node.source?.range.end.offset;
-  if (
-    !Number.isSafeInteger(start) ||
-    !Number.isSafeInteger(end) ||
-    start! < 0 ||
-    end! < start! ||
-    end! > coordinates.text.length ||
-    coordinates.text.slice(start, end) !== node.source?.text
-  ) {
-    throw new AnalysisFailure(
-      "source-map-unavailable",
-      `Missing or inconsistent source map for ${node.type}`,
-    );
-  }
-  return coordinates.range(start!, end!);
-}
 const transparent = new Set([
   "emphasis",
   "strong",
@@ -32,17 +13,17 @@ const transparent = new Set([
 const literals = new Set(["html", "image", "imageReference"]);
 export function inlineAtoms(
   node: EngineNode,
-  coordinates: Coordinates,
+  text: string,
   output: Extraction,
   destinations: ReadonlyMap<string, string>,
 ): Atom[] {
   const atoms: Atom[] = [];
   let leaf = 0;
   function visit(child: EngineNode) {
-    const range = sourceRange(child, coordinates),
+    const range = sourceRange(child, text),
       start = range.start.offset,
       end = range.end.offset;
-    const raw = coordinates.text.slice(start, end);
+    const raw = text.slice(start, end);
     if (child.type === "link" || child.type === "linkReference") {
       const destination = destinations.get(child.target?.id ?? "");
       const meaning =
@@ -53,7 +34,9 @@ export function inlineAtoms(
           start,
           end,
           leaf: leaf++,
-          ...("value" in meaning ? { token: meaning.value } : {}),
+          ...("value" in meaning
+            ? { token: { ...meaning.value, range } }
+            : {}),
         });
         if ("error" in meaning)
           output.diagnostics.push({
@@ -86,7 +69,9 @@ export function inlineAtoms(
         start,
         end,
         leaf: leaf++,
-        ...(child.type === "inlineCode" ? { code: child.text ?? "" } : {}),
+        ...(child.type === "inlineCode"
+          ? { code: { text: child.text ?? "", range } }
+          : {}),
       });
       if (child.type !== "inlineCode")
         output.exclusions.push({ range, reason: `literal-${child.type}` });
