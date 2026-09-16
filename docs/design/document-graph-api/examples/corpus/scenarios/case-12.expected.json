@@ -1,9 +1,0 @@
-{
-  "schemaVersion": "markdown-trace.design-scenario.v1",
-  "caseId": "CASE-12",
-  "source": {"file": "../mixed-layout.md", "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"},
-  "annotationRef": "scenarios/mixed-layout.expected.json",
-  "input": "Set maxSourceUtf8Bytes below the source's recorded 413 bytes, or maxOccurrences below 10",
-  "operationExpectations": {"variants": [{"maxSourceUtf8Bytes": 412, "maxOccurrences": 100}, {"maxSourceUtf8Bytes": 1000, "maxOccurrences": 9}], "error": "analysis-limit", "snapshotReturned": false, "sourceFactAnnotation": "pre-admission oracle only; failed operation returns no analysis"},
-  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
-}

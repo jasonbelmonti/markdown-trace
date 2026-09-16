@@ -1,1 +1,0 @@
-{#WP-1} [REQ-1](https://example.test/REQ-2 "REQ-3").

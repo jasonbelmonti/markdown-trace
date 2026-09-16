@@ -1,6 +1,6 @@
 # Markdown Trace Document Graph Interface Design Packet
 
-Current implementation authority: the owner selected standard Markdown links on 2026-09-16. The [experimental guide](../experimental-document-graph.md) defines draft2 URI semantics and the [runnable task](../tasks/runnable-document-graph.md) bounds this implementation. Earlier draft1 brace-language examples remain design evidence only. Graph validation, traversal and context interfaces below remain proposed.
+Current implementation authority: the owner selected standard Markdown links on 2026-09-16. The [experimental guide](../experimental-document-graph.md) defines draft2 URI semantics and the [runnable task](../tasks/runnable-document-graph.md) bounds this implementation. Superseded brace-language fixtures and contract-only execution plans have been removed. Graph validation, traversal and context interfaces below remain proposed.
 
 ## Document Control
 
@@ -9,24 +9,24 @@ Current implementation authority: the owner selected standard Markdown links on 
 | Title | Markdown Trace Document Graph APIs |
 | Contract depth | ID2 Standard |
 | Status | Draft for interface review |
-| Revision | 7 |
-| Source authority | Owner's document-graph vision and API-design request; merged direction in PR #74; source baseline dce4ac19f8f25f4add7c38898e31934eb70de592 |
+| Revision | 8 |
+| Source authority | Owner's document-graph vision, runnable implementation request, 2026-09-16 standard-link decision and baseline-cleanup request; current runtime source/tests |
 | Author | Codex |
 | Reviewers | Codex internal evaluation; project owner for authoring fit and API acceptance |
 | Last updated | 2026-09-16 |
-| Related design/spec/tickets | [Direction](markdown-trace-document-graph-overview.md); [contract/corpus task](../tasks/document-graph-contract.md); [implementation baseline](../current-implementation.md) |
-| Companion artifacts | [TypeScript declarations](document-graph-api/contracts/index.d.ts); [consumer example](document-graph-api/examples/consumer.ts); [profile example](document-graph-api/examples/profile.ts); [case ledger](document-graph-api/examples/cases.md) |
+| Related design/spec/tickets | [Direction](markdown-trace-document-graph-overview.md); [runnable task](../tasks/runnable-document-graph.md); [implementation baseline](../current-implementation.md) |
+| Companion artifacts | [TypeScript declarations](document-graph-api/contracts/index.d.ts); [consumer example](document-graph-api/examples/consumer.ts); [profile example](document-graph-api/examples/profile.ts); [runnable link fixture](../../fixtures/document-graph/mixed-layout.md) |
 
 ## 0. Executive Contract Summary
 
 - Decision requested: Review the remaining validation, traversal and context boundaries. Standard-link authoring is selected for the experimental graph/direct-query slice; stable release approval remains separate.
 - Source design summary: Recognize constrained identities and relationships throughout a spec, build one graph with source evidence, validate its relationships, and retrieve related implementation context.
 - Highest-risk boundaries: Declaration versus mention and source ownership (RISK-1); policy accidentally changing graph facts (RISK-2); context exceeding its selection or hiding omissions (RISK-3).
-- Implementation slice covered: An in-memory analysis handle, extensible profile data, validation results, identifier lookup, direct reference queries, bounded traversal, and source context. Declaration files are design artifacts, not installed APIs.
-- Out of scope: Production implementation, a full design spec, HTTP services, databases, events, automatic source edits, multi-document resolution, arbitrary query languages, all-path enumeration, and release activation.
-- Section status: Complete for the API draft. Language/corpus acceptance and real-spec scale evidence remain explicit gates.
+- Implemented experimentally: in-memory analysis, profile compilation, identifier lookup and direct reference queries. Proposed: graph-policy evaluation, bounded traversal and context projection. Companion declarations describe the full design; installed types under src/markdowntrace/document-graph/contracts own the runnable subset.
+- Out of scope: HTTP services, databases, events, automatic source edits, multi-document resolution, arbitrary query languages, all-path enumeration and release activation.
+- Section status: Current experimental contracts plus clearly identified future APIs. Real-spec scale and context evidence remain release gates.
 
-Proposed consumer flow:
+Proposed full consumer flow (validateGraph, traverseGraph and extractContext are not exported yet):
 
 ~~~ts
 const profile = compileProfile(profileInput);
@@ -67,12 +67,12 @@ These limits are example caller budgets, not measured production thresholds. A v
 | CON-6 | Query/context results identify their analysis snapshot. | Direction section 3 | C-5, C-6, C-7 |
 | CON-7 | Keep local deterministic operation and existing v1 behavior. | Direction section 3 | C-3 through C-8 |
 | ASM-1 | First delivery analyzes one complete local document. | Direction section 3 | Caller supplies source text; no resolver or network port |
-| ASM-2 | A declaration can own bare references; typed relationships need constrained syntax. | Direction section 3 | Candidate syntax below; Q-1 and Q-2 remain acceptance decisions |
+| ASM-2 | A declaration can own bare references; typed relationships need constrained syntax. | Direction section 3 | Selected link syntax and implemented ownership below; Q-1/Q-2 record their status |
 | ASM-3 | Profiles own entity/relationship vocabulary; runtime owns finite operators. | Direction section 3 | C-2 replaces closed domain enums in the new API |
 | ASM-4 | The initial consumer is a Node/TypeScript authoring or implementer tool. | Inspected package and owner request | Synchronous memory API; callers own file reads and process scheduling |
 | Q-4 | No owner-selected real spec, latency target, or context-completeness oracle has been supplied. | Direction section 9 | Example budgets only; no production performance claim |
 
-Section status: Complete; assumptions remain recommendations, not implied owner decisions.
+Section status: Current decisions and future assumptions are explicit.
 
 ## 2. Problem-Space Model
 
@@ -126,10 +126,10 @@ Section status: Complete.
 
 | Boundary | Owner | Consumers | Direction | Stability | Reason to exist |
 | --- | --- | --- | --- | --- | --- |
-| Profile input to compiled profile | Profile compiler | Host, analyzer, validator | Data to validated handle | Proposed public | Reject invalid configuration once |
+| Profile input to compiled profile | Profile compiler | Host, analyzer, validator | Data to validated handle | Experimental | Reject invalid configuration once |
 | Source/Engine tree to analysis | Analyzer | Queries and validator | External parser to domain | Adapter internal; result public | Contain parser shapes and preserve provenance |
 | Analysis to validation | Validator | Spec author/CI | Facts plus assertions to report | Proposed public | Policy must not create or erase facts |
-| Analysis to direct/traversal queries | Query functions | Reviewer/tool | Facts to selected results | Proposed public | Reuse indexes and consistent resolution |
+| Analysis to direct/traversal queries | Query functions | Reviewer/tool | Facts to selected results | Direct queries experimental; traversal proposed | Reuse indexes and consistent resolution |
 | Analysis plus selection to context | Context projector | Implementer tool | Captured source to bounded excerpts | Proposed public | Own clipping, support context, and omissions |
 | Files/process transport | Host/current CLI | Local user | I/O to memory contracts | Existing compatibility | Keep paths, atomic writes, and scheduling out of graph semantics |
 
@@ -145,8 +145,8 @@ Section status: Complete.
 | IF-2 | tolerate and extend additively | C-8 retains root API; new graph entrypoint | no | VAL-7 |
 | IF-3 | retain separately | C-2 rejects old profile schemas; no lossy adapter | no | VAL-2, VAL-7 |
 | IF-4 | retain separately | C-8 preserves commands and sidecar authority | no | VAL-7 |
-| IF-5 | extend deliberately | C-8 reserves a future ./graph package export | no | VAL-7 |
-| IF-6 | materialize | C-1 through C-7 | no | VAL-1 through VAL-8 |
+| IF-5 | extend deliberately | C-8 uses ./experimental/graph today; stable ./graph remains proposed | no | VAL-7 |
+| IF-6 | extend the runnable graph | C-4, C-6 and C-7 remain to implement | no | VAL-1 through VAL-8 |
 
 Section status: Complete.
 
@@ -154,14 +154,14 @@ Section status: Complete.
 
 | Contract ID | Name | Kind | Owner | Consumers | Stability | Source IDs |
 | --- | --- | --- | --- | --- | --- | --- |
-| C-1 | Source identity and document graph | Domain types/snapshot | Analyzer | Validator, queries, context | Proposed public DTO and opaque handle | OBJ-1, OBJ-3, CON-4, CON-6 |
-| C-2 | Compiled interpretation/validation profile | Config/API | Profile compiler | Authors, analyzer, validator | Proposed public data and opaque handle | OBJ-2, CON-5, ASM-3 |
-| C-3 | analyzeDocument | API/adapter | Analyzer | Host tool | Proposed public | OBJ-1, CON-1, ASM-1 |
+| C-1 | Source identity and document graph | Domain types/snapshot | Analyzer | Validator, queries, context | Experimental DTO and opaque handle | OBJ-1, OBJ-3, CON-4, CON-6 |
+| C-2 | Compiled interpretation/validation profile | Config/API | Profile compiler | Authors, analyzer, validator | Experimental compiler; policy evaluation proposed | OBJ-2, CON-5, ASM-3 |
+| C-3 | analyzeDocument | API/adapter | Analyzer | Host tool | Experimental | OBJ-1, CON-1, ASM-1 |
 | C-4 | validateGraph | API/report | Validator | Author/CI | Proposed public | OBJ-2, CON-4, CON-5 |
-| C-5 | Identifier and direct reference queries | Query API | Query functions | Reviewer/agent | Proposed public | OBJ-3, FLOW-2 |
+| C-5 | Identifier and direct reference queries | Query API | Query functions | Reviewer/agent | Experimental | OBJ-3, FLOW-2 |
 | C-6 | traverseGraph | Query API | Query functions | Implementer tool | Proposed public handle | OBJ-3, FLOW-3 |
 | C-7 | extractContext | Query/projection API | Context projector | Implementer tool | Proposed public report | OBJ-4, CON-6 |
-| C-8 | Package/legacy coexistence | Compatibility contract | Package/CLI adapters | Existing and new callers | Existing stable boundary; additive proposal | CON-7, Q-3 |
+| C-8 | Package/legacy coexistence | Compatibility contract | Package/CLI adapters | Existing and new callers | Legacy retained; experimental subpath implemented | CON-7, Q-3 |
 
 Section status: Complete.
 
@@ -169,7 +169,7 @@ Section status: Complete.
 
 ### Common rules
 
-The [compilable declaration draft](document-graph-api/contracts/index.d.ts) is the shape authority within this packet; this section owns semantics. All functions are synchronous, local, and read-only. They return an Outcome discriminating expected input/profile/limit/selection errors from successful values. A successful operation may contain an invalid or partial graph. Unexpected programming defects may throw; callers must not treat exceptions as a validity verdict.
+The [compilable declaration draft](document-graph-api/contracts/index.d.ts) defines proposed shapes within this packet; this section owns design semantics. The installed experimental types and [guide](../experimental-document-graph.md) define current runtime behavior. C-1/C-2/C-3/C-5 are implemented experimentally; C-4/C-6/C-7 remain proposed. Context fragment partitioning is provisional until projection exists. All functions are synchronous, local, and read-only. They return an Outcome discriminating expected input/profile/limit/selection errors from successful values. A successful operation may contain an invalid or partial graph. Unexpected programming defects may throw; callers must not treat exceptions as a validity verdict.
 
 The host owns file access, authorization, text decoding, scheduling, and any timeout or worker cancellation. No filesystem path is opened or URL fetched by these new functions. There is no tenancy or remote authorization layer to add. Profile input is ordinary data; arbitrary functions, evaluators and network imports are rejected. Extracted text remains untrusted source data.
 
@@ -179,13 +179,13 @@ All returned public collections are deeply immutable at runtime; the implementat
 
 Non-issued analysis/profile handles return invalid-input; non-issued selections return invalid-selection. Issued selections are compatible with an analysis when their analysisId matches, including a repeat analysis with identical identity inputs.
 
-Proposed schema literals ending in v1 reserve independent new formats. They do not redefine existing graph-profile.v1 or graph-validation-result.v1. The declarations remain unpublished design artifacts until implementation and package review.
+Proposed schema literals ending in v1 reserve independent new formats. They do not redefine existing graph-profile.v1 or graph-validation-result.v1. The full declaration set remains a design artifact. Only the implemented subset is exported through experimental/graph; the package remains private.
 
 ### C-1: Source identity and document graph
 
 - Kind/purpose: Domain snapshot and opaque analysis handle; retain facts, provenance, and interpretation identity.
 - Owner/consumers: Analyzer owns construction; validation, query, and context functions consume it.
-- Lifecycle/stability: One immutable source capture; GC owns memory lifetime. Proposed public snapshot schema, private source/index representation.
+- Lifecycle/stability: One immutable source capture; GC owns memory lifetime. Experimental snapshot schema, private source/index representation.
 - Source IDs: OBJ-1, OBJ-3, CON-4, CON-6.
 - Existing interface relationship: New graph model; no table anchor, Engine target, registry object, or parser type crosses this boundary.
 - Preconditions/inputs: Nonempty documentId is an opaque caller identifier. Text must be well-formed Unicode; no newline or Unicode normalization. The document ID does not confer filesystem access.
@@ -236,7 +236,7 @@ Current interpretation uses `markdown-trace.identity.draft2`. Standard Markdown 
 | LEX-7 | An Engine inlineCode node is a generic reference only when its normalized text is one canonical ID and its raw source has no newline. | Other code, fenced/indented examples and frontmatter remain literal. |
 | LEX-8 | Ownership and policy operate after collection; malformed link labels cannot supply fallback references. | Malformed-link diagnostics cover the full link use and make analysis partial. Missing/duplicate definitions remain separate graph integrity states. |
 
-The supported URI forms and exclusions are specified once in the experimental guide. The runtime fixture is fixtures/document-graph/mixed-layout.md; tests/test_document_graph_links.test.ts asserts source facts, owner selection and exact link ranges. The draft1 corpus and its pre-runtime interpretation reports do not prove draft2 conformance. Parser/unsupported-node failures retain their existing behavior; missing usable source maps fail the operation.
+The supported URI forms and exclusions are specified once in the experimental guide. The runtime fixture is fixtures/document-graph/mixed-layout.md; tests/test_document_graph_links.test.ts asserts source facts, owner selection and exact link ranges. The superseded draft1 corpus and its reports are removed; current source fixtures and runtime assertions provide experimental proof. Parser/unsupported-node failures retain their existing behavior; missing usable source maps fail the operation.
 
 ### C-3: analyzeDocument
 
@@ -255,19 +255,19 @@ The supported URI forms and exclusions are specified once in the experimental gu
 - Observability: Complete/partial coverage, exact exclusions, diagnostics, source/profile identities and fact counts.
 - Validation evidence: VAL-1, VAL-6; EVD-1, EVD-2, EVD-5.
 
-Recommended ownership rules are structural and order-independent within a declaration's scope:
+Implemented reference ownership is structural and order-independent within a declaration's scope; OWN-7 also describes the future projection requirement:
 
-| Rule ID | Recommended decision | Observable boundary |
+| Rule ID | Decision | Observable boundary |
 | --- | --- | --- |
 | OWN-1 | Every explicit declaration is retained, wherever it occurs in an eligible heading, paragraph, list introduction or table row. The containing block determines scope; declaration-link position within that block does not. | A reference before its declaration in the same paragraph has that declared owner. All definitions are collected before target resolution; first occurrence never means definition. |
 | OWN-2 | A heading declaration owns the heading and its section until the next heading of equal or shallower depth in the same container. | A heading without a declaration still closes a preceding same-level declaration scope. Shallower containing declaration scopes can remain active. Nested-container headings do not close outside sections. |
 | OWN-3 | A declaration in the first paragraph child of a list item, when that paragraph is the item's first block, owns the whole item. Other paragraph declarations own only their paragraph. | Sibling items do not inherit each other's owners. Nested items inherit a containing owner until their own declaration shadows it. A paragraph inside a quote does not acquire ownership of the entire quote. |
 | OWN-4 | A declaration in any table cell owns that row, including a header row. Multiple declarations across its cells share the same scope. | Header ownership does not propagate to data rows. Header references without a declaration use the enclosing scope. A header with no identity occurrences remains structural support; a header carrying graph facts has its corresponding semantic owner. Delimiter rows are always structural. |
-| OWN-5 | Among containing scopes, the most deeply nested structural scope wins. Multiple declarations defining the same scope give ambiguous ownership, even when their labels are equal. | Retain every declaration ID; references in an ambiguous scope do not attach to an outer owner. With no containing declaration scope, retain the reference as unowned. Ambiguous or unowned references fail integrity and make coverage partial. |
+| OWN-5 | Among containing scopes, the most deeply nested structural scope wins. Multiple declarations defining the same scope give ambiguous ownership, even when their labels are equal. | Retain every declaration ID; references in an ambiguous scope do not attach to an outer owner. With no containing declaration scope, retain the reference as unowned. Unowned or ambiguous references make coverage partial; future validation must report their integrity failure. |
 | OWN-6 | A heading's container is its nearest ancestor list item, blockquote or document. Container exit ends its scope. Child declarations shadow only their own bounded content. | Reference ownership resumes in the still-active outer scope after a child scope ends. A paragraph declaration does not own later paragraphs. A declaration does not leak out of its list/quote merely because its heading has no following peer. |
 | OWN-7 | Context ownership follows the resolved scopes, independently of validation permission. Partition parent context around descendant-owned content rather than including its entire enclosing section. | Keep source fragments contiguous and preserve required list/quote syntax; headings and table headers may be supporting fragments. Structural support without a source reference does not fail ownership integrity. Literal code may belong to an entity's context while contributing no graph occurrences. |
 
-Row/paragraph scopes take precedence over a containing section; a nested heading scope takes precedence over its enclosing list-item scope. A header carrying no graph facts is unowned support, as in the initial mixed-layout ledger. Supporting header/delimiter ranges remain available to selected table rows regardless of whether a header also has semantic ownership. Link runtime tests verify these ownership rules for the current slice. Full validation/traversal/context result proofs remain follow-up work; draft1 annotations are not the new language authority.
+Row/paragraph scopes take precedence over a containing section; a nested heading scope takes precedence over its enclosing list-item scope. A header carrying no graph facts is unowned support, as in the runnable mixed-layout fixture. Supporting header/delimiter ranges remain available to selected table rows regardless of whether a header also has semantic ownership. Link runtime tests verify these ownership rules for the current slice. Full validation/traversal/context result proofs remain follow-up work.
 
 ### C-4: validateGraph
 
@@ -345,7 +345,7 @@ maxDepth zero selects roots only. A depth/node boundary makes no claim about the
 
 The bundle retains the selection's predecessor relationships so its inclusion reasons survive JSON export; parts explain which selected identifiers need each source range. This is source-context selection, not a guarantee that an agent has every fact necessary for implementation.
 
-Selecting all candidate owners does not turn ambiguous ownership into joint ownership: each such entity is omitted independently. Lookup and direct-reference queries remain available. An omitted entity never appears in part.forIdentifiers or includedIdentifiers; a shared range may still appear solely as required heading/table-header support for a different, admitted entity, labelled with the supporting role rather than asserted ownership. With no admitted entities, parts and includedIdentifiers are empty and usedUtf8Bytes is zero. The [ambiguous-context oracle](document-graph-api/examples/ambiguous-context.json) records the reviewed counterexample, zero-budget precedence and selection of both candidates.
+Selecting all candidate owners does not turn ambiguous ownership into joint ownership: each such entity is omitted independently. Lookup and direct-reference queries remain available. An omitted entity never appears in part.forIdentifiers or includedIdentifiers; a shared range may still appear solely as required heading/table-header support for a different, admitted entity, labelled with the supporting role rather than asserted ownership. With no admitted entities, parts and includedIdentifiers are empty and usedUtf8Bytes is zero. For example, two declaration links in one paragraph give an ambiguous fragment owner even when each identifier has a unique definition; selecting either or both must omit their owned context, including at zero budget. Add executable projection proof with C-7.
 
 ### C-8: Package and legacy coexistence
 
@@ -354,7 +354,7 @@ Selecting all candidate owners does not turn ambiguous ownership into joint owne
 - Lifecycle/stability: Retain existing root API and CLI commands while proving the new graph surface.
 - Source IDs: CON-7, Q-3.
 - Existing interface relationship: Preserve legacy commands/schemas; propose a new @jasonbelmonti/markdown-trace/graph export for C-1 through C-7.
-- Preconditions/inputs: New package export and CLI adapters require a separate implementation change with consumer fixtures.
+- Preconditions/inputs: The experimental export has installed-package consumer proof. A stable export and new CLI adapters require later implementation and consumer checks.
 - Postconditions/outputs: Existing imports, serialized results, exit codes, sidecar checks and migration meanings remain intact.
 - Invariants: Never silently reinterpret a legacy profile or claim a v1 table pass is full document validity.
 - Error model: Existing transport/error contract remains; the new memory APIs use Outcome. A future CLI must explicitly map report indeterminate before shipping.
@@ -396,7 +396,7 @@ Section status: Complete.
 | C-1, C-3 | New graph schema; no Engine or legacy DTO leakage | Reanalyze original source; no persisted-graph import | Keep legacy path available | None in this change |
 | C-2, C-4 | Distinct profile and result schemas | Author an explicit new profile; validate against the same interpretation identity | Old profiles remain valid only on old commands | Decide after real consumers migrate |
 | C-5, C-6, C-7 | Additive APIs with analysis-bound selections | Consumers adopt explicitly; no hidden fallback to legacy graph | Stop using new entrypoint; captured legacy behavior remains | No current query API to deprecate |
-| C-8 | Root API and existing CLI meanings preserved | Add graph export and later CLI mapping with package consumer proof | Retain prior package/runtime pin | No root removal proposed |
+| C-8 | Root API and existing CLI meanings preserved | Experimental graph export exists; stable export and CLI mapping need later consumer proof | Retain prior package/runtime pin | No root removal proposed |
 
 Section status: Complete.
 
@@ -404,7 +404,7 @@ Section status: Complete.
 
 | Validation ID | Contract IDs | Method | Evidence required | Owner |
 | --- | --- | --- | --- | --- |
-| VAL-1 | C-1, C-3 | Independent source/ownership corpus and adapter probe | Equivalent heading/prose/list/quote/table facts, nested scope, forward refs, exact occurrence ranges from hand-authored link cases and runtime assertions | Maintainer and owner |
+| VAL-1 | C-1, C-3 | Hand-authored link fixtures and runtime adapter tests | Equivalent heading/prose/list/quote/table facts, nested scope, forward refs, exact occurrence ranges from hand-authored link cases and runtime assertions | Maintainer and owner |
 | VAL-2 | C-2, C-4 | Profile and policy contract cases | Invalid schema/operator rejection, explicit empty policy, distinct hashes, rule counts, unchanged facts under policy change | Maintainer |
 | VAL-3 | C-1, C-4, C-5 | Negative oracle and direct query cases | Duplicates, dangling/unowned/forbidden refs remain queryable and fail appropriate rules | Maintainer/reviewer |
 | VAL-4 | C-5, C-6 | Hand-audited graph examples | Backlink/outgoing agreement, repeated evidence, pagination, cycles, canonical shortest paths and visible traversal bounds | Maintainer/reviewer |
@@ -413,7 +413,7 @@ Section status: Complete.
 | VAL-7 | C-2, C-8 | Existing compatibility and new package consumer checks | Existing root behavior retained, old schema rejected by new API, intentional graph subpath declaration closure | Maintainer |
 | VAL-8 | C-2, C-8 | Type-check proposed consumer and structural artifact validation | Compilable signatures/profile, Markdown Engine profile pass, source/checksum evidence | Codex/maintainer |
 
-Current runtime tests exercise the experimental analysis and direct queries using standard links. The [case ledger](document-graph-api/examples/cases.md) remains draft1 design evidence for broader API scenarios; it is not draft2 language conformance. Validation, traversal and context still require their own runnable proof.
+Current runtime tests exercise the experimental analysis and direct queries using standard links. The runnable fixture is fixtures/document-graph/mixed-layout.md; tests/test_document_graph_links.test.ts and tests/test_document_graph_api.test.ts contain current assertions. Validation, traversal and context still require their own runnable proof.
 
 Section status: Complete as a validation plan.
 
@@ -436,7 +436,7 @@ Section status: Complete.
 | Question ID | Question | Owner | Due date or decision point | Impact if unresolved |
 | --- | --- | --- | --- | --- |
 | Q-1 | Resolved for the experiment: standard Markdown links carry declarations and typed relationships. | Jason | Selected 2026-09-16 | Stable-release syntax remains a later decision. |
-| Q-2 | Prove the remaining validation, traversal and context contracts against the shared graph. | Maintainer | Before claiming those capabilities | Experimental extraction and direct queries have runtime checks; broader proof remains FND-1. |
+| Q-2 | Ownership and literal handling are implemented for analysis/direct queries; context projection still needs proof. | Maintainer | Before claiming context projection | Experimental extraction and direct queries have runtime checks; broader proof remains FND-1. |
 | Q-3 | Experimental export is implemented at experimental/graph; select the stable public surface later. | Maintainer and Jason | Before stable release | Root API and legacy schemas remain unchanged. |
 | Q-4 | Which real spec and required context define adoption success, and what latency/memory limits apply? | Jason supplies target; maintainer measures | Corpus/consumer pilot, before release readiness | No production scale or agent-context-completeness claim; FND-3 |
 
@@ -453,31 +453,31 @@ Section status: Complete; questions have explicit decision gates.
 | EVD-1 | Markdown Engine 3.5.0 public declarations: EngineDocument, EngineNode, SourceRange, documentQueries; installed docs/contracts/api.md | Package inspection | Public tree/source access; aggregate spans overlap; bundled prose labels an older release so actual exports and probes control | C-1, C-3 |
 | EVD-2 | src/markdowntrace/trace-evidence/extract.ts; graph-validation/validate.ts; graph/model.ts | Source inspection | Table-only discovery, dropped unresolved edges, empty ranges/matrices, separate registry projection | C-1, C-3, C-4, C-5, C-6 |
 | EVD-3 | src/markdowntrace/graph-profile/model.ts and validation modules; graph-validation/run.ts | Source/schema inspection | Closed vocabulary, file-backed validation, unsupported matrix-required-path guard | C-2, C-4 |
-| EVD-4 | src/markdowntrace/public.ts; package.json; tests/test_package_exports.test.ts; tests/fixtures/public-package/consumer.ts.fixture | Producer/consumer inspection | Root-only self-contained public boundary and consumer expectations | C-2, C-4, C-8 |
-| EVD-5 | src/markdowntrace/markdown/scanner.ts, source-slices.ts, definition-facts.ts, reference-facts.ts; [parser probe](document-graph-api/checks/probe-engine.mjs) | Source/runtime probe | Current whole-section ownership; public nodes include exact raw slices and nested list/table/quote structure; inline-code source includes delimiters | C-1, C-3, C-7 |
+| EVD-4 | src/markdowntrace/public.ts; package.json; tests/test_package_exports.test.ts; tests/fixtures/public-package/consumer.ts.fixture; scripts/package-exports/graph-consumer.mjs | Producer/consumer inspection | Retained root and experimental graph imports with installed-package type/runtime proof | C-2, C-4, C-8 |
+| EVD-5 | src/markdowntrace/document-graph/extract.ts, inline.ts, ownership.ts; tests/test_document_graph_links.test.ts | Current runtime and tests | Engine-resolved links, exact source spans and structural ownership across nested layouts | C-1, C-3, C-7 |
 | EVD-6 | src/markdowntrace/registry/derived.ts; markdown/trace-links.ts; existing CI and package checks from merged PR #74 | Source and GitHub evidence | Existing link/registry derivation and compatibility work cannot be treated as the new graph | C-8 |
-| EVD-7 | Companion declarations, consumer/profile examples, independent case ledger and current validation record | Local design checks | Consumer type fit and original design oracle; runtime link/API tests separately prove the implemented subset | C-1 through C-8 |
+| EVD-7 | Companion declarations, consumer/profile examples, current validation record; tests/test_document_graph_api.test.ts | Local design checks and runtime tests | Proposed consumer type fit; runtime link/API tests separately prove the implemented subset | C-1 through C-8 |
 
 ### Rubric Scores
 
 | Axis | Score | Evidence IDs | Finding IDs | Notes |
 | --- | --- | --- | --- | --- |
-| Behavioral fitness | Concern | EVD-2, EVD-5, EVD-7 | FND-1 | APIs retain invalid evidence; source interpretation proven, full API-result proof still required |
+| Behavioral fitness | Concern | EVD-2, EVD-5, EVD-7 | FND-1 | Implemented graph retains invalid evidence; validation/context behavior still needs runnable proof |
 | Consumer fitness | Pass | EVD-4, EVD-7 | FND-2 | Memory-first flow, reusable analysis and narrow query functions |
-| Integration realism | Concern | EVD-1, EVD-5 | FND-1 | Full corpus public-parser source probes pass; production adapter proof remains |
+| Integration realism | Concern | EVD-1, EVD-5 | FND-1 | Runtime adapter has link/layout tests; future context projection remains unproven |
 | Change safety | Pass | EVD-3, EVD-4, EVD-6 | none | Additive recommendation, old schemas and commands preserved |
 | Failure semantics | Pass | EVD-2, EVD-3, EVD-7 | none | Operation errors, graph invalidity, partial analysis and bounded results are distinct |
 | Data and invariant protection | Pass | EVD-1, EVD-5, EVD-7 | FND-4 | Explicit identities, offset units, owner states, immutable runtime handles; exported context retains selection provenance |
 | Operational fitness | Concern | EVD-5, EVD-7 | FND-3 | Caller limits and synchronous operation are explicit; scale thresholds unmeasured |
 | Security and trust handling | Pass | EVD-4, EVD-6, EVD-7 | none | Host owns file access; no remote fetch, executable profile, or automatic agent action |
-| Testability | Concern | EVD-5, EVD-7 | FND-1, FND-3 | Independent source corpus exists; full API-result and real-spec oracle proof remain |
+| Testability | Concern | EVD-5, EVD-7 | FND-1, FND-3 | Focused independent runtime expectations exist; future APIs and real-spec adoption need proof |
 | Implementation proportionality | Pass | EVD-2, EVD-4, EVD-7 | none | No storage/service framework; private indexes and concrete adapter remain internal |
 
 ### Evaluation Findings
 
 | Finding ID | Severity | Axis | Affected contracts | Evidence IDs | Required action | Validation target |
 | --- | --- | --- | --- | --- | --- | --- |
-| FND-1 | Major | Behavioral fitness/integration/testability | C-1, C-2, C-3, C-7 | EVD-1, EVD-5, EVD-7 | The experimental graph/direct-query slice has runtime proof. Prove validation, traversal and context results as those operations are implemented; retain exact owners and offsets. These broader obligations do not block the current link-based slice. | VAL-1, VAL-5, VAL-6; Q-1/Q-2 |
+| FND-1 | Major | Behavioral fitness/integration/testability | C-4, C-6, C-7 | EVD-1, EVD-5, EVD-7 | The experimental graph/direct-query slice has runtime proof. Prove validation, traversal and context results as those operations are implemented; retain exact owners and offsets. These broader obligations do not block the current link-based slice. | VAL-1, VAL-5, VAL-6; Q-1/Q-2 |
 | FND-2 | Minor | Consumer fitness | C-5 | EVD-7 | Addressed in revision 2: lookup returns definitions and a reference count; paged reference items include source occurrences. Avoids large reference payloads on simple lookup and manual source joins. | VAL-4, VAL-8 |
 | FND-3 | Major | Operational fitness/testability | C-3, C-6, C-7 | EVD-5, EVD-7 | Jason selects pilot spec/context oracle; maintainer measures time/memory and agrees budgets before release. Production risk is unusable latency or missing implementer context. | VAL-5, VAL-6; Q-4 |
 | FND-4 | Major | Data and invariant protection | C-7 | EVD-7 | Addressed in revision 2: ContextBundle includes selection query, nodes, predecessors and boundaries. Prevents exported context losing the relationship path explaining inclusion. | VAL-5, VAL-8 |
@@ -486,12 +486,12 @@ Section status: Complete; concerns are bounded by explicit implementation/releas
 
 ## Internal Review Record
 
-- Contract depth calibration: ID2 remains appropriate for the proposed library boundaries; this revision changes the authoring convention without adding a remote service.
+- Contract depth calibration: ID2 remains appropriate for the proposed library boundaries; this revision reconciles current runtime status and removes superseded guidance.
 - Grounding result: Engine 3.5.0 exposes link destinations, reference-definition resolution and complete link-use source maps. The experimental graph/direct-query runtime consumes those public APIs.
 - Rubric result: Graph, profile and query shapes remain the prior proposals. The owner's link decision resolves Q-1 for the experiment; FND-1 and FND-3 now bound the remaining capabilities and release claims.
-- Findings addressed: Revision 7 replaces brace syntax with standard links, records the explicit user decision and removes the stale pre-extractor gate from current guidance.
-- Validation result: The current task and companion record identify structural checks. Runtime link/API tests and the packed consumer verify the implemented subset; draft1 corpus reports remain scoped to their original language.
+- Findings addressed: Revision 8 removes obsolete brace corpus and execution-plan dependencies, updates implemented contract status and preserves future validation/traversal/context semantics.
+- Validation result: The current task and companion record identify structural checks. Runtime link/API tests and the packed consumer verify the implemented subset; obsolete draft1 reports are removed.
 - Remaining findings: Graph policy evaluation, traversal, context projection and representative scale/agent-context proof remain unfinished.
 - Readiness verdict: Runnable experimental graph/direct-query subset, with remaining API designs available for later implementation.
 
-Revision history: Revisions 1–6 developed the API proposals and draft1 brace-language corpus. Revision 7 records the owner's 2026-09-16 standard-link decision and reconciles language guidance with the runnable experimental implementation. The adjacent checksum and companion record identify the current bytes.
+Revision history: Revisions 1–6 developed the API proposals and draft1 brace-language corpus. Revision 7 records the owner's 2026-09-16 standard-link decision. Revision 8 reconciles the full packet and companion evidence with that runnable baseline and removes superseded corpus and planning dependencies. The adjacent checksum and companion record identify the current bytes.
