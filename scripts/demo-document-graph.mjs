@@ -3,6 +3,7 @@ import { parseArgs } from "node:util";
 import {
   analyzeDocument,
   compileProfile,
+  exportMermaid,
   findIncoming,
   lookupIdentifier,
 } from "@jasonbelmonti/markdown-trace/experimental/graph";
@@ -16,18 +17,22 @@ const { values, positionals } = parseArgs({
   allowPositionals: true,
   options: {
     graph: { type: "boolean", default: false },
+    mermaid: { type: "boolean", default: false },
     profile: { type: "string" },
     help: { type: "boolean", short: "h" },
   },
 });
 if (values.help) {
-  console.log(`Usage: node scripts/demo-document-graph.mjs [document.md] [identifier] [--graph] [--profile profile.json]
+  console.log(`Usage: node scripts/demo-document-graph.mjs [document.md] [identifier] [--graph | --mermaid] [--profile profile.json]
 
 Defaults: fixtures/document-graph/mixed-layout.md, REQ-2, bundled REQ/WP/VAL profile.
 --graph emits the full snapshot as JSON instead of the identifier/backlink summary.
+--mermaid emits the graph as Mermaid text instead of JSON (no Markdown fence).
 --profile supplies a document-profile.v1 JSON file. Policy is not evaluated yet.`);
   process.exit(0);
 }
+if (values.graph && values.mermaid)
+  throw new Error("Choose either --graph or --mermaid; use --help.");
 if (positionals.length > 2)
   throw new Error(
     "Expected a document path and optional identifier; use --help.",
@@ -55,7 +60,9 @@ const analysis = unwrap(
   }),
 );
 const graph = analysis.snapshot;
-if (values.graph) {
+if (values.mermaid) {
+  process.stdout.write(exportMermaid(graph));
+} else if (values.graph) {
   console.log(JSON.stringify(graph, null, 2));
 } else {
   const lookup = unwrap(lookupIdentifier(analysis, identifier));

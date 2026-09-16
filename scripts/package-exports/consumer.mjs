@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { run } from "./process.mjs";
 import { runGraphApiSmoke } from "./graph-consumer.mjs";
+import { runGraphDemoSmoke } from "./graph-demo.mjs";
 
 export async function checkPackedConsumer({
   consumerDirectory,
@@ -23,6 +24,7 @@ export async function checkPackedConsumer({
     passingProfile,
   });
   runGraphApiSmoke(consumerDirectory, packageName);
+  await runGraphDemoSmoke(consumerDirectory, repositoryRoot);
   runDeepImportNegatives(consumerDirectory, packageName);
 }
 

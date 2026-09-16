@@ -50,9 +50,9 @@ export const validate: (
 ) => Promise<GraphValidationRunResult> = validateGraphDocument;
 
 import {
-  analyzeDocument, compileProfile, findIncoming, findOutgoing, lookupIdentifier,
+  analyzeDocument, compileProfile, exportMermaid, findIncoming, findOutgoing, lookupIdentifier,
   type AnalysisLimits, type DocumentAnalysis, type DocumentSource, type Outcome,
-  type LookupResult, type ReferencePage, type ReferenceQuery, type TraceProfile,
+  type GraphSnapshot, type LookupResult, type ReferencePage, type ReferenceQuery, type TraceProfile,
 } from "@jasonbelmonti/markdown-trace/experimental/graph";
 
 export const compile: (input: unknown) => Outcome<TraceProfile> = compileProfile;
@@ -60,3 +60,4 @@ export const analyze: (source: DocumentSource, profile: TraceProfile, limits: An
 export const lookup: (analysis: DocumentAnalysis, identifier: string) => Outcome<LookupResult> = lookupIdentifier;
 export const incoming: (analysis: DocumentAnalysis, identifier: string, query?: ReferenceQuery) => Outcome<ReferencePage> = findIncoming;
 export const outgoing: typeof incoming = findOutgoing;
+export const mermaid: (snapshot: GraphSnapshot) => string = exportMermaid;

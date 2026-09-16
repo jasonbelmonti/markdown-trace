@@ -5,7 +5,7 @@ export function runGraphApiSmoke(consumerDirectory, packageName) {
     import assert from 'node:assert/strict';
     import * as graph from ${JSON.stringify(`${packageName}/experimental/graph`)};
     assert.deepEqual(Object.keys(graph).sort(), [
-      'analyzeDocument', 'compileProfile', 'findIncoming', 'findOutgoing', 'lookupIdentifier'
+      'analyzeDocument', 'compileProfile', 'exportMermaid', 'findIncoming', 'findOutgoing', 'lookupIdentifier'
     ]);
     const unwrap = result => { assert.equal(result.ok, true); return result.value; };
     const profile = unwrap(graph.compileProfile({
@@ -26,6 +26,11 @@ export function runGraphApiSmoke(consumerDirectory, packageName) {
     const match = incoming.items[0];
     assert.equal(match.relationship.source.identifier, 'WP-1');
     assert.equal(match.relationship.kind, 'implements');
+    const mermaid = graph.exportMermaid(analysis.snapshot);
+    assert.ok(mermaid.includes('n0["REQ-1"]'));
+    assert.ok(mermaid.includes('n1["WP-1"]'));
+    assert.ok(mermaid.includes('n1 -->|"implements"| n0'));
+    assert.equal(graph.exportMermaid(JSON.parse(JSON.stringify(analysis.snapshot))), mermaid);
     assert.equal(text.slice(match.occurrence.range.start.offset, match.occurrence.range.end.offset), '[REQ-1](ctx://trace/entity/REQ-1?rel=implements)');
   `;
   run(process.execPath, ["--input-type=module", "--eval", program], {
