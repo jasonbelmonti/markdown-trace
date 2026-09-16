@@ -1,10 +1,20 @@
 # Current implementation
 
-Inspected baseline: `016dd0905d9f8103dc4dbd528e0b9fc15b516723`, 2026-09-13. This page describes existing code. The [overview](design/markdown-trace-document-graph-overview.md) describes the target; the [next task](tasks/document-graph-contract.md) resolves language and API contracts.
+The first document-wide graph runtime is implemented on the runnable graph branch in [PR #78](https://github.com/jasonbelmonti/markdown-trace/pull/78), following the merged PR #76 design baseline. The [experimental API guide](experimental-document-graph.md) gives runnable examples. The [overview](design/markdown-trace-document-graph-overview.md) describes the broader target.
+
+## Document-wide graph and direct queries
+
+The `experimental/graph` package entry point exports `compileProfile`, `analyzeDocument`, `lookupIdentifier`, `findIncoming`, and `findOutgoing`. Analysis uses Markdown Engine's public tree and source maps across headings, paragraphs, lists, blockquotes and tables, under `markdown-trace.identity.draft2`. Standard Markdown links carry declarations (`?role=definition`) and typed references (`?rel=implements`) in `ctx://trace/entity/ID` destinations; bare IDs remain generic mentions.
+
+The immutable snapshot preserves declaration/mention distinctions, duplicate and missing definitions, unknown vocabulary, ambiguous ownership, source fragments and diagnostics. Incoming/outgoing indexes support source-ordered pagination and relationship filters. Limits apply to source bytes and occurrence count. Analysis coverage and graph validity are separate: profile policy is compiled but not evaluated in this slice.
+
+`npm run demo:graph` prints a mixed-layout summary and two located backlinks to `REQ-2`. `node scripts/demo-document-graph.mjs path/to/spec.md --graph` prints the full snapshot from a built checkout; `--profile path/to/profile.json` supplies domain vocabulary. Tests exercise link declarations and references across layouts, Engine-resolved reference links, malformed destinations, exact ranges, API ingress, immutability, pagination and clean-package consumption. This is initial correctness evidence, not release-scale or consuming-agent validation.
+
+Graph validation, traversal, context projection, stable syntax/export approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces.
 
 ## Public API and CLI
 
-The package-root JavaScript export is `validateGraphDocument({ documentPath, profilePath, cwd? })`, plus self-contained result types. It reads local files and returns `pass`, `fail`, or `operational-error` in `markdown-trace.graph-validation-result.v1`. No public graph-analysis, backlinks, traversal, or context API exists.
+The package-root JavaScript export is `validateGraphDocument({ documentPath, profilePath, cwd? })`, plus self-contained result types. It reads local files and returns `pass`, `fail`, or `operational-error` in `markdown-trace.graph-validation-result.v1`. The separate experimental entry point above provides analysis and direct queries; the root API remains the legacy table validator.
 
 ```sh
 node dist/markdowntrace/cli.js graph-validate \
@@ -16,7 +26,7 @@ The profile argument is a file path, not a built-in alias. JSON is the only form
 
 Help calls graph validation, help, and version stable commands. This identifies the existing pre-release interface boundary, not comprehensive graph verification. The manifest remains private; release and new-version compatibility are later work.
 
-## Extraction and validation limits
+## Legacy extraction and validation limits
 
 | Concern | Existing behavior | Remaining boundary |
 | --- | --- | --- |
@@ -31,7 +41,7 @@ Help calls graph validation, help, and version stable commands. This identifies 
 | Matrices | Matrix-required-path profiles cause compatibility errors; completed results contain no matrix-coverage evaluations. | Matrix assertion implementation. |
 | Query/context | No public surface. | Shared indexes, fragment ownership, queries, and projection. |
 
-Controlled baseline probes showed the positive execution fixture passed and a removed required validation connection failed. Empty input, a duplicate objective, an extra dangling work reference, and an undefined prose range endpoint still passed. Zero evaluated paths do not establish spec validity. The 219 existing tests protect implemented boundaries, not the proposed product.
+Controlled baseline probes showed the positive execution fixture passed and a removed required validation connection failed. Empty input, a duplicate objective, an extra dangling work reference, and an undefined prose range endpoint still passed. Zero evaluated paths do not establish spec validity. The legacy tests protect these compatibility boundaries. The new graph tests separately exercise document-wide behavior.
 
 ## Registry and trace-link compatibility
 
@@ -60,4 +70,4 @@ Omitting `--check` from `derive-sidecar` intentionally writes the generated arti
 
 ## Implementation resumption
 
-Reuse Markdown Engine integration, source locations, hashing, structured errors, atomic output, and package tests. Redesign the table-specific evidence model and closed vocabulary through the current contract task. Deliver document-wide lookup/backlinks early, then profile validation and bounded context queries over the same graph. Align release documentation/distribution after the contract is proven.
+Reuse Markdown Engine integration, source locations, hashing, structured errors, atomic output, and package tests. Extend the experimental shared graph with profile validation and bounded context queries. Keep the legacy table-specific evidence model and closed vocabulary isolated until an explicit migration. Align release documentation/distribution after the contract is proven.

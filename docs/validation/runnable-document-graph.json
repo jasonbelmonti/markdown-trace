@@ -1,0 +1,12 @@
+{
+  "artifact": "docs/tasks/runnable-document-graph.md",
+  "revision": 4,
+  "rawSha256": "bf42a3e3cb86f9f089456ab42cc315c5304187e1b4fbed88abc16e21846bccad",
+  "validatedAt": "2026-09-16T13:28:37.141300+00:00",
+  "engineVersion": "3.6.0",
+  "inputHash": "3ca93249f7e1e7ead9b353b7d209b56d6688866b38a2656eb8f9c5279d30840a",
+  "profileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d",
+  "valid": true,
+  "diagnostics": [],
+  "scope": "Task structure and criterion/evidence coverage for the feature PR; baseline cleanup is a separate PR. Runtime verification is reported against the implementation commit in the PR."
+}

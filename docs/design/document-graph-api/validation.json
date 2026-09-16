@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-09-14T15:59:26.762966+00:00",
+  "validatedAt": "2026-09-16T12:54:14.057636+00:00",
   "implementationBaseline": "155a9157bf3a48540612c6dcf79266b016deff4f",
-  "packetRevision": 6,
+  "packetRevision": 7,
   "versions": {
     "node": "v22.20.0",
     "parser": "3.5.0",
@@ -14,8 +14,8 @@
     "rawSha256": "55bbfbe9a1f5adebdd47027e0cccaba9d6907199c9e8e94e01d82b1bcd247eec"
   },
   "hashes": "Artifact SHA-256 values identify raw file bytes. Engine inputHash/profileHash use the engine identity scheme.",
-  "productionSurfacesChanged": false,
-  "checks": {
+  "productionSurfacesChanged": true,
+  "draft1Checks": {
     "scope": "Design corpus, independent semantic interpretation, source-map feasibility and retained compatibility checks. No proposed Trace API runtime exists.",
     "declarations": {
       "status": "pass",
@@ -288,11 +288,11 @@
     },
     {
       "file": "docs/README.md",
-      "sha256": "99c92a244ba40d6a1bedd2dd6421c50cc214cb26bb9fc02c36d59aa1837a0ae5"
+      "sha256": "2d7c57b26a60b1a75599ca6d8c429ce0200097a96f8f3cb1b4e0566e05e491d1"
     },
     {
       "file": "docs/design/document-graph-api/README.md",
-      "sha256": "46a44611144e59d00f58852bd318f1c85553d1b55e71ee99888f0cfd86374732"
+      "sha256": "24fd59cbe60e5e087cec32f7bee83ca3c47814dc4de1b99ecc922f987608a0e0"
     },
     {
       "file": "docs/design/document-graph-api/checks/check-examples.mjs",
@@ -316,7 +316,7 @@
     },
     {
       "file": "docs/design/document-graph-api/contracts/profile.d.ts",
-      "sha256": "665c90f5c3224f37deb33f0411d38dba9f7013033301817313ed8bf284a6118b"
+      "sha256": "dbfc30ba4e784efb655fa4cd9ab7544680141ccee7859c4a60a1dd39d8252743"
     },
     {
       "file": "docs/design/document-graph-api/contracts/query.d.ts",
@@ -948,7 +948,7 @@
     },
     {
       "file": "docs/design/document-graph-api/examples/profile.ts",
-      "sha256": "49e84106681eea7bb1e086df79df2a27f2254d46acc6a53e211122aa7a4b2ab7"
+      "sha256": "eac31cf78e39e84efa27d31ee4ab5451a994e93458a950240fa4a037690714e3"
     },
     {
       "file": "docs/design/document-graph-api/examples/source-inventory.json",
@@ -960,11 +960,11 @@
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.md",
-      "sha256": "14fb396a2a5927ecfb3fdd8863a14cbf90b9a1ce295c02df3e40d794af13273d"
+      "sha256": "2fc5ba98c8eecf9f1b39634935e1184957dfb279556c313330e5e1e94b51839f"
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.sha256",
-      "sha256": "8448bb6a39a59ddb31a14c7337df454abca6a706e40da56f3e8665a7bb1d8515"
+      "sha256": "4309bf64c0e87c1ffbb46e01916b00772843efa5e2867f8d1fc07023cb92807d"
     }
   ],
   "remainingGates": [
@@ -973,5 +973,25 @@
     "Q-1/Q-2: owner syntax selection and authoring-fit acceptance before extraction.",
     "Q-3: public export/schema acceptance before the new package surface.",
     "Q-4: representative context oracle and scale targets before pilot/release claims."
-  ]
+  ],
+  "navigationUpdate": {
+    "date": "2026-09-16",
+    "scope": "The owner selected standard Markdown links. The current packet, profile declaration and example use draft2. The older brace corpus remains draft1 design evidence and is not current runtime proof."
+  },
+  "draft1ValidatedAt": "2026-09-14T15:59:26.762966+00:00",
+  "checks": {
+    "scope": "Current draft2 packet structure and design declaration compilation. Earlier source-oracle checks remain explicitly draft1 evidence. Runtime proof is reported against the PR implementation commit.",
+    "structure": {
+      "status": "pass",
+      "engineVersion": "3.6.0",
+      "inputHash": "c87a01343895d6b27e4d085f835b2792690a1b3c1188f0ce0509dedb2e0cdb5e",
+      "profileHash": "20e664060a8b483398cd055ba7f26259cbbf5eb99986ba2c7d6d2a521a6b777b",
+      "diagnostics": []
+    },
+    "declarations": {
+      "status": "pass",
+      "command": "./node_modules/.bin/tsc -p docs/design/document-graph-api/tsconfig.json",
+      "exitCode": 0
+    }
+  }
 }

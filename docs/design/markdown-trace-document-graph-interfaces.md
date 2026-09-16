@@ -1,5 +1,7 @@
 # Markdown Trace Document Graph Interface Design Packet
 
+Current implementation authority: the owner selected standard Markdown links on 2026-09-16. The [experimental guide](../experimental-document-graph.md) defines draft2 URI semantics and the [runnable task](../tasks/runnable-document-graph.md) bounds this implementation. Earlier draft1 brace-language examples remain design evidence only. Graph validation, traversal and context interfaces below remain proposed.
+
 ## Document Control
 
 | Field | Value |
@@ -7,17 +9,17 @@
 | Title | Markdown Trace Document Graph APIs |
 | Contract depth | ID2 Standard |
 | Status | Draft for interface review |
-| Revision | 6 |
+| Revision | 7 |
 | Source authority | Owner's document-graph vision and API-design request; merged direction in PR #74; source baseline dce4ac19f8f25f4add7c38898e31934eb70de592 |
 | Author | Codex |
 | Reviewers | Codex internal evaluation; project owner for authoring fit and API acceptance |
-| Last updated | 2026-09-14 |
+| Last updated | 2026-09-16 |
 | Related design/spec/tickets | [Direction](markdown-trace-document-graph-overview.md); [contract/corpus task](../tasks/document-graph-contract.md); [implementation baseline](../current-implementation.md) |
 | Companion artifacts | [TypeScript declarations](document-graph-api/contracts/index.d.ts); [consumer example](document-graph-api/examples/consumer.ts); [profile example](document-graph-api/examples/profile.ts); [case ledger](document-graph-api/examples/cases.md) |
 
 ## 0. Executive Contract Summary
 
-- Decision requested: Review the API boundaries and recommended authoring rules below. Revision 6 materializes the complete language/scenario source corpus and records its independent interpretation gate; full API-result proof and owner authoring-fit acceptance remain before extraction.
+- Decision requested: Review the remaining validation, traversal and context boundaries. Standard-link authoring is selected for the experimental graph/direct-query slice; stable release approval remains separate.
 - Source design summary: Recognize constrained identities and relationships throughout a spec, build one graph with source evidence, validate its relationships, and retrieve related implementation context.
 - Highest-risk boundaries: Declaration versus mention and source ownership (RISK-1); policy accidentally changing graph facts (RISK-2); context exceeding its selection or hiding omissions (RISK-3).
 - Implementation slice covered: An in-memory analysis handle, extensible profile data, validation results, identifier lookup, direct reference queries, bounded traversal, and source context. Declaration files are design artifacts, not installed APIs.
@@ -82,8 +84,8 @@ Section status: Complete; assumptions remain recommendations, not implied owner 
 | IF-2: validateGraphDocument and result v1 | Public API | Markdown Trace | owned-risky | tested, versioned; narrow table/path semantics | Package consumer fixture and CLI | Preserve existing meaning and root export |
 | IF-3: graph-profile.v1 and trace-evidence.v1 | Profile/evidence schema | Markdown Trace | owned-risky | schema-validated but some accepted operators are unevaluated | Table extractor, path validator, fixtures | Do not reinterpret these files as the new profile |
 | IF-4: Registry, type profiles, ctx://trace and generated sidecars | File and internal API | Markdown Trace | owned-risky | legacy, extensively tested | derive, validate, sidecar and migration commands | Retain independently; no automatic translation or authority flip |
-| IF-5: Package export map and CLI transport | Distribution/CLI | Markdown Trace | owned-changeable | tested root-only import and atomic-output behavior | Node consumers and CLI users | Adding a graph subpath deliberately changes export tests later |
-| IF-6: Shared analysis/query/context API | Library API | Markdown Trace | not-yet-real | draft; no runtime implementation | Spec tools and implementer agents | Shape around consumer needs without legacy table anchors |
+| IF-5: Package export map and CLI transport | Distribution/CLI | Markdown Trace | owned-changeable | tested root and experimental graph imports; atomic-output behavior | Node consumers and CLI users | Experimental graph consumer checks are implemented; stable exports remain later work |
+| IF-6: Shared analysis/query/context API | Library API | Markdown Trace | owned-changeable | experimental graph/direct queries implemented; context proposed | Spec tools and implementer agents | Shape around consumer needs without legacy table anchors |
 
 ### Actors and Systems
 
@@ -187,7 +189,7 @@ Proposed schema literals ending in v1 reserve independent new formats. They do n
 - Source IDs: OBJ-1, OBJ-3, CON-4, CON-6.
 - Existing interface relationship: New graph model; no table anchor, Engine target, registry object, or parser type crosses this boundary.
 - Preconditions/inputs: Nonempty documentId is an opaque caller identifier. Text must be well-formed Unicode; no newline or Unicode normalization. The document ID does not confer filesystem access.
-- Postconditions/outputs: Every recognized label has one IdentifierRecord; its declaration state is resolved, missing, or duplicate. Each occurrence's exact range covers the complete lexical expression, including marker braces or identifier-only code delimiters. Each reference occurrence produces one Relationship, including unowned/ambiguous sources and dangling targets.
+- Postconditions/outputs: Every recognized label has one IdentifierRecord; its declaration state is resolved, missing, or duplicate. Each occurrence's exact range covers the complete lexical expression, including whole Markdown links or identifier-only code delimiters. Each reference occurrence produces one Relationship, including unowned/ambiguous sources and dangling targets.
 - Invariants: Relationship target equals its reference occurrence's identifier. Owned sources identify their exact declaration occurrence; duplicate labels do not erase those distinctions. Each occurrence points to a containing fragment. All fragment dependencies exist and form an acyclic required-context relation.
 - Error model: Missing usable offsets for accepted content produces source-map-unavailable; fabricated or approximate token locations are forbidden. Semantic ambiguity is retained in diagnostics and coverage, not erased.
 - Authorization/tenancy: Common host-owned rules; text remains private to the handle unless explicitly queried/exported.
@@ -221,40 +223,20 @@ Initial operators are entity-count and require-relation. minEntities must be exp
 
 Entity counts include distinct labels with a unique definition and known entity kind. Referenced-only labels do not satisfy an entity-count obligation. Unknown prefixes remain graph facts with null entityKind and fail integrity. Unknown relation slugs remain facts and fail the closed allowlist.
 
-Candidate interpretation input for API examples, pending Q-1/Q-2 acceptance:
+Current interpretation uses `markdown-trace.identity.draft2`. Standard Markdown links carry explicit declarations and typed references; bare identifiers remain low-overhead generic mentions. Markdown Engine owns link parsing, reference-definition resolution and source maps. Trace owns the constrained URI convention described in the [experimental guide](../experimental-document-graph.md).
 
-| Construct | Candidate meaning | Boundary |
+| Rule ID | Current decision | Observable boundary |
 | --- | --- | --- |
-| REQ-17 | Generic references relationship from the owning declaration | Canonical ID regex: [A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+; case-sensitive; no substring match inside a longer ID/word |
-| {#REQ-17} | Explicit declaration | Marker is consumed once; its inner label is not also a reference |
-| {implements:REQ-17} | Observed typed reference | Relation slug is lexical data; policy may forbid it but cannot discard it |
-| Identifier-only inline code | Generic reference, for conventional monospace labels | Other inline code and fenced/indented code remain literal |
-| Markdown links | Scan visible textual labels using the same rules | Never scan/fetch destinations; image metadata, Engine HTML nodes, frontmatter, and link-definition metadata are literal |
+| LEX-1 | IDs match [A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+; the first segment selects the profile prefix. | Bare mentions cannot be substrings of longer identifier-like words or assembled across formatting leaves. |
+| LEX-2 | A link to ctx://trace/entity/ID?role=definition declares; ?rel=RELATION creates a typed reference; no query creates a generic reference. | Relation names match [a-z][a-z0-9]*(?:-[a-z0-9]+)*. URI targets, not labels, establish identity. Unknown well-formed vocabulary remains evidence. |
+| LEX-3 | Engine-parsed inline, reference-style and angle-bracket links are interpreted from their resolved destination. | Each Trace link yields one occurrence covering its full source use; labels are not scanned again. A reference definition supplies a destination, not an entity occurrence. |
+| LEX-4 | Non-Trace link labels and emphasis remain eligible for generic mentions; ordinary destinations, titles and images are literal. | Engine HTML nodes are literal; no HTML parser or secondary Markdown parser is added. |
+| LEX-5 | Malformed ctx: destinations produce markdown-trace.language.malformed-link and no label fallback. | Reject credentials, ports, fragments, extra path segments, encoded components, duplicate/unknown query fields and mixed declaration/relationship fields. Never fetch a destination. |
+| LEX-6 | Generic bare IDs retain raw-source boundaries and backslash parity. | Encoded spellings cannot assemble generic IDs. Brace markers have no special role in draft2. |
+| LEX-7 | An Engine inlineCode node is a generic reference only when its normalized text is one canonical ID and its raw source has no newline. | Other code, fenced/indented examples and frontmatter remain literal. |
+| LEX-8 | Ownership and policy operate after collection; malformed link labels cannot supply fallback references. | Malformed-link diagnostics cover the full link use and make analysis partial. Missing/duplicate definitions remain separate graph integrity states. |
 
-Bare identifiers preserve low annotation overhead for references. Explicit declarations avoid first-occurrence-wins. The credible alternative is a leading "ID:" declaration inferred from structural position, including table ID columns. It is less visible but reintroduces layout-dependent ambiguity. This packet recommends explicit markers for the proving corpus; it does not claim existing specs already follow that language.
-
-The following decisions complete the recommended language for the proving corpus. They remain maintainer recommendations pending Jason's syntax selection and authoring-fit acceptance; the corpus proof is recorded separately. The [rule/case index](document-graph-api/examples/corpus/manifest.json) maps 55 paired language fixtures and 24 API scenarios to independently authored source annotations. The [corpus guide](document-graph-api/examples/corpus/README.md) defines annotation conventions and the boundary before EP-ACT-3 full API-result expansion.
-
-| Rule ID | Recommended decision | Observable boundary |
-| --- | --- | --- |
-| LEX-1 | IDs use the canonical uppercase ASCII regex above. The segment before the first hyphen is the profile prefix. | Case is significant. A bare ID must not touch a Unicode letter, number, combining mark, underscore or hyphen in the visible inline text, including across formatting boundaries. No substring extraction from a longer word. Dots and commas separate IDs; no range expansion. |
-| LEX-2 | A declaration is exactly {#ID}; a typed reference is exactly {relation:ID}. Relation syntax is [a-z][a-z0-9]*(?:-[a-z0-9]+)*. | No internal spaces, newline, range shorthand or multiple targets. A marker consumes its ID once. Unknown but well-formed prefixes or relation names remain facts and are judged by validation. |
-| LEX-3 | A recognized expression must have its canonical spelling in contiguous original source bytes within one Engine text leaf, except the identifier-only code rule. | Do not recognize decoded character references as IDs, join tokens across emphasis/link boundaries or normalize Unicode/case. An identifier-like word touching a character-reference unit is literal, including a raw suffix such as EQ-1 in &#82;EQ-1. Record the exclusion without discarding unrelated valid tokens in the same leaf. |
-| LEX-4 | Emphasis/strong/delete wrappers and visible link labels are transparent around a complete expression; their delimiters are not part of a text occurrence. | **REQ-1** can be a reference; REQ-**1** cannot. Link destinations/titles, autolinks, images/alt text and definition metadata are excluded. Engine HTML nodes are literal; text nodes between inline HTML tags remain eligible Markdown text. No HTML tree interpretation is added. |
-| LEX-5 | Reserve unescaped brace groups before scanning bare IDs. Classify marker-like candidates using the formatting-transparent raw-text view defined below; recognize valid markers only from exact source spelling. Ordinary groups are literal. | A candidate view, after optional horizontal whitespace, starts with # or an ASCII name followed by optional whitespace and a colon. A noncanonical marker-like group yields malformed-expression and no inner occurrences. Balanced nested braces are one noncanonical group. An unclosed group ends at the physical line/container boundary. Stray closing braces are punctuation. |
-| LEX-6 | An odd immediately preceding run of backslashes escapes a bare ID or brace group; an even run does not. This is a Trace lexical escape, independent of rendered Markdown escaping. | The escaped expression is literal, including every inner ID in an escaped group. A backslash within an identifier-like word makes that word literal. Character references and escaped spellings cannot construct a marker. |
-| LEX-7 | An Engine inlineCode node is a generic reference only when its normalized text is exactly one canonical ID and its raw source has no newline. | Engine-recognized code padding/backtick-run length may vary; the occurrence covers the entire raw code span. Marker text in inline code, multi-ID spans, other inline code, fenced/indented code and Engine frontmatter are literal. A heading called Example does not alter these rules. |
-| LEX-8 | Ownership and policy operate after lexical collection; malformed reserved syntax never falls back to generic references. | A marker-like group split by formatting, including its prefix, emits malformed-expression and suppresses all inner tokens. Group recovery is local to the containing heading/paragraph/table cell and physical line; it never consumes a later line or another cell. A marker-like group crossing an excluded inline node is malformed; its inner content remains suppressed. |
-
-A brace group is the outer opening brace through its matching closing brace, counting nested unescaped braces in the same inline container and physical line. Inline containers are headings, paragraphs and table cells. Excluded inline nodes are opaque units: their text, destinations and braces do not participate in matching, and crossing one prevents marker recognition. A soft/hard line break closes an unfinished group. Group shielding applies before the normal per-leaf scan, so {implements:**REQ-1**} cannot leak a generic REQ-1 reference. Escaping shields a whole group before marker-like classification. The scanner uses Engine structure to establish these boundaries; it does not parse Markdown itself. An unclosed group's recovery range reaches the earlier physical-line or containing Engine inline-container source boundary, including trailing whitespace inside that boundary; it is not trimmed to the final text leaf. Thus LANG-45 covers offsets [56,74), including the single padding space before the next cell's pipe, and never consumes the next cell.
-
-For diagnostic-candidate classification only, concatenate the original raw text-leaf slices inside the group in source order, descending through emphasis/strong/delete wrappers and visible link labels. Omit those wrappers' syntax; preserve raw textual punctuation, backslashes and character-reference spellings without decoding. Each excluded inline node, including inline code, contributes one opaque barrier that cannot count as whitespace, a name character, # or a colon. A prefix cannot be assembled across that barrier. Do not use the parent's rendered/aggregate text. Thus {**implements**:REQ-1}, {imple**ments**:REQ-1} and {**#REQ**-1} are malformed candidates; {**note** REQ-1} is an ordinary literal group. A prefix supplied only by code or encoded characters stays literal. Candidate classification never creates a graph occurrence: even a candidate whose view looks canonical must pass LEX-2/LEX-3 against one contiguous original text leaf. A complete marker wrapped in emphasis remains valid.
-
-Formatting transparency follows Engine nodes, not punctuation that merely resembles Markdown delimiters: Engine 3.5.0 parses {**#**REQ-1} as plain text, so its asterisks remain in the candidate view and the group is ordinary literal. Trace does not reinterpret those asterisks as a wrapper. In contrast, {**#REQ**-1} contains an Engine strong wrapper, yielding a marker-like candidate that fails exact-source recognition.
-
-For marker-like classification, an ASCII name is one or more ASCII letters, digits, underscores or hyphens; this deliberately includes invalid relation names so they receive a language diagnostic. Horizontal whitespace is space or tab. Character-reference units for LEX-3/LEX-6 are semicolon-terminated raw spellings: ampersand followed by an ASCII letter and optional ASCII letters/digits, or ampersand-number-sign followed by decimal digits, or ampersand-number-sign-x/X followed by hexadecimal digits. Do not decode them or require a named reference to exist in an HTML dictionary. A raw spelling adjoining such a unit without punctuation/whitespace separation cannot supply a partial ID. Full tokens elsewhere in that same text leaf remain eligible. Literal and excluded ranges retain original source coordinates.
-
-malformed-expression is the diagnostic code markdown-trace.language.malformed-expression, with severity error, the original group range, and any enclosing owner information available. Its range includes malformed delimiters but excludes the following line break. It makes coverage partial and validation fail. Missing/duplicate definitions remain separate integrity failures; a fully scanned dangling reference alone does not make coverage partial. Known literal exclusions do not produce errors or partial coverage. Unexpected Engine node kinds that cannot be classified safely produce markdown-trace.language.unsupported-node and partial coverage; missing usable source maps still fail the operation under C-1/C-3.
+The supported URI forms and exclusions are specified once in the experimental guide. The runtime fixture is fixtures/document-graph/mixed-layout.md; tests/test_document_graph_links.test.ts asserts source facts, owner selection and exact link ranges. The draft1 corpus and its pre-runtime interpretation reports do not prove draft2 conformance. Parser/unsupported-node failures retain their existing behavior; missing usable source maps fail the operation.
 
 ### C-3: analyzeDocument
 
@@ -269,7 +251,7 @@ malformed-expression is the diagnostic code markdown-trace.language.malformed-ex
 - Error model: invalid-input, analysis-limit, source-map-unavailable. Parse/normalization findings are retained and deduplicated by code/range/message; parser errors make coverage partial, while warnings alone do not. Absent usable source mapping is an operation failure.
 - Authorization/tenancy: Common rules; files and parser internals remain outside the signature.
 - Idempotency/retry/ordering: Common rules; no retry needed without changed input or limits.
-- Versioning/compatibility: Language identifier and analyzer/parser versions participate in analysis identity. The draft language is explicitly not the legacy ctx://trace language.
+- Versioning/compatibility: Language identifier and analyzer/parser versions participate in analysis identity. Draft2 interprets ctx://trace entity URIs with explicit declaration/relation fields and canonical uppercase IDs. Legacy registry/link commands retain their separate behavior; draft1 profiles are rejected by the experimental runtime.
 - Observability: Complete/partial coverage, exact exclusions, diagnostics, source/profile identities and fact counts.
 - Validation evidence: VAL-1, VAL-6; EVD-1, EVD-2, EVD-5.
 
@@ -277,7 +259,7 @@ Recommended ownership rules are structural and order-independent within a declar
 
 | Rule ID | Recommended decision | Observable boundary |
 | --- | --- | --- |
-| OWN-1 | Every explicit declaration is retained, wherever it occurs in an eligible heading, paragraph, list introduction or table row. The containing block determines scope; marker position within that block does not. | A reference before its declaration in the same paragraph has that declared owner. All definitions are collected before target resolution; first occurrence never means definition. |
+| OWN-1 | Every explicit declaration is retained, wherever it occurs in an eligible heading, paragraph, list introduction or table row. The containing block determines scope; declaration-link position within that block does not. | A reference before its declaration in the same paragraph has that declared owner. All definitions are collected before target resolution; first occurrence never means definition. |
 | OWN-2 | A heading declaration owns the heading and its section until the next heading of equal or shallower depth in the same container. | A heading without a declaration still closes a preceding same-level declaration scope. Shallower containing declaration scopes can remain active. Nested-container headings do not close outside sections. |
 | OWN-3 | A declaration in the first paragraph child of a list item, when that paragraph is the item's first block, owns the whole item. Other paragraph declarations own only their paragraph. | Sibling items do not inherit each other's owners. Nested items inherit a containing owner until their own declaration shadows it. A paragraph inside a quote does not acquire ownership of the entire quote. |
 | OWN-4 | A declaration in any table cell owns that row, including a header row. Multiple declarations across its cells share the same scope. | Header ownership does not propagate to data rows. Header references without a declaration use the enclosing scope. A header with no identity occurrences remains structural support; a header carrying graph facts has its corresponding semantic owner. Delimiter rows are always structural. |
@@ -285,7 +267,7 @@ Recommended ownership rules are structural and order-independent within a declar
 | OWN-6 | A heading's container is its nearest ancestor list item, blockquote or document. Container exit ends its scope. Child declarations shadow only their own bounded content. | Reference ownership resumes in the still-active outer scope after a child scope ends. A paragraph declaration does not own later paragraphs. A declaration does not leak out of its list/quote merely because its heading has no following peer. |
 | OWN-7 | Context ownership follows the resolved scopes, independently of validation permission. Partition parent context around descendant-owned content rather than including its entire enclosing section. | Keep source fragments contiguous and preserve required list/quote syntax; headings and table headers may be supporting fragments. Structural support without a source reference does not fail ownership integrity. Literal code may belong to an entity's context while contributing no graph occurrences. |
 
-Row/paragraph scopes take precedence over a containing section; a nested heading scope takes precedence over its enclosing list-item scope. A header carrying no graph facts is unowned support, as in the initial mixed-layout ledger. Supporting header/delimiter ranges remain available to selected table rows regardless of whether a header also has semantic ownership. The paired occurrence/fragment annotations and EP-GATE-1 independent interpretations record the source-level proof for these recommendations. Complete validation/query/context result expectations and their generalized checker remain EP-ACT-3; owner authoring-fit acceptance is separate.
+Row/paragraph scopes take precedence over a containing section; a nested heading scope takes precedence over its enclosing list-item scope. A header carrying no graph facts is unowned support, as in the initial mixed-layout ledger. Supporting header/delimiter ranges remain available to selected table rows regardless of whether a header also has semantic ownership. Link runtime tests verify these ownership rules for the current slice. Full validation/traversal/context result proofs remain follow-up work; draft1 annotations are not the new language authority.
 
 ### C-4: validateGraph
 
@@ -378,13 +360,13 @@ Selecting all candidate owners does not turn ambiguous ownership into joint owne
 - Error model: Existing transport/error contract remains; the new memory APIs use Outcome. A future CLI must explicitly map report indeterminate before shipping.
 - Authorization/tenancy: Existing file access and atomic-output protections stay owned by their adapters.
 - Idempotency/retry/ordering: Existing no-write checks and deterministic serialization remain.
-- Versioning/compatibility: Package version changes independently from schema versions. The graph subpath is a recommendation; root-only package tests must be deliberately extended when it becomes real.
+- Versioning/compatibility: Package version changes independently from schema versions. The experimental/graph subpath is implemented and package-tested. A stable graph subpath remains a recommendation.
 - Observability: Existing CLI metadata plus new graph/report identities once implemented.
 - Validation evidence: VAL-7, VAL-8; EVD-4, EVD-6.
 
 No automatic registry-to-new-graph adapter is promised: the registry graph lacks enough occurrence and ownership evidence for a lossless conversion. The original Markdown must be analyzed under an explicit new interpretation policy.
 
-Section status: Complete as an API recommendation; C-2/C-3 authoring details remain subject to Q-1/Q-2.
+Section status: API proposals retained; C-2/C-3 use the selected experimental link convention. Validation, traversal and context remain future work.
 
 ## 6. State, Fault, and Misuse Contracts
 
@@ -422,7 +404,7 @@ Section status: Complete.
 
 | Validation ID | Contract IDs | Method | Evidence required | Owner |
 | --- | --- | --- | --- | --- |
-| VAL-1 | C-1, C-3 | Independent source/ownership corpus and adapter probe | Equivalent heading/prose/list/quote/table facts, nested scope, forward refs, exact occurrence ranges; full lexical ledger before extractor | Maintainer and owner |
+| VAL-1 | C-1, C-3 | Independent source/ownership corpus and adapter probe | Equivalent heading/prose/list/quote/table facts, nested scope, forward refs, exact occurrence ranges from hand-authored link cases and runtime assertions | Maintainer and owner |
 | VAL-2 | C-2, C-4 | Profile and policy contract cases | Invalid schema/operator rejection, explicit empty policy, distinct hashes, rule counts, unchanged facts under policy change | Maintainer |
 | VAL-3 | C-1, C-4, C-5 | Negative oracle and direct query cases | Duplicates, dangling/unowned/forbidden refs remain queryable and fail appropriate rules | Maintainer/reviewer |
 | VAL-4 | C-5, C-6 | Hand-audited graph examples | Backlink/outgoing agreement, repeated evidence, pagination, cycles, canonical shortest paths and visible traversal bounds | Maintainer/reviewer |
@@ -431,7 +413,7 @@ Section status: Complete.
 | VAL-7 | C-2, C-8 | Existing compatibility and new package consumer checks | Existing root behavior retained, old schema rejected by new API, intentional graph subpath declaration closure | Maintainer |
 | VAL-8 | C-2, C-8 | Type-check proposed consumer and structural artifact validation | Compilable signatures/profile, Markdown Engine profile pass, source/checksum evidence | Codex/maintainer |
 
-Current evidence establishes type compatibility, structural document validity, full-corpus parser/source feasibility and independently reviewed source interpretations. It does not establish runtime correctness for these unimplemented APIs. The [case ledger](document-graph-api/examples/cases.md) is independently authored design evidence; production tests must later execute those expectations.
+Current runtime tests exercise the experimental analysis and direct queries using standard links. The [case ledger](document-graph-api/examples/cases.md) remains draft1 design evidence for broader API scenarios; it is not draft2 language conformance. Validation, traversal and context still require their own runnable proof.
 
 Section status: Complete as a validation plan.
 
@@ -453,12 +435,12 @@ Section status: Complete.
 
 | Question ID | Question | Owner | Due date or decision point | Impact if unresolved |
 | --- | --- | --- | --- | --- |
-| Q-1 | Select explicit declaration/typed-reference markers or the structural alternative. Revision 6 recommends LEX-1 through LEX-8; no explicit owner selection has been recorded. | Jason with maintainer recommendation | Before implementing extraction or freezing the language identifier | The recommendation and case index can proceed; selection is not inferred from authorization to execute or repair the recommendation |
-| Q-2 | Independently prove and review the recorded LEX-1 through LEX-8 and OWN-1 through OWN-7 recommendations. | Maintainer; Jason judges authoring fit | Paired lexical/fragment corpus and independent interpretation before extractor implementation | Paired source/owner annotations and their independent interpretation gate are recorded; full API-result/context proof and owner authoring-fit acceptance remain FND-1 |
-| Q-3 | Accept the additive graph package subpath and reserved new schema names? | Maintainer and Jason | Before public export implementation | Existing package unchanged; draft import path remains a recommendation |
+| Q-1 | Resolved for the experiment: standard Markdown links carry declarations and typed relationships. | Jason | Selected 2026-09-16 | Stable-release syntax remains a later decision. |
+| Q-2 | Prove the remaining validation, traversal and context contracts against the shared graph. | Maintainer | Before claiming those capabilities | Experimental extraction and direct queries have runtime checks; broader proof remains FND-1. |
+| Q-3 | Experimental export is implemented at experimental/graph; select the stable public surface later. | Maintainer and Jason | Before stable release | Root API and legacy schemas remain unchanged. |
 | Q-4 | Which real spec and required context define adoption success, and what latency/memory limits apply? | Jason supplies target; maintainer measures | Corpus/consumer pilot, before release readiness | No production scale or agent-context-completeness claim; FND-3 |
 
-This packet begins the existing contract/corpus task. It does not mark that task complete. The immediate review can settle API shapes and the candidate authoring choice; the remaining full API-result proof and owner authoring-fit decision are required before production extraction.
+The runnable task supersedes earlier contract-only execution gates for the experimental graph and direct queries. This packet does not claim the full product or the remaining API proposals are complete.
 
 Section status: Complete; questions have explicit decision gates.
 
@@ -474,7 +456,7 @@ Section status: Complete; questions have explicit decision gates.
 | EVD-4 | src/markdowntrace/public.ts; package.json; tests/test_package_exports.test.ts; tests/fixtures/public-package/consumer.ts.fixture | Producer/consumer inspection | Root-only self-contained public boundary and consumer expectations | C-2, C-4, C-8 |
 | EVD-5 | src/markdowntrace/markdown/scanner.ts, source-slices.ts, definition-facts.ts, reference-facts.ts; [parser probe](document-graph-api/checks/probe-engine.mjs) | Source/runtime probe | Current whole-section ownership; public nodes include exact raw slices and nested list/table/quote structure; inline-code source includes delimiters | C-1, C-3, C-7 |
 | EVD-6 | src/markdowntrace/registry/derived.ts; markdown/trace-links.ts; existing CI and package checks from merged PR #74 | Source and GitHub evidence | Existing link/registry derivation and compatibility work cannot be treated as the new graph | C-8 |
-| EVD-7 | Companion declarations, consumer/profile examples, independent case ledger and current validation record | Local design checks | Consumer type fit and initial oracle; no new API runtime exists | C-1 through C-8 |
+| EVD-7 | Companion declarations, consumer/profile examples, independent case ledger and current validation record | Local design checks | Consumer type fit and original design oracle; runtime link/API tests separately prove the implemented subset | C-1 through C-8 |
 
 ### Rubric Scores
 
@@ -495,7 +477,7 @@ Section status: Complete; questions have explicit decision gates.
 
 | Finding ID | Severity | Axis | Affected contracts | Evidence IDs | Required action | Validation target |
 | --- | --- | --- | --- | --- | --- | --- |
-| FND-1 | Major | Behavioral fitness/integration/testability | C-1, C-2, C-3, C-7 | EVD-1, EVD-5, EVD-7 | Source annotations and independent lexical/ownership interpretation are complete; maintainer finishes full API-result/checker proof and Jason accepts authoring fit before extractor implementation. Production risk is wrong owners or offsets. | VAL-1, VAL-5, VAL-6; Q-1/Q-2 |
+| FND-1 | Major | Behavioral fitness/integration/testability | C-1, C-2, C-3, C-7 | EVD-1, EVD-5, EVD-7 | The experimental graph/direct-query slice has runtime proof. Prove validation, traversal and context results as those operations are implemented; retain exact owners and offsets. These broader obligations do not block the current link-based slice. | VAL-1, VAL-5, VAL-6; Q-1/Q-2 |
 | FND-2 | Minor | Consumer fitness | C-5 | EVD-7 | Addressed in revision 2: lookup returns definitions and a reference count; paged reference items include source occurrences. Avoids large reference payloads on simple lookup and manual source joins. | VAL-4, VAL-8 |
 | FND-3 | Major | Operational fitness/testability | C-3, C-6, C-7 | EVD-5, EVD-7 | Jason selects pilot spec/context oracle; maintainer measures time/memory and agrees budgets before release. Production risk is unusable latency or missing implementer context. | VAL-5, VAL-6; Q-4 |
 | FND-4 | Major | Data and invariant protection | C-7 | EVD-7 | Addressed in revision 2: ContextBundle includes selection query, nodes, predecessors and boundaries. Prevents exported context losing the relationship path explaining inclusion. | VAL-5, VAL-8 |
@@ -504,12 +486,12 @@ Section status: Complete; concerns are bounded by explicit implementation/releas
 
 ## Internal Review Record
 
-- Contract depth calibration: ID2 is appropriate for a durable library boundary across analysis, profiles, queries and context; no ID3 operational or remote system is introduced.
-- Grounding result: Inspected actual producers, consumers, source adapters, profiles, exports and tests at the merged baseline. A current public-API parser probe verified basic mixed layouts, raw slices and UTF-16/CRLF offsets.
-- Rubric result: Approve with constraints for interface review. FND-1 gates extractor implementation; FND-3 gates pilot/release claims. No existing runtime behavior is changed.
-- Findings addressed: Revision 6 materializes 55 language and 24 scenario inputs and independently annotated roles, owners, fragments, diagnostics and exclusions. Both independent reviewers identified the same LANG-45 padding question; the explicit container-boundary range above resolves it. CASE-14 now names the unchanged hashes, entity-kind interpretation and validation result after input mutation. Revision 2 resolved FND-2 and FND-4. Revision 3 recorded EP-ACT-1's eight lexical and seven ownership recommendations. Revision 4 addresses PR review findings F1/F2: formatting-transparent diagnostic-candidate classification with exact raw recognition, and explicit context omissions for ambiguous definition ownership. Regression examples and consumer handling accompany both changes. Revision 5 reconciles LANG-51 with Engine's plain-text parse and adds LANG-55 as the actual formatted declaration-prefix case; it addresses the first re-review's remaining F1 contradiction.
-- Validation result: Revision 6 records EP-ACT-2 and EP-GATE-1 in the [companion validation record](document-graph-api/validation.json), with exact input fingerprints and two independent case-by-case interpretations. Supporting checks cover 81 annotation records, 416 source slices, 66 distinct public-parser sources, declaration/consumer types and the retained initial ledger. All 219 existing tests and repository enforcement pass. These are design, source and compatibility checks; no proposed runtime API is executed.
-- Remaining findings: FND-1 still requires full API-result/checker proof and Q-1/Q-2 owner decisions before extraction. FND-3 and Q-4 remain before pilot/release claims. This corpus gate does not complete the parent contract task.
-- Readiness verdict: Concrete API draft for review. It is not production implementation acceptance or completion of the contract/corpus task.
+- Contract depth calibration: ID2 remains appropriate for the proposed library boundaries; this revision changes the authoring convention without adding a remote service.
+- Grounding result: Engine 3.5.0 exposes link destinations, reference-definition resolution and complete link-use source maps. The experimental graph/direct-query runtime consumes those public APIs.
+- Rubric result: Graph, profile and query shapes remain the prior proposals. The owner's link decision resolves Q-1 for the experiment; FND-1 and FND-3 now bound the remaining capabilities and release claims.
+- Findings addressed: Revision 7 replaces brace syntax with standard links, records the explicit user decision and removes the stale pre-extractor gate from current guidance.
+- Validation result: The current task and companion record identify structural checks. Runtime link/API tests and the packed consumer verify the implemented subset; draft1 corpus reports remain scoped to their original language.
+- Remaining findings: Graph policy evaluation, traversal, context projection and representative scale/agent-context proof remain unfinished.
+- Readiness verdict: Runnable experimental graph/direct-query subset, with remaining API designs available for later implementation.
 
-Revision history: Revision 1 materialized the API boundaries from the merged direction and inspected implementation. Revision 2 incorporated the internal review corrections. Revision 3 recorded EP-ACT-1 language/ownership recommendations and examples. Revision 4 repairs the two PR review findings under the owner's request to fix and review again. Revision 5 resolves the first re-review's LANG-51 contradiction using the public parser's actual structure and a separate formatted declaration case. Revision 6 completes source fixture materialization and independent interpretation, clarifies the unclosed table-cell diagnostic range, and refreshes source/evidence navigation. These revisions do not record syntax acceptance, complete API-result proof or implementation. The adjacent checksum and companion validation record identify the current bytes.
+Revision history: Revisions 1–6 developed the API proposals and draft1 brace-language corpus. Revision 7 records the owner's 2026-09-16 standard-link decision and reconciles language guidance with the runnable experimental implementation. The adjacent checksum and companion record identify the current bytes.
