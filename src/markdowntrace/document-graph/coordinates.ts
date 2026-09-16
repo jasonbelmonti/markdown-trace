@@ -3,8 +3,12 @@ import type { SourcePosition, SourceRange } from "./contracts/source.js";
 export class Coordinates {
   private readonly starts = [0];
   constructor(readonly text: string) {
-    for (let i = 0; i < text.length; i++)
-      if (text[i] === "\n") this.starts.push(i + 1);
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === "\r") {
+        if (text[i + 1] === "\n") i++;
+        this.starts.push(i + 1);
+      } else if (text[i] === "\n") this.starts.push(i + 1);
+    }
   }
   position(offset: number): SourcePosition {
     let low = 0,
