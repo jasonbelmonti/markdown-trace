@@ -10,7 +10,7 @@ The immutable snapshot preserves declaration/mention distinctions, duplicate and
 
 `npm run demo:graph` prints a mixed-layout summary and two located backlinks to `REQ-2`. `node scripts/demo-document-graph.mjs path/to/spec.md --graph` prints the full snapshot from a built checkout; `--profile path/to/profile.json` supplies domain vocabulary. Tests exercise link declarations and references across layouts, Engine-resolved reference links, malformed destinations, exact ranges, API ingress, immutability, pagination and clean-package consumption. This is initial correctness evidence, not release-scale or consuming-agent validation.
 
-Graph validation, traversal, context projection, stable syntax/export approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces.
+Graph validation, traversal, context projection, stable syntax/export approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces; their gaps are not instructions to build the new product inside the old modules.
 
 ## Public API and CLI
 
@@ -28,7 +28,7 @@ Help calls graph validation, help, and version stable commands. This identifies 
 
 ## Legacy extraction and validation limits
 
-| Concern | Existing behavior | Remaining boundary |
+| Concern | Legacy behavior | Limitation of this compatibility surface |
 | --- | --- | --- |
 | Markdown coverage | Graph extraction iterates tables. | Common discovery and ownership across headings/prose/lists/quotes. |
 | Identifiers | Uppercase hyphen-separated tokens filtered by profile regular expressions. | Canonical language; arbitrary lexical syntax is not supported today. |
@@ -39,7 +39,7 @@ Help calls graph validation, help, and version stable commands. This identifies 
 | Vocabularies | Artifact families and relationship names are closed runtime enums. | Versioned, domain-owned vocabulary. |
 | Integrity | Unresolved edges can be dropped; duplicates/ranges are not comprehensively diagnosed. | Preserve defects and report analysis completeness. |
 | Matrices | Matrix-required-path profiles cause compatibility errors; completed results contain no matrix-coverage evaluations. | Matrix assertion implementation. |
-| Query/context | No public surface. | Shared indexes, fragment ownership, queries, and projection. |
+| Query/context | No public surface over the legacy graph. | The experimental graph has separate lookup/direct queries; traversal and projection remain proposed. |
 
 Controlled baseline probes showed the positive execution fixture passed and a removed required validation connection failed. Empty input, a duplicate objective, an extra dangling work reference, and an undefined prose range endpoint still passed. Zero evaluated paths do not establish spec validity. The legacy tests protect these compatibility boundaries. The new graph tests separately exercise document-wide behavior.
 

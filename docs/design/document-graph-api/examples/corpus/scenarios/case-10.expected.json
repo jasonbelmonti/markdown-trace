@@ -1,9 +1,0 @@
-{
-  "schemaVersion": "markdown-trace.design-scenario.v1",
-  "caseId": "CASE-10",
-  "source": {"file": "../mixed-layout.md", "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"},
-  "annotationRef": "scenarios/mixed-layout.expected.json",
-  "input": "Create a selection, append text to source and reanalyze, then use old selection with new analysis",
-  "operationExpectations": {"sequence": ["Analyze mixed source", "Issue WP-1 selection", "Analyze case-10-after source", "Apply original selection to after analysis"], "error": "stale-selection", "afterAnnotation": "scenarios/case-10-after.expected.json"},
-  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
-}

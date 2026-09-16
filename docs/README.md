@@ -4,16 +4,16 @@ The current direction is a document-wide graph for relationship validation and c
 
 | Document | Purpose |
 | --- | --- |
-| [Document graph overview](design/markdown-trace-document-graph-overview.md) | Direction, boundaries, decisions, and delivery sequence. |
-| [Document graph API draft](design/markdown-trace-document-graph-interfaces.md) | Proposed types and validation/query/context contracts; draft1 syntax examples are superseded by the experimental guide. |
+| [Document graph overview](design/markdown-trace-document-graph-overview.md) | Current direction, resolved language decisions and remaining capabilities. |
+| [Document graph API draft](design/markdown-trace-document-graph-interfaces.md) | Implemented contract status plus proposed validation/traversal/context contracts. |
 | [Current implementation](current-implementation.md) | What the code does and where it falls short. |
 | [Experimental graph guide](experimental-document-graph.md) | Runnable API, demo, syntax and current limits. |
 | [Runnable graph task](tasks/runnable-document-graph.md) | Current implementation and acceptance boundary. |
 | [Source map](../src/markdowntrace/README.md) | Existing responsibilities and reuse boundaries. |
 | [Test guidance](../tests/README.md) | Compatibility tests versus future product proof. |
 
-The overview and task have adjacent SHA-256 files and [structural validation evidence](validation/artifacts.json). Verify from the repository root with `shasum -a 256 -c <checksum-file>` before durable handoff. Review and structural-validation status do not mean proposed behavior is implemented.
+The overview and interface packet have adjacent SHA-256 files and current structural records in [overview validation](validation/artifacts.json) and [interface validation](design/document-graph-api/validation.json). The runnable task has its own [structural record](validation/runnable-document-graph.json) and adjacent checksum. Verify from the repository root with `shasum -a 256 -c <checksum-file>` before durable handoff. Structural validation and declaration compilation do not mean proposed behavior is implemented.
 
-Superseded designs, execution plans, unused reports, provisional profiles, and old tracked agent packets were removed in the 2026-09-13 alignment pass. There are no repository archives or redirect stubs. Historical source is recoverable from Git commit `016dd0905d9f8103dc4dbd528e0b9fc15b516723`.
+The 2026-09-16 baseline uses draft2 standard Markdown links and the runnable graph. Superseded contract-only tasks, execution plans, brace-language corpus, standalone probes and historical review packets are removed. There are no archives or redirect stubs; Git history retains the old work. PR #77 is an unmerged predecessor based on those superseded artifacts and is not a dependency or implementation authority.
 
 [Evidence payloads](evidence/README.md) remain only where tests or fixture commands consume them. Old path strings inside those payloads are historical provenance, not current guidance links.

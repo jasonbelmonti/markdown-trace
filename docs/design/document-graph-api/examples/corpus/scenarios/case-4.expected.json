@@ -1,9 +1,0 @@
-{
-  "schemaVersion": "markdown-trace.design-scenario.v1",
-  "caseId": "CASE-4",
-  "source": {"file": "../mixed-layout.md", "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"},
-  "annotationRef": "scenarios/mixed-layout.expected.json",
-  "input": "Revalidate the unchanged mixed-layout analysis with allowedRelations empty and rules empty, preserving minEntities and interpretation",
-  "operationExpectations": {"profileChange": {"validation.allowedRelations": [], "validation.rules": []}, "validation": "fail", "policyRejectedRelationships": ["R1", "R2", "R3", "R4"], "facts": "unchanged"},
-  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
-}

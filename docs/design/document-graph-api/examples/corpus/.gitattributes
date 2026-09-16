@@ -1,4 +1,0 @@
-# Source hashes and coordinates depend on original fixture bytes.
-language/*.md -text
-scenarios/*.md -text
-scenarios/case-13.md whitespace=cr-at-eol
