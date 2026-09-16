@@ -13,6 +13,34 @@ npm run demo:graph -- path/to/spec.md REQ-2
 
 The default example produces six identifiers, ten occurrences and four relationships. `REQ-2` has two incoming references: one from the `WP-1` nested list at line 8, and one from the `WP-2` table row at line 14. The demo prints their exact locations and source text.
 
+## Inspect your own document
+
+From this repository checkout, build once and export the complete graph:
+
+```sh
+npm ci
+npm run build
+node scripts/demo-document-graph.mjs "/absolute/path/to/your-spec.md" --graph > /tmp/markdown-trace-graph.json
+cat /tmp/markdown-trace-graph.json
+```
+
+Only the direct `node` command is redirected, so npm output cannot contaminate the JSON. The snapshot includes `source`, `identifiers`, `occurrences`, `relationships`, `fragments`, `exclusions`, `diagnostics` and `coverage`. Fragment ranges locate source text; the snapshot is not an assembled context bundle. The demo admits up to 2,000,000 UTF-8 source bytes and 50,000 occurrences; the API accepts explicit caller limits.
+
+For a located backlink summary instead:
+
+```sh
+node scripts/demo-document-graph.mjs "/absolute/path/to/your-spec.md" REQ-1
+```
+
+The default profile maps REQ/WP/VAL to requirement/work/validation. Other canonical IDs remain in the graph with `entityKind: null`; they are not discarded. To map your own prefixes, copy and edit [the JSON profile](../fixtures/document-graph/profile.json), then supply it explicitly:
+
+```sh
+node scripts/demo-document-graph.mjs "/absolute/path/to/your-spec.md" \
+  --profile "/absolute/path/to/your-profile.json" --graph > /tmp/markdown-trace-graph.json
+```
+
+Any Markdown file can be analyzed, but meaningful declarations and typed edges require the link convention below. Bare IDs alone create mentions, not definitions; unowned references produce partial coverage. Arbitrary prose is not interpreted as a relationship. This draft2 URI convention is separate from the legacy registry links with dotted IDs and `type=` fields; those are not automatically migrated.
+
 ## API example
 
 ```js

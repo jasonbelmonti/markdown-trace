@@ -1,6 +1,6 @@
 # Current implementation
 
-The first document-wide graph runtime is implemented on the merged PR #76 baseline (`9155cdd`). The [experimental API guide](experimental-document-graph.md) gives runnable examples. The [overview](design/markdown-trace-document-graph-overview.md) describes the broader target.
+The first document-wide graph runtime is implemented on the runnable graph branch in [PR #78](https://github.com/jasonbelmonti/markdown-trace/pull/78), following the merged PR #76 design baseline. The [experimental API guide](experimental-document-graph.md) gives runnable examples. The [overview](design/markdown-trace-document-graph-overview.md) describes the broader target.
 
 ## Document-wide graph and direct queries
 
@@ -8,7 +8,7 @@ The `experimental/graph` package entry point exports `compileProfile`, `analyzeD
 
 The immutable snapshot preserves declaration/mention distinctions, duplicate and missing definitions, unknown vocabulary, ambiguous ownership, source fragments and diagnostics. Incoming/outgoing indexes support source-ordered pagination and relationship filters. Limits apply to source bytes and occurrence count. Analysis coverage and graph validity are separate: profile policy is compiled but not evaluated in this slice.
 
-`npm run demo:graph` prints the mixed-layout graph and two located backlinks to `REQ-2`. Tests exercise link declarations and references across layouts, Engine-resolved reference links, malformed destinations, exact ranges, API ingress, immutability, pagination and clean-package consumption. This is initial correctness evidence, not release-scale or consuming-agent validation.
+`npm run demo:graph` prints a mixed-layout summary and two located backlinks to `REQ-2`. `node scripts/demo-document-graph.mjs path/to/spec.md --graph` prints the full snapshot from a built checkout; `--profile path/to/profile.json` supplies domain vocabulary. Tests exercise link declarations and references across layouts, Engine-resolved reference links, malformed destinations, exact ranges, API ingress, immutability, pagination and clean-package consumption. This is initial correctness evidence, not release-scale or consuming-agent validation.
 
 Graph validation, traversal, context projection, stable syntax/export approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces.
 

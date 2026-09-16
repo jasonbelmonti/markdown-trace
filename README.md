@@ -50,6 +50,8 @@ Run the document-wide graph and backlinks demonstration:
 
 ```sh
 npm run demo:graph
+# Full graph for your own document (after building):
+node scripts/demo-document-graph.mjs "/absolute/path/to/spec.md" --graph > /tmp/markdown-trace-graph.json
 ```
 
 See the [experimental API guide](docs/experimental-document-graph.md) for link syntax, profile configuration and query examples.
