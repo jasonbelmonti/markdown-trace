@@ -4,9 +4,9 @@ import {
   parse,
   type EngineNode,
 } from "@jasonbelmonti/markdown-engine";
-import { Coordinates } from "./coordinates.js";
+import type { Coordinates } from "./coordinates.js";
 import type { Extraction, NodeInfo } from "./extraction-model.js";
-import { sourceRange } from "./inline.js";
+import { copyEngineRange, sourceRange } from "./source-range.js";
 import { scanInline } from "./lexical.js";
 import { AnalysisFailure } from "./value.js";
 
@@ -20,12 +20,12 @@ const literalBlocks = new Set([
   "thematicBreak",
 ]);
 export function extract(
-  text: string,
+  coordinates: Coordinates,
   documentId: string,
   maxOccurrences: number,
 ): Extraction {
-  const coordinates = new Coordinates(text),
-    parsed = parse(text, { path: documentId });
+  const { text } = coordinates;
+  const parsed = parse(text, { path: documentId });
   const normalized = normalize(parsed.parsed),
     output: Extraction = { blocks: [], diagnostics: [], exclusions: [] };
   const destinations = new Map(
@@ -40,18 +40,14 @@ export function extract(
   );
   let occurrences = 0;
   for (const d of [...parsed.diagnostics, ...normalized.diagnostics]) {
-    const start = d.sourceRange?.start.offset,
-      end = d.sourceRange?.end.offset;
     if (d.severity === "info") continue;
+    const range = copyEngineRange(d.sourceRange);
     const diagnostic = {
       code: d.code,
       severity: d.severity,
       message: d.message,
       identifiers: [],
-      sourceRanges:
-        typeof start === "number" && typeof end === "number"
-          ? [coordinates.range(start, end)]
-          : [],
+      sourceRanges: range ? [range] : [],
     };
     if (
       !output.diagnostics.some(
@@ -63,7 +59,7 @@ export function extract(
   function visit(node: EngineNode, parent?: NodeInfo, container?: NodeInfo) {
     const info: NodeInfo = {
       node,
-      range: sourceRange(node, coordinates),
+      range: sourceRange(node, text),
       depth: (parent?.depth ?? 0) + 1,
       parent,
       container,

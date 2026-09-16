@@ -1,7 +1,9 @@
 import type { EngineNode } from "@jasonbelmonti/markdown-engine";
-import { Coordinates } from "./coordinates.js";
+import type { Coordinates } from "./coordinates.js";
 import type { Atom, Extraction, Token } from "./extraction-model.js";
-import { inlineAtoms, sourceRange } from "./inline.js";
+import type { SourceRange } from "./contracts/source.js";
+import { inlineAtoms } from "./inline.js";
+import { sourceRange } from "./source-range.js";
 import { identifierPattern } from "./value.js";
 
 const wordChar = (char: string) => /^[\p{L}\p{N}\p{M}_-]$/u.test(char);
@@ -13,34 +15,35 @@ export function scanInline(
   output: Extraction,
   destinations: ReadonlyMap<string, string>,
 ): Token[] {
-  const atoms = inlineAtoms(node, coordinates, output, destinations),
+  const atoms = inlineAtoms(node, coordinates.text, output, destinations),
     tokens: Token[] = [];
   const text = coordinates.text,
-    container = sourceRange(node, coordinates);
-  const exclude = (start: number, end: number, reason: string) =>
-    output.exclusions.push({ range: coordinates.range(start, end), reason });
-  const emit = (identifier: string, start: number, end: number) =>
+    container = sourceRange(node, text);
+  const emit = (identifier: string, range: SourceRange) =>
     tokens.push({
       identifier,
-      start,
-      end,
+      range,
       role: "reference",
       kind: "references",
     });
   for (let i = 0; i < atoms.length; ) {
     const atom = atoms[i];
     if (atom.token) {
-      tokens.push({ ...atom.token, start: atom.start, end: atom.end });
+      tokens.push(atom.token);
       i++;
       continue;
     }
     if (atom.code !== undefined) {
       if (
-        identifierPattern.test(atom.code) &&
+        identifierPattern.test(atom.code.text) &&
         !/[\r\n]/.test(text.slice(atom.start, atom.end))
       )
-        emit(atom.code, atom.start, atom.end);
-      else exclude(atom.start, atom.end, "literal-inline-code");
+        emit(atom.code.text, atom.code.range);
+      else
+        output.exclusions.push({
+          range: atom.code.range,
+          reason: "literal-inline-code",
+        });
       i++;
       continue;
     }
@@ -92,9 +95,12 @@ export function scanInline(
       contiguous &&
       identifierPattern.test(candidate)
     ) {
-      emit(candidate, content[0].start, content.at(-1)!.end);
+      emit(candidate, coordinates.range(content[0].start, content.at(-1)!.end));
     } else if (/[A-Z][A-Z0-9]*-/.test(spelling))
-      exclude(word[0].start, word.at(-1)!.end, "noncanonical-or-escaped-word");
+      output.exclusions.push({
+        range: coordinates.range(word[0].start, word.at(-1)!.end),
+        reason: "noncanonical-or-escaped-word",
+      });
     i = j;
   }
   return tokens;
