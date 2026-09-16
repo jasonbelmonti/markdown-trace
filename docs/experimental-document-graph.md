@@ -28,7 +28,7 @@ const profile = unwrap(compileProfile({
   schemaVersion: 'markdown-trace.document-profile.v1',
   profileId: 'my-spec',
   interpretation: {
-    language: 'markdown-trace.identity.draft1',
+    language: 'markdown-trace.identity.draft2',
     entityKinds: [
       { name: 'requirement', prefixes: ['REQ'] },
       { name: 'work', prefixes: ['WP'] },
@@ -36,7 +36,9 @@ const profile = unwrap(compileProfile({
   },
   validation: { minEntities: 0, allowedRelations: [], rules: [] },
 }));
-const text = '# Requirement {#REQ-1}\n\n- {#WP-1} {implements:REQ-1}';
+const text = '# [Requirement](ctx://trace/entity/REQ-1?role=definition)\n\n'
+  + '- [Work](ctx://trace/entity/WP-1?role=definition) '
+  + '[requirement](ctx://trace/entity/REQ-1?rel=implements)';
 const analysis = unwrap(analyzeDocument({ documentId: 'spec.md', text }, profile, {
   maxSourceUtf8Bytes: 1_000_000,
   maxOccurrences: 10_000,
@@ -50,16 +52,33 @@ const outgoing = unwrap(findOutgoing(analysis, 'WP-1', {
 
 `compileProfile` checks and captures profile configuration. It does **not** evaluate relationship validity yet. The `validation` section is accepted for later policy evaluation; it neither removes relationships nor turns analysis into a validity verdict. Changing only that section leaves the graph and analysis identity unchanged.
 
-## Draft identity language
+## Link identity language
 
-- An identifier matches `[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+`, for example `REQ-1` or `WP-API-2`.
-- `{#REQ-1}` declares an identifier. `{implements:REQ-1}` creates a typed reference. Relation names use lowercase hyphen-separated slugs.
-- A whole bare identifier or a single-identifier inline code span creates a generic `references` relationship. A mention does not declare an identifier.
-- Headings own their sections; a declaration in a list item's opening paragraph owns that item. Local paragraph and table-row declarations take precedence over enclosing scopes. Blockquotes and nested lists preserve structural boundaries.
-- Multiple declarations at the selected scope produce an ambiguous owner. Duplicate definitions and dangling references remain inspectable. Unknown prefixes and relation names remain graph facts.
-- Fenced/indented code, frontmatter, link destinations, images, HTML nodes and non-identifier inline code are literal. Link labels and emphasis are eligible, but syntax cannot be assembled across separate text leaves. Malformed marker groups produce diagnostics and suppress inner identifiers.
+Declarations and typed references use standard Markdown links. Markdown Engine parses links and resolves reference-style destinations; Trace interprets their URI values. Labels are presentation text and do not have to match the target identifier.
 
-The [language and ownership clauses](design/markdown-trace-document-graph-interfaces.md) and existing source corpus describe the experimental interpretation. Runtime source-fragment partitioning currently follows Engine blocks and captures supporting headings/table structure. Context projection is not implemented, and exact fragment partitioning is provisional.
+```markdown
+## [Sign-in requirement](ctx://trace/entity/REQ-1?role=definition)
+
+Users can sign in.
+
+## [Sign-in work](ctx://trace/entity/WP-1?role=definition)
+
+Implements [the requirement](ctx://trace/entity/REQ-1?rel=implements).
+Also mentions [REQ-1](ctx://trace/entity/REQ-1).
+```
+
+The typed edge is `WP-1 -> REQ-1`, with kind `implements`. The second link adds a separate generic `references` edge. Each Trace link contributes exactly one occurrence spanning the whole Markdown link; its label is not scanned again.
+
+- The URI shape is `ctx://trace/entity/ID`, optionally followed by exactly `?role=definition` or `?rel=RELATION`. Declarations work in headings, paragraphs, list items, blockquotes and table cells. Omitted query parameters create generic references.
+- IDs match `[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+`. Relation names match `[a-z][a-z0-9]*(?:-[a-z0-9]+)*`. The interpretation profile maps prefixes to entity kinds; unknown well-formed IDs and relation names remain graph facts.
+- These are constrained URIs: credentials, ports, fragments, extra path segments, encoded components, duplicate/unknown parameters and combinations of declaration and relation parameters are rejected. A malformed `ctx:` destination produces a located diagnostic and no fallback occurrence from its label. Trace never opens or fetches these URIs.
+- Inline links, reference-style links and angle-bracket autolinks recognized by Engine are supported. Reference definitions supply destinations but are not themselves entity declarations. The occurrence range identifies the link use, not its shared reference definition.
+- Whole bare identifiers and single-identifier inline code remain generic references. Ordinary link labels are eligible for generic mentions; ordinary destinations, images, HTML nodes, frontmatter and fenced/indented code remain literal.
+- Headings own their sections; a declaration in a list item's opening paragraph owns that item. Local paragraph and table-row declarations take precedence over enclosing scopes. Multiple declarations at the selected scope produce an ambiguous owner. Duplicate and missing definitions remain inspectable.
+
+This guide is the current authoring contract. It replaces draft1's brace-marker grammar. Former brace markers have no declaration or typed-reference meaning; an eligible bare ID within ordinary text can still be a generic mention. A draft1 profile is rejected as an unsupported language version rather than silently reinterpreted.
+
+The graph/query contracts remain unchanged. Runtime source fragments follow Engine blocks and capture supporting headings/table structure. Context projection is not implemented, and exact fragment partitioning is provisional. Custom-scheme links use ordinary Markdown syntax; whether a renderer makes their destinations clickable depends on that renderer.
 
 ## Results and limits
 
@@ -67,7 +86,7 @@ Every operation returns `{ ok: true, value }` or `{ ok: false, error }`. Invalid
 
 `analysis.snapshot` contains immutable identifiers, occurrences, relationships, source fragments, exclusions and diagnostics. Each reference occurrence contributes one relationship, so repeated references remain distinct. Incoming queries retain unowned and ambiguous references; outgoing queries return references with a unique owner matching the requested identifier.
 
-`coverage: 'complete'` means extraction completed without error diagnostics. It does **not** mean the graph is valid. Malformed expressions, unsupported structures and uncertain reference ownership produce `partial` coverage with queryable evidence. Duplicate definitions, unknown kinds and missing targets are represented explicitly for later validation.
+`coverage: 'complete'` means extraction completed without error diagnostics. It does **not** mean the graph is valid. Malformed Trace links, unsupported structures and uncertain reference ownership produce `partial` coverage with queryable evidence. Duplicate definitions, unknown kinds and missing targets are represented explicitly for later validation.
 
 Ranges use zero-based UTF-16 offsets, one-based lines/columns, and exclusive ends. SHA-256 hashes cover the original UTF-8 source. Keep the source text alongside the analysis when slicing locations. Issued profile/analysis handles are local to the loaded module instance; serializing a snapshot does not create a reusable handle.
 

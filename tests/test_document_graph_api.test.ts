@@ -10,7 +10,9 @@ import {
   type Outcome,
   type TraceProfile,
 } from "../src/markdowntrace/document-graph/index.js";
-import { profileInput } from "../docs/design/document-graph-api/examples/profile.js";
+const profileInput = JSON.parse(
+  readFileSync("fixtures/document-graph/profile.json", "utf8"),
+);
 
 function value<T>(result: Outcome<T>): T {
   if (!result.ok) throw new Error(JSON.stringify(result.error));
@@ -19,10 +21,7 @@ function value<T>(result: Outcome<T>): T {
 const limits = { maxSourceUtf8Bytes: 100_000, maxOccurrences: 10_000 };
 const source = {
   documentId: "spec.md",
-  text: readFileSync(
-    "docs/design/document-graph-api/examples/mixed-layout.md",
-    "utf8",
-  ),
+  text: readFileSync("fixtures/document-graph/mixed-layout.md", "utf8"),
 };
 const profile = value(compileProfile(profileInput));
 const analyze = (text = source.text) =>
@@ -59,25 +58,24 @@ describe("experimental graph consumer contracts", () => {
       ).toMatch(/REQ-2/);
     expect(value(lookupIdentifier(analysis, "REQ-999")).record).toBeNull(); // fenced example
   });
-  it("recovers at the physical line boundary inside an opaque inline node", () => {
-    const text = "# {#WP-1}\n\n{implements:`literal\ncode` REQ-2} REQ-3";
+  it("reports malformed Trace destinations without salvaging their labels", () => {
+    const text =
+      "# [Work](ctx://trace/entity/WP-1?role=definition)\n\n[REQ-9](ctx://trace/entity/REQ-2?rel=bad_slug) REQ-3";
     const graph = analyze(text).snapshot;
-    expect(graph.relationships.map((r) => r.target)).toEqual([
-      "REQ-2",
-      "REQ-3",
-    ]);
+    expect(graph.relationships.map((r) => r.target)).toEqual(["REQ-3"]);
     const diagnostic = graph.diagnostics.find(
-      (d) => d.code === "markdown-trace.language.malformed-expression",
+      (d) => d.code === "markdown-trace.language.malformed-link",
     )!;
     const range = diagnostic.sourceRanges[0];
     expect(text.slice(range.start.offset, range.end.offset)).toBe(
-      "{implements:`literal",
+      "[REQ-9](ctx://trace/entity/REQ-2?rel=bad_slug)",
     );
     expect(diagnostic.identifiers).toEqual(["WP-1"]);
+    expect(graph.coverage).toBe("partial");
   });
   it("retains dangling, duplicate, unknown-kind and ambiguous-source evidence", () => {
     const analysis = analyze(
-      "{#WP-1} {#WP-2} {custom-edge:NEW-1}.\n\n{#REQ-1}\n\n{#REQ-1}",
+      "[WP-1](ctx://trace/entity/WP-1?role=definition) [WP-2](ctx://trace/entity/WP-2?role=definition) [NEW-1](ctx://trace/entity/NEW-1?rel=custom-edge).\n\n[REQ-1](ctx://trace/entity/REQ-1?role=definition)\n\n[REQ-1](ctx://trace/entity/REQ-1?role=definition)",
     );
     const page = value(findIncoming(analysis, "NEW-1"));
     expect(page.record).toMatchObject({
@@ -95,7 +93,7 @@ describe("experimental graph consumer contracts", () => {
   });
   it("paginates repeated evidence and treats empty/unknown filters as no matches", () => {
     const analysis = analyze(
-      "{#WP-1} REQ-1 REQ-1 {implements:REQ-1}.\n\n{#REQ-1}",
+      "[WP-1](ctx://trace/entity/WP-1?role=definition) REQ-1 REQ-1 [REQ-1](ctx://trace/entity/REQ-1?rel=implements).\n\n[REQ-1](ctx://trace/entity/REQ-1?role=definition)",
     );
     const pages = [0, 1, 2, 3].map((offset) =>
       value(findIncoming(analysis, "REQ-1", { offset, limit: 1 })),
@@ -217,7 +215,10 @@ describe("experimental graph consumer contracts", () => {
     const custom = value(compileProfile(input));
     const a = value(
       analyzeDocument(
-        { ...source, text: "{#ADR-1} {motivates:REQ-1}.\n\n{#REQ-1}" },
+        {
+          ...source,
+          text: "[ADR-1](ctx://trace/entity/ADR-1?role=definition) [REQ-1](ctx://trace/entity/REQ-1?rel=motivates).\n\n[REQ-1](ctx://trace/entity/REQ-1?role=definition)",
+        },
         custom,
         limits,
       ),
@@ -232,7 +233,7 @@ describe("experimental graph consumer contracts", () => {
   it("captures source and yields repeatable identities without policy/limit dependence", () => {
     const input = { ...source },
       a = value(analyzeDocument(input, profile, limits));
-    input.text = "{#REQ-99}";
+    input.text = "[REQ-99](ctx://trace/entity/REQ-99?role=definition)";
     expect(value(lookupIdentifier(a, "REQ-1")).record?.definition.status).toBe(
       "resolved",
     );

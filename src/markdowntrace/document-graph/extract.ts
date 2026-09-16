@@ -1,5 +1,6 @@
 import {
   normalize,
+  documentQueries,
   parse,
   type EngineNode,
 } from "@jasonbelmonti/markdown-engine";
@@ -27,6 +28,16 @@ export function extract(
     parsed = parse(text, { path: documentId });
   const normalized = normalize(parsed.parsed),
     output: Extraction = { blocks: [], diagnostics: [], exclusions: [] };
+  const destinations = new Map(
+    documentQueries
+      .linkReferences(normalized.document)
+      .filter(
+        (link) =>
+          (link.kind === "link" || link.kind === "linkReference") &&
+          link.url !== undefined,
+      )
+      .map((link) => [link.target.id, link.url!]),
+  );
   let occurrences = 0;
   for (const d of [...parsed.diagnostics, ...normalized.diagnostics]) {
     const start = d.sourceRange?.start.offset,
@@ -61,10 +72,10 @@ export function extract(
       row = node.type === "tableRow";
     if (inline || row || literalBlocks.has(node.type)) {
       const tokens = inline
-        ? scanInline(node, coordinates, output)
+        ? scanInline(node, coordinates, output, destinations)
         : row
           ? (node.children ?? []).flatMap((cell) =>
-              scanInline(cell, coordinates, output),
+              scanInline(cell, coordinates, output, destinations),
             )
           : [];
       occurrences += tokens.length;

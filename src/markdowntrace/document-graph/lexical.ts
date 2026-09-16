@@ -7,82 +7,31 @@ import { identifierPattern } from "./value.js";
 const wordChar = (char: string) => /^[\p{L}\p{N}\p{M}_-]$/u.test(char);
 const characterReference =
   /&(?:[A-Za-z][A-Za-z0-9]*|#[0-9]+|#[xX][0-9A-Fa-f]+);/y;
-const marker =
-  /^\{(?:(#)|([a-z][a-z0-9]*(?:-[a-z0-9]+)*):)([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)\}$/;
-function escaped(text: string, offset: number): boolean {
-  let count = 0;
-  while (offset > 0 && text[--offset] === "\\") count++;
-  return count % 2 === 1;
-}
 export function scanInline(
   node: EngineNode,
   coordinates: Coordinates,
   output: Extraction,
+  destinations: ReadonlyMap<string, string>,
 ): Token[] {
-  const atoms = inlineAtoms(node, coordinates, output),
+  const atoms = inlineAtoms(node, coordinates, output, destinations),
     tokens: Token[] = [];
   const text = coordinates.text,
     container = sourceRange(node, coordinates);
   const exclude = (start: number, end: number, reason: string) =>
     output.exclusions.push({ range: coordinates.range(start, end), reason });
-  const emit = (
-    identifier: string,
-    start: number,
-    end: number,
-    role: Token["role"] = "reference",
-    kind = "references",
-  ) => tokens.push({ identifier, start, end, role, kind });
-  for (let i = 0; i < atoms.length;) {
+  const emit = (identifier: string, start: number, end: number) =>
+    tokens.push({
+      identifier,
+      start,
+      end,
+      role: "reference",
+      kind: "references",
+    });
+  for (let i = 0; i < atoms.length; ) {
     const atom = atoms[i];
-    if (atom.char === "{") {
-      let j = i + 1,
-        depth = 1;
-      for (; j < atoms.length; j++) {
-        const a = atoms[j];
-        if (
-          a.char === "\n" ||
-          a.char === "\r" ||
-          /[\r\n]/.test(text.slice(atoms[j - 1].end, a.start)) ||
-          (a.char === "\ufffc" && /[\r\n]/.test(text.slice(a.start, a.end)))
-        )
-          break;
-        if (a.char === "\ufffc" || escaped(text, a.start)) continue;
-        if (a.char === "{") depth++;
-        if (a.char === "}" && --depth === 0) break;
-      }
-      const closed = depth === 0;
-      const lineEnd = text.indexOf("\n", atom.start);
-      let end = closed
-        ? atoms[j].end
-        : Math.min(container.end.offset, lineEnd < 0 ? text.length : lineEnd);
-      if (!closed && text[end - 1] === "\r") end--;
-      const group = atoms.slice(i, closed ? j + 1 : j);
-      const view = group
-        .slice(1)
-        .map((a) => a.char)
-        .join("");
-      const raw = text.slice(atom.start, end),
-        match = marker.exec(raw);
-      if (escaped(text, atom.start))
-        exclude(atom.start, end, "escaped-expression");
-      else if (closed && match && group.every((a) => a.leaf === atom.leaf))
-        emit(
-          match[3],
-          atom.start,
-          end,
-          match[1] ? "definition" : "reference",
-          match[2] ?? "references",
-        );
-      else if (/^[ \t]*(?:#|[A-Za-z0-9_-]+[ \t]*:)/.test(view)) {
-        output.diagnostics.push({
-          code: "markdown-trace.language.malformed-expression",
-          severity: "error",
-          message: "Noncanonical identity expression",
-          identifiers: [],
-          sourceRanges: [coordinates.range(atom.start, end)],
-        });
-      } else exclude(atom.start, end, "literal-brace-group");
-      i = closed ? j + 1 : j;
+    if (atom.token) {
+      tokens.push({ ...atom.token, start: atom.start, end: atom.end });
+      i++;
       continue;
     }
     if (atom.code !== undefined) {

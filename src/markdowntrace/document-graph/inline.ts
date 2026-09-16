@@ -2,6 +2,7 @@ import type { EngineNode } from "@jasonbelmonti/markdown-engine";
 import { Coordinates } from "./coordinates.js";
 import type { Atom, Extraction } from "./extraction-model.js";
 import { AnalysisFailure } from "./value.js";
+import { traceDestination } from "./trace-destination.js";
 
 export function sourceRange(node: EngineNode, coordinates: Coordinates) {
   const start = node.source?.range.start.offset,
@@ -33,6 +34,7 @@ export function inlineAtoms(
   node: EngineNode,
   coordinates: Coordinates,
   output: Extraction,
+  destinations: ReadonlyMap<string, string>,
 ): Atom[] {
   const atoms: Atom[] = [];
   let leaf = 0;
@@ -41,6 +43,29 @@ export function inlineAtoms(
       start = range.start.offset,
       end = range.end.offset;
     const raw = coordinates.text.slice(start, end);
+    if (child.type === "link" || child.type === "linkReference") {
+      const destination = destinations.get(child.target?.id ?? "");
+      const meaning =
+        destination === undefined ? null : traceDestination(destination);
+      if (meaning) {
+        atoms.push({
+          char: "\ufffc",
+          start,
+          end,
+          leaf: leaf++,
+          ...("value" in meaning ? { token: meaning.value } : {}),
+        });
+        if ("error" in meaning)
+          output.diagnostics.push({
+            code: "markdown-trace.language.malformed-link",
+            severity: "error",
+            message: meaning.error,
+            identifiers: [],
+            sourceRanges: [range],
+          });
+        return;
+      }
+    }
     if (child.type === "text") {
       let offset = start;
       for (const char of raw) {

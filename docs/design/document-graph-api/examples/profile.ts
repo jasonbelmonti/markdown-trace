@@ -3,7 +3,7 @@ export const profileInput = {
   schemaVersion: "markdown-trace.document-profile.v1",
   profileId: "implementation-spec",
   interpretation: {
-    language: "markdown-trace.identity.draft1",
+    language: "markdown-trace.identity.draft2",
     entityKinds: [
       { name: "requirement", prefixes: ["REQ"] },
       { name: "work", prefixes: ["WP"] },

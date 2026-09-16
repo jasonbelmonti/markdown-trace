@@ -31,4 +31,5 @@ export interface Atom {
   end: number;
   leaf: number;
   code?: string;
+  token?: Pick<Token, "identifier" | "role" | "kind">;
 }

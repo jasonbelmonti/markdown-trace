@@ -104,7 +104,7 @@ export function readProfile(input: unknown): ProfileInput {
     ["language", "entityKinds"],
     "interpretation",
   );
-  if (interpretation.language !== "markdown-trace.identity.draft1")
+  if (interpretation.language !== "markdown-trace.identity.draft2")
     throw new ProfileError(
       "interpretation.language",
       "Unsupported identity language",

@@ -5,7 +5,7 @@ The current direction is a document-wide graph for relationship validation and c
 | Document | Purpose |
 | --- | --- |
 | [Document graph overview](design/markdown-trace-document-graph-overview.md) | Direction, boundaries, decisions, and delivery sequence. |
-| [Document graph API draft](design/markdown-trace-document-graph-interfaces.md) | Proposed types, validation/query/context contracts, examples, and unresolved language decisions. |
+| [Document graph API draft](design/markdown-trace-document-graph-interfaces.md) | Proposed types and validation/query/context contracts; draft1 syntax examples are superseded by the experimental guide. |
 | [Current implementation](current-implementation.md) | What the code does and where it falls short. |
 | [Experimental graph guide](experimental-document-graph.md) | Runnable API, demo, syntax and current limits. |
 | [Runnable graph task](tasks/runnable-document-graph.md) | Current implementation and acceptance boundary. |

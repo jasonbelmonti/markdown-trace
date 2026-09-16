@@ -4,11 +4,11 @@ The first document-wide graph runtime is implemented on the merged PR #76 baseli
 
 ## Document-wide graph and direct queries
 
-The `experimental/graph` package entry point exports `compileProfile`, `analyzeDocument`, `lookupIdentifier`, `findIncoming`, and `findOutgoing`. Analysis uses Markdown Engine's public tree and source maps across headings, paragraphs, lists, blockquotes and tables, under `markdown-trace.identity.draft1`.
+The `experimental/graph` package entry point exports `compileProfile`, `analyzeDocument`, `lookupIdentifier`, `findIncoming`, and `findOutgoing`. Analysis uses Markdown Engine's public tree and source maps across headings, paragraphs, lists, blockquotes and tables, under `markdown-trace.identity.draft2`. Standard Markdown links carry declarations (`?role=definition`) and typed references (`?rel=implements`) in `ctx://trace/entity/ID` destinations; bare IDs remain generic mentions.
 
 The immutable snapshot preserves declaration/mention distinctions, duplicate and missing definitions, unknown vocabulary, ambiguous ownership, source fragments and diagnostics. Incoming/outgoing indexes support source-ordered pagination and relationship filters. Limits apply to source bytes and occurrence count. Analysis coverage and graph validity are separate: profile policy is compiled but not evaluated in this slice.
 
-`npm run demo:graph` prints the mixed-layout graph and two located backlinks to `REQ-2`. Tests execute all 66 distinct sources in the independently annotated corpus, plus API ingress, immutability, pagination and clean-package consumption. This is initial correctness evidence, not release-scale or consuming-agent validation.
+`npm run demo:graph` prints the mixed-layout graph and two located backlinks to `REQ-2`. Tests exercise link declarations and references across layouts, Engine-resolved reference links, malformed destinations, exact ranges, API ingress, immutability, pagination and clean-package consumption. This is initial correctness evidence, not release-scale or consuming-agent validation.
 
 Graph validation, traversal, context projection, stable syntax/export approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces.
 

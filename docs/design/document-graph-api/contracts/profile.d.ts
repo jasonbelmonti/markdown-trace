@@ -5,7 +5,7 @@ export interface EntityKindDeclaration {
   readonly prefixes: NonEmpty<string>;
 }
 export interface InterpretationPolicy {
-  readonly language: "markdown-trace.identity.draft1";
+  readonly language: "markdown-trace.identity.draft2";
   readonly entityKinds: NonEmpty<EntityKindDeclaration>;
 }
 export interface AllowedRelation {

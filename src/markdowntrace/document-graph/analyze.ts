@@ -23,7 +23,7 @@ import {
 } from "./value.js";
 import { Coordinates } from "./coordinates.js";
 
-const ANALYZER_VERSION = "0.1.0-experimental.1";
+const ANALYZER_VERSION = "0.1.0-experimental.2";
 const PARSER_VERSION = "3.5.0";
 export function analyzeDocument(
   source: DocumentSource,
@@ -104,7 +104,7 @@ export function analyzeDocument(
         };
       });
     extracted.diagnostics = extracted.diagnostics.map((diagnostic) => {
-      if (diagnostic.code !== "markdown-trace.language.malformed-expression")
+      if (diagnostic.code !== "markdown-trace.language.malformed-link")
         return diagnostic;
       const offset = diagnostic.sourceRanges[0].start.offset;
       const owner = fragments.find(
@@ -123,18 +123,6 @@ export function analyzeDocument(
         ),
       };
     });
-    extracted.exclusions = extracted.exclusions.filter(
-      (e) =>
-        !extracted.diagnostics.some(
-          (d) =>
-            d.code === "markdown-trace.language.malformed-expression" &&
-            d.sourceRanges.some(
-              (r) =>
-                r.start.offset <= e.range.start.offset &&
-                r.end.offset >= e.range.end.offset,
-            ),
-        ),
-    );
     const relationships: Relationship[] = [],
       incoming = new Map<string, ReferenceMatch[]>(),
       outgoing = new Map<string, ReferenceMatch[]>();

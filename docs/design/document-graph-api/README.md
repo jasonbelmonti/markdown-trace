@@ -1,8 +1,10 @@
 # Document graph API draft
 
+**Current authoring convention:** The owner selected standard Markdown links on 2026-09-16. Use the [experimental guide](../../experimental-document-graph.md) and fixtures/document-graph for draft2. The brace-language fixtures and their checks below describe draft1 design evidence only; they no longer define runtime syntax or block implementation. The graph, validation, traversal and context interface proposals remain available here.
+
 Start with the [interface packet](../markdown-trace-document-graph-interfaces.md). It defines proposed behavior and distinguishes review decisions from implementation gates. The declaration files under contracts/ remain design artifacts. The graph/direct-query subset is now runnable through the separate [experimental API](../../experimental-document-graph.md); validation, traversal and context signatures remain proposed.
 
-The [consumer example](examples/consumer.ts) exercises the proposed analysis, validation, lookup, references, traversal and context signatures. The [profile example](examples/profile.ts) defines vocabulary as data. The [case ledger](examples/cases.md) and [expectations](examples/expectations.json) were authored independently of the extractor. Runtime tests now compare real extraction and direct queries to the existing source annotations.
+The [consumer example](examples/consumer.ts) exercises the proposed analysis, validation, lookup, references, traversal and context signatures. The [profile example](examples/profile.ts) defines vocabulary as data. The [case ledger](examples/cases.md) and [expectations](examples/expectations.json) were authored independently of the extractor. Runtime tests now exercise the separate draft2 link fixtures; these draft1 source annotations are not runtime conformance evidence.
 
 Run these checks from the repository root after npm ci:
 

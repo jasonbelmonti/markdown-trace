@@ -20,7 +20,7 @@ The [documentation map](docs/README.md) identifies current guidance and retained
 - Queries for definitions, occurrences, incoming/outgoing references, and bounded traversal.
 - Context extraction with source locations, inclusion reasons, and visible size limits.
 
-Markdown Engine supplies Markdown structure and source locations. Markdown Trace owns graph interpretation, integrity, validation, and querying. The experimental API implements the current draft identity syntax and ownership rules; stable language and release compatibility remain later decisions.
+Markdown Engine supplies Markdown structure and source locations. Markdown Trace owns graph interpretation, integrity, validation, and querying. The experimental API uses standard Markdown links for declarations and typed relationships, with constrained `ctx://trace/entity/ID` destinations; stable language and release compatibility remain later decisions.
 
 ## What runs today
 
@@ -52,7 +52,7 @@ Run the document-wide graph and backlinks demonstration:
 npm run demo:graph
 ```
 
-See the [experimental API guide](docs/experimental-document-graph.md) for profile configuration and query examples.
+See the [experimental API guide](docs/experimental-document-graph.md) for link syntax, profile configuration and query examples.
 
 Run the existing table-profile demonstration:
 

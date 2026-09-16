@@ -12,23 +12,18 @@ function unwrap(result) {
 }
 
 const [
-  documentId = "docs/design/document-graph-api/examples/mixed-layout.md",
+  documentId = "fixtures/document-graph/mixed-layout.md",
   identifier = "REQ-2",
 ] = process.argv.slice(2);
 const profile = unwrap(
-  compileProfile({
-    schemaVersion: "markdown-trace.document-profile.v1",
-    profileId: "graph-demo",
-    interpretation: {
-      language: "markdown-trace.identity.draft1",
-      entityKinds: [
-        { name: "requirement", prefixes: ["REQ"] },
-        { name: "work", prefixes: ["WP"] },
-        { name: "validation", prefixes: ["VAL"] },
-      ],
-    },
-    validation: { minEntities: 0, allowedRelations: [], rules: [] },
-  }),
+  compileProfile(
+    JSON.parse(
+      await readFile(
+        new URL("../fixtures/document-graph/profile.json", import.meta.url),
+        "utf8",
+      ),
+    ),
+  ),
 );
 const text = await readFile(documentId, "utf8");
 const analysis = unwrap(
