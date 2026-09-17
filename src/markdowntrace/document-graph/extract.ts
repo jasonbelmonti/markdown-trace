@@ -27,7 +27,12 @@ export function extract(
   const { text } = coordinates;
   const parsed = parse(text, { path: documentId });
   const normalized = normalize(parsed.parsed),
-    output: Extraction = { blocks: [], diagnostics: [], exclusions: [] };
+    output: Extraction = {
+      document: normalized.document,
+      blocks: [],
+      diagnostics: [],
+      exclusions: [],
+    };
   const destinations = new Map(
     documentQueries
       .linkReferences(normalized.document)
