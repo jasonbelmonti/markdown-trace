@@ -32,6 +32,32 @@ For a located backlink summary instead:
 node scripts/demo-document-graph.mjs "/absolute/path/to/your-spec.md" REQ-1
 ```
 
+## Export a Mermaid diagram
+
+From the built checkout, write Mermaid text directly to a file:
+
+```sh
+node scripts/demo-document-graph.mjs "/absolute/path/to/your-spec.md" --mermaid > /tmp/markdown-trace-graph.mmd
+```
+
+Use the same `--profile` option for custom vocabulary. `--graph` and `--mermaid` are mutually exclusive. The output has no Markdown fence or console preamble; paste it inside a `mermaid` fenced code block in a compatible Markdown viewer, or open it with a Mermaid renderer.
+
+The diagram includes every identifier, including isolated ones, and one directed, labeled edge per reference occurrence. Repeated references remain separate edges. Missing/duplicate definitions and unknown entity kinds are labeled. References without a unique owner use separate warning nodes showing their source line/column; ambiguous nodes list candidate identifiers without assigning the edge to any candidate. The metadata box shows extraction coverage, diagnostic/exclusion counts, and that policy has not been evaluated.
+
+The export is a visual projection of the snapshot, not its full serialization. Use `--graph` for detailed diagnostics, provenance and source ranges. The exporter does not parse Markdown, evaluate validation rules, filter large graphs, or render SVG/PNG. Large diagrams remain subject to the chosen renderer's limits; export does not truncate them.
+
+The library adapter also works with an analyzer-produced snapshot restored from JSON:
+
+```js
+import { exportMermaid } from '@jasonbelmonti/markdown-trace/experimental/graph';
+
+const mermaid = exportMermaid(analysis.snapshot); // string, ending in a newline
+```
+
+`exportMermaid(snapshot: GraphSnapshot): string` is a synchronous, read-only formatter. It accepts a valid `markdown-trace.document-graph.v1` snapshot; it does not validate arbitrary JSON or require an issued analysis handle. Snapshot array order determines diagram order and generated node IDs.
+
+## Custom vocabulary
+
 The default profile maps REQ/WP/VAL to requirement/work/validation. Other canonical IDs remain in the graph with `entityKind: null`; they are not discarded. To map your own prefixes, copy and edit [the JSON profile](../fixtures/document-graph/profile.json), then supply it explicitly:
 
 ```sh
@@ -110,7 +136,7 @@ The graph/query contracts remain unchanged. Runtime source fragments follow Engi
 
 ## Results and limits
 
-Every operation returns `{ ok: true, value }` or `{ ok: false, error }`. Invalid profiles, fabricated handles, invalid query bounds, unusable source maps, and exceeded analysis limits return errors. Analysis accepts caller-supplied text; it performs no file reads or network access.
+Profile compilation, analysis and query operations return `{ ok: true, value }` or `{ ok: false, error }`; the Mermaid formatter returns a string directly. Invalid profiles, fabricated handles, invalid query bounds, unusable source maps, and exceeded analysis limits return errors. Analysis accepts caller-supplied text; it performs no file reads or network access.
 
 `analysis.snapshot` contains immutable identifiers, occurrences, relationships, source fragments, exclusions and diagnostics. Each reference occurrence contributes one relationship, so repeated references remain distinct. Incoming queries retain unowned and ambiguous references; outgoing queries return references with a unique owner matching the requested identifier.
 
