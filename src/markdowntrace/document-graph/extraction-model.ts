@@ -1,4 +1,4 @@
-import type { EngineNode } from "@jasonbelmonti/markdown-engine";
+import type { EngineNode, normalize } from "@jasonbelmonti/markdown-engine";
 import type { Diagnostic, SourceRange } from "./contracts/source.js";
 
 export interface Token {
@@ -20,6 +20,7 @@ export interface Block extends NodeInfo {
   header: boolean;
 }
 export interface Extraction {
+  document: ReturnType<typeof normalize>["document"];
   blocks: Block[];
   diagnostics: Diagnostic[];
   exclusions: { range: SourceRange; reason: string }[];
