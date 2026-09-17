@@ -53,6 +53,8 @@ import {
   analyzeDocument, compileProfile, exportMermaid, findIncoming, findOutgoing, lookupIdentifier,
   type AnalysisLimits, type DocumentAnalysis, type DocumentSource, type Outcome,
   type GraphSnapshot, type LookupResult, type ReferencePage, type ReferenceQuery, type TraceProfile,
+  compileValidationProfile, validateGraph, type TraceValidationProfile, type GraphValidationReport,
+  type ValidationProfileInput, type GraphValidationRule, type SourceSelector, type ValidationRuleResult, type ValidationDiagnostic,
 } from "@jasonbelmonti/markdown-trace/experimental/graph";
 
 export const compile: (input: unknown) => Outcome<TraceProfile> = compileProfile;
@@ -61,3 +63,12 @@ export const lookup: (analysis: DocumentAnalysis, identifier: string) => Outcome
 export const incoming: (analysis: DocumentAnalysis, identifier: string, query?: ReferenceQuery) => Outcome<ReferencePage> = findIncoming;
 export const outgoing: typeof incoming = findOutgoing;
 export const mermaid: (snapshot: GraphSnapshot) => string = exportMermaid;
+export const compileValidation: (json: string) => Outcome<TraceValidationProfile> = compileValidationProfile;
+export const validateAnalysis: (analysis: DocumentAnalysis, profile: TraceValidationProfile) => Outcome<GraphValidationReport> = validateGraph;
+export interface ValidationContractClosure {
+  readonly profile: ValidationProfileInput;
+  readonly rule: GraphValidationRule;
+  readonly selector: SourceSelector;
+  readonly result: ValidationRuleResult;
+  readonly diagnostic: ValidationDiagnostic;
+}
