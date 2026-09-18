@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { lstatSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -57,7 +57,7 @@ try {
     const protectedStats = [path, profilePath, structuralProfile].map(input => statSync(input));
     for (const name of ["report.json", "graph.json", "graph.mmd"]) {
       const outputPath = join(out, name);
-      if (existsSync(outputPath)) {
+      if (lstatSync(outputPath, { throwIfNoEntry: false })) {
         const outputStat = statSync(outputPath);
         if (protectedStats.some(fileStat => fileStat.dev === outputStat.dev && fileStat.ino === outputStat.ino))
           throw new Error("Output must not overwrite an input or another output.");

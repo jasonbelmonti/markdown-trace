@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { linkSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { linkSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, readlinkSync, symlinkSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
@@ -55,6 +55,18 @@ assert.equal(JSON.parse(rejected.stderr).code, "runtime-error");
 assert.deepEqual(outputNames.map(name => fileHash(join(aliasedOutput, name))), outputBefore,
   "Rejecting aliased outputs must preserve every existing output");
 results.push({ case: "aliased outputs", runtimeExit: 2, outputsPreserved: true });
+
+const danglingOutput = mkdtempSync(join(output, "dangling-output-"));
+symlinkSync("report.json", join(danglingOutput, "graph.mmd"));
+const danglingRejected = spawnSync(process.execPath, [join(here, "run.mjs"), sourcePath, "--out", danglingOutput], {
+  encoding: "utf8", timeout: 30_000,
+});
+assert.equal(danglingRejected.status, 2, "Dangling output links must fail before writing");
+assert.equal(danglingRejected.stdout, "");
+assert.equal(JSON.parse(danglingRejected.stderr).valid, false);
+assert.deepEqual(readdirSync(danglingOutput), ["graph.mmd"], "No outputs may be created after rejecting a dangling link");
+assert.equal(readlinkSync(join(danglingOutput, "graph.mmd")), "report.json");
+results.push({ case: "dangling output alias", runtimeExit: 2, outputsPreserved: true });
 
 const definition = "[Remove a slice link and misdirect a criterion link](ctx://trace/entity/VAL-2?role=definition)";
 const visibleCheck = "Remove a slice link and misdirect a criterion link";
