@@ -5,28 +5,36 @@ first and verify its adjacent checksum. Its revision 3 completion and review
 boundary governs every handoff below. Do not use the older runnable-graph task
 to exclude the package integration authorized by the owner.
 
-The stack starts from `origin/main` at
-`c1c1c4b7a767c5f864e6a47b798363e29d115567`, fetched on 2026-09-17. Review
-each PR against its declared base and merge in the order below. The complete
-change includes the earlier TaskDefinition trial; inspect it with
-`git diff c1c1c4b7a767c5f864e6a47b798363e29d115567...codex/task-definition-trace-pilot`.
+The remaining PRs target `main`, fetched at
+`94a6c7cc0b3cc5c1dd681ef6690165389266a5e5` on 2026-09-18. PR #82 is
+already on main. PR #85 carries the reviewed #83 API changes to main because
+#83 merged into the former #82 branch. Its head,
+`24e39271f17b37557ba02706579d75c3f51334e5`, has the same complete Git tree
+as the reviewed #83 head `ee716f4d896899602eaceec834bb97210f69ce3d`.
+
+Merge #85 before #84. The #84 branch includes #85 and the two #83 review
+fixes. While #85 is pending, GitHub's main-based #84 diff includes that
+dependency; isolate the R6 review with
+`git diff 24e39271f17b37557ba02706579d75c3f51334e5...codex/task-definition-trace-pilot`.
+After #85 merges, the ordinary #84 PR diff has that same adapter/docs boundary.
 In the review table, `DG` means `src/markdowntrace/document-graph/`.
 
 | Order | Branch | PR base | Review scope |
 | --- | --- | --- | --- |
-| 1 | `codex/retain-graph-engine-capture` | `main` | R2: retain the existing normalized document privately; preserve graph/query/export behavior. |
-| 2 | `codex/graph-profile-validation` | `codex/retain-graph-engine-capture` | R1, R3, R4 and R5: compiler, source coverage, graph policy, exports and package tests. Includes the task, annotation convention and profile used as test inputs; the one-parse test exercises R2 with validation present. |
-| 3 | `codex/task-definition-trace-pilot` | `codex/graph-profile-validation` | R6: runnable skill adapter, defect/repair proof, usage guidance and this review map. |
+| Landed (#82) | `codex/retain-graph-engine-capture` | `main` | R2: retain the existing normalized document privately; preserve graph/query/export behavior. |
+| Next (#85) | `codex/land-graph-validation-on-main` | `main` | Previously reviewed R1, R3, R4 and R5: compiler, source coverage, graph policy, exports and package tests, including the two #83 review fixes. |
+| Then (#84) | `codex/task-definition-trace-pilot` | `main` | R6: runnable skill adapter, defect/repair proof, usage guidance and this review map; depends on #85. |
 
-The task and its checksum enter the stack with PR 2. Read them from that branch
-when reviewing PR 1. Each PR body links its dependency, this contract and its
-specific verification. The six review topics remain separate questions within
-three buildable PRs; shared test inputs stay with the tests that consume them.
+The task, checksum, annotation convention and profile are included in #85 and
+inherited by #84. Each PR body links its dependency, this contract and its
+specific verification. The six review topics remain separate questions across
+the capture, package API and adapter boundaries; shared test inputs stay with
+the tests that consume them.
 
 Verification: run `npm run ci:enforcement` at each PR checkpoint, including the
-real packed consumer. The complete integration passed with 34 test files and
-271 tests before splitting. The PR bodies record the fresh checks on each
-isolated commit. At the stack tip, rerun the TaskDefinition command proof with
+real packed consumer. The reviewed API, including remediation, passed with
+36 test files and 275 tests. The PR bodies record checks against their exact
+heads. At the stack tip, rerun the TaskDefinition command proof with
 `node experiments/task-definition-trace/verify.mjs`; it records its input and
 built-runtime fingerprints in its ignored `output/verification.json`.
 Before relying on saved observations, verify their fingerprints against the
