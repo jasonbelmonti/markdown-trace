@@ -4,15 +4,15 @@ The first document-wide graph runtime landed in [PR #78](https://github.com/jaso
 
 ## Document-wide graph and direct queries
 
-The `experimental/graph` package entry point exports `compileProfile`, `analyzeDocument`, `lookupIdentifier`, `findIncoming`, `findOutgoing`, and `exportMermaid`. Analysis uses Markdown Engine's public tree and source maps across headings, paragraphs, lists, blockquotes and tables, under `markdown-trace.identity.draft2`. Standard Markdown links carry declarations (`?role=definition`) and typed references (`?rel=implements`) in `ctx://trace/entity/ID` destinations; bare IDs remain generic mentions.
+The `experimental/graph` package entry point exports `compileProfile`, `analyzeDocument`, `lookupIdentifier`, `findIncoming`, `findOutgoing`, `exportMermaid`, `compileValidationProfile`, and `validateGraph`. Analysis uses Markdown Engine's public tree and source maps across headings, paragraphs, lists, blockquotes and tables, under `markdown-trace.identity.draft2`. Standard Markdown links carry declarations (`?role=definition`) and typed references (`?rel=implements`) in `ctx://trace/entity/ID` destinations; bare IDs remain generic mentions.
 
-The immutable snapshot preserves declaration/mention distinctions, duplicate and missing definitions, unknown vocabulary, ambiguous ownership, source fragments and diagnostics. Incoming/outgoing indexes support source-ordered pagination and relationship filters. Limits apply to source bytes and occurrence count. Analysis coverage and graph validity are separate: profile policy is compiled but not evaluated in this slice.
+The immutable snapshot preserves declaration/mention distinctions, duplicate and missing definitions, unknown vocabulary, ambiguous ownership, source fragments and diagnostics. Incoming/outgoing indexes support source-ordered pagination and relationship filters. Limits apply to source bytes and occurrence count. Analysis coverage and graph validity are separate. The [validation API](experimental-graph-validation.md) evaluates the versioned validation profile over the captured graph and Engine document, with one parse per analysis. The original document-profile.v1 compiler retains its compile-only validation fields.
 
 `npm run demo:graph` prints a mixed-layout summary and two located backlinks to `REQ-2`. `node scripts/demo-document-graph.mjs path/to/spec.md --graph` prints the full snapshot from a built checkout; `--profile path/to/profile.json` supplies domain vocabulary. Tests exercise link declarations and references across layouts, Engine-resolved reference links, malformed destinations, exact ranges, API ingress, immutability, pagination and clean-package consumption. This is initial correctness evidence, not release-scale or consuming-agent validation.
 
 `exportMermaid(snapshot)` formats that snapshot as a diagram without re-extracting source. The demo's `--mermaid` option emits this text directly. Isolated identifiers, repeated edges, missing/duplicate definitions and uncertain owners remain visible, alongside coverage and diagnostic/exclusion counts. Rendering and graph filtering are separate concerns.
 
-Graph validation, traversal, context projection, stable syntax/API approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces.
+Source annotation coverage, allowed relations and incoming/outgoing cardinality validation are implemented. Traversal, context projection, stable syntax/API approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces.
 
 ## Public API and CLI
 
@@ -72,4 +72,4 @@ Omitting `--check` from `derive-sidecar` intentionally writes the generated arti
 
 ## Implementation resumption
 
-Reuse Markdown Engine integration, source locations, hashing, structured errors, atomic output, and package tests. Extend the experimental shared graph with profile validation and bounded context queries. Keep the legacy table-specific evidence model and closed vocabulary isolated until an explicit migration. Align release documentation/distribution after the contract is proven.
+Reuse Markdown Engine integration, source locations, hashing, structured errors, atomic output, and package tests. Extend the experimental shared graph with bounded context queries; profile validation now reuses its Engine capture and indexes. Keep the legacy table-specific evidence model and closed vocabulary isolated until an explicit migration. Align release documentation/distribution after the contract is proven.

@@ -104,7 +104,7 @@ const outgoing = unwrap(findOutgoing(analysis, 'WP-1', {
 }));
 ```
 
-`compileProfile` checks and captures profile configuration. It does **not** evaluate relationship validity yet. The `validation` section is accepted for later policy evaluation; it neither removes relationships nor turns analysis into a validity verdict. Changing only that section leaves the graph and analysis identity unchanged.
+`compileProfile` checks and captures the original document-profile.v1 configuration. Its `validation` section remains compile-only for compatibility. Use [`compileValidationProfile` and `validateGraph`](experimental-graph-validation.md) with the separate validation profile schema to evaluate graph and source-coverage rules. Neither compiler removes relationships or turns analysis into a validity verdict. Changing only that section leaves the graph and analysis identity unchanged.
 
 ## Link identity language
 
@@ -140,10 +140,10 @@ Profile compilation, analysis and query operations return `{ ok: true, value }` 
 
 `analysis.snapshot` contains immutable identifiers, occurrences, relationships, source fragments, exclusions and diagnostics. Each reference occurrence contributes one relationship, so repeated references remain distinct. Incoming queries retain unowned and ambiguous references; outgoing queries return references with a unique owner matching the requested identifier.
 
-`coverage: 'complete'` means extraction completed without error diagnostics. It does **not** mean the graph is valid. Malformed Trace links, unsupported structures and uncertain reference ownership produce `partial` coverage with queryable evidence. Duplicate definitions, unknown kinds and missing targets are represented explicitly for later validation.
+`coverage: 'complete'` means extraction completed without error diagnostics. It does **not** mean the graph is valid. Malformed Trace links, unsupported structures and uncertain reference ownership produce `partial` coverage with queryable evidence. Duplicate definitions, unknown kinds and missing targets are represented explicitly and checked by the validation API.
 
 Ranges use zero-based UTF-16 offsets, one-based lines/columns, and exclusive ends. SHA-256 hashes cover the original UTF-8 source. Keep the source text alongside the analysis when slicing locations. Issued profile/analysis handles are local to the loaded module instance; serializing a snapshot does not create a reusable handle.
 
 Reference pages are ordered by source occurrence. Defaults are offset 0 and limit 100, with a maximum page size of 1,000. Follow `nextOffset` until it is null. Omitted relation filters select all kinds; an empty filter selects none. An absent identifier yields a null record and empty results.
 
-Next capabilities are profile-based graph validation, bounded traversal and source-context projection over this same graph. The existing package-root validator and CLI retain their compatibility behavior.
+Profile-driven validation is available over this same analysis. Next capabilities are bounded traversal and source-context projection. The existing package-root validator and CLI retain their compatibility behavior.

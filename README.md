@@ -2,7 +2,7 @@
 
 Markdown Trace is being developed into a document graph engine for complex Markdown specifications: discover identities and relationships throughout a document under a constrained syntax, validate relationships against developer-owned profiles, and query the graph for relevant source context.
 
-**The first document-wide graph and backlinks API is runnable.** It is experimental; relationship-policy validation and context assembly remain to be implemented. The repository also retains the table-based validator and registry/trace-link compatibility tools. The package is version `0.1.0`, guarded by `private: true`, and in development.
+**Document-wide graphs, backlinks and profile-driven validation are runnable.** The APIs are experimental; traversal and context assembly remain to be implemented. The repository also retains the table-based validator and registry/trace-link compatibility tools. The package is version `0.1.0`, guarded by `private: true`, and in development.
 
 ## Start here
 
@@ -31,10 +31,10 @@ Markdown Engine supplies Markdown structure and source locations. Markdown Trace
 | `derive` | Registry/graph derivation using existing heading and `ctx://trace` conventions. |
 | `derive-sidecar` | Generated registry writing and read-only stale/missing checks. |
 | `migration-check` | Manual-versus-generated registry comparison. |
-| `experimental/graph` | Document-wide analysis, identifier lookup, incoming and outgoing references with source locations. |
-| Graph policy validation, traversal and context projection | Follow-up work over the shared graph. |
+| `experimental/graph` | Document-wide analysis, direct queries, Mermaid export and [profile-driven validation](docs/experimental-graph-validation.md). |
+| Traversal and context projection | Follow-up work over the shared graph. |
 
-A graph-validation pass covers only implemented checks. Empty/unrecognized documents can pass; duplicate definitions, dangling references, and ranges are not comprehensively validated. This is not a complete spec-validity verdict.
+The legacy table validator covers only its implemented checks. Empty/unrecognized documents can pass; duplicate definitions, dangling references, and ranges are not comprehensively validated. This is not a complete spec-validity verdict.
 
 ## Development setup
 
