@@ -8,13 +8,7 @@ export function selectTargets(
   document: Extraction["document"],
   select: SourceSelector,
 ) {
-  const scopes =
-    select.section === undefined
-      ? null
-      : documentQueries
-          .sections(document, { title: select.section })
-          .flatMap((section) => [section.headingTarget, ...section.bodyTargets])
-          .map((target) => requiredRange(target.sourceRange));
+  const scopes = sectionRanges(document, select.section);
   const within = (range: SourceRange) =>
     scopes === null || scopes.some((scope) => contains(scope, range));
   if (select.target === "node") {
@@ -44,4 +38,27 @@ export function selectTargets(
         }));
     })
     .sort((a, b) => a.sourceRange.start.offset - b.sourceRange.start.offset);
+}
+
+function sectionRanges(
+  document: Extraction["document"],
+  title: string | undefined,
+): SourceRange[] | null {
+  if (title === undefined) return null;
+  const sections = documentQueries.sections(document);
+  const byId = new Map(sections.map((section) => [section.target.id, section]));
+  const pending = sections.filter((section) => section.title === title);
+  const visited = new Set<string>();
+  const ranges: SourceRange[] = [];
+  while (pending.length) {
+    const section = pending.pop()!;
+    if (visited.has(section.target.id)) continue;
+    visited.add(section.target.id);
+    // Engine section targets locate headings; body and child sections carry scope.
+    for (const target of [section.headingTarget, ...section.bodyTargets])
+      ranges.push(requiredRange(target.sourceRange));
+    for (const child of section.childSections)
+      pending.push(byId.get(child.id)!);
+  }
+  return ranges;
 }
