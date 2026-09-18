@@ -43,6 +43,11 @@ export function runBuiltins(
             (item) => item.identifier === record.identifier,
           )!.range,
           record.identifier,
+          record.definition.status === "missing" &&
+            record.entityKind !== null &&
+            graph.coverage === "partial"
+            ? "indeterminate"
+            : "fail",
         );
     }
     for (const edge of graph.relationships) {
