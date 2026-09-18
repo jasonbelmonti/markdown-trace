@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { linkSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
@@ -39,6 +39,22 @@ const mermaid = readFileSync(join(output, "valid/graph.mmd"), "utf8");
 assert.ok(mermaid.startsWith("flowchart LR\n"));
 assert.equal(mermaid.split("-->").length - 1, 6);
 results.push({ case: "valid authored task", structuralValid: true, traceValid: true });
+
+const aliasedOutput = mkdtempSync(join(output, "aliased-outputs-"));
+writeFileSync(join(aliasedOutput, "report.json"), "{\"preserved\":\"report\"}\n");
+writeFileSync(join(aliasedOutput, "graph.json"), "{\"preserved\":\"graph\"}\n");
+linkSync(join(aliasedOutput, "report.json"), join(aliasedOutput, "graph.mmd"));
+const outputNames = ["report.json", "graph.json", "graph.mmd"];
+const outputBefore = outputNames.map(name => fileHash(join(aliasedOutput, name)));
+const rejected = spawnSync(process.execPath, [join(here, "run.mjs"), sourcePath, "--out", aliasedOutput], {
+  encoding: "utf8", timeout: 30_000,
+});
+assert.equal(rejected.status, 2, "Aliased outputs must fail before writing");
+assert.equal(rejected.stdout, "", "An output conflict must not emit a success report");
+assert.equal(JSON.parse(rejected.stderr).code, "runtime-error");
+assert.deepEqual(outputNames.map(name => fileHash(join(aliasedOutput, name))), outputBefore,
+  "Rejecting aliased outputs must preserve every existing output");
+results.push({ case: "aliased outputs", runtimeExit: 2, outputsPreserved: true });
 
 const definition = "[Remove a slice link and misdirect a criterion link](ctx://trace/entity/VAL-2?role=definition)";
 const visibleCheck = "Remove a slice link and misdirect a criterion link";

@@ -54,13 +54,14 @@ try {
   };
   if (values.out) {
     const out = resolve(values.out);
-    const inputStats = [path, profilePath, structuralProfile].map(input => statSync(input));
+    const protectedStats = [path, profilePath, structuralProfile].map(input => statSync(input));
     for (const name of ["report.json", "graph.json", "graph.mmd"]) {
       const outputPath = join(out, name);
       if (existsSync(outputPath)) {
         const outputStat = statSync(outputPath);
-        if (inputStats.some(inputStat => inputStat.dev === outputStat.dev && inputStat.ino === outputStat.ino))
-          throw new Error("Output must not overwrite an input task or profile.");
+        if (protectedStats.some(fileStat => fileStat.dev === outputStat.dev && fileStat.ino === outputStat.ino))
+          throw new Error("Output must not overwrite an input or another output.");
+        protectedStats.push(outputStat);
       }
     }
     mkdirSync(out, { recursive: true });
