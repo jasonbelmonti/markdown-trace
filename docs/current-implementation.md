@@ -18,7 +18,9 @@ Source annotation coverage, allowed relations and incoming/outgoing cardinality 
 
 `markdown-trace-document` is the experimental document-wide command. It requires
 an explicit validation profile and supports validation reports, full graph JSON,
-incoming/outgoing queries and Mermaid export. The
+incoming/outgoing queries, Mermaid export and visual HTML reports. HTML combines
+the graph, Engine-captured labels and definition context, and validation findings;
+its browser renderer loads Mermaid from a pinned CDN. The
 [shared Trace skill](../skills/markdown-trace/SKILL.md) uses it alongside a
 document-owned profile and optional domain guide. TaskDefinition's structural and
 semantic gates stay with its authoring skill; the installed skill is unchanged.

@@ -6,12 +6,24 @@ import type { GraphSnapshot } from "../contracts/analysis.js";
  * arbitrary JSON. Nodes and relationships retain snapshot order.
  */
 export function exportMermaid(snapshot: GraphSnapshot): string {
+  return renderMermaid(snapshot, {
+    direction: "LR",
+    metadata: `Extraction: ${snapshot.coverage}<br/>Diagnostics: ${snapshot.diagnostics.length}; exclusions: ${snapshot.exclusions.length}<br/>Policy not evaluated`,
+  });
+}
+
+/** Internal presentation options; facts and uncertainty always come from the snapshot. */
+export function renderMermaid(snapshot: GraphSnapshot, presentation: {
+  direction: "LR" | "TD";
+  metadata?: string;
+  labels?: ReadonlyMap<string, string>;
+}): string {
   const nodes = new Map<string, string>();
   const occurrences = new Map(snapshot.occurrences.map((item) => [item.id, item]));
   const lines = [
-    "flowchart LR",
-    `  graphStatus["Extraction: ${snapshot.coverage}<br/>Diagnostics: ${snapshot.diagnostics.length}; exclusions: ${snapshot.exclusions.length}<br/>Policy not evaluated"]:::metadata`,
+    `flowchart ${presentation.direction}`,
   ];
+  if (presentation.metadata) lines.push(`  graphStatus["${presentation.metadata}"]:::metadata`);
 
   snapshot.identifiers.forEach((record, index) => {
     const node = `n${index}`;
@@ -23,7 +35,9 @@ export function exportMermaid(snapshot: GraphSnapshot): string {
       notes.push(`duplicate definitions: ${record.definition.occurrenceIds.length}`);
     const suffix = notes.length ? ` (${notes.join("; ")})` : "";
     const style = record.definition.status === "resolved" ? "" : ":::unresolved";
-    lines.push(`  ${node}["${label(record.identifier + suffix)}"]${style}`);
+    const title = presentation.labels?.get(record.identifier);
+    const description = title && title !== record.identifier ? `<br/>${label(title)}` : "";
+    lines.push(`  ${node}["${label(record.identifier + suffix)}${description}"]${style}`);
   });
 
   snapshot.relationships.forEach((relationship, index) => {

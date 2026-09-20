@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
+import { exportHtml } from "./export/html.js";
 import {
   analyzeDocument, compileValidationProfile, exportMermaid,
   findIncoming, findOutgoing, lookupIdentifier, validateGraph,
@@ -12,7 +13,7 @@ const help = `Usage: markdown-trace-document --file document.md --profile profil
 Experimental document-wide Trace validation. The profile must use
 markdown-trace.validation-profile.experimental.v1. No default vocabulary.
 
---format report|graph|query|mermaid  Default: report
+--format report|graph|query|mermaid|html  Default: report
 --identifier ID                     Required for query
 --direction incoming|outgoing       Query direction; default: incoming
 --offset N --limit N                Query page; defaults: 0, 100; limit <= 1000
@@ -21,6 +22,7 @@ markdown-trace.validation-profile.experimental.v1. No default vocabulary.
 Report: validation JSON. Graph: { validation, graph } JSON.
 Query: { validation, lookup, references } JSON, including pagination and ranges.
 Mermaid: diagram on stdout, validation JSON on stderr (also on pass).
+HTML: one visual report on stdout; its diagram loads Mermaid from a pinned CDN.
 Exit 0: validation passed; 1: failed or indeterminate; 2: invocation/runtime error.
 Invalid graphs remain available. An ID absent from the graph returns a null record.
 Limits: 2,000,000 UTF-8 source bytes and 50,000 occurrences.
@@ -44,7 +46,7 @@ function options(args: string[]) {
   if (values.help) return values;
   if (!values.file || !values.profile)
     throw new Error("Both --file and --profile are required; use --help.");
-  if (!["report", "graph", "query", "mermaid"].includes(values.format))
+  if (!["report", "graph", "query", "mermaid", "html"].includes(values.format))
     throw new Error("Unknown --format; use --help.");
   if (values.format === "query") {
     if (!values.identifier) throw new Error("Query requires --identifier.");
@@ -73,6 +75,9 @@ export async function runDocumentCommand(
     ));
     const validation = value(validateGraph(analysis, profile));
     switch (flags.format) {
+      case "html":
+        io.stdout(exportHtml(analysis, validation));
+        break;
       case "graph":
         io.stdout(json({ validation, graph: analysis.snapshot }));
         break;

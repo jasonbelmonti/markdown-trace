@@ -30,15 +30,16 @@ the command. An installed package exposes the entry point as
 | `--format graph` | `{ validation, graph }` JSON; graph is the complete snapshot. |
 | `--format query --identifier REQ-1` | `{ validation, lookup, references }` JSON; incoming references by default. |
 | `--format mermaid` | Mermaid on stdout and validation JSON on stderr, including on pass. |
+| `--format html` | Visual HTML report on stdout, combining the graph, definition context and validation findings. |
 
 Queries accept `--direction outgoing`, `--offset N` and `--limit N` (default 100,
 maximum 1,000). Follow `references.nextOffset` until null for all results.
 An absent identifier has a null lookup record and empty reference page. A query
-does not change the document's validation verdict. Graph/query commands analyze
+does not change the document's validation verdict. All formats analyze
 once and reuse the captured graph for validation and inspection.
 
 Every format exits 0 for pass, 1 for fail/indeterminate, or 2 for an invocation or
-runtime failure. Failure does not suppress an available graph or query result.
+runtime failure. Failure does not suppress an available graph, query or HTML report.
 Runtime failures emit JSON on stderr without a graph. The command reads inputs
 and writes only stdout/stderr; use distinct artifact paths when redirecting:
 
@@ -53,6 +54,30 @@ Limits are 2,000,000 UTF-8 source bytes and 50,000 occurrences. The command uses
 the packaged API and performs no domain-specific structural or semantic checks.
 Keep the validation report beside the diagram; Mermaid itself does not carry
 the evaluated profile verdict. The legacy `markdown-trace` commands are unchanged.
+
+### Visual report
+
+Generate a single HTML file and open it in a browser:
+
+```sh
+node dist/markdowntrace/document-graph/cli.js \
+  --file examples/preview-design/document.md \
+  --profile examples/preview-design/profile.json \
+  --format html > /tmp/preview-design.html
+```
+
+The page provides a graph with zoom/pan controls and SVG download, a searchable
+entity key with definition text and source lines, and the evaluated profile's
+verdict and findings. Labels and definition context come from the existing Engine
+capture. It preserves observed edges and uncertain definitions; it does not infer
+missing relationships. The search filters the key, not the graph.
+
+Opening the report needs an internet connection for the pinned Mermaid 11.12.0
+CDN module; fonts also load from Google Fonts with local fallbacks. Rendering
+runs in the browser. No browser or image-rendering dependency is added to the
+package. If the diagram cannot load, entity details and validation findings
+remain readable. The file is a static snapshot; regenerate it after source or
+profile changes. A failing report still writes HTML and exits 1.
 
 ## Skill composition
 
