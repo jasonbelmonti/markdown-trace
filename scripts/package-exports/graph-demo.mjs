@@ -26,4 +26,17 @@ export async function runGraphDemoSmoke(consumerDirectory, repositoryRoot) {
   assert.equal(conflict.status, 1);
   assert.equal(conflict.stdout, "");
   assert.match(conflict.stderr, /Choose either --graph or --mermaid/);
+
+  // Exercise the installed binary from outside the checkout, with an external profile.
+  const command = path.join(consumerDirectory, "node_modules/.bin/markdown-trace-document");
+  const documentArgs = [
+    "--file", path.join(repositoryRoot, "examples/preview-design/document.md"),
+    "--profile", path.join(repositoryRoot, "examples/preview-design/profile.json"),
+  ];
+  const validated = JSON.parse(run(command, documentArgs, options).stdout);
+  assert.equal(validated.status, "pass");
+  assert.equal(validated.identifiers, 3);
+  assert.equal(validated.relationships, 2);
+  const queried = JSON.parse(run(command, [...documentArgs, "--format", "query", "--identifier", "REQ-1"], options).stdout);
+  assert.deepEqual(queried.references.items.map(item => item.relationship.source.identifier), ["DES-1", "CHECK-1"]);
 }

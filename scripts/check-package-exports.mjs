@@ -140,8 +140,9 @@ function assertManifest(manifest, lockfile) {
   assert(manifest.engines?.node === NODE_RANGE, `Node range must remain ${NODE_RANGE}`);
   assert(
     JSON.stringify(manifest.bin) ===
-      JSON.stringify({ "markdown-trace": CLI_IMPORT }),
-    "package bin metadata must remain unchanged",
+      JSON.stringify({ "markdown-trace": CLI_IMPORT,
+        "markdown-trace-document": "./dist/markdowntrace/document-graph/cli.js" }),
+    "package bins must retain the legacy command and expose the document command",
   );
   assert(
     manifest.dependencies?.["@jasonbelmonti/markdown-engine"] === ENGINE_VERSION,
@@ -156,7 +157,8 @@ function assertManifest(manifest, lockfile) {
   assert(rootLock?.license === "MIT", "lockfile root license must be MIT");
   assert(
     JSON.stringify(rootLock?.bin) ===
-      JSON.stringify({ "markdown-trace": LOCK_CLI_IMPORT }),
+      JSON.stringify({ "markdown-trace": LOCK_CLI_IMPORT,
+        "markdown-trace-document": "dist/markdowntrace/document-graph/cli.js" }),
     "lockfile root bin metadata must match",
   );
   assert(
@@ -228,6 +230,7 @@ function assertTarballMembers(members) {
     "package/dist/markdowntrace/cli.js",
     "package/dist/markdowntrace/document-graph/index.js",
     "package/dist/markdowntrace/document-graph/index.d.ts",
+    "package/dist/markdowntrace/document-graph/cli.js",
   ]) {
     assert(members.includes(required), `tarball must contain ${required}`);
   }

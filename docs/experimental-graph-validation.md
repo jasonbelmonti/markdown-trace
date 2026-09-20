@@ -4,6 +4,77 @@ The `experimental/graph` package entry point applies external JSON rules to a
 captured Trace graph and Engine source structure. The [TaskDefinition trial](../experiments/task-definition-trace/README.md)
 exercises these exports through a real skill's structural validation and defect probes.
 
+## Shared command
+
+The experimental `markdown-trace-document` command accepts any local Markdown
+document and an explicit validation profile. From a checkout, run `npm ci` and
+`npm run build` once, then:
+
+```sh
+node dist/markdowntrace/document-graph/cli.js \
+  --file examples/preview-design/document.md \
+  --profile examples/preview-design/profile.json
+```
+
+The [preview design](../examples/preview-design/document.md) uses paragraphs and
+list items with three identities and two edges. The same command accepts
+`experiments/task-definition-trace/task-definition.md` with
+`experiments/task-definition-trace/profile.json`; that example has seven
+identities and six edges. Neither vocabulary nor document layout is built into
+the command. An installed package exposes the entry point as
+`markdown-trace-document`; the package remains private and unpublished.
+
+| Option | Output |
+| --- | --- |
+| `--format report` (default) | Validation report JSON, including source/profile hashes and located diagnostics. |
+| `--format graph` | `{ validation, graph }` JSON; graph is the complete snapshot. |
+| `--format query --identifier REQ-1` | `{ validation, lookup, references }` JSON; incoming references by default. |
+| `--format mermaid` | Mermaid on stdout and validation JSON on stderr, including on pass. |
+
+Queries accept `--direction outgoing`, `--offset N` and `--limit N` (default 100,
+maximum 1,000). Follow `references.nextOffset` until null for all results.
+An absent identifier has a null lookup record and empty reference page. A query
+does not change the document's validation verdict. Graph/query commands analyze
+once and reuse the captured graph for validation and inspection.
+
+Every format exits 0 for pass, 1 for fail/indeterminate, or 2 for an invocation or
+runtime failure. Failure does not suppress an available graph or query result.
+Runtime failures emit JSON on stderr without a graph. The command reads inputs
+and writes only stdout/stderr; use distinct artifact paths when redirecting:
+
+```sh
+node dist/markdowntrace/document-graph/cli.js \
+  --file examples/preview-design/document.md \
+  --profile examples/preview-design/profile.json \
+  --format mermaid > /tmp/preview-design.mmd 2> /tmp/preview-design-validation.json
+```
+
+Limits are 2,000,000 UTF-8 source bytes and 50,000 occurrences. The command uses
+the packaged API and performs no domain-specific structural or semantic checks.
+Keep the validation report beside the diagram; Mermaid itself does not carry
+the evaluated profile verdict. The legacy `markdown-trace` commands are unchanged.
+
+## Skill composition
+
+The repository-owned [markdown-trace skill](../skills/markdown-trace/SKILL.md)
+teaches protocol and command use. A document's producing skill owns content,
+structural validation and semantic review; its Trace profile owns machine rules.
+A short domain guide supplies the meaning of its kinds and connections.
+
+Two explicit compositions are available:
+
+- [TaskDefinition mapping](../experiments/task-definition-trace/authoring.md)
+  selects the shared skill and its table profile, alongside the installed
+  task-definition skill and its existing gates.
+- [Preview design guidance](../examples/preview-design/authoring.md) selects the
+  same skill with a paragraph/list profile and explains the intended connections.
+
+Load the chosen domain guide and profile when invoking the shared skill. This
+does not automatically enable annotations in other installed authoring skills.
+For local Codex use, the repository skill directory can be symlinked into the
+configured skills directory; retain this checkout so its runtime and references
+remain available. The npm package ships the command, not the skill or examples.
+
 ## API
 
 From the repository root, with dependencies installed and `npm run build` complete:
@@ -116,6 +187,6 @@ Completeness is limited to what the profile selects. A missing annotation in a
 selected source row can be detected even if no identity was extracted. An entirely
 missing row or an implied relationship in prose needs a separate structural or
 semantic requirement. No rules infer unexpressed relationships or certify evidence
-truth. Additional selectors/operators, installed-skill activation and production scale
+truth. Additional selectors/operators, automatic adoption by other authoring skills and production scale
 guarantees remain outside this integration. Mermaid exports contain graph facts
 and do not attach validation reports; present the report separately from the diagram.

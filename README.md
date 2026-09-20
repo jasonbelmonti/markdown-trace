@@ -9,6 +9,7 @@ Markdown Trace is being developed into a document graph engine for complex Markd
 1. [Current product direction](docs/design/markdown-trace-document-graph-overview.md)
 2. [Implemented capabilities and limitations](docs/current-implementation.md)
 3. [Runnable graph API and demo](docs/experimental-document-graph.md)
+4. [Shared validation command and authoring skill](docs/experimental-graph-validation.md#shared-command)
 
 The [documentation map](docs/README.md) identifies current guidance and retained test data. Superseded plans were removed; Git history retains them. Earlier YAML migration, automated-authoring, and release-only plans do not define the current objective.
 
@@ -32,6 +33,7 @@ Markdown Engine supplies Markdown structure and source locations. Markdown Trace
 | `derive-sidecar` | Generated registry writing and read-only stale/missing checks. |
 | `migration-check` | Manual-versus-generated registry comparison. |
 | `experimental/graph` | Document-wide analysis, direct queries, Mermaid export and [profile-driven validation](docs/experimental-graph-validation.md). |
+| `markdown-trace-document` | Experimental command for profile validation, graph export and direct queries; used by the shared Trace skill. |
 | Traversal and context projection | Follow-up work over the shared graph. |
 
 The legacy table validator covers only its implemented checks. Empty/unrecognized documents can pass; duplicate definitions, dangling references, and ranges are not comprehensively validated. This is not a complete spec-validity verdict.

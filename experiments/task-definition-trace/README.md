@@ -58,8 +58,9 @@ separately records the experimental validator's actual rule results.
 The TaskDefinition profile selects every matching data cell in its named sections.
 All selected rows require their configured annotations; a wholly unannotated row
 remains visible to the source selector. Shared validation checks may serve multiple
-slices. The adapter still requires TaskDefinition structure; use the reusable API
-for other layouts. No check certifies implied prose relationships, evidence truth
+slices. The adapter still requires TaskDefinition structure; use the
+[shared command](../../docs/experimental-graph-validation.md#shared-command)
+or reusable API for other layouts. No check certifies implied prose relationships, evidence truth
 or semantic readiness. The package exports compileValidationProfile and validateGraph. The installed
 skill remains unchanged.
 
