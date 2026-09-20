@@ -1,19 +1,24 @@
 ---
 name: markdown-trace
-description: Author and inspect Markdown Trace identities and typed relationships using an explicit document profile. Use when adding Trace annotations, validating annotation coverage or relationships, querying backlinks, or exporting a Trace graph from Markdown.
+description: Author Markdown Trace annotations and validation profiles, validate coverage and relationships, query backlinks, and export document graphs. Use with a document's explicit Trace profile or when creating or revising that profile.
 ---
 
 # Markdown Trace
 
 Use the document owner's Trace profile and domain guidance with the shared
 runtime. The document's authoring skill owns content, structural checks and
-semantic review. This skill owns protocol fluency and tool operation.
+semantic review. This skill owns protocol fluency, profile authoring and tool
+operation; the document owner supplies the domain meanings and requirements.
 
 ## Select the inputs
 
 Read the supplied document, Trace profile and any domain annotation guide.
-Require an explicit profile from the user or owning workflow; do not guess one
-from the filename. The command accepts
+For annotation or inspection, use the profile explicitly selected by the user or
+owning workflow; do not guess one from the filename. When asked to create or
+revise a profile, read [Profile authoring](references/profile-authoring.md) to
+translate document conventions into rules and prove their behavior before use.
+If no profile is selected and creating one is outside the request, ask for the
+profile. The command accepts
 `markdown-trace.validation-profile.experimental.v1`. Its interpretation names
 the entity kinds and prefixes; validation specifies permitted relationships,
 source selectors and required counts. Read those requirements before annotating.

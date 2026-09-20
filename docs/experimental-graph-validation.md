@@ -82,7 +82,10 @@ profile changes. A failing report still writes HTML and exits 1.
 ## Skill composition
 
 The repository-owned [markdown-trace skill](../skills/markdown-trace/SKILL.md)
-teaches protocol and command use. A document's producing skill owns content,
+teaches protocol, profile authoring and command use. Its
+[profile-authoring workflow](../skills/markdown-trace/references/profile-authoring.md)
+maps document conventions to supported rules and checks them with valid documents,
+deliberate defects and restored inputs. A document's producing skill owns content,
 structural validation and semantic review; its Trace profile owns machine rules.
 A short domain guide supplies the meaning of its kinds and connections.
 
