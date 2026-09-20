@@ -39,4 +39,10 @@ export async function runGraphDemoSmoke(consumerDirectory, repositoryRoot) {
   assert.equal(validated.relationships, 2);
   const queried = JSON.parse(run(command, [...documentArgs, "--format", "query", "--identifier", "REQ-1"], options).stdout);
   assert.deepEqual(queried.references.items.map(item => item.relationship.source.identifier), ["DES-1", "CHECK-1"]);
+  const html = run(command, [...documentArgs, "--format", "html"], options);
+  assert.match(html.stdout, /^<!doctype html>/);
+  assert.ok(html.stdout.includes("Trace checks passed"));
+  assert.ok(html.stdout.includes("Selection handler"));
+  assert.ok(html.stdout.includes("This check is proposed and has not run against an implementation."));
+  assert.equal(html.stderr, "");
 }
