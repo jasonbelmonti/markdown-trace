@@ -1,0 +1,291 @@
+{
+  "scope": "Task 1: shared Trace runtime contract and exact Engine 3.6.0 dependency upgrade. This does not attest a shared Trace installation or Fleet admission.",
+  "recordedAt": "2026-09-20T14:49:57.430Z",
+  "task": {
+    "file": "docs/tasks/shared-runtime-contract.md",
+    "revision": "1"
+  },
+  "baseline": {
+    "repository": "jasonbelmonti/markdown-trace",
+    "commit": "0a6bb8c00e36d5f5be78044899dd061630253518",
+    "fleetRepository": "jasonbelmonti/skill-fleet",
+    "fleetCommit": "1ef68a780cac6d8786b849db9f78ac284bbd935e"
+  },
+  "environment": {
+    "node": "v22.20.0",
+    "npm": "11.13.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "installedEngine": "3.6.0",
+    "enginePackageIntegrity": "sha512-0gIPXY/F7xN/NgeJTVPqjoSGu6rfXfABmRDWEV1q1vP1IDp8UY4x2AgKBgHcs3I1rjNEsPwBOiLIubMzOJEGAw=="
+  },
+  "testedState": {
+    "changedFileSha256": {
+      "AGENTS.md": "1a08515b9f30bf8f5d03d476e64ec7bb3c4cff80f756106c368eaf4299871ad2",
+      "docs/README.md": "1ccbf32a97efc46c83a76dd2c05bb39fff458794a45be9b7d44b6f3f83819ffb",
+      "docs/current-implementation.md": "ca60f0c413d9cce3d528ca50e537462cbee7ec6502b6d47bc3f62b0c7df94ecf",
+      "docs/design/shared-trace-runtime-contract.md": "846b71de6fc109cd7362aface64ef6c875fdf770a5c78639b9d060dda55d98f9",
+      "docs/evidence/determinism-repeat-report.md": "48913254529896c44bef4630940d8d6ccaf9ee845ec00036513ed9484fb3211f",
+      "docs/evidence/issue-key-collision-report.md": "27e08693817cb8a40d3a69830b97fdb8c42d294cdc6d2239e8c0c6df12dc6daf",
+      "docs/evidence/local-safety-report.md": "72d396aaa326211729e52b4dee6ece745f19de0687393d3db63f713975466a31",
+      "docs/evidence/negative-fixture-report.md": "eabe4f62548a33293005b0d2eb49ebdda501bccce40e936258f140dd6aabe916",
+      "docs/evidence/valid-fixture-report.md": "0d62353d5af5738cc096cb38c8cb5062e2f94c9f015d19a0e8450ab8bb6a3296",
+      "docs/experimental-document-graph.md": "39844eb63dd8aaa81982b67565db66194afebc214e170f9a02f2a1c4f1215fe4",
+      "docs/tasks/shared-runtime-contract.md": "aa6801badef3c55bee586c1b3f0b9f0f76d9c6fe33305ba23da675204d7b2a54",
+      "experiments/task-definition-trace/README.md": "95330ea3703e93fedd0a3c135f362a7b6f45f98e5dbb557c0b168cdb3e7d0612",
+      "package-lock.json": "c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c",
+      "package.json": "96bca9752d4e473d7fd77f1872e61cd7fcfe0478d871df43d289e8b8ddec82e0",
+      "scripts/check-package-exports.mjs": "f955a68c8006858b1c3e64a12774337e95fd9e6d88596eaef775b2c5ba2f68aa",
+      "scripts/package-exports/graph-consumer.mjs": "2dc4611a5504836201d558d6d3e2adf676b7be4434cd71f08429c3b9ba513ecd",
+      "scripts/package-exports/graph-demo.mjs": "199fda3e53f67aeb15049bef027f5630a2f454e878a2eba77ce5e1eb62dffb17",
+      "src/markdowntrace/document-graph/analyze.ts": "35736b867855abbd3ee12c305333e96756c3dcdeec89f9b3f24dff329f616bcb",
+      "src/markdowntrace/generated/release-metadata.ts": "96be59cedb903f485676f9eca48d86a284d2124b75130d56129f10e4358a6dba",
+      "tests/test_document_graph_command.test.ts": "7af09afb1d26d18b5592d1786b3b472d5ad161d20e152bf27b824ea2e76cde28"
+    },
+    "lockfileSha256": "c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c",
+    "builtDistSha256": "5cc3cc2ae4d60d01f95712b4a4203ac95aa4717e860f6ff7afd1168fb85b4920",
+    "builtDistHashAlgorithm": "SHA-256 of JSON.stringify(sorted [repository-relative path, raw-file SHA-256] pairs for every file under dist).",
+    "sourceFixtureSha256": "e3c0794e4a93a7892c747b2b3547860e49683b80034f4c69bd8f9baa66576a84"
+  },
+  "validations": [
+    {
+      "file": "docs/tasks/shared-runtime-contract.md",
+      "sourceSha256": "aa6801badef3c55bee586c1b3f0b9f0f76d9c6fe33305ba23da675204d7b2a54",
+      "profile": {
+        "skill": "task-definition",
+        "resource": "profiles/task-definition.yaml",
+        "sourceSha256": "068798f6e0e95256e4fa1d7d469380b7781bdeb4a039186d0da45ff6bdb959b2"
+      },
+      "exitCode": 0,
+      "valid": true,
+      "diagnostics": [],
+      "engineVersion": "3.6.0",
+      "inputHash": "a45eb9a9794e6337c4f212540af2a514fb2a8dd23964e18db6461600af15a44c",
+      "profileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d"
+    },
+    {
+      "file": "docs/design/shared-trace-runtime-contract.md",
+      "sourceSha256": "846b71de6fc109cd7362aface64ef6c875fdf770a5c78639b9d060dda55d98f9",
+      "profile": {
+        "skill": "interface-design",
+        "resource": "references/interface-design-validation-profile.yaml",
+        "sourceSha256": "55bbfbe9a1f5adebdd47027e0cccaba9d6907199c9e8e94e01d82b1bcd247eec"
+      },
+      "exitCode": 0,
+      "valid": true,
+      "diagnostics": [],
+      "engineVersion": "3.6.0",
+      "inputHash": "517bbb1746e8962d405fb82b9c3cd73b831500261b3070e9e0a2895cad92297c",
+      "profileHash": "20e664060a8b483398cd055ba7f26259cbbf5eb99986ba2c7d6d2a521a6b777b"
+    }
+  ],
+  "checks": [
+    {
+      "criteria": [
+        "TD-SC-2",
+        "TD-SC-3"
+      ],
+      "command": "npm ci --no-audit --no-fund",
+      "exitCode": 0,
+      "result": "Installed from upgraded lockfile; exact Engine 3.6.0 confirmed."
+    },
+    {
+      "criteria": [
+        "TD-SC-2"
+      ],
+      "command": "npm test -- tests/test_document_graph_command.test.ts tests/test_release_metadata.test.ts",
+      "exitCode": 0,
+      "testFiles": 2,
+      "tests": 13,
+      "result": "Graph and validation report parserVersion assertions pass; the same command assertions failed twice before replacing the old parser constant."
+    },
+    {
+      "criteria": [
+        "TD-SC-2",
+        "TD-SC-3",
+        "TD-SC-4"
+      ],
+      "command": "npm run ci:enforcement",
+      "exitCode": 0,
+      "testFiles": 38,
+      "tests": 286,
+      "result": "Typecheck, tests, build, validation/derive/migration and sidecar checks pass; enforcement observed no repository changes."
+    },
+    {
+      "criteria": [
+        "TD-SC-2",
+        "TD-SC-3"
+      ],
+      "command": "npm run check:package-exports",
+      "exitCode": 0,
+      "result": "212 packed entries; root and experimental APIs, installed document command including parser 3.6.0 and HTML, declaration closure and rejected deep imports pass."
+    },
+    {
+      "criteria": [
+        "TD-SC-3"
+      ],
+      "command": "MARKDOWN_ENGINE_BIN=<verified Engine 3.6.0 wrapper> MARKDOWN_ENGINE_CLI= node experiments/task-definition-trace/verify.mjs",
+      "exitCode": 0,
+      "result": "Seven identities, six relationships, four distinct Trace defect/repair probes, output-alias failures, profile variation and backlinks pass."
+    }
+  ],
+  "trial": {
+    "structuralEngine": "3.6.0",
+    "graphEngine": "3.6.0",
+    "results": [
+      {
+        "case": "valid authored task",
+        "structuralValid": true,
+        "traceValid": true
+      },
+      {
+        "case": "aliased outputs",
+        "runtimeExit": 2,
+        "outputsPreserved": true
+      },
+      {
+        "case": "dangling output alias",
+        "runtimeExit": 2,
+        "outputsPreserved": true
+      },
+      {
+        "case": "missing-definition",
+        "structuralValid": true,
+        "traceValid": false,
+        "diagnostic": {
+          "ruleId": "validation-definitions",
+          "code": "trace-validation.annotation-count",
+          "line": 79,
+          "column": 54,
+          "message": "Expected 1..1 declarations; found 0."
+        },
+        "repairedValid": true
+      },
+      {
+        "case": "missing-slice-link",
+        "structuralValid": true,
+        "traceValid": false,
+        "diagnostic": {
+          "ruleId": "validation-has-slice",
+          "code": "trace-validation.relation-count",
+          "line": 79,
+          "column": 56,
+          "message": "Expected 1..unbounded distinct incoming verified-by neighbors; found 0."
+        },
+        "repairedValid": true
+      },
+      {
+        "case": "wrong-existing-criterion",
+        "structuralValid": true,
+        "traceValid": false,
+        "diagnostic": {
+          "ruleId": "validation-criterion-reference",
+          "code": "trace-validation.text-mismatch",
+          "line": 79,
+          "column": 1,
+          "message": "Annotation identifier must equal the selected source text: TD-SC-2."
+        },
+        "repairedValid": true
+      },
+      {
+        "case": "wholly-unannotated-check",
+        "structuralValid": true,
+        "traceValid": false,
+        "diagnostic": {
+          "ruleId": "validation-definitions",
+          "code": "trace-validation.annotation-count",
+          "line": 79,
+          "column": 11,
+          "message": "Expected 1..1 declarations; found 0."
+        },
+        "repairedValid": true
+      }
+    ],
+    "profileProof": {
+      "strictStatus": "fail",
+      "relaxedStatus": "pass",
+      "strictValidationHash": "caa6e5a04642187bed41894aea551ce3f7d398732080038544ae3c83caa241d2",
+      "relaxedValidationHash": "8999120e633407b7773e46c10f207d556dab1b7392d6bfedd1668b1cdeec2db4",
+      "analysisId": "fc86c9ffaf99f00769a6a37e95c64721dde120950a8f9944479215777c6c3d8d",
+      "graphUnchanged": true,
+      "repeatable": true,
+      "changedSelectorRejected": true,
+      "renamedSectionsPassed": true,
+      "prosePassed": true,
+      "listAndQuotePassed": true,
+      "missingProseReferenceRejected": true,
+      "unsupportedProfilesRejected": true,
+      "interpretationMismatchRejected": true,
+      "partialAnalysisStatus": "indeterminate"
+    },
+    "graphRuntimeSha256": "215ffd18b794359c252b4748c8ea07dcb16f46a8162ce8ab36c55bb9d1e3a308",
+    "structuralProfileSha256": "068798f6e0e95256e4fa1d7d469380b7781bdeb4a039186d0da45ff6bdb959b2",
+    "inputs": {
+      "authoring.md": "37f9021ba002856ca812af740c7a3823c34329e469431157f4a584a148bb5d8d",
+      "task-definition.md": "e3c0794e4a93a7892c747b2b3547860e49683b80034f4c69bd8f9baa66576a84",
+      "profile.json": "374a153be64021904504117441a077f7279549e2d438b28467c74a81fac19808",
+      "check.mjs": "39cac670f218a0b0aab204538017b01c8355a4b21cbbf4615d9458762d96cae2",
+      "run.mjs": "2d99e7e9f756e73b9ece60914e78d5a80e6f610bb63742223f5ca945d5ef86d4",
+      "verify.mjs": "602bbc408153aefe62058f3b45297aa48409a93b86c313b9c9415721f58705c1",
+      "profile-proof.mjs": "e680a2cbfab3a22c9acc2d419e5466eb518e1af148e80025375d4a3712eb16f7",
+      "../../src/markdowntrace/document-graph/analysis-state.ts": "cd3ca2d0b7f6eb46d34367c8bb00e0ab2135bf1a7a4e1f31b6eedc46488e3cf2",
+      "../../src/markdowntrace/document-graph/analyze.ts": "35736b867855abbd3ee12c305333e96756c3dcdeec89f9b3f24dff329f616bcb",
+      "../../src/markdowntrace/document-graph/cli.ts": "9e3212b75b89fe235be996f3b236e145369835e265255f0b1bb3ee575ad2a0af",
+      "../../src/markdowntrace/document-graph/command.ts": "dd75a9bf4bfb02925313910d15dc65f322cef779fe56d19f88c604415de854fe",
+      "../../src/markdowntrace/document-graph/contracts/analysis.ts": "d1fa68bb75dad4d8eed6edbe9135de7750a728951b3ecdd07e994084009cb5d0",
+      "../../src/markdowntrace/document-graph/contracts/profile.ts": "dbfc30ba4e784efb655fa4cd9ab7544680141ccee7859c4a60a1dd39d8252743",
+      "../../src/markdowntrace/document-graph/contracts/query.ts": "e1f6412277ca8c3db5eaff9343ecf8525ca1f16ae2e4786dcff661655909d1d1",
+      "../../src/markdowntrace/document-graph/contracts/source.ts": "db985f80e091dd791fa4b852de6313dfc256cbce2cc5525fd1977cd01532a839",
+      "../../src/markdowntrace/document-graph/contracts/validation-profile.ts": "af31b66b9a62ae75eab3c698fa3883a76fbf55a5fcb5b98971c0af3e2225b066",
+      "../../src/markdowntrace/document-graph/contracts/validation.ts": "219f18835236cdb8201147d7de4c67e1acb449a3521c6743cd6c037883e37671",
+      "../../src/markdowntrace/document-graph/coordinates.ts": "aa17e4d19fc28928f2d767bfcd26782eb2870b73082646d5a41c1311b57363a3",
+      "../../src/markdowntrace/document-graph/export/html-client.ts": "1e167a4ba51f34fbc641356aa4e7e4c8f820be9002da672e78a6d88e2ec49d6b",
+      "../../src/markdowntrace/document-graph/export/html-style.ts": "5a364fcad833603c483fca70e2a280badcd5186165d79a2f575c4bd961885bfb",
+      "../../src/markdowntrace/document-graph/export/html.ts": "bf52640171fe9cb913ea2f83884381113a8ff4f6391daea471551de29976dd9e",
+      "../../src/markdowntrace/document-graph/export/mermaid.ts": "4647af683a63bf673026462d6a90345cad8181f26c3f2bbc4db221520f782f1b",
+      "../../src/markdowntrace/document-graph/export/presentation.ts": "b2e6ab4c0ec4c8cbf49d8c9e0b9ff1dd6dcd90b6dd7ce9620b2791482e0005b1",
+      "../../src/markdowntrace/document-graph/extract.ts": "6c785379e6bf8f0492d2b727c5d367efb15195276988efc170660f3ecad848a6",
+      "../../src/markdowntrace/document-graph/extraction-model.ts": "c6bf6010585c0c9d61f82d81a492a361e9108a36ca13c9f998f5991ccad75921",
+      "../../src/markdowntrace/document-graph/fragment-support.ts": "9886a41004fd34ff88cede21af59993df66cc948065b3696a0c2d29605f095fe",
+      "../../src/markdowntrace/document-graph/index.ts": "d4072c3ada1f25bad02a8c8e9f7540efb2fa09fa72e46e36bba4a51482c89d53",
+      "../../src/markdowntrace/document-graph/inline.ts": "e63b03280e333c435405151c18aeb03db58e996135b95c0b16a1317bb779b6d7",
+      "../../src/markdowntrace/document-graph/lexical.ts": "8086d05f2419590c8e943fca8c5b26c6b28ca88d13bd5b218478be0bc95276d9",
+      "../../src/markdowntrace/document-graph/ownership.ts": "1aa3115cf5e185ce0eaf5a65369abb3f56d6910f64dbc616f70577447f2127ee",
+      "../../src/markdowntrace/document-graph/profile-input.ts": "f6a402ea4b1ae9fcd5308f1368e12ee22c25dfc4e3fa82a76d9db14c8455b41d",
+      "../../src/markdowntrace/document-graph/profile.ts": "8ee7498bda6fdb22e740bb8b67a7ed7e6e35fa9bbbac2340c81294e1130d32b4",
+      "../../src/markdowntrace/document-graph/queries.ts": "3439a96e46ebdb5971d48463cd5bc3813786d694f6f30a7c4ee39e4da87f56fa",
+      "../../src/markdowntrace/document-graph/source-range.ts": "2cbdc4f082937f6b0da6d85e1f17e6ff65ef41cf8782e571b5e31169f95a2e9d",
+      "../../src/markdowntrace/document-graph/trace-destination.ts": "61659bdb55e4f0f9c311804814d7ff60d0d3adc56e45150640ce0a44652ef392",
+      "../../src/markdowntrace/document-graph/validation/builtins.ts": "9f88d39e1a77d84ada4b80b5629d2da5008108d1c514550997cd857999a0e547",
+      "../../src/markdowntrace/document-graph/validation/evaluate.ts": "1f902ace5a45d6a6312aead438f2811823b8829b8392955f29d4fbe01f3056b5",
+      "../../src/markdowntrace/document-graph/validation/model.ts": "142c706c91caada8f9fb1934ecc855bf08837e89d2ed03c2a79292e006aa5cb7",
+      "../../src/markdowntrace/document-graph/validation/profile.ts": "20fc134d1efb3750ec56b2048ef06787d1e01e5acf8476013956a1de64fe29b3",
+      "../../src/markdowntrace/document-graph/validation/rules.ts": "88ed18175b1203ae4ba63aaf3832b7d05e70270ea19542e0e1ae75302a14fa34",
+      "../../src/markdowntrace/document-graph/validation/schema.ts": "1a376b329064f48ca7e1046d2eb6964ac777282a25605f83dc4fbc535b69cf6f",
+      "../../src/markdowntrace/document-graph/validation/selectors.ts": "c00c914ae0b4ea5f2542c8a289f60c962fa8a65b230e2459e8f48efc939a30a2",
+      "../../src/markdowntrace/document-graph/validation/source.ts": "453fa343793e703ce9fc432947ee9af339d349400c1999e92ebe93904446cdc5",
+      "../../src/markdowntrace/document-graph/validation/validate.ts": "1ae50dda40e1005695f16c5903f2f3d9a2bd4756f89157ae6e3cdda8c2005cd8",
+      "../../src/markdowntrace/document-graph/value.ts": "6c9f084316c0a8604a11fa2ee107aa5c46538b06c84697b407518f70d37de3dc"
+    }
+  },
+  "review": {
+    "criteria": [
+      "TD-SC-1",
+      "TD-SC-4"
+    ],
+    "result": "No blocking findings within the contract-and-upgrade boundary.",
+    "notes": [
+      "Runtime-info, shared launcher, artifact admission and Fleet changes are explicitly assigned to later tasks.",
+      "Only the exact Engine package changed in the dependency lock; existing public and experimental schema shapes are unchanged.",
+      "Five test-consumed expected reports were regenerated from existing builders. Their differences are Engine version headers and the deterministic stdout hash derived from that versioned report. Historical structural evidence and checksum-protected source fixtures remain unchanged.",
+      "The package checker remains at 250 lines because its manifest, lockfile and packed-boundary assertions form one verification operation; the added resolved-version assertion belongs beside its existing dependency assertions.",
+      "No installed skills, active runtime wrappers, source documents or Fleet control files were modified."
+    ]
+  },
+  "evidenceApplicability": "The base commit plus changed-file hashes identifies tracked inputs and new controlling documents; the lockfile, installed Engine identity, built output digest, structural profile fingerprints and trial input fingerprints identify relevant runtime inputs. This record excludes its own bytes to avoid a recursive digest. Re-run affected checks after relevant changes.",
+  "historicalFailures": {
+    "admitted": false,
+    "parserProvenance": "Two command cases reported parserVersion 3.5.0 after the dependency upgrade and before the provenance fix.",
+    "firstEnforcement": "Five expected-report comparisons failed on Engine version headers and one version-dependent stdout hash; regenerated via existing evidence builders before the passing enforcement run."
+  }
+}

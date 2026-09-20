@@ -46,7 +46,7 @@ separately records the experimental validator's actual rule results.
 
 - Engine 3.6.0 runs the existing skill's structural profile, including criterion
   and evidence ID coverage. Its semantic/readiness gates remain the author's job.
-- Engine 3.5.0, already installed by Trace, supplies structural queries and ranges.
+- Engine 3.6.0, installed as Trace's JavaScript dependency, supplies structural queries and ranges.
   The validator joins selected source targets to the existing graph occurrences;
   it does not parse Markdown syntax or decode Trace URIs itself.
 - Trace supplies identities, ownership and references through its graph API.

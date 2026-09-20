@@ -6,7 +6,7 @@ Read before planning or implementation:
 
 1. [Document graph direction](docs/design/markdown-trace-document-graph-overview.md)
 2. [Current implementation](docs/current-implementation.md)
-3. The active implementation boundary: [packaged profile-driven validation](experiments/task-definition-trace/task-definition.md).
+3. The active task: [shared runtime contract and Engine 3.6.0 upgrade](docs/tasks/shared-runtime-contract.md).
 
 The latest explicit user instruction takes precedence. The overview defines direction; source/tests describe implemented behavior. The active task owns completion and review boundaries. The earlier runnable-graph task records the delivered graph/query slice. Future tasks must cite current contracts rather than resurrecting removed plans.
 

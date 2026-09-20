@@ -19,6 +19,7 @@ export function runGraphApiSmoke(consumerDirectory, packageName) {
     const analysis = unwrap(graph.analyzeDocument({documentId: 'spec.md', text}, profile,
       {maxSourceUtf8Bytes: 1000, maxOccurrences: 100}));
     assert.equal(analysis.snapshot.coverage, 'complete');
+    assert.equal(analysis.snapshot.parserVersion, '3.6.0');
     assert.equal(unwrap(graph.lookupIdentifier(analysis, 'REQ-1')).referenceCount, 1);
     const incoming = unwrap(graph.findIncoming(analysis, 'REQ-1'));
     const outgoing = unwrap(graph.findOutgoing(analysis, 'WP-1'));

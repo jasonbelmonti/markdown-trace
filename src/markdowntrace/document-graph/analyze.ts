@@ -22,9 +22,10 @@ import {
   sha256,
 } from "./value.js";
 import { Coordinates } from "./coordinates.js";
+import { MARKDOWN_ENGINE_PACKAGE_VERSION } from "../generated/release-metadata.js";
 
 const ANALYZER_VERSION = "0.1.0-experimental.2";
-const PARSER_VERSION = "3.5.0";
+const PARSER_VERSION = MARKDOWN_ENGINE_PACKAGE_VERSION;
 export function analyzeDocument(
   source: DocumentSource,
   profile: TraceProfile,
