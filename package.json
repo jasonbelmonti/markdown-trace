@@ -20,7 +20,8 @@
     "dist"
   ],
   "bin": {
-    "markdown-trace": "./dist/markdowntrace/cli.js"
+    "markdown-trace": "./dist/markdowntrace/cli.js",
+    "markdown-trace-document": "./dist/markdowntrace/document-graph/cli.js"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

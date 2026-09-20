@@ -16,6 +16,15 @@ Source annotation coverage, allowed relations and incoming/outgoing cardinality 
 
 ## Public API and CLI
 
+`markdown-trace-document` is the experimental document-wide command. It requires
+an explicit validation profile and supports validation reports, full graph JSON,
+incoming/outgoing queries and Mermaid export. The
+[shared Trace skill](../skills/markdown-trace/SKILL.md) uses it alongside a
+document-owned profile and optional domain guide. TaskDefinition's structural and
+semantic gates stay with its authoring skill; the installed skill is unchanged.
+See the [command guide](experimental-graph-validation.md#shared-command) for
+checkout usage, output channels, exit codes and the paragraph/list example.
+
 The package-root JavaScript export is `validateGraphDocument({ documentPath, profilePath, cwd? })`, plus self-contained result types. It reads local files and returns `pass`, `fail`, or `operational-error` in `markdown-trace.graph-validation-result.v1`. The separate experimental entry point above provides analysis and direct queries; the root API remains the legacy table validator.
 
 ```sh

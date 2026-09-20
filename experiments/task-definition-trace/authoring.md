@@ -1,44 +1,36 @@
-# Opt-in TaskDefinition trace trial
+# Opt-in TaskDefinition trace mapping
 
 Use the installed task-definition skill in AUTHOR or REVISE mode. Read its
-SKILL.md, structural profile and applicable reference guides first. This
-supplement adds annotation requirements for this local trial; it does not
-replace the skill's structure, semantic review or readiness rules.
+SKILL.md, structural profile and applicable reference guides first. Compose it
+with [the shared markdown-trace skill](../../skills/markdown-trace/SKILL.md) and
+explicitly select [this Trace profile](profile.json). This guide adds the domain
+mapping; the shared skill owns link syntax, ownership and runtime operation.
 
-Author the links with the task, using the existing draft2 Markdown convention:
+Declare criteria in success-criterion ID cells, validation checks in Validation /
+Evidence Check cells, and slices in Incremental Value Delivery Slice cells.
+Use the profile's criterion, validation and slice kinds. Preserve the exact
+visible TD-SC identifiers in criterion ID cells, as required by task-definition.
 
-- Each success-criterion ID cell declares its criterion with a link whose
-  visible label remains the exact TD-SC identifier.
-- Each Validation / Evidence Check cell declares one VAL identity.
-- That row's Criterion ID cell links to its displayed criterion with rel=verifies.
-- Each Incremental Value Delivery Slice cell declares one SLICE identity.
-- Its Evidence cell links to the validation checks that prove the slice,
-  using rel=verified-by. Keep the evidence descriptions readable.
-- Every validation must be referenced by at least one slice, every slice must
-  reference at least one validation, and every criterion must be verified.
-  Shared validation checks may serve multiple slices.
+A check's `verifies` reference belongs in its Criterion ID cell and points to
+the criterion the check actually proves. A slice's `verified-by` references
+belong in its Evidence cell and point to checks that prove the slice's value.
+Keep evidence descriptions readable. Shared checks may serve multiple slices;
+the profile enforces annotation counts, coverage, label agreement and required
+connections. It cannot decide whether the evidence actually proves the claim.
 
-Use ctx://trace/entity/ID?role=definition for declarations and
-ctx://trace/entity/ID?rel=RELATION for relationships. Assign stable identifiers;
-do not reuse an identifier for two declarations. These three entity kinds and
-two relation kinds are the complete trial vocabulary. Avoid bare identifiers
-elsewhere in the task: Trace interprets them as additional generic references.
+After authoring, run task-definition's Engine 3.6.0 structural check, followed by
+the shared command from a built Trace checkout:
 
-After authoring, run the installed skill's Engine 3.6.0 structural profile and
-this trial's checker. Repair located failures within the skill's three-draft
-limit. Rerun both checks after repair, then perform the skill's semantic and
-post-draft review gates before READY. Machine validation alone is insufficient.
+```sh
+node dist/markdowntrace/document-graph/cli.js --file /absolute/path/task.md --profile experiments/task-definition-trace/profile.json
+```
 
-The source row inventory is independent of trace links. A missing identity is
-an error even when no graph node was extracted for that row. A link to a
-different criterion than its displayed ID is an error even when both criteria
-exist. The checker never invents relationships or edits the task.
+Repair located failures within task-definition's three-draft limit, rerun both
+checks, then complete its semantic and post-draft gates before READY. Trace alone
+does not establish readiness. The existing `run.mjs` and `verify.mjs` retain the
+combined structural/Trace trial and its reproducible defect probes.
 
-The external [profile.json](profile.json) now specifies these annotation locations,
-counts, label agreement and required relationships. The trial command accepts
-`--profile` to select another profile; the shared validator contains no
-TaskDefinition section names or vocabulary. Changing the annotation convention
-requires changing the profile and the author's guidance together.
-
-The trial uses the packaged experimental API. The installed skill is unchanged;
-activation in installed skills remains follow-up work.
+The installed task-definition skill is unchanged. For this opt-in composition,
+supply this guide alongside it; the guide explicitly selects the shared skill
+and domain profile. Convention changes must reconcile this mapping with the
+profile while keeping generic protocol guidance in the shared skill.
