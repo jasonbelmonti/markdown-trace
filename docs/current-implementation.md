@@ -83,4 +83,16 @@ Omitting `--check` from `derive-sidecar` intentionally writes the generated arti
 
 ## Implementation resumption
 
+Trace's JavaScript dependency is pinned to Engine 3.6.0. Graph snapshots and
+validation reports derive their parser version from generated release metadata;
+the dependency upgrade changes analysis identities, so prior runtime evidence
+must be re-established. The separate Engine CLI still runs document-owner
+structural checks.
+
+The [shared runtime contract](design/shared-trace-runtime-contract.md) defines the
+next distribution boundary. Its runtime-info command, executable binding,
+installer and Fleet admission are planned interfaces, not implemented features.
+The [active task](tasks/shared-runtime-contract.md) covers that contract and the
+dependency upgrade only.
+
 Reuse Markdown Engine integration, source locations, hashing, structured errors, atomic output, and package tests. Extend the experimental shared graph with bounded context queries; profile validation now reuses its Engine capture and indexes. Keep the legacy table-specific evidence model and closed vocabulary isolated until an explicit migration. Align release documentation/distribution after the contract is proven.

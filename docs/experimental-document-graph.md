@@ -1,6 +1,6 @@
 # Experimental document graph and backlinks
 
-The first document-wide graph API is runnable from a built checkout or packed tarball at `@jasonbelmonti/markdown-trace/experimental/graph`. It uses Markdown Engine 3.5.0 for structure and source maps. The package remains private; the experimental entry point and draft language may change before a stable release.
+The first document-wide graph API is runnable from a built checkout or packed tarball at `@jasonbelmonti/markdown-trace/experimental/graph`. It uses Markdown Engine 3.6.0 for structure and source maps. The package remains private; the experimental entry point and draft language may change before a stable release.
 
 Run the mixed-layout example:
 

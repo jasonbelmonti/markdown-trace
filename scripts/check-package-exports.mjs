@@ -8,7 +8,7 @@ import { assert, run } from "./package-exports/process.mjs";
 
 const PACKAGE_NAME = "@jasonbelmonti/markdown-trace";
 const PACKAGE_VERSION = "0.1.0";
-const ENGINE_VERSION = "3.5.0";
+const ENGINE_VERSION = "3.6.0";
 const YAML_VERSION = "^2.8.3";
 const NODE_RANGE = "^20.19.0 || >=22.12.0";
 const CLI_IMPORT = "./dist/markdowntrace/cli.js";
@@ -164,6 +164,10 @@ function assertManifest(manifest, lockfile) {
   assert(
     rootLock?.dependencies?.["@jasonbelmonti/markdown-engine"] === ENGINE_VERSION,
     "lockfile Markdown Engine dependency must match",
+  );
+  assert(
+    lockfile.packages?.["node_modules/@jasonbelmonti/markdown-engine"]?.version === ENGINE_VERSION,
+    "lockfile resolved Markdown Engine version must match",
   );
   assert(rootLock?.engines?.node === NODE_RANGE, "lockfile Node range must match");
   assert(

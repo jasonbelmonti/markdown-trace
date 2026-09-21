@@ -35,7 +35,8 @@ describe("shared document command", () => {
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const { validation, graph } = JSON.parse(result.stdout);
-    expect(validation).toMatchObject({ status: "pass", identifiers: ids.length, relationships: edgeCount });
+    expect(validation).toMatchObject({ status: "pass", identifiers: ids.length, relationships: edgeCount, parserVersion: "3.6.0" });
+    expect(graph.parserVersion).toBe("3.6.0");
     expect(graph.identifiers.map((record: { identifier: string }) => record.identifier).sort()).toEqual(ids);
     expect(validation.sourceSha256).toBe(graph.source.sha256);
     expect(await run(args)).toEqual(result);
