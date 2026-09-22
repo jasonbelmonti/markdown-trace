@@ -90,9 +90,11 @@ must be re-established. The separate Engine CLI still runs document-owner
 structural checks.
 
 The [shared runtime contract](design/shared-trace-runtime-contract.md) defines the
-next distribution boundary. Its runtime-info command, executable binding,
-installer and Fleet admission are planned interfaces, not implemented features.
-The [active task](tasks/shared-runtime-contract.md) covers that contract and the
-dependency upgrade only.
+next distribution boundary. Its C-3 runtime-info command and locally produced portable payload are implemented;
+[portable runtime usage](portable-runtime.md) describes building, independently
+verifying and invoking a candidate. Executable binding, installation and Fleet
+admission remain future work. The [selected task](tasks/portable-trace-runtime.md)
+owns artifact production and its required evidence; the earlier shared-runtime
+task records the completed contract and dependency upgrade.
 
 Reuse Markdown Engine integration, source locations, hashing, structured errors, atomic output, and package tests. Extend the experimental shared graph with bounded context queries; profile validation now reuses its Engine capture and indexes. Keep the legacy table-specific evidence model and closed vocabulary isolated until an explicit migration. Align release documentation/distribution after the contract is proven.

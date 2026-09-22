@@ -1,0 +1,11 @@
+
+> @jasonbelmonti/markdown-trace@0.1.0 check:package-exports
+> node scripts/check-package-exports.mjs
+
+package: @jasonbelmonti/markdown-trace@0.1.0
+tarball entries: 218
+declaration closure: self-contained
+root API: pass
+experimental graph API: pass
+deep imports: rejected
+package exports contract: PASS

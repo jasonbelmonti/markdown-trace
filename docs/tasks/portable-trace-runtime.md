@@ -145,7 +145,7 @@ work. Do not rewrite source checksums or weaken assertions to manufacture a pass
 
 | Execution status | Current proving slice | Evidence admitted | Next action | Blockers / stop condition |
 | --- | --- | --- | --- | --- |
-| not-started | Produce an isolated, correctly identified candidate for TD-SC-1 and TD-SC-2. | None admitted. | Read the task and controlling sources, then complete and validate the bounded execution plan. | Stop dependent implementation if the selected interfaces must change or required authority is missing. |
+| active | Prove isolated document behavior and compatibility on the identified candidate. | TD-SC-2 and TD-SC-3: docs/validation/portable-trace-runtime/build-integrity.json records relocated identity, source commit e53473f8b642dd48755977893b7e5235ee1d3899 and altered/missing dependency rejection; identity.log records checkout identity checks. | Execute fixture-derived artifact probes and retained regression gates, then rebuild the final candidate for reproducibility and bounded platforms. | Linux Node 20.19.0 execution is not yet available; completion requires its evidence. |
 
 ## Follow-up / Non-blocking Work
 

@@ -10,7 +10,9 @@ The current direction is a document-wide graph for relationship validation and c
 | [Experimental graph guide](experimental-document-graph.md) | Runnable API, demo, syntax and current limits. |
 | [Profile validation and shared skill](experimental-graph-validation.md) | Generic command, domain-owned profiles, skill composition and runnable examples. |
 | [Shared runtime contract](design/shared-trace-runtime-contract.md) | Executable, binding, identity and Fleet admission contracts; future delivery boundaries are explicit. |
-| [Shared runtime task](tasks/shared-runtime-contract.md) | Active contract-authoring and Engine 3.6.0 upgrade boundary. |
+| [Portable runtime guide](portable-runtime.md) | Local artifact production, independent integrity verification and isolated execution. |
+| [Portable runtime task](tasks/portable-trace-runtime.md) | Selected artifact implementation and evidence boundary. |
+| [Shared runtime task](tasks/shared-runtime-contract.md) | Completed contract-authoring and Engine 3.6.0 upgrade foundation. |
 | [Runnable graph task](tasks/runnable-document-graph.md) | Delivered graph/query slice and retained acceptance evidence. |
 | [Source map](../src/markdowntrace/README.md) | Existing responsibilities and reuse boundaries. |
 | [Test guidance](../tests/README.md) | Compatibility tests versus future product proof. |
