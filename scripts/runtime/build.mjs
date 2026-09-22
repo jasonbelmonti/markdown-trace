@@ -48,7 +48,7 @@ async function produce(destination) {
     const versionedName = `markdown-trace-${manifest.version}-${commit}`;
     const payload = join(pending, versionedName);
     await mkdir(payload);
-    for (const name of ["dist", "node_modules", "package.json", "package-lock.json", "LICENSE"])
+    for (const name of ["dist", "node_modules", "package.json", "package-lock.json"])
       await cp(join(snapshot, name), join(payload, name), { recursive: true });
     // npm's hidden installation lock is build metadata with platform-specific dev remnants.
     await rm(join(payload, "node_modules/.package-lock.json"), { force: true });
