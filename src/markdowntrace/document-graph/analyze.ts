@@ -24,7 +24,7 @@ import {
 import { Coordinates } from "./coordinates.js";
 import { MARKDOWN_ENGINE_PACKAGE_VERSION } from "../generated/release-metadata.js";
 
-const ANALYZER_VERSION = "0.1.0-experimental.2";
+import { ANALYZER_VERSION } from "./versions.js";
 const PARSER_VERSION = MARKDOWN_ENGINE_PACKAGE_VERSION;
 export function analyzeDocument(
   source: DocumentSource,
