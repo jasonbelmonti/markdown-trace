@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "sourceInputsRestored": true,
+  "cases": [
+    {
+      "kind": "modified",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Runtime production failed: Commit runtime-affecting inputs before release production:\nM src/markdowntrace/generated/build-source.ts\n+ actual - expected\n\n+ 'M src/markdowntrace/generated/build-source.ts'\n- ''\n\n"
+    },
+    {
+      "kind": "untracked",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Runtime production failed: Commit runtime-affecting inputs before release production:\n?? src/provenance-untracked.ts\n+ actual - expected\n\n+ '?? src/provenance-untracked.ts'\n- ''\n\n"
+    }
+  ]
+}

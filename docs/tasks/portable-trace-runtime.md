@@ -145,7 +145,7 @@ work. Do not rewrite source checksums or weaken assertions to manufacture a pass
 
 | Execution status | Current proving slice | Evidence admitted | Next action | Blockers / stop condition |
 | --- | --- | --- | --- | --- |
-| active | Prove isolated document behavior and compatibility on the identified candidate. | TD-SC-2 and TD-SC-3: docs/validation/portable-trace-runtime/build-integrity.json records relocated identity, source commit e53473f8b642dd48755977893b7e5235ee1d3899 and altered/missing dependency rejection; identity.log records checkout identity checks. | Execute fixture-derived artifact probes and retained regression gates, then rebuild the final candidate for reproducibility and bounded platforms. | Linux Node 20.19.0 execution is not yet available; completion requires its evidence. |
+| blocked | Complete TD-SC-5 bounded platform evidence for the verified local candidate. | TD-SC-1, TD-SC-2, TD-SC-3 and TD-SC-4: docs/validation/portable-trace-runtime/macos.json plus checkout-identity.json and producer-negatives.json pass for source 8a92023b96078594f1caa484a851f330e760da2b. TD-SC-6: reproduction.json records identical 2,005-file payloads and descriptors. TD-SC-5: enforcement.log, package.log, owner-trial.json and macos.json pass; Linux evidence is unavailable. | Run scripts/runtime/check.mjs against this candidate on Linux Node 20.19.0; retain its exact identity/environment report and reassess applicability before review-ready. | Required Linux Node 20.19.0 runner is unavailable locally; the CI matrix is configured but has not run. No review-ready or overall completion claim. |
 
 ## Follow-up / Non-blocking Work
 
