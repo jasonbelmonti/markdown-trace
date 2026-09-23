@@ -1,10 +1,10 @@
 {
-  "scope": "Task-definition authoring and current checkpoint validation; implementation proof is separately recorded in the execution-plan evidence.",
+  "scope": "Task-definition authoring and checkpoint-only round-2 review-readiness validation; implementation proof is separately recorded in CI and local review evidence.",
   "baseline": "34be6d6b705397a2da465aaaf1a914c13aadb227",
   "artifact": {
     "file": "docs/tasks/portable-runtime-installer.md",
     "revision": "1",
-    "sourceSha256": "0377d3b1ff4e49bef0ca89d1b6a2ce24cb3020c36feb28ccb5cb6d153d0269ed"
+    "sourceSha256": "30e22c4dcb81bfd5ae304a0415d99361ac65f5adbc86f35f3ad561d4477f482e"
   },
   "profile": {
     "skill": "task-definition",
@@ -16,7 +16,7 @@
     "valid": true,
     "diagnostics": [],
     "engineVersion": "3.6.0",
-    "inputHash": "613f6e290ae1bdc4a6370c69576af9d09e9bf1b36658158d5c4593d7c7b8ac33",
+    "inputHash": "e7b84863d013f29b51f2bb3cf62377a34d7abc87f6d0b1684bd2b49d6d410dd3",
     "profileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d"
   }
 }

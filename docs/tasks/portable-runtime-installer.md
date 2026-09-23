@@ -5,7 +5,7 @@ task_id: portable-runtime-installer
 artifact_version: "3.0"
 revision: "1"
 created_at: "2026-09-23T16:30:00Z"
-updated_at: "2026-09-23T16:30:00Z"
+updated_at: "2026-09-23T18:50:31Z"
 validation_profile: skills/task-definition/profiles/task-definition.yaml
 ---
 
@@ -93,7 +93,7 @@ Record relevant code, tests, fixture, configuration and environment identities a
 
 | Execution status | Current proving slice | Evidence admitted | Next action | Blockers / stop condition |
 | --- | --- | --- | --- | --- |
-| review-ready | Independent review of the completed local installer and binding slice. | TD-SC-1, TD-SC-2, TD-SC-3, TD-SC-4 and TD-SC-5: `.codefactory/execution-plans/portable-runtime-installer/evidence/EP-GATE-1.txt` and `EP-GATE-2.txt` record passing local proof and CI run 35893767655 on Linux Node 20.19.0 and macOS Node 22.20.0. The run tested PR head `8e00f8a2c07a44f32340a7787f9295c8850017f6` via merge checkout `411d1775044421a87ce76515b0af5a14d7a075b8`; current code/test/config input hashes match the local proof. Earlier failed and superseded attempts remain historical. | Review the task and plan against PR #91, then accept or request focused remediation. | None. |
+| review-ready | Independent review of the remediated installer and binding slice. | TD-SC-1, TD-SC-2 and TD-SC-3: CI run 35905016596 passed actual installed lifecycle proof on Linux Node 20.19.0 and macOS Node 22.20.0 at source `27e253de01665d7643dd31051a381751e20034f9`; earlier EP-GATE-1/2 results remain historical. TD-SC-4: the updated local installer proof and explicit unreadable-binding CLI reproduction passed at that source. TD-SC-5: the same CI run passed both platform jobs and enforcement; local `ci:enforcement`, `check:package-exports` and `experiments/task-definition-trace/verify.mjs` exited 0. This checkpoint-only update does not change tested code, tests, configuration or fixtures. | Review the current task and plan against PR #91 in convergent-review round 2. | None. |
 
 ## Follow-up / Non-blocking Work
 
