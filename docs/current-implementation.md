@@ -1,20 +1,33 @@
 # Current implementation
 
-The first document-wide graph runtime is implemented on the runnable graph branch in [PR #78](https://github.com/jasonbelmonti/markdown-trace/pull/78), following the merged PR #76 design baseline. The [experimental API guide](experimental-document-graph.md) gives runnable examples. The [overview](design/markdown-trace-document-graph-overview.md) describes the broader target.
+The first document-wide graph runtime landed in [PR #78](https://github.com/jasonbelmonti/markdown-trace/pull/78), followed by shared source-location work in [PR #80](https://github.com/jasonbelmonti/markdown-trace/pull/80). The [experimental API guide](experimental-document-graph.md) gives runnable examples. The [overview](design/markdown-trace-document-graph-overview.md) describes the broader target.
 
-## Document-wide graph and direct queries
+## Document-wide graph, validation and direct queries
 
-The `experimental/graph` package entry point exports `compileProfile`, `analyzeDocument`, `lookupIdentifier`, `findIncoming`, and `findOutgoing`. Analysis uses Markdown Engine's public tree and source maps across headings, paragraphs, lists, blockquotes and tables, under `markdown-trace.identity.draft2`. Standard Markdown links carry declarations (`?role=definition`) and typed references (`?rel=implements`) in `ctx://trace/entity/ID` destinations; bare IDs remain generic mentions.
+The `experimental/graph` package entry point exports `compileProfile`, `analyzeDocument`, `lookupIdentifier`, `findIncoming`, `findOutgoing`, `exportMermaid`, `compileValidationProfile`, and `validateGraph`. Analysis uses Markdown Engine's public tree and source maps across headings, paragraphs, lists, blockquotes and tables, under `markdown-trace.identity.draft2`. Standard Markdown links carry declarations (`?role=definition`) and typed references (`?rel=implements`) in `ctx://trace/entity/ID` destinations; bare IDs remain generic mentions.
 
-The immutable snapshot preserves declaration/mention distinctions, duplicate and missing definitions, unknown vocabulary, ambiguous ownership, source fragments and diagnostics. Incoming/outgoing indexes support source-ordered pagination and relationship filters. Limits apply to source bytes and occurrence count. Analysis coverage and graph validity are separate: profile policy is compiled but not evaluated in this slice.
+The immutable snapshot preserves declaration/mention distinctions, duplicate and missing definitions, unknown vocabulary, ambiguous ownership, source fragments and diagnostics. Incoming/outgoing indexes support source-ordered pagination and relationship filters. Limits apply to source bytes and occurrence count. Analysis coverage and graph validity are separate. The [validation API](experimental-graph-validation.md) evaluates the versioned validation profile over the captured graph and Engine document, with one parse per analysis. The original document-profile.v1 compiler retains its compile-only validation fields.
 
 `npm run demo:graph` prints a mixed-layout summary and two located backlinks to `REQ-2`. `node scripts/demo-document-graph.mjs path/to/spec.md --graph` prints the full snapshot from a built checkout; `--profile path/to/profile.json` supplies domain vocabulary. Tests exercise link declarations and references across layouts, Engine-resolved reference links, malformed destinations, exact ranges, API ingress, immutability, pagination and clean-package consumption. This is initial correctness evidence, not release-scale or consuming-agent validation.
 
-Graph validation, traversal, context projection, stable syntax/export approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces; their gaps are not instructions to build the new product inside the old modules.
+`exportMermaid(snapshot)` formats that snapshot as a diagram without re-extracting source. The demo's `--mermaid` option emits this text directly. Isolated identifiers, repeated edges, missing/duplicate definitions and uncertain owners remain visible, alongside coverage and diagnostic/exclusion counts. Rendering and graph filtering are separate concerns.
+
+Source annotation coverage, allowed relations and incoming/outgoing cardinality validation are implemented. Traversal, context projection, stable syntax/API approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces; their gaps are not instructions to build the new product inside the old modules.
 
 ## Public API and CLI
 
-The package-root JavaScript export is `validateGraphDocument({ documentPath, profilePath, cwd? })`, plus self-contained result types. It reads local files and returns `pass`, `fail`, or `operational-error` in `markdown-trace.graph-validation-result.v1`. The separate experimental entry point above provides analysis and direct queries; the root API remains the legacy table validator.
+`markdown-trace-document` is the experimental document-wide command. It requires
+an explicit validation profile and supports validation reports, full graph JSON,
+incoming/outgoing queries, Mermaid export and visual HTML reports. HTML combines
+the graph, Engine-captured labels and definition context, and validation findings;
+its browser renderer loads Mermaid from a pinned CDN. The
+[shared Trace skill](../skills/markdown-trace/SKILL.md) uses it alongside a
+document-owned profile and optional domain guide. TaskDefinition's structural and
+semantic gates stay with its authoring skill; the installed skill is unchanged.
+See the [command guide](experimental-graph-validation.md#shared-command) for
+checkout usage, output channels, exit codes and the paragraph/list example.
+
+The package-root JavaScript export is `validateGraphDocument({ documentPath, profilePath, cwd? })`, plus self-contained result types. It reads local files and returns `pass`, `fail`, or `operational-error` in `markdown-trace.graph-validation-result.v1`. The separate experimental entry point above provides analysis, validation and direct queries; the root API remains the legacy table validator.
 
 ```sh
 node dist/markdowntrace/cli.js graph-validate \
@@ -70,4 +83,16 @@ Omitting `--check` from `derive-sidecar` intentionally writes the generated arti
 
 ## Implementation resumption
 
-Reuse Markdown Engine integration, source locations, hashing, structured errors, atomic output, and package tests. Extend the experimental shared graph with profile validation and bounded context queries. Keep the legacy table-specific evidence model and closed vocabulary isolated until an explicit migration. Align release documentation/distribution after the contract is proven.
+Trace's JavaScript dependency is pinned to Engine 3.6.0. Graph snapshots and
+validation reports derive their parser version from generated release metadata;
+the dependency upgrade changes analysis identities, so prior runtime evidence
+must be re-established. The separate Engine CLI still runs document-owner
+structural checks.
+
+The [shared runtime contract](design/shared-trace-runtime-contract.md) defines the
+next distribution boundary. Its runtime-info command, executable binding,
+installer and Fleet admission are planned interfaces, not implemented features.
+The [active task](tasks/shared-runtime-contract.md) covers that contract and the
+dependency upgrade only.
+
+Reuse Markdown Engine integration, source locations, hashing, structured errors, atomic output, and package tests. Extend the experimental shared graph with bounded context queries; profile validation now reuses its Engine capture and indexes. Keep the legacy table-specific evidence model and closed vocabulary isolated until an explicit migration. Align release documentation/distribution after the contract is proven.

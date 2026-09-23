@@ -1,12 +1,11 @@
-import type { EngineNode } from "@jasonbelmonti/markdown-engine";
+import type { EngineNode, normalize } from "@jasonbelmonti/markdown-engine";
 import type { Diagnostic, SourceRange } from "./contracts/source.js";
 
 export interface Token {
   identifier: string;
   role: "definition" | "reference";
   kind: string;
-  start: number;
-  end: number;
+  range: SourceRange;
 }
 export interface NodeInfo {
   node: EngineNode;
@@ -21,6 +20,7 @@ export interface Block extends NodeInfo {
   header: boolean;
 }
 export interface Extraction {
+  document: ReturnType<typeof normalize>["document"];
   blocks: Block[];
   diagnostics: Diagnostic[];
   exclusions: { range: SourceRange; reason: string }[];
@@ -30,6 +30,6 @@ export interface Atom {
   start: number;
   end: number;
   leaf: number;
-  code?: string;
-  token?: Pick<Token, "identifier" | "role" | "kind">;
+  code?: { text: string; range: SourceRange };
+  token?: Token;
 }

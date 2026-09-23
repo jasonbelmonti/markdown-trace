@@ -22,9 +22,10 @@ import {
   sha256,
 } from "./value.js";
 import { Coordinates } from "./coordinates.js";
+import { MARKDOWN_ENGINE_PACKAGE_VERSION } from "../generated/release-metadata.js";
 
 const ANALYZER_VERSION = "0.1.0-experimental.2";
-const PARSER_VERSION = "3.5.0";
+const PARSER_VERSION = MARKDOWN_ENGINE_PACKAGE_VERSION;
 export function analyzeDocument(
   source: DocumentSource,
   profile: TraceProfile,
@@ -58,22 +59,22 @@ export function analyzeDocument(
   if (sourceIdentity.utf8Bytes > limits.maxSourceUtf8Bytes)
     return failure("analysis-limit", "Document exceeds maxSourceUtf8Bytes");
   try {
-    const extracted = extract(text, documentId, limits.maxOccurrences),
-      coordinates = new Coordinates(text);
+    const coordinates = new Coordinates(text),
+      extracted = extract(coordinates, documentId, limits.maxOccurrences);
     const located = extracted.blocks
       .flatMap((b) => b.tokens.map((token) => ({ token, block: b })))
-      .sort((a, b) => a.token.start - b.token.start);
+      .sort((a, b) => a.token.range.start.offset - b.token.range.start.offset);
     const occurrences: Occurrence[] = located.map(({ token, block }, i) => ({
       id: `O${i + 1}`,
       identifier: token.identifier,
       role: token.role,
-      range: coordinates.range(token.start, token.end),
+      range: token.range,
       fragmentId: block.id,
     }));
     const fragments = attachSupport(
         assignOwners(extracted.blocks, occurrences, text.length),
         extracted.blocks,
-        text,
+        coordinates,
       ),
       byFragment = new Map(fragments.map((f) => [f.id, f]));
     const prefixKinds = new Map(
@@ -196,6 +197,7 @@ export function analyzeDocument(
     };
     const analysis = freeze({ snapshot }) as DocumentAnalysis;
     registerAnalysis(analysis, {
+      document: freeze(extracted.document),
       identifiers: new Map(identifiers.map((i) => [i.identifier, i])),
       incoming,
       outgoing,

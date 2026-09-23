@@ -5,10 +5,13 @@ The current direction is a document-wide graph for relationship validation and c
 | Document | Purpose |
 | --- | --- |
 | [Document graph overview](design/markdown-trace-document-graph-overview.md) | Current direction, resolved language decisions and remaining capabilities. |
-| [Document graph API draft](design/markdown-trace-document-graph-interfaces.md) | Implemented contract status plus proposed validation/traversal/context contracts. |
+| [Document graph API draft](design/markdown-trace-document-graph-interfaces.md) | Implemented graph and validation boundaries plus proposed traversal/context contracts. |
 | [Current implementation](current-implementation.md) | What the code does and where it falls short. |
 | [Experimental graph guide](experimental-document-graph.md) | Runnable API, demo, syntax and current limits. |
-| [Runnable graph task](tasks/runnable-document-graph.md) | Current implementation and acceptance boundary. |
+| [Profile validation and shared skill](experimental-graph-validation.md) | Generic command, domain-owned profiles, skill composition and runnable examples. |
+| [Shared runtime contract](design/shared-trace-runtime-contract.md) | Executable, binding, identity and Fleet admission contracts; future delivery boundaries are explicit. |
+| [Shared runtime task](tasks/shared-runtime-contract.md) | Active contract-authoring and Engine 3.6.0 upgrade boundary. |
+| [Runnable graph task](tasks/runnable-document-graph.md) | Delivered graph/query slice and retained acceptance evidence. |
 | [Source map](../src/markdowntrace/README.md) | Existing responsibilities and reuse boundaries. |
 | [Test guidance](../tests/README.md) | Compatibility tests versus future product proof. |
 

@@ -1,6 +1,6 @@
 # Experimental document graph and backlinks
 
-The first document-wide graph API is runnable from a built checkout or packed tarball at `@jasonbelmonti/markdown-trace/experimental/graph`. It uses Markdown Engine 3.5.0 for structure and source maps. The package remains private; the experimental entry point and draft language may change before a stable release.
+The first document-wide graph API is runnable from a built checkout or packed tarball at `@jasonbelmonti/markdown-trace/experimental/graph`. It uses Markdown Engine 3.6.0 for structure and source maps. The package remains private; the experimental entry point and draft language may change before a stable release.
 
 Run the mixed-layout example:
 
@@ -31,6 +31,32 @@ For a located backlink summary instead:
 ```sh
 node scripts/demo-document-graph.mjs "/absolute/path/to/your-spec.md" REQ-1
 ```
+
+## Export a Mermaid diagram
+
+From the built checkout, write Mermaid text directly to a file:
+
+```sh
+node scripts/demo-document-graph.mjs "/absolute/path/to/your-spec.md" --mermaid > /tmp/markdown-trace-graph.mmd
+```
+
+Use the same `--profile` option for custom vocabulary. `--graph` and `--mermaid` are mutually exclusive. The output has no Markdown fence or console preamble; paste it inside a `mermaid` fenced code block in a compatible Markdown viewer, or open it with a Mermaid renderer.
+
+The diagram includes every identifier, including isolated ones, and one directed, labeled edge per reference occurrence. Repeated references remain separate edges. Missing/duplicate definitions and unknown entity kinds are labeled. References without a unique owner use separate warning nodes showing their source line/column; ambiguous nodes list candidate identifiers without assigning the edge to any candidate. The metadata box shows extraction coverage, diagnostic/exclusion counts, and that policy has not been evaluated.
+
+The export is a visual projection of the snapshot, not its full serialization. Use `--graph` for detailed diagnostics, provenance and source ranges. The exporter does not parse Markdown, evaluate validation rules, filter large graphs, or render SVG/PNG. Large diagrams remain subject to the chosen renderer's limits; export does not truncate them.
+
+The library adapter also works with an analyzer-produced snapshot restored from JSON:
+
+```js
+import { exportMermaid } from '@jasonbelmonti/markdown-trace/experimental/graph';
+
+const mermaid = exportMermaid(analysis.snapshot); // string, ending in a newline
+```
+
+`exportMermaid(snapshot: GraphSnapshot): string` is a synchronous, read-only formatter. It accepts a valid `markdown-trace.document-graph.v1` snapshot; it does not validate arbitrary JSON or require an issued analysis handle. Snapshot array order determines diagram order and generated node IDs.
+
+## Custom vocabulary
 
 The default profile maps REQ/WP/VAL to requirement/work/validation. Other canonical IDs remain in the graph with `entityKind: null`; they are not discarded. To map your own prefixes, copy and edit [the JSON profile](../fixtures/document-graph/profile.json), then supply it explicitly:
 
@@ -78,7 +104,7 @@ const outgoing = unwrap(findOutgoing(analysis, 'WP-1', {
 }));
 ```
 
-`compileProfile` checks and captures profile configuration. It does **not** evaluate relationship validity yet. The `validation` section is accepted for later policy evaluation; it neither removes relationships nor turns analysis into a validity verdict. Changing only that section leaves the graph and analysis identity unchanged.
+`compileProfile` checks and captures the original document-profile.v1 configuration. Its `validation` section remains compile-only for compatibility. Use [`compileValidationProfile` and `validateGraph`](experimental-graph-validation.md) with the separate validation profile schema to evaluate graph and source-coverage rules. Neither compiler removes relationships or turns analysis into a validity verdict. Changing only that section leaves the graph and analysis identity unchanged.
 
 ## Link identity language
 
@@ -110,14 +136,14 @@ The graph/query contracts remain unchanged. Runtime source fragments follow Engi
 
 ## Results and limits
 
-Every operation returns `{ ok: true, value }` or `{ ok: false, error }`. Invalid profiles, fabricated handles, invalid query bounds, unusable source maps, and exceeded analysis limits return errors. Analysis accepts caller-supplied text; it performs no file reads or network access.
+Profile compilation, analysis and query operations return `{ ok: true, value }` or `{ ok: false, error }`; the Mermaid formatter returns a string directly. Invalid profiles, fabricated handles, invalid query bounds, unusable source maps, and exceeded analysis limits return errors. Analysis accepts caller-supplied text; it performs no file reads or network access.
 
 `analysis.snapshot` contains immutable identifiers, occurrences, relationships, source fragments, exclusions and diagnostics. Each reference occurrence contributes one relationship, so repeated references remain distinct. Incoming queries retain unowned and ambiguous references; outgoing queries return references with a unique owner matching the requested identifier.
 
-`coverage: 'complete'` means extraction completed without error diagnostics. It does **not** mean the graph is valid. Malformed Trace links, unsupported structures and uncertain reference ownership produce `partial` coverage with queryable evidence. Duplicate definitions, unknown kinds and missing targets are represented explicitly for later validation.
+`coverage: 'complete'` means extraction completed without error diagnostics. It does **not** mean the graph is valid. Malformed Trace links, unsupported structures and uncertain reference ownership produce `partial` coverage with queryable evidence. Duplicate definitions, unknown kinds and missing targets are represented explicitly and checked by the validation API.
 
 Ranges use zero-based UTF-16 offsets, one-based lines/columns, and exclusive ends. SHA-256 hashes cover the original UTF-8 source. Keep the source text alongside the analysis when slicing locations. Issued profile/analysis handles are local to the loaded module instance; serializing a snapshot does not create a reusable handle.
 
 Reference pages are ordered by source occurrence. Defaults are offset 0 and limit 100, with a maximum page size of 1,000. Follow `nextOffset` until it is null. Omitted relation filters select all kinds; an empty filter selects none. An absent identifier yields a null record and empty results.
 
-Next capabilities are profile-based graph validation, bounded traversal and source-context projection over this same graph. The existing package-root validator and CLI retain their compatibility behavior.
+Profile-driven validation is available over this same analysis. Next capabilities are bounded traversal and source-context projection. The existing package-root validator and CLI retain their compatibility behavior.

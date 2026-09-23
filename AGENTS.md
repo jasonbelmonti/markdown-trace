@@ -6,11 +6,11 @@ Read before planning or implementation:
 
 1. [Document graph direction](docs/design/markdown-trace-document-graph-overview.md)
 2. [Current implementation](docs/current-implementation.md)
-3. The active implementation boundary: [runnable document graph and backlinks](docs/tasks/runnable-document-graph.md).
+3. The active task: [shared runtime contract and Engine 3.6.0 upgrade](docs/tasks/shared-runtime-contract.md).
 
-The latest explicit user instruction takes precedence. The overview defines direction; source/tests describe implemented behavior. The active task owns completion and review boundaries. Future tasks must cite current contracts rather than resurrecting removed plans.
+The latest explicit user instruction takes precedence. The overview defines direction; source/tests describe implemented behavior. The active task owns completion and review boundaries. The earlier runnable-graph task records the delivered graph/query slice. Future tasks must cite current contracts rather than resurrecting removed plans.
 
-The target is a document-wide identity/relationship graph with validation and query/context APIs. The experimental graph uses standard Markdown links under draft2; docs/experimental-document-graph.md owns the current authoring convention. Graph analysis and direct queries are implemented; graph-policy evaluation, traversal and context projection remain proposed. Continue from this runtime. Old brace-syntax corpus and contract-only execution plans are removed and must not be restored as implementation prerequisites.
+The target is a document-wide identity/relationship graph with validation and query/context APIs. The experimental graph uses standard Markdown links under draft2; docs/experimental-document-graph.md owns the current authoring convention. Graph analysis, direct queries and profile-based validation are implemented; traversal and context projection remain proposed. Continue from this runtime. Old brace-syntax corpus and contract-only execution plans are removed and must not be restored as implementation prerequisites.
 
 Legacy table roles, closed relationship enums, YAML registries and registry-specific link conventions remain compatibility behavior, not constraints on the new graph. The experimental link grammar is distinct from the legacy registry URI fields despite sharing ctx://trace. Stable API/CLI migration and publication remain separate decisions.
 

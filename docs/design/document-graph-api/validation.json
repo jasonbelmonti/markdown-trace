@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-09-16T13:14:44.012200+00:00",
-  "packetRevision": 8,
-  "scope": "Current packet structure and proposed declaration/consumer compilation. Runtime verification is reported against the implementation commit in PR #78. These checks do not execute proposed validation/traversal/context APIs.",
+  "validatedAt": "2026-09-23T16:04:34.369Z",
+  "packetRevision": 9,
+  "scope": "Current packet structure, proposed declaration/consumer compilation and artifact hashes. The experimental graph and supported validation rules have separate runtime tests and package checks; this record does not prove the full C-2/C-4 design or traversal/context APIs.",
   "profile": {
     "skill": "interface-design",
     "resource": "references/interface-design-validation-profile.yaml",
@@ -11,7 +11,7 @@
     "structure": {
       "status": "pass",
       "engineVersion": "3.6.0",
-      "inputHash": "d6133fe5b482d12050b61cdebf208d11dde403308818cd4a959d2d6509fd6f14",
+      "inputHash": "12bcf2932daef85c48cbcb62135229efb0801917f0855ca76fbff71dae7010fb",
       "profileHash": "20e664060a8b483398cd055ba7f26259cbbf5eb99986ba2c7d6d2a521a6b777b",
       "diagnostics": []
     },
@@ -24,7 +24,7 @@
   "artifacts": [
     {
       "file": "docs/design/document-graph-api/README.md",
-      "sha256": "fac116f189f0223b74ea3f19b8863a2475fe25a2b630032f3a19a041859d1d74"
+      "sha256": "86007553555dd56e96e54f545549794e4988152efc58bb405921abcbd0dbb122"
     },
     {
       "file": "docs/design/document-graph-api/contracts/analysis.d.ts",
@@ -68,15 +68,15 @@
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.md",
-      "sha256": "56949c51dd6bcedf1b84a919dd960ba17da34110fdbfeabb7715c0495b98648b"
+      "sha256": "9edad87f63511d91d9e540f02807f2707e8c007adb6b3f4dbe8aaed4e47a7b09"
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.sha256",
-      "sha256": "f14f138e52e2ec9c031de5b55e18b93a67f716a2150f62d45e37a670c5373b91"
+      "sha256": "8770026963f149833fb34dd27b7395fb743aa8a85f5a5cfe90a5d0fae0d89a67"
     }
   ],
   "remainingCapabilities": [
-    "Graph-policy validation (C-4).",
+    "Reconcile additional full C-2/C-4 design semantics with the experimental validator if adopted.",
     "Bounded traversal and source-context projection (C-6/C-7)."
   ],
   "releaseDecisions": [

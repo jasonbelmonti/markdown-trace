@@ -8,7 +8,7 @@ import { assert, run } from "./package-exports/process.mjs";
 
 const PACKAGE_NAME = "@jasonbelmonti/markdown-trace";
 const PACKAGE_VERSION = "0.1.0";
-const ENGINE_VERSION = "3.5.0";
+const ENGINE_VERSION = "3.6.0";
 const YAML_VERSION = "^2.8.3";
 const NODE_RANGE = "^20.19.0 || >=22.12.0";
 const CLI_IMPORT = "./dist/markdowntrace/cli.js";
@@ -140,8 +140,9 @@ function assertManifest(manifest, lockfile) {
   assert(manifest.engines?.node === NODE_RANGE, `Node range must remain ${NODE_RANGE}`);
   assert(
     JSON.stringify(manifest.bin) ===
-      JSON.stringify({ "markdown-trace": CLI_IMPORT }),
-    "package bin metadata must remain unchanged",
+      JSON.stringify({ "markdown-trace": CLI_IMPORT,
+        "markdown-trace-document": "./dist/markdowntrace/document-graph/cli.js" }),
+    "package bins must retain the legacy command and expose the document command",
   );
   assert(
     manifest.dependencies?.["@jasonbelmonti/markdown-engine"] === ENGINE_VERSION,
@@ -156,12 +157,17 @@ function assertManifest(manifest, lockfile) {
   assert(rootLock?.license === "MIT", "lockfile root license must be MIT");
   assert(
     JSON.stringify(rootLock?.bin) ===
-      JSON.stringify({ "markdown-trace": LOCK_CLI_IMPORT }),
+      JSON.stringify({ "markdown-trace": LOCK_CLI_IMPORT,
+        "markdown-trace-document": "dist/markdowntrace/document-graph/cli.js" }),
     "lockfile root bin metadata must match",
   );
   assert(
     rootLock?.dependencies?.["@jasonbelmonti/markdown-engine"] === ENGINE_VERSION,
     "lockfile Markdown Engine dependency must match",
+  );
+  assert(
+    lockfile.packages?.["node_modules/@jasonbelmonti/markdown-engine"]?.version === ENGINE_VERSION,
+    "lockfile resolved Markdown Engine version must match",
   );
   assert(rootLock?.engines?.node === NODE_RANGE, "lockfile Node range must match");
   assert(
@@ -228,6 +234,7 @@ function assertTarballMembers(members) {
     "package/dist/markdowntrace/cli.js",
     "package/dist/markdowntrace/document-graph/index.js",
     "package/dist/markdowntrace/document-graph/index.d.ts",
+    "package/dist/markdowntrace/document-graph/cli.js",
   ]) {
     assert(members.includes(required), `tarball must contain ${required}`);
   }

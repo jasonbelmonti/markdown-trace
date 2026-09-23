@@ -148,20 +148,24 @@ describe("standard Markdown links as graph annotations", () => {
       true,
     );
   });
-  it("keeps raw Unicode/CRLF coordinates for complete links", () => {
-    const text = `# ${declaration("WP-1")}\r\n\r\n😀 ${reference("REQ-1", "implements")}\r\n`;
-    const match = value(findIncoming(analyze(text), "REQ-1")).items[0];
-    expect(match.occurrence.range.start).toEqual({
-      offset: text.indexOf("[REQ-1]"),
-      line: 3,
-      column: 4,
+  it.each([
+    ["LF", "\n\n", "\n"],
+    ["CRLF", "\r\n\r\n", "\r\n"],
+    ["CR", "\r\r", "\r"],
+    ["mixed", "\r\n\r", "\n"],
+  ])("keeps raw Unicode/%s coordinates for complete links", (_name, gap, end) => {
+    const link = reference("REQ-1", "implements");
+    const text = `# ${declaration("WP-1")}${gap}😀 ${link}${end}`;
+    const analysis = analyze(text);
+    const page = value(findIncoming(analysis, "REQ-1"));
+    const range = page.items[0].occurrence.range;
+    expect(page.coverage).toBe("complete");
+    expect(range).toEqual({
+      start: { offset: text.indexOf(link), line: 3, column: 4 },
+      end: { offset: text.indexOf(link) + link.length, line: 3, column: 52 },
     });
-    expect(slice(text, match.occurrence.range)).toBe(
-      reference("REQ-1", "implements"),
-    );
-    expect(analyze(text).snapshot.source.utf8Bytes).toBe(
-      Buffer.byteLength(text),
-    );
+    expect(slice(text, range)).toBe(link);
+    expect(analysis.snapshot.source.utf8Bytes).toBe(Buffer.byteLength(text));
   });
   it("rejects the former language version and removes brace marker semantics", () => {
     expect(
