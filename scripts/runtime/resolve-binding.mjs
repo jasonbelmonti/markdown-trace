@@ -9,7 +9,7 @@ const command = "markdown-trace-document";
 async function executable(path) {
   const info = await stat(path);
   if (!info.isFile()) throw Object.assign(new Error(`Binding is not a file: ${path}`), { code: "EISDIR" });
-  await access(path, constants.X_OK);
+  await access(path, constants.R_OK | constants.X_OK);
   return path;
 }
 

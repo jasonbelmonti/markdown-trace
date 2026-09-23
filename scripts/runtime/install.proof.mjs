@@ -142,6 +142,9 @@ test("binding resolves exact executable and never falls back from an explicit va
       await assert.rejects(resolveBinding({ PATH: path, MARKDOWN_TRACE_BIN: bad }));
     await chmod(fallback, 0o644);
     await assert.rejects(resolveBinding({ PATH: path, MARKDOWN_TRACE_BIN: fallback }));
+    await chmod(fallback, 0o111);
+    await assert.rejects(resolveBinding({ PATH: path, MARKDOWN_TRACE_BIN: fallback }),
+      "An unreadable explicit binding must fail without using PATH");
     await chmod(fallback, 0o755);
     await rm(selected);
     await writeFile(join(first, "markdown-trace"), "#!/bin/sh\nexit 0\n", { mode: 0o755 });
