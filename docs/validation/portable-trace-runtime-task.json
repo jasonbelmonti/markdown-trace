@@ -1,0 +1,22 @@
+{
+  "scope": "Task-definition authoring validation only; no portable-runtime implementation evidence is admitted.",
+  "baseline": "90610cdabca6dfc04e069451798a2ef19b08cf2b",
+  "artifact": {
+    "file": "docs/tasks/portable-trace-runtime.md",
+    "revision": "1",
+    "sourceSha256": "6c4528f02d912848784c22761f5e43f4c65783fb95ab1aae536b9f1a711e4eb0"
+  },
+  "profile": {
+    "skill": "task-definition",
+    "resource": "profiles/task-definition.yaml",
+    "sourceSha256": "068798f6e0e95256e4fa1d7d469380b7781bdeb4a039186d0da45ff6bdb959b2"
+  },
+  "validation": {
+    "exitCode": 0,
+    "valid": true,
+    "diagnostics": [],
+    "engineVersion": "3.6.0",
+    "inputHash": "6cf97d887497766cf34f806838b269b96d0a5a4e111827f4523b45f4b4125719",
+    "profileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d"
+  }
+}

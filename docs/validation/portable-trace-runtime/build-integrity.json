@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "sourceCommit": "e53473f8b642dd48755977893b7e5235ee1d3899",
+  "payloadSha256": "d3b539f950b56daf52d2f22f196a27725c841508668928d680d2464eeed6a915",
+  "relocated": "/private/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-first-proof-loZ0Co/runtime with spaces",
+  "node": "v22.20.0",
+  "platform": "darwin",
+  "command": [
+    "--experimental-permission",
+    "--no-warnings",
+    "--no-global-search-paths",
+    "--allow-fs-read=/private/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-first-proof-loZ0Co/runtime with spaces",
+    "/private/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-first-proof-loZ0Co/runtime with spaces/dist/markdowntrace/document-graph/cli.js",
+    "--runtime-info"
+  ],
+  "identity": {
+    "schemaVersion": "markdown-trace.runtime-info.v1",
+    "package": "@jasonbelmonti/markdown-trace",
+    "packageVersion": "0.1.0",
+    "sourceCommit": "e53473f8b642dd48755977893b7e5235ee1d3899",
+    "markdownEngineVersion": "3.6.0",
+    "analyzerVersion": "0.1.0-experimental.2",
+    "languageVersion": "markdown-trace.identity.draft2",
+    "validationProfileVersion": "markdown-trace.validation-profile.experimental.v1",
+    "graphVersion": "markdown-trace.document-graph.v1",
+    "validationResultVersion": "markdown-trace.validation-result.experimental.v1",
+    "nodeVersion": "v22.20.0"
+  },
+  "alteredDependencyRejected": true,
+  "missingDependencyRejected": true
+}

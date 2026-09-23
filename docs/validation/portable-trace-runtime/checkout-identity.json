@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "entry": "/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/portable-runtime-implementation/dist/markdowntrace/document-graph/cli.js",
+  "flags": [
+    "--experimental-permission",
+    "--no-warnings",
+    "--no-global-search-paths",
+    "--allow-fs-read=/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/portable-runtime-implementation/dist",
+    "--allow-fs-read=/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/portable-runtime-implementation/node_modules",
+    "--allow-fs-read=/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/portable-runtime-implementation/package.json"
+  ],
+  "environment": {
+    "PATH": "",
+    "HOME": "/tmp"
+  },
+  "observed": {
+    "schemaVersion": "markdown-trace.runtime-info.v1",
+    "package": "@jasonbelmonti/markdown-trace",
+    "packageVersion": "0.1.0",
+    "sourceCommit": null,
+    "markdownEngineVersion": "3.6.0",
+    "analyzerVersion": "0.1.0-experimental.2",
+    "languageVersion": "markdown-trace.identity.draft2",
+    "validationProfileVersion": "markdown-trace.validation-profile.experimental.v1",
+    "graphVersion": "markdown-trace.document-graph.v1",
+    "validationResultVersion": "markdown-trace.validation-result.experimental.v1",
+    "nodeVersion": "v22.20.0"
+  },
+  "rejected": [
+    [
+      "--file",
+      "missing document.md"
+    ],
+    [
+      "--profile",
+      "missing profile.json"
+    ],
+    [
+      "--format",
+      "report"
+    ],
+    [
+      "--format",
+      "query"
+    ],
+    [
+      "--identifier",
+      "REQ-1"
+    ],
+    [
+      "--direction",
+      "incoming"
+    ],
+    [
+      "--offset",
+      "0"
+    ],
+    [
+      "--limit",
+      "1"
+    ],
+    [
+      "--help"
+    ],
+    [
+      "--runtime-info"
+    ]
+  ]
+}

@@ -30,3 +30,35 @@ jobs:
 
       - name: Run enforcement checks
         run: npm run ci:enforcement
+
+  portable-runtime:
+    name: Portable runtime (${{ matrix.os }}, Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            node: 20.19.0
+          - os: macos-latest
+            node: 22.20.0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Produce two clean local candidates
+        run: |
+          node scripts/runtime/build.mjs --out "$RUNNER_TEMP/trace-a"
+          node scripts/runtime/build.mjs --out "$RUNNER_TEMP/trace-b"
+      - name: Verify reproducibility and isolated behavior
+        run: |
+          node scripts/runtime/reproduce.mjs --first "$RUNNER_TEMP/trace-a" --second "$RUNNER_TEMP/trace-b" > "$RUNNER_TEMP/reproduction.json"
+          node scripts/runtime/check.mjs --artifact "$RUNNER_TEMP/trace-a" --report "$RUNNER_TEMP/artifact-proof.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: portable-runtime-proof-${{ matrix.os }}
+          path: |
+            ${{ runner.temp }}/artifact-proof.json
+            ${{ runner.temp }}/reproduction.json
+            ${{ runner.temp }}/trace-a/release.json

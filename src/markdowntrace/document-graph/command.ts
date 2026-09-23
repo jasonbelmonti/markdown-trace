@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
+import { documentRuntimeInfo } from "./runtime-identity.js";
 import { exportHtml } from "./export/html.js";
 import {
   analyzeDocument, compileValidationProfile, exportMermaid,
@@ -17,6 +18,7 @@ markdown-trace.validation-profile.experimental.v1. No default vocabulary.
 --identifier ID                     Required for query
 --direction incoming|outgoing       Query direction; default: incoming
 --offset N --limit N                Query page; defaults: 0, 100; limit <= 1000
+--runtime-info                     Standalone runtime identity (no other arguments)
 --help, -h                          Show this help
 
 Report: validation JSON. Graph: { validation, graph } JSON.
@@ -65,6 +67,11 @@ export async function runDocumentCommand(
 ): Promise<number> {
   const json = (data: unknown) => JSON.stringify(data, null, 2) + "\n";
   try {
+    if (args.includes("--runtime-info")) {
+      if (args.length !== 1) throw new Error("--runtime-info must be used alone.");
+      io.stdout(json(documentRuntimeInfo()));
+      return 0;
+    }
     const flags = options(args);
     if (flags.help) { io.stdout(help); return 0; }
     const profile = value(compileValidationProfile(await readFile(flags.profile!, "utf8")));

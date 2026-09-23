@@ -1,0 +1,151 @@
+{
+  "passed": true,
+  "node": "v22.20.0",
+  "baseCommit": "e53473f8b642dd48755977893b7e5235ee1d3899",
+  "inputs": {
+    "authoring.md": "37f9021ba002856ca812af740c7a3823c34329e469431157f4a584a148bb5d8d",
+    "task-definition.md": "e3c0794e4a93a7892c747b2b3547860e49683b80034f4c69bd8f9baa66576a84",
+    "profile.json": "374a153be64021904504117441a077f7279549e2d438b28467c74a81fac19808",
+    "check.mjs": "39cac670f218a0b0aab204538017b01c8355a4b21cbbf4615d9458762d96cae2",
+    "run.mjs": "2d99e7e9f756e73b9ece60914e78d5a80e6f610bb63742223f5ca945d5ef86d4",
+    "verify.mjs": "602bbc408153aefe62058f3b45297aa48409a93b86c313b9c9415721f58705c1",
+    "profile-proof.mjs": "e680a2cbfab3a22c9acc2d419e5466eb518e1af148e80025375d4a3712eb16f7",
+    "../../src/markdowntrace/document-graph/analysis-state.ts": "cd3ca2d0b7f6eb46d34367c8bb00e0ab2135bf1a7a4e1f31b6eedc46488e3cf2",
+    "../../src/markdowntrace/document-graph/analyze.ts": "2eefef6e2674e80d2db66dfd986f82ee69c3663187b45a5a1b8b95ab802cf8c0",
+    "../../src/markdowntrace/document-graph/cli.ts": "9e3212b75b89fe235be996f3b236e145369835e265255f0b1bb3ee575ad2a0af",
+    "../../src/markdowntrace/document-graph/command.ts": "fbc564372d4ef99b9c59904354448c5a1d13823892900da3e83bae71fb0dacd6",
+    "../../src/markdowntrace/document-graph/contracts/analysis.ts": "d1fa68bb75dad4d8eed6edbe9135de7750a728951b3ecdd07e994084009cb5d0",
+    "../../src/markdowntrace/document-graph/contracts/profile.ts": "dbfc30ba4e784efb655fa4cd9ab7544680141ccee7859c4a60a1dd39d8252743",
+    "../../src/markdowntrace/document-graph/contracts/query.ts": "e1f6412277ca8c3db5eaff9343ecf8525ca1f16ae2e4786dcff661655909d1d1",
+    "../../src/markdowntrace/document-graph/contracts/source.ts": "db985f80e091dd791fa4b852de6313dfc256cbce2cc5525fd1977cd01532a839",
+    "../../src/markdowntrace/document-graph/contracts/validation-profile.ts": "af31b66b9a62ae75eab3c698fa3883a76fbf55a5fcb5b98971c0af3e2225b066",
+    "../../src/markdowntrace/document-graph/contracts/validation.ts": "219f18835236cdb8201147d7de4c67e1acb449a3521c6743cd6c037883e37671",
+    "../../src/markdowntrace/document-graph/coordinates.ts": "aa17e4d19fc28928f2d767bfcd26782eb2870b73082646d5a41c1311b57363a3",
+    "../../src/markdowntrace/document-graph/export/html-client.ts": "1e167a4ba51f34fbc641356aa4e7e4c8f820be9002da672e78a6d88e2ec49d6b",
+    "../../src/markdowntrace/document-graph/export/html-style.ts": "5a364fcad833603c483fca70e2a280badcd5186165d79a2f575c4bd961885bfb",
+    "../../src/markdowntrace/document-graph/export/html.ts": "bf52640171fe9cb913ea2f83884381113a8ff4f6391daea471551de29976dd9e",
+    "../../src/markdowntrace/document-graph/export/mermaid.ts": "4647af683a63bf673026462d6a90345cad8181f26c3f2bbc4db221520f782f1b",
+    "../../src/markdowntrace/document-graph/export/presentation.ts": "b2e6ab4c0ec4c8cbf49d8c9e0b9ff1dd6dcd90b6dd7ce9620b2791482e0005b1",
+    "../../src/markdowntrace/document-graph/extract.ts": "6c785379e6bf8f0492d2b727c5d367efb15195276988efc170660f3ecad848a6",
+    "../../src/markdowntrace/document-graph/extraction-model.ts": "c6bf6010585c0c9d61f82d81a492a361e9108a36ca13c9f998f5991ccad75921",
+    "../../src/markdowntrace/document-graph/fragment-support.ts": "9886a41004fd34ff88cede21af59993df66cc948065b3696a0c2d29605f095fe",
+    "../../src/markdowntrace/document-graph/index.ts": "d4072c3ada1f25bad02a8c8e9f7540efb2fa09fa72e46e36bba4a51482c89d53",
+    "../../src/markdowntrace/document-graph/inline.ts": "e63b03280e333c435405151c18aeb03db58e996135b95c0b16a1317bb779b6d7",
+    "../../src/markdowntrace/document-graph/lexical.ts": "8086d05f2419590c8e943fca8c5b26c6b28ca88d13bd5b218478be0bc95276d9",
+    "../../src/markdowntrace/document-graph/ownership.ts": "1aa3115cf5e185ce0eaf5a65369abb3f56d6910f64dbc616f70577447f2127ee",
+    "../../src/markdowntrace/document-graph/profile-input.ts": "f6a402ea4b1ae9fcd5308f1368e12ee22c25dfc4e3fa82a76d9db14c8455b41d",
+    "../../src/markdowntrace/document-graph/profile.ts": "8ee7498bda6fdb22e740bb8b67a7ed7e6e35fa9bbbac2340c81294e1130d32b4",
+    "../../src/markdowntrace/document-graph/queries.ts": "3439a96e46ebdb5971d48463cd5bc3813786d694f6f30a7c4ee39e4da87f56fa",
+    "../../src/markdowntrace/document-graph/runtime-identity.ts": "a64cae23f01105c4d0442d34172f4eb2828c6098981c3fee3363b915a0416010",
+    "../../src/markdowntrace/document-graph/source-range.ts": "2cbdc4f082937f6b0da6d85e1f17e6ff65ef41cf8782e571b5e31169f95a2e9d",
+    "../../src/markdowntrace/document-graph/trace-destination.ts": "61659bdb55e4f0f9c311804814d7ff60d0d3adc56e45150640ce0a44652ef392",
+    "../../src/markdowntrace/document-graph/validation/builtins.ts": "9f88d39e1a77d84ada4b80b5629d2da5008108d1c514550997cd857999a0e547",
+    "../../src/markdowntrace/document-graph/validation/evaluate.ts": "1f902ace5a45d6a6312aead438f2811823b8829b8392955f29d4fbe01f3056b5",
+    "../../src/markdowntrace/document-graph/validation/model.ts": "142c706c91caada8f9fb1934ecc855bf08837e89d2ed03c2a79292e006aa5cb7",
+    "../../src/markdowntrace/document-graph/validation/profile.ts": "20fc134d1efb3750ec56b2048ef06787d1e01e5acf8476013956a1de64fe29b3",
+    "../../src/markdowntrace/document-graph/validation/rules.ts": "88ed18175b1203ae4ba63aaf3832b7d05e70270ea19542e0e1ae75302a14fa34",
+    "../../src/markdowntrace/document-graph/validation/schema.ts": "1a376b329064f48ca7e1046d2eb6964ac777282a25605f83dc4fbc535b69cf6f",
+    "../../src/markdowntrace/document-graph/validation/selectors.ts": "c00c914ae0b4ea5f2542c8a289f60c962fa8a65b230e2459e8f48efc939a30a2",
+    "../../src/markdowntrace/document-graph/validation/source.ts": "453fa343793e703ce9fc432947ee9af339d349400c1999e92ebe93904446cdc5",
+    "../../src/markdowntrace/document-graph/validation/validate.ts": "1ae50dda40e1005695f16c5903f2f3d9a2bd4756f89157ae6e3cdda8c2005cd8",
+    "../../src/markdowntrace/document-graph/value.ts": "6c9f084316c0a8604a11fa2ee107aa5c46538b06c84697b407518f70d37de3dc",
+    "../../src/markdowntrace/document-graph/versions.ts": "1fb70265f15c15647d3b94861c165165f090c3333c8465615fd77f0520218ce9"
+  },
+  "structuralProfileSha256": "068798f6e0e95256e4fa1d7d469380b7781bdeb4a039186d0da45ff6bdb959b2",
+  "lockfileSha256": "c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c",
+  "graphRuntimeSha256": "1b191878c20b4531b9366268512daac56f795150431842b8a8d9017dbc4174f0",
+  "structuralEngine": "3.6.0",
+  "graphEngine": "3.6.0",
+  "results": [
+    {
+      "case": "valid authored task",
+      "structuralValid": true,
+      "traceValid": true
+    },
+    {
+      "case": "aliased outputs",
+      "runtimeExit": 2,
+      "outputsPreserved": true
+    },
+    {
+      "case": "dangling output alias",
+      "runtimeExit": 2,
+      "outputsPreserved": true
+    },
+    {
+      "case": "missing-definition",
+      "structuralValid": true,
+      "traceValid": false,
+      "diagnostic": {
+        "ruleId": "validation-definitions",
+        "code": "trace-validation.annotation-count",
+        "line": 79,
+        "column": 54,
+        "message": "Expected 1..1 declarations; found 0."
+      },
+      "repairedValid": true
+    },
+    {
+      "case": "missing-slice-link",
+      "structuralValid": true,
+      "traceValid": false,
+      "diagnostic": {
+        "ruleId": "validation-has-slice",
+        "code": "trace-validation.relation-count",
+        "line": 79,
+        "column": 56,
+        "message": "Expected 1..unbounded distinct incoming verified-by neighbors; found 0."
+      },
+      "repairedValid": true
+    },
+    {
+      "case": "wrong-existing-criterion",
+      "structuralValid": true,
+      "traceValid": false,
+      "diagnostic": {
+        "ruleId": "validation-criterion-reference",
+        "code": "trace-validation.text-mismatch",
+        "line": 79,
+        "column": 1,
+        "message": "Annotation identifier must equal the selected source text: TD-SC-2."
+      },
+      "repairedValid": true
+    },
+    {
+      "case": "wholly-unannotated-check",
+      "structuralValid": true,
+      "traceValid": false,
+      "diagnostic": {
+        "ruleId": "validation-definitions",
+        "code": "trace-validation.annotation-count",
+        "line": 79,
+        "column": 11,
+        "message": "Expected 1..1 declarations; found 0."
+      },
+      "repairedValid": true
+    }
+  ],
+  "profileProof": {
+    "strictStatus": "fail",
+    "relaxedStatus": "pass",
+    "strictValidationHash": "caa6e5a04642187bed41894aea551ce3f7d398732080038544ae3c83caa241d2",
+    "relaxedValidationHash": "8999120e633407b7773e46c10f207d556dab1b7392d6bfedd1668b1cdeec2db4",
+    "analysisId": "baf69c1f3c0c05c86d337be2e884523bbf9e5a47c9dfccca872f54bcb085d6a0",
+    "graphUnchanged": true,
+    "repeatable": true,
+    "changedSelectorRejected": true,
+    "renamedSectionsPassed": true,
+    "prosePassed": true,
+    "listAndQuotePassed": true,
+    "missingProseReferenceRejected": true,
+    "unsupportedProfilesRejected": true,
+    "interpretationMismatchRejected": true,
+    "partialAnalysisStatus": "indeterminate"
+  },
+  "backlink": {
+    "identifier": "VAL-2",
+    "source": "SLICE-1",
+    "relation": "verified-by",
+    "line": 65
+  }
+}
