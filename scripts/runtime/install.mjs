@@ -5,29 +5,29 @@ import { activate, rollback, stage, status, verify } from "./installed-release.m
 try {
   const { values, positionals } = parseArgs({
     allowPositionals: true,
-    options: { root: { type: "string" }, candidate: { type: "string" }, release: { type: "string" } },
+    options: { root: { type: "string" }, candidate: { type: "string" }, descriptor: { type: "string" }, release: { type: "string" } },
   });
   const [action] = positionals;
-  if (positionals.length !== 1 || !values.root) throw new Error("Usage: install.mjs <stage|verify|activate|rollback|status> --root DIRECTORY [--candidate DIRECTORY|--release ID]");
+  if (positionals.length !== 1 || !values.root) throw new Error("Usage: install.mjs <stage|verify|activate|rollback|status> --root DIRECTORY [--candidate DIRECTORY --descriptor TRUSTED_JSON|--release ID]");
   const root = resolve(values.root);
   let result;
   switch (action) {
     case "stage":
-      if (!values.candidate || values.release) throw new Error("stage requires --candidate only");
-      result = await stage(root, values.candidate); break;
+      if (!values.candidate || !values.descriptor || values.release) throw new Error("stage requires --candidate and --descriptor only");
+      result = await stage(root, values.candidate, values.descriptor); break;
     case "verify":
-      if (!values.release || values.candidate) throw new Error("verify requires --release only");
+      if (!values.release || values.candidate || values.descriptor) throw new Error("verify requires --release only");
       { const slot = await verify(root, values.release);
         result = { id: slot.id, launcher: slot.launcher, identity: slot.descriptor.identity }; }
       break;
     case "activate":
-      if (!values.release || values.candidate) throw new Error("activate requires --release only");
+      if (!values.release || values.candidate || values.descriptor) throw new Error("activate requires --release only");
       result = await activate(root, values.release); break;
     case "rollback":
-      if (!values.release || values.candidate) throw new Error("rollback requires --release only");
+      if (!values.release || values.candidate || values.descriptor) throw new Error("rollback requires --release only");
       result = await rollback(root, values.release); break;
     case "status":
-      if (values.release || values.candidate) throw new Error("status accepts only --root");
+      if (values.release || values.candidate || values.descriptor) throw new Error("status accepts only --root");
       result = await status(root); break;
     default: throw new Error("Unknown installer action");
   }

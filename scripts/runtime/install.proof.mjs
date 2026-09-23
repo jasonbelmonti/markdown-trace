@@ -27,7 +27,7 @@ test("versioned installation verifies before switching and restores a prior rele
     const secondDescriptor = await readJson(join(candidateB, "release.json"));
     assert.notEqual(firstDescriptor.identity.sourceCommit, secondDescriptor.identity.sourceCommit,
       "Rollback proof needs independently identified candidates");
-    const first = await stage(root, candidateA);
+    const first = await stage(root, candidateA, join(candidateA, "release.json"));
     assert.equal((await status(root)).active, null, "Staging must not activate");
     assert.deepEqual((await verify(root, first.id)).descriptor.identity, firstDescriptor.identity);
     assert.deepEqual(JSON.parse(run(first.launcher, ["--runtime-info"], { cwd: base }).stdout),
@@ -37,12 +37,12 @@ test("versioned installation verifies before switching and restores a prior rele
     await cp(candidateB, brokenCandidate, { recursive: true });
     const brokenDescriptor = await readJson(join(brokenCandidate, "release.json"));
     await writeFile(join(brokenCandidate, brokenDescriptor.payloadDirectory, entrypoint), "broken\n");
-    await assert.rejects(stage(root, brokenCandidate), /inventory differs/i);
+    await assert.rejects(stage(root, brokenCandidate, join(candidateB, "release.json")), /inventory differs/i);
     assert.equal((await status(root)).active, null);
     const malformed = join(base, "malformed descriptor");
     await mkdir(malformed);
     await writeFile(join(malformed, "release.json"), '{"payloadDirectory":"../escape"}');
-    await assert.rejects(stage(root, malformed));
+    await assert.rejects(stage(root, candidateB, join(malformed, "release.json")));
     assert.equal((await status(root)).active, null);
 
     const firstActivation = await activate(root, first.id);
@@ -65,7 +65,10 @@ test("versioned installation verifies before switching and restores a prior rele
     assert.equal(installedRun.status, 0);
     assert.deepEqual(await inventory(join(work, "input with spaces")), before);
 
-    const second = await stage(root, candidateB);
+    const untrustedCandidate = join(base, "payload with untrusted descriptor");
+    await cp(candidateB, untrustedCandidate, { recursive: true });
+    await writeFile(join(untrustedCandidate, "release.json"), "candidate-controlled descriptor is ignored\n");
+    const second = await stage(root, untrustedCandidate, join(candidateB, "release.json"));
     assert.equal(await readlink(active), firstLink, "Staging a second release must not switch active");
     const secondActivation = await activate(root, second.id);
     assert.equal(secondActivation.previous, firstLink);

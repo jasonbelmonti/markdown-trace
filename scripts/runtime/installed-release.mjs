@@ -51,11 +51,12 @@ async function verifySlot(root, id) {
   return { id, slot, launcher, descriptor: verified };
 }
 
-export async function stage(rootInput, candidateInput) {
+export async function stage(rootInput, candidateInput, descriptorInput) {
   const root = await installRoot(rootInput, true);
   const candidate = resolve(candidateInput);
   await directory(candidate);
-  const sourceDescriptor = join(candidate, "release.json");
+  assert.ok(descriptorInput, "A separately selected trusted descriptor is required");
+  const sourceDescriptor = resolve(descriptorInput);
   const sourceStat = await lstat(sourceDescriptor);
   assert.ok(sourceStat.isFile() && !sourceStat.isSymbolicLink(), "Source descriptor must be a regular file");
   const sourceBytes = await readFile(sourceDescriptor);

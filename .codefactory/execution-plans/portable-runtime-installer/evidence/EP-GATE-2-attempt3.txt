@@ -1,16 +1,16 @@
 {
   "gate": "EP-GATE-2",
-  "utc": "2026-09-23T17:09:29Z",
-  "head": "50eda3d442b9a1b6d32ae83dd9d0030dbb106ffb",
+  "utc": "2026-09-23T17:05:20Z",
+  "head": "34be6d6b705397a2da465aaaf1a914c13aadb227",
   "node": "v22.20.0",
   "npm": "11.13.0",
   "platform": "Darwin arm64",
   "source_inputs_before": {
-    "scripts/runtime/install.mjs": "486c2caaebb9bea2d795435a68d113c9a407fc2155047f14617e61c3c04ed788",
-    "scripts/runtime/installed-release.mjs": "fb99fd8684b9ce882d996e942efa067f0035fdd7ded84572f0f818a327331741",
+    "scripts/runtime/install.mjs": "68f3951276746b94fc05e69ecb24ee424b2bf92e207de91a99702de29cd40c68",
+    "scripts/runtime/installed-release.mjs": "34bfc876ff4f3b3df7ec20bc5f2987147ed7d28aba841a6fa8016848373c527c",
     "scripts/runtime/launcher.mjs": "9c65d07ab7dfeef02b7e4ce5c47d2c71019aa8564ec4e590c2098531f60b6ad3",
     "scripts/runtime/resolve-binding.mjs": "d8baa94f9a07832933302e053864ac62e2514c75df0bdbbb224cb86e195eb94f",
-    "scripts/runtime/install.proof.mjs": "488a0d46cb33969907ed123113e8552f875509bef8e8ba114e8be9d5d7673fb2",
+    "scripts/runtime/install.proof.mjs": "824acd03d272184e8543cf3687aca6dceb52ee975892826cea9421490a7dbbc4",
     "scripts/runtime/integrity.mjs": "96ac53502b7fa91bfbc977680d28916f5face195a523d7d9e68fb6167d8500c3",
     "package.json": "775da0e7d7752d5325c66f9303877fbc3c036eba6086c24eeb353a573642dadd",
     "package-lock.json": "c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c",
@@ -26,7 +26,7 @@
         "scripts/runtime/install.proof.mjs"
       ],
       "exit": 0,
-      "stdout_tail": "TAP version 13\n# Subtest: versioned installation verifies before switching and restores a prior release\nok 1 - versioned installation verifies before switching and restores a prior release\n  ---\n  duration_ms: 7772.716125\n  type: 'test'\n  ...\n# Subtest: binding resolves exact executable and never falls back from an explicit value\nok 2 - binding resolves exact executable and never falls back from an explicit value\n  ---\n  duration_ms: 173.52925\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 7996.876916\n",
+      "stdout_tail": "TAP version 13\n# Subtest: versioned installation verifies before switching and restores a prior release\nok 1 - versioned installation verifies before switching and restores a prior release\n  ---\n  duration_ms: 7096.113708\n  type: 'test'\n  ...\n# Subtest: binding resolves exact executable and never falls back from an explicit value\nok 2 - binding resolves exact executable and never falls back from an explicit value\n  ---\n  duration_ms: 169.582292\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 7313.948166\n",
       "stderr_tail": ""
     },
     {
@@ -61,15 +61,14 @@
   ],
   "prior_attempts": [
     "EP-GATE-2-attempt1.txt",
-    "EP-GATE-2-attempt2.txt",
-    "EP-GATE-2-attempt3.txt"
+    "EP-GATE-2-attempt2.txt"
   ],
   "source_inputs_after": {
-    "scripts/runtime/install.mjs": "486c2caaebb9bea2d795435a68d113c9a407fc2155047f14617e61c3c04ed788",
-    "scripts/runtime/installed-release.mjs": "fb99fd8684b9ce882d996e942efa067f0035fdd7ded84572f0f818a327331741",
+    "scripts/runtime/install.mjs": "68f3951276746b94fc05e69ecb24ee424b2bf92e207de91a99702de29cd40c68",
+    "scripts/runtime/installed-release.mjs": "34bfc876ff4f3b3df7ec20bc5f2987147ed7d28aba841a6fa8016848373c527c",
     "scripts/runtime/launcher.mjs": "9c65d07ab7dfeef02b7e4ce5c47d2c71019aa8564ec4e590c2098531f60b6ad3",
     "scripts/runtime/resolve-binding.mjs": "d8baa94f9a07832933302e053864ac62e2514c75df0bdbbb224cb86e195eb94f",
-    "scripts/runtime/install.proof.mjs": "488a0d46cb33969907ed123113e8552f875509bef8e8ba114e8be9d5d7673fb2",
+    "scripts/runtime/install.proof.mjs": "824acd03d272184e8543cf3687aca6dceb52ee975892826cea9421490a7dbbc4",
     "scripts/runtime/integrity.mjs": "96ac53502b7fa91bfbc977680d28916f5face195a523d7d9e68fb6167d8500c3",
     "package.json": "775da0e7d7752d5325c66f9303877fbc3c036eba6086c24eeb353a573642dadd",
     "package-lock.json": "c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c",

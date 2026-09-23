@@ -148,7 +148,8 @@ integrity check nor the reported identity authenticates an untrusted publisher.
 
 ```sh
 root=/absolute/path/to/trace-install
-node scripts/runtime/install.mjs stage --root "$root" --candidate /tmp/trace-candidate-a
+node scripts/runtime/install.mjs stage --root "$root" \
+  --candidate /tmp/trace-candidate-a --descriptor /trusted/path/release.json
 node scripts/runtime/install.mjs status --root "$root"
 ```
 
