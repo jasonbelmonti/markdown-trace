@@ -1,0 +1,25 @@
+{
+  "repository": "https://github.com/jasonbelmonti/markdown-trace",
+  "baseline": "24d33c1061101c1065fb511921f7ddce4f285717",
+  "files": {
+    "AGENTS.md": "f5d62d358e32015db7b867bfca9c10421412b66d517f9912ceff82231ed41250",
+    "docs/design/markdown-trace-document-graph-overview.md": "8ea81464fb2cb71bf8126512fd9ffb4c866c250e770208b516cfb88fbc7844bb",
+    "docs/design/markdown-trace-document-graph-interfaces.md": "9edad87f63511d91d9e540f02807f2707e8c007adb6b3f4dbe8aaed4e47a7b09",
+    "docs/current-implementation.md": "2951a5972f4981969de45af372fac05e2710ff84b8dbcfd0993a11693c77b447",
+    "docs/experimental-document-graph.md": "39844eb63dd8aaa81982b67565db66194afebc214e170f9a02f2a1c4f1215fe4",
+    "docs/experimental-graph-validation.md": "95f571f981a7ae31eb485c6ddf7737fe7fcf3017cadc1184f20983181e6d5792",
+    "docs/tasks/portable-trace-runtime.md": "27a2665ee8cb40702400c28354200bae03895ea8f10f7737fbaee517fe695e82",
+    "package.json": "775da0e7d7752d5325c66f9303877fbc3c036eba6086c24eeb353a573642dadd",
+    "src/markdowntrace/document-graph/index.ts": "d4072c3ada1f25bad02a8c8e9f7540efb2fa09fa72e46e36bba4a51482c89d53",
+    "src/markdowntrace/document-graph/contracts/query.ts": "e1f6412277ca8c3db5eaff9343ecf8525ca1f16ae2e4786dcff661655909d1d1",
+    "src/markdowntrace/document-graph/queries.ts": "3439a96e46ebdb5971d48463cd5bc3813786d694f6f30a7c4ee39e4da87f56fa",
+    "src/markdowntrace/document-graph/fragment-support.ts": "9886a41004fd34ff88cede21af59993df66cc948065b3696a0c2d29605f095fe",
+    "src/markdowntrace/document-graph/contracts/source.ts": "db985f80e091dd791fa4b852de6313dfc256cbce2cc5525fd1977cd01532a839",
+    "experiments/task-definition-trace/authoring.md": "37f9021ba002856ca812af740c7a3823c34329e469431157f4a584a148bb5d8d",
+    "src/markdowntrace/document-graph/contracts/analysis.ts": "d1fa68bb75dad4d8eed6edbe9135de7750a728951b3ecdd07e994084009cb5d0",
+    "src/markdowntrace/document-graph/analysis-state.ts": "cd3ca2d0b7f6eb46d34367c8bb00e0ab2135bf1a7a4e1f31b6eedc46488e3cf2",
+    "tests/test_document_graph_api.test.ts": "4694577729109c37202260cb1722b50d80808a2962dd0057321e6b1a3036e26f",
+    "tests/test_document_graph_links.test.ts": "8433159dea125f8116313ef34fd6c7ab23e4743e8d13bd827807110321ef8379",
+    "skills/markdown-trace/SKILL.md": "6f15136b65637006a4b06a9a880a126665db34dd5f366afa152bcdc53cb4e7c6"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "operation": "AUTHOR",
+  "artifact_revision": "1",
+  "repository_baseline": "24d33c1061101c1065fb511921f7ddce4f285717",
+  "engineVersion": "3.6.0",
+  "profileFileSha256": "068798f6e0e95256e4fa1d7d469380b7781bdeb4a039186d0da45ff6bdb959b2",
+  "validated_at": "2026-09-23T16:30:11-05:00",
+  "hashSemantics": "Artifact and profileFileSha256 fields hash raw bytes. Engine inputHash hashes the normalized EngineDocument; Engine profileHash hashes the resolved profile. They are separate identities.",
+  "records": [
+    {
+      "file": "01-bounded-traversal.md",
+      "state": "READY",
+      "route": "PLAN_REQUIRED",
+      "revision": "1",
+      "sha256": "cdc1a012195c7055e81e6cd178489d41e03088089394d895f7698f4b1a61372e",
+      "engineInputHash": "7a9a084237efa4363c61d60188291335bbba00332cbee3fb6c8848dd6fd30998",
+      "engineProfileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d",
+      "valid": true,
+      "diagnostics": [],
+      "report": "validation/01-bounded-traversal.json"
+    },
+    {
+      "file": "02-source-projection.md",
+      "state": "READY",
+      "route": "PLAN_REQUIRED",
+      "revision": "1",
+      "sha256": "5bb45b3b71aa9cf1523cc0f2cf89063c6071ca12b5807f89a874e8a01ad9d714",
+      "engineInputHash": "2171f45cc8d24670f85b5f2ff5ce8c373d2bf4adf7c87a7e90cd346aeb8794c2",
+      "engineProfileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d",
+      "valid": true,
+      "diagnostics": [],
+      "report": "validation/02-source-projection.json"
+    },
+    {
+      "file": "03-cross-document-resolution.md",
+      "state": "READY",
+      "route": "SPEC_REQUIRED",
+      "revision": "1",
+      "sha256": "279fe3ff0ae14c670be2f504d22a756683c422c71e51922c70209f60f7250b4d",
+      "engineInputHash": "b29dab65248a148a531571c588a999a053da14e2f30909d5bcb0f99be481d165",
+      "engineProfileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d",
+      "valid": true,
+      "diagnostics": [],
+      "report": "validation/03-cross-document-resolution.json"
+    },
+    {
+      "file": "04-projection-policy-verification.md",
+      "state": "READY",
+      "route": "SPEC_REQUIRED",
+      "revision": "1",
+      "sha256": "1e12c23acc37c0809b2015dbaf3ed03c8fc47bbed2e4241b4e12c8042961aa2c",
+      "engineInputHash": "00fcb9cb8bf67595ccbda87c07fb8e483a806a58e9eab24cb455ccb3628018aa",
+      "engineProfileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d",
+      "valid": true,
+      "diagnostics": [],
+      "report": "validation/04-projection-policy-verification.json"
+    }
+  ]
+}
