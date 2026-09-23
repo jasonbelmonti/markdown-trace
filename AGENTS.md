@@ -10,7 +10,9 @@ Read before planning or implementation:
 
 The latest explicit user instruction takes precedence. The overview defines direction; source/tests describe implemented behavior. The active task owns completion and review boundaries. The earlier runnable-graph task records the delivered graph/query slice. Future tasks must cite current contracts rather than resurrecting removed plans.
 
-The target is a document-wide identity/relationship graph with validation and query/context APIs. Current table roles, closed relationship enums, YAML registries, and `ctx://trace` syntax are existing implementation constraints, not the final language or product scope. The experimental graph uses standard Markdown links under draft2; docs/experimental-document-graph.md owns the current authoring convention. Draft1 brace-marker examples and pre-implementation syntax gates in earlier design evidence are superseded by the owner's link decision. The owner authorized a runnable implementation after the contract/corpus work; earlier contract-only gates do not block this slice. Stable syntax and release approval remain separate.
+The target is a document-wide identity/relationship graph with validation and query/context APIs. The experimental graph uses standard Markdown links under draft2; docs/experimental-document-graph.md owns the current authoring convention. Graph analysis, direct queries and profile-based validation are implemented; traversal and context projection remain proposed. Continue from this runtime. Old brace-syntax corpus and contract-only execution plans are removed and must not be restored as implementation prerequisites.
+
+Legacy table roles, closed relationship enums, YAML registries and registry-specific link conventions remain compatibility behavior, not constraints on the new graph. The experimental link grammar is distinct from the legacy registry URI fields despite sharing ctx://trace. Stable API/CLI migration and publication remain separate decisions.
 
 ## Tasks and durable artifacts
 

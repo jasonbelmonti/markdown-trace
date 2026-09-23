@@ -1,9 +1,0 @@
-{
-  "schemaVersion": "markdown-trace.design-scenario.v1",
-  "caseId": "CASE-9N",
-  "source": {"file": "../mixed-layout.md", "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"},
-  "annotationRef": "scenarios/mixed-layout.expected.json",
-  "input": "Original mixed source; WP-1 outgoing traversal, maxDepth 1, maxNodes 2",
-  "operationExpectations": {"query": {"roots": ["WP-1"], "direction": "outgoing", "maxDepth": 1, "maxNodes": 2}, "nodes": ["WP-1", "REQ-1"], "depthLimited": false, "nodeLimited": true, "unresolvedRelationships": 0},
-  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
-}

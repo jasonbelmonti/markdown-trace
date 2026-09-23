@@ -2,7 +2,7 @@
 
 The first document-wide graph runtime landed in [PR #78](https://github.com/jasonbelmonti/markdown-trace/pull/78), followed by shared source-location work in [PR #80](https://github.com/jasonbelmonti/markdown-trace/pull/80). The [experimental API guide](experimental-document-graph.md) gives runnable examples. The [overview](design/markdown-trace-document-graph-overview.md) describes the broader target.
 
-## Document-wide graph and direct queries
+## Document-wide graph, validation and direct queries
 
 The `experimental/graph` package entry point exports `compileProfile`, `analyzeDocument`, `lookupIdentifier`, `findIncoming`, `findOutgoing`, `exportMermaid`, `compileValidationProfile`, and `validateGraph`. Analysis uses Markdown Engine's public tree and source maps across headings, paragraphs, lists, blockquotes and tables, under `markdown-trace.identity.draft2`. Standard Markdown links carry declarations (`?role=definition`) and typed references (`?rel=implements`) in `ctx://trace/entity/ID` destinations; bare IDs remain generic mentions.
 
@@ -12,7 +12,7 @@ The immutable snapshot preserves declaration/mention distinctions, duplicate and
 
 `exportMermaid(snapshot)` formats that snapshot as a diagram without re-extracting source. The demo's `--mermaid` option emits this text directly. Isolated identifiers, repeated edges, missing/duplicate definitions and uncertain owners remain visible, alongside coverage and diagnostic/exclusion counts. Rendering and graph filtering are separate concerns.
 
-Source annotation coverage, allowed relations and incoming/outgoing cardinality validation are implemented. Traversal, context projection, stable syntax/API approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces.
+Source annotation coverage, allowed relations and incoming/outgoing cardinality validation are implemented. Traversal, context projection, stable syntax/API approval and package publication remain follow-up work. The sections below describe the retained compatibility surfaces; their gaps are not instructions to build the new product inside the old modules.
 
 ## Public API and CLI
 
@@ -27,7 +27,7 @@ semantic gates stay with its authoring skill; the installed skill is unchanged.
 See the [command guide](experimental-graph-validation.md#shared-command) for
 checkout usage, output channels, exit codes and the paragraph/list example.
 
-The package-root JavaScript export is `validateGraphDocument({ documentPath, profilePath, cwd? })`, plus self-contained result types. It reads local files and returns `pass`, `fail`, or `operational-error` in `markdown-trace.graph-validation-result.v1`. The separate experimental entry point above provides analysis and direct queries; the root API remains the legacy table validator.
+The package-root JavaScript export is `validateGraphDocument({ documentPath, profilePath, cwd? })`, plus self-contained result types. It reads local files and returns `pass`, `fail`, or `operational-error` in `markdown-trace.graph-validation-result.v1`. The separate experimental entry point above provides analysis, validation and direct queries; the root API remains the legacy table validator.
 
 ```sh
 node dist/markdowntrace/cli.js graph-validate \
@@ -41,7 +41,7 @@ Help calls graph validation, help, and version stable commands. This identifies 
 
 ## Legacy extraction and validation limits
 
-| Concern | Existing behavior | Remaining boundary |
+| Concern | Legacy behavior | Limitation of this compatibility surface |
 | --- | --- | --- |
 | Markdown coverage | Graph extraction iterates tables. | Common discovery and ownership across headings/prose/lists/quotes. |
 | Identifiers | Uppercase hyphen-separated tokens filtered by profile regular expressions. | Canonical language; arbitrary lexical syntax is not supported today. |
@@ -52,7 +52,7 @@ Help calls graph validation, help, and version stable commands. This identifies 
 | Vocabularies | Artifact families and relationship names are closed runtime enums. | Versioned, domain-owned vocabulary. |
 | Integrity | Unresolved edges can be dropped; duplicates/ranges are not comprehensively diagnosed. | Preserve defects and report analysis completeness. |
 | Matrices | Matrix-required-path profiles cause compatibility errors; completed results contain no matrix-coverage evaluations. | Matrix assertion implementation. |
-| Query/context | No public surface. | Shared indexes, fragment ownership, queries, and projection. |
+| Query/context | No public surface over the legacy graph. | The experimental graph has separate lookup/direct queries; traversal and projection remain proposed. |
 
 Controlled baseline probes showed the positive execution fixture passed and a removed required validation connection failed. Empty input, a duplicate objective, an extra dangling work reference, and an undefined prose range endpoint still passed. Zero evaluated paths do not establish spec validity. The legacy tests protect these compatibility boundaries. The new graph tests separately exercise document-wide behavior.
 

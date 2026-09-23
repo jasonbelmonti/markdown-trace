@@ -1,9 +1,0 @@
-{
-  "schemaVersion": "markdown-trace.design-scenario.v1",
-  "caseId": "CASE-11",
-  "source": {"file": "../mixed-layout.md", "sha256": "bd9b21859c15fbb840e8a70801b893504ee4489ab77460f10e175da6ebd6a901"},
-  "annotationRef": "scenarios/mixed-layout.expected.json",
-  "input": "Original mixed source; WP-1 outgoing depth 1, context budget 1000 UTF-8 bytes and 10 fragments",
-  "operationExpectations": {"query": {"roots": ["WP-1"], "direction": "outgoing", "maxDepth": 1, "maxNodes": 20}, "budget": {"maxUtf8Bytes": 1000, "maxFragments": 10}, "nodes": ["WP-1", "REQ-1", "REQ-2"], "context": {"includedIdentifiers": ["WP-1", "REQ-1", "REQ-2"], "parts": ["F1", "F2", "F3", "F4"], "excludedFragments": ["F5", "F6", "F7", "F8", "F9", "F10"], "usedUtf8Bytes": 169}},
-  "resultScope": "Semantic input/interpretation oracle only. Complete executable API-result DTO expectations remain EP-ACT-3."
-}

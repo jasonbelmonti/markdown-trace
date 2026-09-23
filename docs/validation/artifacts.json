@@ -1,55 +1,24 @@
 {
-  "scope": "Structural artifact validation only; this does not prove graph semantics or product implementation.",
-  "validatedAt": "2026-09-13T13:03:59.922Z",
-  "implementationBaseline": "016dd0905d9f8103dc4dbd528e0b9fc15b516723",
-  "reproduction": "With Markdown Engine 3.5.0 and the named skills installed, run markdown-engine validate --file <file> --profile <skill-directory>/<profile.resource> --format json.",
-  "hashes": "sourceSha256 hashes raw file bytes; inputHash and profileHash are engine-provided identities and may differ from raw file hashes.",
+  "scope": "Current overview structural validation only; not runtime or semantic proof.",
+  "validatedAt": "2026-09-23T16:04:34.369Z",
+  "reproduction": "markdown-engine validate --file <file> --profile <skill-directory>/<profile.resource> --format json (Markdown Engine 3.6.0)",
   "artifacts": [
     {
       "file": "docs/design/markdown-trace-document-graph-overview.md",
-      "sourceSha256": "e08a88780dc60179cba0042dd0aa97655178b8d7b38a9540d541add5dba93cf5",
+      "sourceSha256": "8ea81464fb2cb71bf8126512fd9ffb4c866c250e770208b516cfb88fbc7844bb",
       "profile": {
         "skill": "design-overview",
         "resource": "references/design-overview-validation-profile.yaml",
         "sourceSha256": "1e1f029046143e0d562fd70c3989cb36e71fcf01ca4e85888d12ad28901a678b"
       },
       "evidence": {
-        "engineVersion": "3.5.0",
+        "engineVersion": "3.6.0",
         "runtimeVersion": "v22.20.0",
-        "inputHash": "603bd2928e22664f53037a29f855997bbd7ac4b1ed3607780eb60e69ceaa963c",
+        "inputHash": "8847860ff8d38326e1b999be53f17f3c5bae3563f5eb9529823c96caa59cbf94",
         "profileHash": "c86430c8c07d316ba61425b6f32b4241d212b071c09b72773fe6d8006a0c4932"
       },
       "valid": true,
-      "diagnostics": [],
-      "rules": {
-        "configured": 13,
-        "passed": 13,
-        "skipped": 0,
-        "failed": 0
-      }
-    },
-    {
-      "file": "docs/tasks/document-graph-contract.md",
-      "sourceSha256": "f9f7132321ed0e8664a0e4f906074e7302de8dfc03d5c94df39033e2a3e52057",
-      "profile": {
-        "skill": "task-definition",
-        "resource": "profiles/task-definition.yaml",
-        "sourceSha256": "57d8498e8fc14641ffef404bd48d4f5604d49ac45a07419b08dbd2c8010f6cdc"
-      },
-      "evidence": {
-        "engineVersion": "3.5.0",
-        "runtimeVersion": "v22.20.0",
-        "inputHash": "48a77b1d7cd4c3903856bf492caa04dde314edbae14ac39a48eb0f4042148d8b",
-        "profileHash": "714e80cfd6ae87dcb11e7e8bafd23d4ea9b184e5ffd2b63bdac7fdbcb7996fc7"
-      },
-      "valid": true,
-      "diagnostics": [],
-      "rules": {
-        "configured": 28,
-        "passed": 20,
-        "skipped": 8,
-        "failed": 0
-      }
+      "diagnostics": []
     }
   ]
 }
