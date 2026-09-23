@@ -91,6 +91,12 @@ notify Fleet before changing any pinned package bytes. Release production must
 use committed inputs. Review evidence must identify the commit and relevant
 runtime, profile, fixture and environment; rerun affected checks after edits.
 
+### Execution Checkpoint
+
+| Execution status | Current proving slice | Evidence admitted | Next action | Blockers / stop condition |
+| --- | --- | --- | --- | --- |
+| review-ready | Review the portable skill package and its Fleet source handoff. | TD-SC-1 and TD-SC-3: docs/validation/portable-trace-skill/installed-copy.json passes binding, graph/query, located-defect and restoration checks with unchanged source hashes. TD-SC-2: package closure/mirrored-source tests and independent-agent.json native-install scenario pass. TD-SC-4: checks.json records 40 test files / 298 tests, enforcement and package exports; runtime.json and installer.txt pass real artifact and installer proofs; CI run 35912087657 passes Linux Node 20.19.0 and macOS Node 22.20.0. All implementation inputs match source commit dde0960b10c0a5c927d605286370b3682766dce8; this checkpoint/evidence update changes no proof dependency. | Independently review PR #92 against this task and inspect CI plus the coordinated Fleet evidence before acceptance. | None; review-ready does not authorize merge or active host installation. |
+
 ## Follow-up / Non-blocking Work
 
 Fleet runtime verification and inventory are delivered by the coordinated Fleet

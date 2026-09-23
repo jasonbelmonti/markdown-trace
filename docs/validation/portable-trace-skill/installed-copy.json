@@ -1,0 +1,136 @@
+{
+  "passed": true,
+  "runtime": {
+    "schemaVersion": "markdown-trace.runtime-info.v1",
+    "package": "@jasonbelmonti/markdown-trace",
+    "packageVersion": "0.1.0",
+    "sourceCommit": "dde0960b10c0a5c927d605286370b3682766dce8",
+    "markdownEngineVersion": "3.6.0",
+    "analyzerVersion": "0.1.0-experimental.2",
+    "languageVersion": "markdown-trace.identity.draft2",
+    "validationProfileVersion": "markdown-trace.validation-profile.experimental.v1",
+    "graphVersion": "markdown-trace.document-graph.v1",
+    "validationResultVersion": "markdown-trace.validation-result.experimental.v1",
+    "nodeVersion": "v22.20.0"
+  },
+  "skillFiles": [
+    {
+      "path": "SKILL.md",
+      "size": 7693,
+      "sha256": "6f15136b65637006a4b06a9a880a126665db34dd5f366afa152bcdc53cb4e7c6"
+    },
+    {
+      "path": "contracts/runtime.json",
+      "size": 588,
+      "sha256": "4de008bbf25945bcf1a0f6186a79425ae955f0a01a3d26cceb8fb0ea9105ac31"
+    },
+    {
+      "path": "examples/preview-design/authoring.md",
+      "size": 1341,
+      "sha256": "a27353fb1ab7807950d671fc0965f3de6a81096d7668c02ad05a70a2ecf2a9a3"
+    },
+    {
+      "path": "examples/preview-design/document.md",
+      "size": 754,
+      "sha256": "fa211c82e7cef9a485442969aacd764c8d7bc32fdcf205cb49cc6814b4e8edb3"
+    },
+    {
+      "path": "examples/preview-design/profile.json",
+      "size": 2300,
+      "sha256": "49820acec3551db131e9a357cb035ee601414cc3a3938e3f66c8ebc15e1dfe83"
+    },
+    {
+      "path": "examples/task-definition/authoring.md",
+      "size": 2001,
+      "sha256": "9ea61591a04978c7ccd2ed0fde08f50b6626d37057135303ddf84027fc7555c3"
+    },
+    {
+      "path": "examples/task-definition/profile.json",
+      "size": 2759,
+      "sha256": "374a153be64021904504117441a077f7279549e2d438b28467c74a81fac19808"
+    },
+    {
+      "path": "references/link-language.md",
+      "size": 5087,
+      "sha256": "c3a06f93a4bfd089ddebb337e397659720d094f3c275e75874a6f6d74acd90dd"
+    },
+    {
+      "path": "references/profile-authoring.md",
+      "size": 6920,
+      "sha256": "e5570c1bdb6577c7010672a1a481c33cba0ada3a8a1f62af8ace703b36015a24"
+    },
+    {
+      "path": "references/profile-contract.md",
+      "size": 4109,
+      "sha256": "5f0000d54c014312d8ea6232691730ee4723ee50b5b54499724156686cea2252"
+    },
+    {
+      "path": "scripts/resolve-runtime.mjs",
+      "size": 1541,
+      "sha256": "66d6567561cd9d2990079f69b233d1ae43019b2f4d4045960be537b11d22a069"
+    },
+    {
+      "path": "scripts/run.mjs",
+      "size": 498,
+      "sha256": "96f78f08bbb444b91c04c182752828495246627e8dec9c9fd72938ef352c8c4e"
+    },
+    {
+      "path": "skill-package.json",
+      "size": 487,
+      "sha256": "e0d87803c041af7f4b6384c8cc478c088e69cde4804decb9bb76f58893fb06ef"
+    }
+  ],
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "isolatedCopy": {
+    "cwd": "/private/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-skill-YlFTbg/caller cwd",
+    "skill": "/private/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-skill-YlFTbg/copied skill",
+    "launcher": "/private/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-skill-YlFTbg/installed runtime/releases/dde0960b10c0a5c927d605286370b3682766dce8-95e1891e7cfe7af37720a0e784b498fc0466fe5cba609e338b7e4da50dada4d9/markdown-trace-document",
+    "nodeOnlyPath": true,
+    "externalDependencies": false
+  },
+  "bindings": {
+    "explicit": true,
+    "unsetAndEmptyPathFallback": true,
+    "invalidBindingNoFallback": true,
+    "exactCommandName": true
+  },
+  "valid": {
+    "status": "pass",
+    "identifiers": 3,
+    "relationships": 2
+  },
+  "defect": {
+    "status": "fail",
+    "diagnostic": {
+      "ruleId": "design-implements-requirement",
+      "code": "trace-validation.relation-count",
+      "status": "fail",
+      "message": "Expected 1..unbounded distinct outgoing implements neighbors; found 0.",
+      "identifier": "DES-1",
+      "line": 9,
+      "column": 3,
+      "range": {
+        "start": {
+          "line": 9,
+          "column": 3,
+          "offset": 201
+        },
+        "end": {
+          "line": 9,
+          "column": 64,
+          "offset": 262
+        }
+      }
+    }
+  },
+  "repaired": {
+    "status": "pass"
+  },
+  "fixtureSha256": "fa211c82e7cef9a485442969aacd764c8d7bc32fdcf205cb49cc6814b4e8edb3",
+  "profileSha256": "49820acec3551db131e9a357cb035ee601414cc3a3938e3f66c8ebc15e1dfe83",
+  "inputsUnchanged": true
+}

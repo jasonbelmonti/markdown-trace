@@ -3,7 +3,7 @@
   "evidence": {
     "diagnostics": [],
     "engineVersion": "3.6.0",
-    "inputHash": "7c5d413edf810bb1ba658ade4aabcbbc089ffc351e446f743a1e2585ecd657c3",
+    "inputHash": "1b7672b4b536c98c0e4b0910c1e2c590b9306ad0717ba815844da12e61be3a31",
     "profileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d",
     "ruleResults": [
       {
@@ -29,86 +29,127 @@
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "branches": [
+            {
+              "branchIndex": 0,
+              "diagnostics": [],
+              "label": "status",
+              "status": "passed"
+            },
+            {
+              "branchIndex": 1,
+              "diagnostics": [],
+              "label": "slice",
+              "status": "passed"
+            },
+            {
+              "branchIndex": 2,
+              "diagnostics": [],
+              "label": "evidence",
+              "status": "passed"
+            },
+            {
+              "branchIndex": 3,
+              "diagnostics": [],
+              "label": "next-action",
+              "status": "passed"
+            },
+            {
+              "branchIndex": 4,
+              "diagnostics": [],
+              "label": "blockers",
+              "status": "passed"
+            }
+          ],
+          "kind": "allOf"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.cells.nonblank",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.cells.nonblank",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.evidence.declared",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.evidence.declared",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "branches": [
+            {
+              "branchIndex": 0,
+              "diagnostics": [
+                {
+                  "code": "profile.validation.textMissing",
+                  "message": "Selected tableCell text must contain \"None admitted.\".",
+                  "ruleId": "execution-checkpoint.evidence.references-or-none",
+                  "severity": "error",
+                  "sourceRange": {
+                    "end": {
+                      "column": 742,
+                      "line": 98,
+                      "offset": 8913
+                    },
+                    "start": {
+                      "column": 82,
+                      "line": 98,
+                      "offset": 8253
+                    }
+                  }
+                },
+                {
+                  "code": "profile.validation.assertionFailed",
+                  "message": "Selected tableCell text length must be between 14 and 14; found 657.",
+                  "ruleId": "execution-checkpoint.evidence.references-or-none",
+                  "severity": "error",
+                  "sourceRange": {
+                    "end": {
+                      "column": 742,
+                      "line": 98,
+                      "offset": 8913
+                    },
+                    "start": {
+                      "column": 82,
+                      "line": 98,
+                      "offset": 8253
+                    }
+                  }
+                }
+              ],
+              "label": "none-admitted",
+              "status": "failed"
+            },
+            {
+              "branchIndex": 1,
+              "diagnostics": [],
+              "label": "criterion-references",
+              "status": "passed"
+            }
+          ],
+          "kind": "anyOf",
+          "selectedBranch": {
+            "branchIndex": 1,
+            "label": "criterion-references"
+          }
         },
         "passed": true,
         "ruleId": "execution-checkpoint.evidence.references-or-none",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.evidence.references-or-none",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.heading-depth.when-present",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.heading-depth.when-present",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
@@ -123,191 +164,232 @@
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.heading.when-table-present",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.heading.when-table-present",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.notes.count",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.notes.count",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.notes.depth",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.notes.depth",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.required-evidence.coverage",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.required-evidence.coverage",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.row.when-present",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.row.when-present",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "branches": [
+            {
+              "branchIndex": 0,
+              "diagnostics": [
+                {
+                  "code": "profile.validation.textMissing",
+                  "message": "Selected tableCell text must contain \"not-started\".",
+                  "ruleId": "execution-checkpoint.status.allowed",
+                  "severity": "error",
+                  "sourceRange": {
+                    "end": {
+                      "column": 16,
+                      "line": 98,
+                      "offset": 8187
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 98,
+                      "offset": 8172
+                    }
+                  }
+                },
+                {
+                  "code": "profile.validation.assertionFailed",
+                  "message": "Selected tableCell text length must be between 11 and 11; found 12.",
+                  "ruleId": "execution-checkpoint.status.allowed",
+                  "severity": "error",
+                  "sourceRange": {
+                    "end": {
+                      "column": 16,
+                      "line": 98,
+                      "offset": 8187
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 98,
+                      "offset": 8172
+                    }
+                  }
+                }
+              ],
+              "label": "not-started",
+              "status": "failed"
+            },
+            {
+              "branchIndex": 1,
+              "diagnostics": [
+                {
+                  "code": "profile.validation.textMissing",
+                  "message": "Selected tableCell text must contain \"active\".",
+                  "ruleId": "execution-checkpoint.status.allowed",
+                  "severity": "error",
+                  "sourceRange": {
+                    "end": {
+                      "column": 16,
+                      "line": 98,
+                      "offset": 8187
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 98,
+                      "offset": 8172
+                    }
+                  }
+                },
+                {
+                  "code": "profile.validation.assertionFailed",
+                  "message": "Selected tableCell text length must be between 6 and 6; found 12.",
+                  "ruleId": "execution-checkpoint.status.allowed",
+                  "severity": "error",
+                  "sourceRange": {
+                    "end": {
+                      "column": 16,
+                      "line": 98,
+                      "offset": 8187
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 98,
+                      "offset": 8172
+                    }
+                  }
+                }
+              ],
+              "label": "active",
+              "status": "failed"
+            },
+            {
+              "branchIndex": 2,
+              "diagnostics": [
+                {
+                  "code": "profile.validation.textMissing",
+                  "message": "Selected tableCell text must contain \"blocked\".",
+                  "ruleId": "execution-checkpoint.status.allowed",
+                  "severity": "error",
+                  "sourceRange": {
+                    "end": {
+                      "column": 16,
+                      "line": 98,
+                      "offset": 8187
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 98,
+                      "offset": 8172
+                    }
+                  }
+                },
+                {
+                  "code": "profile.validation.assertionFailed",
+                  "message": "Selected tableCell text length must be between 7 and 7; found 12.",
+                  "ruleId": "execution-checkpoint.status.allowed",
+                  "severity": "error",
+                  "sourceRange": {
+                    "end": {
+                      "column": 16,
+                      "line": 98,
+                      "offset": 8187
+                    },
+                    "start": {
+                      "column": 1,
+                      "line": 98,
+                      "offset": 8172
+                    }
+                  }
+                }
+              ],
+              "label": "blocked",
+              "status": "failed"
+            },
+            {
+              "branchIndex": 3,
+              "diagnostics": [],
+              "label": "review-ready",
+              "status": "passed"
+            }
+          ],
+          "kind": "anyOf",
+          "selectedBranch": {
+            "branchIndex": 3,
+            "label": "review-ready"
+          }
         },
         "passed": true,
         "ruleId": "execution-checkpoint.status.allowed",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.status.allowed",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.table.global-count",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.table.global-count",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.table.inside-checkpoint",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.table.inside-checkpoint",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.table.when-present",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.table.when-present",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
@@ -1171,9 +1253,9 @@
   },
   "profile": {
     "documentVersion": "1.0.0",
-    "evaluatedRuleCount": 26,
+    "evaluatedRuleCount": 39,
     "ruleCount": 44,
-    "skippedRuleCount": 18,
+    "skippedRuleCount": 5,
     "syntaxVersion": "markdown-engine.validation@v2"
   },
   "ruleResults": [
@@ -1200,86 +1282,127 @@
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "branches": [
+          {
+            "branchIndex": 0,
+            "diagnostics": [],
+            "label": "status",
+            "status": "passed"
+          },
+          {
+            "branchIndex": 1,
+            "diagnostics": [],
+            "label": "slice",
+            "status": "passed"
+          },
+          {
+            "branchIndex": 2,
+            "diagnostics": [],
+            "label": "evidence",
+            "status": "passed"
+          },
+          {
+            "branchIndex": 3,
+            "diagnostics": [],
+            "label": "next-action",
+            "status": "passed"
+          },
+          {
+            "branchIndex": 4,
+            "diagnostics": [],
+            "label": "blockers",
+            "status": "passed"
+          }
+        ],
+        "kind": "allOf"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.cells.nonblank",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.cells.nonblank",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.evidence.declared",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.evidence.declared",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "branches": [
+          {
+            "branchIndex": 0,
+            "diagnostics": [
+              {
+                "code": "profile.validation.textMissing",
+                "message": "Selected tableCell text must contain \"None admitted.\".",
+                "ruleId": "execution-checkpoint.evidence.references-or-none",
+                "severity": "error",
+                "sourceRange": {
+                  "end": {
+                    "column": 742,
+                    "line": 98,
+                    "offset": 8913
+                  },
+                  "start": {
+                    "column": 82,
+                    "line": 98,
+                    "offset": 8253
+                  }
+                }
+              },
+              {
+                "code": "profile.validation.assertionFailed",
+                "message": "Selected tableCell text length must be between 14 and 14; found 657.",
+                "ruleId": "execution-checkpoint.evidence.references-or-none",
+                "severity": "error",
+                "sourceRange": {
+                  "end": {
+                    "column": 742,
+                    "line": 98,
+                    "offset": 8913
+                  },
+                  "start": {
+                    "column": 82,
+                    "line": 98,
+                    "offset": 8253
+                  }
+                }
+              }
+            ],
+            "label": "none-admitted",
+            "status": "failed"
+          },
+          {
+            "branchIndex": 1,
+            "diagnostics": [],
+            "label": "criterion-references",
+            "status": "passed"
+          }
+        ],
+        "kind": "anyOf",
+        "selectedBranch": {
+          "branchIndex": 1,
+          "label": "criterion-references"
+        }
       },
       "passed": true,
       "ruleId": "execution-checkpoint.evidence.references-or-none",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.evidence.references-or-none",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.heading-depth.when-present",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.heading-depth.when-present",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
@@ -1294,191 +1417,232 @@
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.heading.when-table-present",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.heading.when-table-present",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.notes.count",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.notes.count",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.notes.depth",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.notes.depth",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.required-evidence.coverage",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.required-evidence.coverage",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.row.when-present",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.row.when-present",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "branches": [
+          {
+            "branchIndex": 0,
+            "diagnostics": [
+              {
+                "code": "profile.validation.textMissing",
+                "message": "Selected tableCell text must contain \"not-started\".",
+                "ruleId": "execution-checkpoint.status.allowed",
+                "severity": "error",
+                "sourceRange": {
+                  "end": {
+                    "column": 16,
+                    "line": 98,
+                    "offset": 8187
+                  },
+                  "start": {
+                    "column": 1,
+                    "line": 98,
+                    "offset": 8172
+                  }
+                }
+              },
+              {
+                "code": "profile.validation.assertionFailed",
+                "message": "Selected tableCell text length must be between 11 and 11; found 12.",
+                "ruleId": "execution-checkpoint.status.allowed",
+                "severity": "error",
+                "sourceRange": {
+                  "end": {
+                    "column": 16,
+                    "line": 98,
+                    "offset": 8187
+                  },
+                  "start": {
+                    "column": 1,
+                    "line": 98,
+                    "offset": 8172
+                  }
+                }
+              }
+            ],
+            "label": "not-started",
+            "status": "failed"
+          },
+          {
+            "branchIndex": 1,
+            "diagnostics": [
+              {
+                "code": "profile.validation.textMissing",
+                "message": "Selected tableCell text must contain \"active\".",
+                "ruleId": "execution-checkpoint.status.allowed",
+                "severity": "error",
+                "sourceRange": {
+                  "end": {
+                    "column": 16,
+                    "line": 98,
+                    "offset": 8187
+                  },
+                  "start": {
+                    "column": 1,
+                    "line": 98,
+                    "offset": 8172
+                  }
+                }
+              },
+              {
+                "code": "profile.validation.assertionFailed",
+                "message": "Selected tableCell text length must be between 6 and 6; found 12.",
+                "ruleId": "execution-checkpoint.status.allowed",
+                "severity": "error",
+                "sourceRange": {
+                  "end": {
+                    "column": 16,
+                    "line": 98,
+                    "offset": 8187
+                  },
+                  "start": {
+                    "column": 1,
+                    "line": 98,
+                    "offset": 8172
+                  }
+                }
+              }
+            ],
+            "label": "active",
+            "status": "failed"
+          },
+          {
+            "branchIndex": 2,
+            "diagnostics": [
+              {
+                "code": "profile.validation.textMissing",
+                "message": "Selected tableCell text must contain \"blocked\".",
+                "ruleId": "execution-checkpoint.status.allowed",
+                "severity": "error",
+                "sourceRange": {
+                  "end": {
+                    "column": 16,
+                    "line": 98,
+                    "offset": 8187
+                  },
+                  "start": {
+                    "column": 1,
+                    "line": 98,
+                    "offset": 8172
+                  }
+                }
+              },
+              {
+                "code": "profile.validation.assertionFailed",
+                "message": "Selected tableCell text length must be between 7 and 7; found 12.",
+                "ruleId": "execution-checkpoint.status.allowed",
+                "severity": "error",
+                "sourceRange": {
+                  "end": {
+                    "column": 16,
+                    "line": 98,
+                    "offset": 8187
+                  },
+                  "start": {
+                    "column": 1,
+                    "line": 98,
+                    "offset": 8172
+                  }
+                }
+              }
+            ],
+            "label": "blocked",
+            "status": "failed"
+          },
+          {
+            "branchIndex": 3,
+            "diagnostics": [],
+            "label": "review-ready",
+            "status": "passed"
+          }
+        ],
+        "kind": "anyOf",
+        "selectedBranch": {
+          "branchIndex": 3,
+          "label": "review-ready"
+        }
       },
       "passed": true,
       "ruleId": "execution-checkpoint.status.allowed",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.status.allowed",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.table.global-count",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.table.global-count",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.table.inside-checkpoint",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.table.inside-checkpoint",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.table.when-present",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.table.when-present",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
