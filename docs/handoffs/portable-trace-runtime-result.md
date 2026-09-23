@@ -1,22 +1,24 @@
 # Portable runtime execution result
 
-Implementation is delivered locally. Overall completion is blocked only on the
-required Linux Node 20.19.0 execution result; the task checkpoint is `blocked`,
-not `review-ready`. No source contract change is needed to resume that check.
+Implementation and required platform proof are available for independent review.
+The task checkpoint is `review-ready`; this is not an acceptance or installed
+runtime claim. GitHub Actions run 35723730819 supplies the formerly missing
+Linux Node 20.19.0 proof alongside macOS Node 22.20.0.
 
 Read these complete artifacts and controlling sources before relying on this
-handoff or running the pending check:
+handoff or reviewing the PR:
 
-- `docs/tasks/portable-trace-runtime.md`, revision 1, SHA-256 `f6be21a6a89d6b1d438b946848ddd73b6411f1242b76238b08dbb8ea5908a953`.
+- `docs/tasks/portable-trace-runtime.md`, revision 1, SHA-256 `27a2665ee8cb40702400c28354200bae03895ea8f10f7737fbaee517fe695e82`.
 - `.codefactory/execution-plans/portable-trace-runtime/execution-plan.md`, revision 1,
   READY, SHA-256 `fe90acc9ed10530ac4b97ade1dc442f341fa3d27c2d1a8906d1866551b9886e9`; verify the adjacent checksum first.
 - `AGENTS.md`, `docs/current-implementation.md`,
   `docs/design/shared-trace-runtime-contract.md` and
   `docs/design/markdown-trace-document-graph-overview.md` (verify its companion).
 - `docs/validation/portable-trace-runtime/summary.json`, including evidence
-  applicability and the full-version checkpoint comparison. The original
-  `docs/handoffs/portable-trace-runtime.md` names the initial authoring hash;
-  it is historical. Only the checkpoint row changed from that original task.
+  applicability, the full-version checkpoint comparison, and the retained CI
+  reports. The original `docs/handoffs/portable-trace-runtime.md` names the
+  initial authoring hash and is historical. Only the checkpoint row changed
+  from that original task.
 
 ## Delivered source and artifacts
 
@@ -24,9 +26,13 @@ Branch: `codex/portable-runtime-implementation`.
 
 Implementation commits: `a242c90` (plan, identity, producer, verifier), `e53473f`
 (staging correction), `8a92023b96078594f1caa484a851f330e760da2b` (artifact proofs, CI and usage documentation).
-The later delivery commit contains evidence and checkpoint updates only.
+Subsequent commits through PR head `6e9245f7d8cd9f53b0736ecbb0160f175b1983ad`
+opened the draft PR without changing runtime, test, fixture, lockfile or CI inputs.
+This remediation changes only the checkpoint, result handoff, validation summary
+and retained CI reports; compare the diff before carrying older evidence forward.
 
-Producer source: `8a92023b96078594f1caa484a851f330e760da2b`. Engine: 3.6.0. Package: private 0.1.0.
+The following local candidate is historical evidence from producer source
+`8a92023b96078594f1caa484a851f330e760da2b`. Engine: 3.6.0. Package: private 0.1.0.
 Toolchain: Node v22.20.0, npm 11.13.0, TypeScript 6.0.3.
 
 Local runnable artifact: `/Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/portable-runtime-implementation/dist/portable-runtime/markdown-trace-0.1.0-8a92023b96078594f1caa484a851f330e760da2b`.
@@ -50,8 +56,8 @@ Keep the descriptor through a trusted channel when transferring a candidate.
 | TD-SC-2 | PASS | `macos.json`, `checkout-identity.json`, `producer-negatives.json`: real entry points, truthful identity, 20 rejected combinations and dirty-source rejection. |
 | TD-SC-3 | PASS | `macos.json`: independent complete inventory; changed, missing, extra and linked content rejected. |
 | TD-SC-4 | PASS | `macos.json`, `owner-trial.json`: five modes, exact graph/query/range oracles, invalid/indeterminate graphs, four located defects and repairs, unchanged inputs, separate structural gate. |
-| TD-SC-5 | PARTIAL | `enforcement.log` (296 passing tests and full enforcement), `package.log`, `owner-trial.json`, Mac arm64 Node v22.20.0; Linux Node 20.19.0 remains unexecuted. |
-| TD-SC-6 | PASS | `reproduction.json`: all 2,005 files and full descriptors identical across independent clean builds; local usage workflow exercised. |
+| TD-SC-5 | PASS | `enforcement.log` (296 passing tests and full enforcement), `package.log`, `owner-trial.json`; CI run 35723730819 passes artifact smoke on Linux x64 Node v20.19.0 and macOS arm64 Node v22.20.0 for the reviewed tree. |
+| TD-SC-6 | PASS | `reproduction.json` and both CI reproduction reports: 2,005-file payload and descriptors agree across two clean builds per toolchain; local usage workflow exercised. |
 
 Evidence filenames above resolve under `docs/validation/portable-trace-runtime/`.
 The Mac artifact run also passed under `sandbox-exec` with network denied.
@@ -59,35 +65,32 @@ A redundant enforcement rerun was interrupted after host process delays; it is
 not admitted. The earlier passing regression inputs are unchanged, as recorded
 in `summary.json`.
 
-## Reproduction and remaining gate
+## Platform proof and review handoff
 
-From the repository root, create a checkout of the exact producer source:
+[CI run 35723730819](https://github.com/jasonbelmonti/markdown-trace/actions/runs/35723730819)
+completed successfully for enforcement, Linux x64 Node v20.19.0 and macOS
+arm64 Node v22.20.0. The retained `ci-35723730819-{linux,macos}-{artifact-proof,reproduction}.json`
+reports each say `passed: true`. Each platform built two matching 2,005-file
+payloads; both payload inventories have SHA-256
+`23ca04e2d5aafd7c987a47d75585a9e384ea3ec3de733e3bb324b4b23d5d3ba6`.
+The Linux and macOS descriptors differ by build environment but match within
+each platform's two-build comparison. The reports identify synthetic merge
+commit `9c3dd3a6670d9bde966799c1058d49dfeef7e540`; its tree
+`1c3230c5fc26db4f50d4ea3520ee4790eaf3ec8c` equals PR head
+`6e9245f7d8cd9f53b0736ecbb0160f175b1983ad`'s tree. This establishes
+source applicability without pretending the synthetic merge commit is the PR
+head commit.
 
-```sh
-git worktree add --detach .worktrees/portable-runtime-reproduction 8a92023b96078594f1caa484a851f330e760da2b
-cd .worktrees/portable-runtime-reproduction
-node scripts/runtime/build.mjs --out /tmp/trace-reproduced-a
-node scripts/runtime/build.mjs --out /tmp/trace-reproduced-b
-node scripts/runtime/reproduce.mjs --first /tmp/trace-reproduced-a --second /tmp/trace-reproduced-b
-node scripts/runtime/check.mjs --artifact /tmp/trace-reproduced-a
-```
+The four retained CI reports and their hashes are indexed in `summary.json`.
+Prior local candidate identities above remain historical evidence, not the CI
+candidate identities. This remediation changes only task/evidence/handoff
+records, so the recorded runtime, test, fixture, lockfile and workflow inputs
+remain unchanged. Before concluding independent review, inspect the rerun CI
+artifacts on the new PR head and compare its checkout tree to that head. A
+failure or tree mismatch returns the checkpoint to active rather than relying
+on this handoff.
 
-Use the declared Node/npm toolchain to reproduce the recorded descriptor exactly.
-For execution on Linux, install/select Node 20.19.0 on an available runner and
-transfer the existing candidate plus its separately trusted descriptor. Run the
-trusted proof scripts from the source commit above:
-
-```sh
-node --version
-node scripts/runtime/check.mjs --artifact /absolute/transferred-stage --report /absolute/new-linux-proof.json
-```
-
-Require `environment.platform: linux`, `environment.node: v20.19.0`, `passed: true`
-and the same source, descriptor and payload identities as above. Record the
-result, compare evidence dependencies, revalidate the task checkpoint, and only
-then mark it `review-ready`. The configured CI matrix offers the bounded Linux
-and Mac route, but no workflow result is claimed and no branch has been pushed.
-
-See `docs/portable-runtime.md` for independent verification and invocation.
-Installation, host activation, rollback, Fleet changes, installed-skill migration,
-merge and remote release publication remain outside this delivery.
+From a clean checkout, a maintainer can reproduce the candidate and verify the
+local workflow with the commands in `docs/portable-runtime.md`. Installation,
+host activation, rollback, Fleet changes, installed-skill migration, merge and
+remote release publication remain outside this delivery.

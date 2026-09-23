@@ -1,6 +1,6 @@
 {
   "recordedAt": "2026-09-22T03:57:12.465438+00:00",
-  "status": "implementation delivered; completion blocked on Linux evidence",
+  "status": "review-ready for independent review; CI platform evidence admitted",
   "branch": "codex/portable-runtime-implementation",
   "sourceCommit": "8a92023b96078594f1caa484a851f330e760da2b",
   "baseline": "90610cdabca6dfc04e069451798a2ef19b08cf2b",
@@ -46,22 +46,28 @@
       "observation": "Five output modes; exact identities/edges/backlinks/ranges; failed/indeterminate graphs; four located defect/repair cases; fixture hashes unchanged; owner structural trial separate."
     },
     "TD-SC-5": {
-      "status": "blocked",
+      "status": "pass",
       "evidence": [
         "enforcement.log",
         "package.log",
         "owner-trial.json",
-        "macos.json"
+        "macos.json",
+        "ci-35723730819-linux-artifact-proof.json",
+        "ci-35723730819-linux-reproduction.json",
+        "ci-35723730819-macos-artifact-proof.json",
+        "ci-35723730819-macos-reproduction.json"
       ],
-      "observation": "296 tests, enforcement, 218-entry packed package and retained owner trial passed; Mac arm64 Node v22.20.0 passes. Required Linux Node 20.19.0 not executed."
+      "observation": "Existing enforcement, packed-package and retained trial pass. GitHub Actions run 35723730819 reports passing isolated artifact proof on Linux x64 Node v20.19.0 and macOS arm64 Node v22.20.0 for source tree 1c3230c5fc26db4f50d4ea3520ee4790eaf3ec8c, equal to PR head 6e9245f7d8cd9f53b0736ecbb0160f175b1983ad."
     },
     "TD-SC-6": {
       "status": "pass",
       "evidence": [
         "reproduction.json",
-        "../../portable-runtime.md"
+        "../../portable-runtime.md",
+        "ci-35723730819-linux-reproduction.json",
+        "ci-35723730819-macos-reproduction.json"
       ],
-      "observation": "Two independent Git snapshot/npm-ci/tsc builds have identical 2,005-file inventories and whole descriptors; documented local workflow followed."
+      "observation": "Local two-build proof remains historical for source 8a92023b96078594f1caa484a851f330e760da2b. CI run 35723730819 independently records equal 2,005-file payload inventories and equal descriptor hashes within each platform for the reviewed source tree. docs/portable-runtime.md documents the local workflow."
     }
   },
   "plan": {
@@ -74,10 +80,11 @@
   },
   "taskReconciliation": {
     "originalSha256": "6c4528f02d912848784c22761f5e43f4c65783fb95ab1aae536b9f1a711e4eb0",
-    "currentSha256": "f6be21a6a89d6b1d438b946848ddd73b6411f1242b76238b08dbb8ea5908a953",
+    "currentSha256": "27a2665ee8cb40702400c28354200bae03895ea8f10f7737fbaee517fe695e82",
     "revision": "1",
-    "change": "Full-version comparison found exactly one changed line: execution checkpoint. Task control, scope, criteria, proof and review boundary unchanged. Original handoff and authoring evidence retain their initial-source hashes as historical records.",
-    "line": 148
+    "change": "Full-version comparison against the previous task version found exactly one changed line: the Execution Checkpoint row. The original authoring source differs only in this checkpoint row. Task Control, scope, criteria, proof and review boundary are unchanged; revision remains 1. Revalidated after the checkpoint update.",
+    "line": 148,
+    "previousSha256": "f6be21a6a89d6b1d438b946848ddd73b6411f1242b76238b08dbb8ea5908a953"
   },
   "applicability": {
     "inputs": {
@@ -357,10 +364,6 @@
     "macSandboxCommand": "sandbox-exec -p '(version 1) (allow default) (deny network*)' node scripts/runtime/check.mjs --artifact /tmp/markdown-trace-runtime-release-a",
     "ownerProfileSha256": "068798f6e0e95256e4fa1d7d469380b7781bdeb4a039186d0da45ff6bdb959b2"
   },
-  "unavailable": {
-    "Linux": "No docker, podman, colima, limactl, qemu, orb, multipass or container command found. No known Linux execution host was supplied. CI jobs are configured only; no branch push, workflow execution, remote publishing or host activation occurred.",
-    "resume": "On Linux Node 20.19.0, run the trusted scripts/runtime/check.mjs from source 8a92023b96078594f1caa484a851f330e760da2b with --artifact pointing to the transferred candidate. Match sourceCommit, descriptor SHA-256 and payload digest to this summary; retain report; then revalidate checkpoint and admit TD-SC-5."
-  },
   "historicalFailures": [
     {
       "case": "First production",
@@ -382,6 +385,51 @@
     "reproduction.json": "bc25cd863094957b74b89e6ce656185b04a54a577d019b3e4c682a70e8fb772a",
     "enforcement.log": "7c4ada7db95df21849364274b32c6d26af9220d23b6969621a609d8c27612ccc",
     "package.log": "53391f5aa4aba4b0e6ae622c407628377f6b064d3597516d23b79b5b81149460",
-    "owner-trial.json": "5fc373cec8ff5446c21be24663a82634b7a789d1c419a371a4a103d204a51f8a"
-  }
+    "owner-trial.json": "5fc373cec8ff5446c21be24663a82634b7a789d1c419a371a4a103d204a51f8a",
+    "ci-35723730819-linux-artifact-proof.json": "1f890fc2c31350aa484c21f3f878dd0ce9a9d5f4d60e5c613a76690b1b02c708",
+    "ci-35723730819-linux-reproduction.json": "63b3e8ff85ef76437fb5389d66eec6ea45ac6249c8bbdf461b3bb0d2a5193911",
+    "ci-35723730819-macos-artifact-proof.json": "cd164107aa487cfe6f8df0576d9c5bf7a2beb479d430110054d8ec24377c6b81",
+    "ci-35723730819-macos-reproduction.json": "8046ea6502d38e7898d470f6587a378ecf4d003c2f84d04008bbba9761499cd5"
+  },
+  "platformCI": {
+    "runId": 35723730819,
+    "url": "https://github.com/jasonbelmonti/markdown-trace/actions/runs/35723730819",
+    "headSha": "6e9245f7d8cd9f53b0736ecbb0160f175b1983ad",
+    "headTree": "1c3230c5fc26db4f50d4ea3520ee4790eaf3ec8c",
+    "checkoutCommit": "9c3dd3a6670d9bde966799c1058d49dfeef7e540",
+    "checkoutTree": "1c3230c5fc26db4f50d4ea3520ee4790eaf3ec8c",
+    "results": {
+      "linux": {
+        "runner": "ubuntu-latest",
+        "node": "v20.19.0",
+        "arch": "x64",
+        "artifactProof": "ci-35723730819-linux-artifact-proof.json",
+        "reproduction": "ci-35723730819-linux-reproduction.json",
+        "passed": true
+      },
+      "macos": {
+        "runner": "macos-latest",
+        "node": "v22.20.0",
+        "arch": "arm64",
+        "artifactProof": "ci-35723730819-macos-artifact-proof.json",
+        "reproduction": "ci-35723730819-macos-reproduction.json",
+        "passed": true
+      }
+    },
+    "evidenceSha256": {
+      "ci-35723730819-linux-artifact-proof.json": "1f890fc2c31350aa484c21f3f878dd0ce9a9d5f4d60e5c613a76690b1b02c708",
+      "ci-35723730819-linux-reproduction.json": "63b3e8ff85ef76437fb5389d66eec6ea45ac6249c8bbdf461b3bb0d2a5193911",
+      "ci-35723730819-macos-artifact-proof.json": "cd164107aa487cfe6f8df0576d9c5bf7a2beb479d430110054d8ec24377c6b81",
+      "ci-35723730819-macos-reproduction.json": "8046ea6502d38e7898d470f6587a378ecf4d003c2f84d04008bbba9761499cd5"
+    },
+    "payloadSha256": "23ca04e2d5aafd7c987a47d75585a9e384ea3ec3de733e3bb324b4b23d5d3ba6",
+    "applicability": "These CI reports tested the exact PR head tree before the checkpoint/evidence-only remediation. No runtime, test, fixture, build script, lockfile or CI workflow input changed in the remediation. The PR workflow reruns on the new head; its synthetic-merge tree must be compared with that head before final review admission."
+  },
+  "historicalUnavailable": {
+    "Linux": "No docker, podman, colima, limactl, qemu, orb, multipass or container command found. No known Linux execution host was supplied. CI jobs are configured only; no branch push, workflow execution, remote publishing or host activation occurred.",
+    "resume": "On Linux Node 20.19.0, run the trusted scripts/runtime/check.mjs from source 8a92023b96078594f1caa484a851f330e760da2b with --artifact pointing to the transferred candidate. Match sourceCommit, descriptor SHA-256 and payload digest to this summary; retain report; then revalidate checkpoint and admit TD-SC-5.",
+    "context": "Recorded before branch push and CI run 35723730819; no longer a current blocker."
+  },
+  "updatedAt": "2026-09-23T16:01:44.051919+00:00",
+  "sourceCommitScope": "Historical local candidate recorded before CI; platformCI records the CI candidate and reviewed source tree."
 }

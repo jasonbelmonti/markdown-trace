@@ -3,7 +3,7 @@
   "evidence": {
     "diagnostics": [],
     "engineVersion": "3.6.0",
-    "inputHash": "c82b10b737d4661b9451b178920f2380ebb91e4131c9dc31ee9e37aab4571bb6",
+    "inputHash": "3e23bd955523d2c84ad4abc0e99372921c4c48d464b80a8638fc26d1d143ecff",
     "profileHash": "ecfb852e7ccb29a54d5283d34a79c5b796c01132853866a3314ba32dac51284d",
     "ruleResults": [
       {
@@ -91,32 +91,32 @@
                   "severity": "error",
                   "sourceRange": {
                     "end": {
-                      "column": 485,
+                      "column": 1020,
                       "line": 148,
-                      "offset": 17056
+                      "offset": 17591
                     },
                     "start": {
-                      "column": 90,
+                      "column": 116,
                       "line": 148,
-                      "offset": 16661
+                      "offset": 16687
                     }
                   }
                 },
                 {
                   "code": "profile.validation.assertionFailed",
-                  "message": "Selected tableCell text length must be between 14 and 14; found 392.",
+                  "message": "Selected tableCell text length must be between 14 and 14; found 901.",
                   "ruleId": "execution-checkpoint.evidence.references-or-none",
                   "severity": "error",
                   "sourceRange": {
                     "end": {
-                      "column": 485,
+                      "column": 1020,
                       "line": 148,
-                      "offset": 17056
+                      "offset": 17591
                     },
                     "start": {
-                      "column": 90,
+                      "column": 116,
                       "line": 148,
-                      "offset": 16661
+                      "offset": 16687
                     }
                   }
                 }
@@ -194,23 +194,12 @@
       {
         "diagnostics": [],
         "evaluation": {
-          "kind": "skipped",
-          "reason": "whenNotMatched"
+          "diagnostics": [],
+          "kind": "assertions"
         },
         "passed": true,
         "ruleId": "execution-checkpoint.required-evidence.coverage",
-        "status": "skipped",
-        "when": {
-          "diagnostics": [
-            {
-              "code": "profile.validation.emptySelection",
-              "message": "Rule selector did not match any document targets.",
-              "ruleId": "execution-checkpoint.required-evidence.coverage",
-              "severity": "error"
-            }
-          ],
-          "status": "notMatched"
-        }
+        "status": "passed"
       },
       {
         "diagnostics": [],
@@ -236,9 +225,9 @@
                   "severity": "error",
                   "sourceRange": {
                     "end": {
-                      "column": 11,
+                      "column": 16,
                       "line": 148,
-                      "offset": 16582
+                      "offset": 16587
                     },
                     "start": {
                       "column": 1,
@@ -249,14 +238,14 @@
                 },
                 {
                   "code": "profile.validation.assertionFailed",
-                  "message": "Selected tableCell text length must be between 11 and 11; found 7.",
+                  "message": "Selected tableCell text length must be between 11 and 11; found 12.",
                   "ruleId": "execution-checkpoint.status.allowed",
                   "severity": "error",
                   "sourceRange": {
                     "end": {
-                      "column": 11,
+                      "column": 16,
                       "line": 148,
-                      "offset": 16582
+                      "offset": 16587
                     },
                     "start": {
                       "column": 1,
@@ -279,9 +268,9 @@
                   "severity": "error",
                   "sourceRange": {
                     "end": {
-                      "column": 11,
+                      "column": 16,
                       "line": 148,
-                      "offset": 16582
+                      "offset": 16587
                     },
                     "start": {
                       "column": 1,
@@ -292,14 +281,14 @@
                 },
                 {
                   "code": "profile.validation.assertionFailed",
-                  "message": "Selected tableCell text length must be between 6 and 6; found 7.",
+                  "message": "Selected tableCell text length must be between 6 and 6; found 12.",
                   "ruleId": "execution-checkpoint.status.allowed",
                   "severity": "error",
                   "sourceRange": {
                     "end": {
-                      "column": 11,
+                      "column": 16,
                       "line": 148,
-                      "offset": 16582
+                      "offset": 16587
                     },
                     "start": {
                       "column": 1,
@@ -314,23 +303,17 @@
             },
             {
               "branchIndex": 2,
-              "diagnostics": [],
-              "label": "blocked",
-              "status": "passed"
-            },
-            {
-              "branchIndex": 3,
               "diagnostics": [
                 {
                   "code": "profile.validation.textMissing",
-                  "message": "Selected tableCell text must contain \"review-ready\".",
+                  "message": "Selected tableCell text must contain \"blocked\".",
                   "ruleId": "execution-checkpoint.status.allowed",
                   "severity": "error",
                   "sourceRange": {
                     "end": {
-                      "column": 11,
+                      "column": 16,
                       "line": 148,
-                      "offset": 16582
+                      "offset": 16587
                     },
                     "start": {
                       "column": 1,
@@ -341,14 +324,14 @@
                 },
                 {
                   "code": "profile.validation.assertionFailed",
-                  "message": "Selected tableCell text length must be between 12 and 12; found 7.",
+                  "message": "Selected tableCell text length must be between 7 and 7; found 12.",
                   "ruleId": "execution-checkpoint.status.allowed",
                   "severity": "error",
                   "sourceRange": {
                     "end": {
-                      "column": 11,
+                      "column": 16,
                       "line": 148,
-                      "offset": 16582
+                      "offset": 16587
                     },
                     "start": {
                       "column": 1,
@@ -358,14 +341,20 @@
                   }
                 }
               ],
-              "label": "review-ready",
+              "label": "blocked",
               "status": "failed"
+            },
+            {
+              "branchIndex": 3,
+              "diagnostics": [],
+              "label": "review-ready",
+              "status": "passed"
             }
           ],
           "kind": "anyOf",
           "selectedBranch": {
-            "branchIndex": 2,
-            "label": "blocked"
+            "branchIndex": 3,
+            "label": "review-ready"
           }
         },
         "passed": true,
@@ -1228,9 +1217,9 @@
   },
   "profile": {
     "documentVersion": "1.0.0",
-    "evaluatedRuleCount": 38,
+    "evaluatedRuleCount": 39,
     "ruleCount": 44,
-    "skippedRuleCount": 6,
+    "skippedRuleCount": 5,
     "syntaxVersion": "markdown-engine.validation@v2"
   },
   "ruleResults": [
@@ -1319,32 +1308,32 @@
                 "severity": "error",
                 "sourceRange": {
                   "end": {
-                    "column": 485,
+                    "column": 1020,
                     "line": 148,
-                    "offset": 17056
+                    "offset": 17591
                   },
                   "start": {
-                    "column": 90,
+                    "column": 116,
                     "line": 148,
-                    "offset": 16661
+                    "offset": 16687
                   }
                 }
               },
               {
                 "code": "profile.validation.assertionFailed",
-                "message": "Selected tableCell text length must be between 14 and 14; found 392.",
+                "message": "Selected tableCell text length must be between 14 and 14; found 901.",
                 "ruleId": "execution-checkpoint.evidence.references-or-none",
                 "severity": "error",
                 "sourceRange": {
                   "end": {
-                    "column": 485,
+                    "column": 1020,
                     "line": 148,
-                    "offset": 17056
+                    "offset": 17591
                   },
                   "start": {
-                    "column": 90,
+                    "column": 116,
                     "line": 148,
-                    "offset": 16661
+                    "offset": 16687
                   }
                 }
               }
@@ -1422,23 +1411,12 @@
     {
       "diagnostics": [],
       "evaluation": {
-        "kind": "skipped",
-        "reason": "whenNotMatched"
+        "diagnostics": [],
+        "kind": "assertions"
       },
       "passed": true,
       "ruleId": "execution-checkpoint.required-evidence.coverage",
-      "status": "skipped",
-      "when": {
-        "diagnostics": [
-          {
-            "code": "profile.validation.emptySelection",
-            "message": "Rule selector did not match any document targets.",
-            "ruleId": "execution-checkpoint.required-evidence.coverage",
-            "severity": "error"
-          }
-        ],
-        "status": "notMatched"
-      }
+      "status": "passed"
     },
     {
       "diagnostics": [],
@@ -1464,9 +1442,9 @@
                 "severity": "error",
                 "sourceRange": {
                   "end": {
-                    "column": 11,
+                    "column": 16,
                     "line": 148,
-                    "offset": 16582
+                    "offset": 16587
                   },
                   "start": {
                     "column": 1,
@@ -1477,14 +1455,14 @@
               },
               {
                 "code": "profile.validation.assertionFailed",
-                "message": "Selected tableCell text length must be between 11 and 11; found 7.",
+                "message": "Selected tableCell text length must be between 11 and 11; found 12.",
                 "ruleId": "execution-checkpoint.status.allowed",
                 "severity": "error",
                 "sourceRange": {
                   "end": {
-                    "column": 11,
+                    "column": 16,
                     "line": 148,
-                    "offset": 16582
+                    "offset": 16587
                   },
                   "start": {
                     "column": 1,
@@ -1507,9 +1485,9 @@
                 "severity": "error",
                 "sourceRange": {
                   "end": {
-                    "column": 11,
+                    "column": 16,
                     "line": 148,
-                    "offset": 16582
+                    "offset": 16587
                   },
                   "start": {
                     "column": 1,
@@ -1520,14 +1498,14 @@
               },
               {
                 "code": "profile.validation.assertionFailed",
-                "message": "Selected tableCell text length must be between 6 and 6; found 7.",
+                "message": "Selected tableCell text length must be between 6 and 6; found 12.",
                 "ruleId": "execution-checkpoint.status.allowed",
                 "severity": "error",
                 "sourceRange": {
                   "end": {
-                    "column": 11,
+                    "column": 16,
                     "line": 148,
-                    "offset": 16582
+                    "offset": 16587
                   },
                   "start": {
                     "column": 1,
@@ -1542,23 +1520,17 @@
           },
           {
             "branchIndex": 2,
-            "diagnostics": [],
-            "label": "blocked",
-            "status": "passed"
-          },
-          {
-            "branchIndex": 3,
             "diagnostics": [
               {
                 "code": "profile.validation.textMissing",
-                "message": "Selected tableCell text must contain \"review-ready\".",
+                "message": "Selected tableCell text must contain \"blocked\".",
                 "ruleId": "execution-checkpoint.status.allowed",
                 "severity": "error",
                 "sourceRange": {
                   "end": {
-                    "column": 11,
+                    "column": 16,
                     "line": 148,
-                    "offset": 16582
+                    "offset": 16587
                   },
                   "start": {
                     "column": 1,
@@ -1569,14 +1541,14 @@
               },
               {
                 "code": "profile.validation.assertionFailed",
-                "message": "Selected tableCell text length must be between 12 and 12; found 7.",
+                "message": "Selected tableCell text length must be between 7 and 7; found 12.",
                 "ruleId": "execution-checkpoint.status.allowed",
                 "severity": "error",
                 "sourceRange": {
                   "end": {
-                    "column": 11,
+                    "column": 16,
                     "line": 148,
-                    "offset": 16582
+                    "offset": 16587
                   },
                   "start": {
                     "column": 1,
@@ -1586,14 +1558,20 @@
                 }
               }
             ],
-            "label": "review-ready",
+            "label": "blocked",
             "status": "failed"
+          },
+          {
+            "branchIndex": 3,
+            "diagnostics": [],
+            "label": "review-ready",
+            "status": "passed"
           }
         ],
         "kind": "anyOf",
         "selectedBranch": {
-          "branchIndex": 2,
-          "label": "blocked"
+          "branchIndex": 3,
+          "label": "review-ready"
         }
       },
       "passed": true,
