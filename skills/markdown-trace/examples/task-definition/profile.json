@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "markdown-trace.validation-profile.experimental.v1",
+  "profileId": "task-definition-trace-pilot",
+  "interpretation": {
+    "language": "markdown-trace.identity.draft2",
+    "entityKinds": [
+      { "name": "criterion", "prefixes": ["TD"] },
+      { "name": "validation", "prefixes": ["VAL"] },
+      { "name": "slice", "prefixes": ["SLICE"] }
+    ]
+  },
+  "validation": {
+    "minEntities": 1,
+    "allowedRelations": [
+      { "kind": "verifies", "from": ["validation"], "to": ["criterion"] },
+      { "kind": "verified-by", "from": ["slice"], "to": ["validation"] }
+    ],
+    "rules": [
+      {
+        "id": "criterion-definitions", "op": "declarations", "kinds": ["criterion"],
+        "select": { "target": "tableCell", "section": "Materially Verifiable Success Criteria", "column": "ID" },
+        "min": 1, "max": 1, "minSelections": 1, "matchText": true, "exclusive": true
+      },
+      {
+        "id": "validation-definitions", "op": "declarations", "kinds": ["validation"],
+        "select": { "target": "tableCell", "section": "Validation / Evidence", "column": "Check" },
+        "min": 1, "max": 1, "minSelections": 1, "matchText": false, "exclusive": true
+      },
+      {
+        "id": "slice-definitions", "op": "declarations", "kinds": ["slice"],
+        "select": { "target": "tableCell", "section": "Incremental Value Delivery", "column": "Slice" },
+        "min": 1, "max": 1, "minSelections": 1, "matchText": false, "exclusive": true
+      },
+      {
+        "id": "validation-criterion-reference", "op": "references", "relation": "verifies",
+        "select": { "target": "tableCell", "section": "Validation / Evidence", "column": "Criterion ID" },
+        "min": 1, "max": 1, "minSelections": 1, "matchText": true, "exclusive": true
+      },
+      {
+        "id": "slice-validation-references", "op": "references", "relation": "verified-by",
+        "select": { "target": "tableCell", "section": "Incremental Value Delivery", "column": "Evidence" },
+        "min": 1, "max": null, "minSelections": 1, "matchText": false, "exclusive": true
+      },
+      {
+        "id": "validation-has-slice", "op": "require-relation", "kinds": ["validation"],
+        "direction": "incoming", "relation": "verified-by", "relatedKinds": ["slice"], "min": 1, "max": null
+      },
+      {
+        "id": "validation-has-criterion", "op": "require-relation", "kinds": ["validation"],
+        "direction": "outgoing", "relation": "verifies", "relatedKinds": ["criterion"], "min": 1, "max": 1
+      },
+      {
+        "id": "criterion-has-validation", "op": "require-relation", "kinds": ["criterion"],
+        "direction": "incoming", "relation": "verifies", "relatedKinds": ["validation"], "min": 1, "max": null
+      }
+    ]
+  }
+}

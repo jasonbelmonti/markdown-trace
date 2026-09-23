@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "markdown-trace.consumer-contract.v1",
+  "profile": "examples/preview-design/profile.json",
+  "document": "examples/preview-design/document.md",
+  "valid": {
+    "status": "pass",
+    "entityCount": 3,
+    "relationshipCount": 2
+  },
+  "defect": {
+    "replace": {
+      "from": "[the preview requirement](ctx://trace/entity/REQ-1?rel=implements)",
+      "to": "the preview requirement"
+    },
+    "expected": {
+      "status": "fail",
+      "ruleId": "design-implements-requirement",
+      "code": "trace-validation.relation-count",
+      "startLine": 9
+    }
+  }
+}

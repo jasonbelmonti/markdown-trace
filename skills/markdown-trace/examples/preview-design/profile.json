@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "markdown-trace.validation-profile.experimental.v1",
+  "profileId": "preview-design",
+  "interpretation": {
+    "language": "markdown-trace.identity.draft2",
+    "entityKinds": [
+      { "name": "requirement", "prefixes": ["REQ"] },
+      { "name": "design", "prefixes": ["DES"] },
+      { "name": "check", "prefixes": ["CHECK"] }
+    ]
+  },
+  "validation": {
+    "minEntities": 3,
+    "allowedRelations": [
+      { "kind": "implements", "from": ["design"], "to": ["requirement"] },
+      { "kind": "verifies", "from": ["check"], "to": ["requirement"] }
+    ],
+    "rules": [
+      {
+        "id": "requirement-definitions", "op": "declarations", "kinds": ["requirement"],
+        "select": { "target": "node", "section": "Requirements", "nodeType": "paragraph" },
+        "min": 1, "max": 1, "minSelections": 1, "matchText": false, "exclusive": true
+      },
+      {
+        "id": "design-definitions", "op": "declarations", "kinds": ["design"],
+        "select": { "target": "node", "section": "Design", "nodeType": "listItem" },
+        "min": 1, "max": 1, "minSelections": 1, "matchText": false, "exclusive": true
+      },
+      {
+        "id": "check-definitions", "op": "declarations", "kinds": ["check"],
+        "select": { "target": "node", "section": "Checks", "nodeType": "listItem" },
+        "min": 1, "max": 1, "minSelections": 1, "matchText": false, "exclusive": true
+      },
+      {
+        "id": "design-implements-requirement", "op": "require-relation", "kinds": ["design"],
+        "direction": "outgoing", "relation": "implements", "relatedKinds": ["requirement"], "min": 1, "max": null
+      },
+      {
+        "id": "check-verifies-requirement", "op": "require-relation", "kinds": ["check"],
+        "direction": "outgoing", "relation": "verifies", "relatedKinds": ["requirement"], "min": 1, "max": null
+      },
+      {
+        "id": "requirement-has-design", "op": "require-relation", "kinds": ["requirement"],
+        "direction": "incoming", "relation": "implements", "relatedKinds": ["design"], "min": 1, "max": null
+      },
+      {
+        "id": "requirement-has-check", "op": "require-relation", "kinds": ["requirement"],
+        "direction": "incoming", "relation": "verifies", "relatedKinds": ["check"], "min": 1, "max": null
+      }
+    ]
+  }
+}

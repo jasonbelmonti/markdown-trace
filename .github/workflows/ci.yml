@@ -57,6 +57,7 @@ jobs:
         run: |
           node scripts/runtime/reproduce.mjs --first "$RUNNER_TEMP/trace-a" --second "$RUNNER_TEMP/trace-b" > "$RUNNER_TEMP/reproduction.json"
           node scripts/runtime/check.mjs --artifact "$RUNNER_TEMP/trace-a" --report "$RUNNER_TEMP/artifact-proof.json"
+          node scripts/skill/check.mjs --artifact "$RUNNER_TEMP/trace-a" > "$RUNNER_TEMP/skill-proof.json"
       - name: Build a distinct previous release and prove installed lifecycle
         run: |
           git worktree add --detach "$RUNNER_TEMP/trace-previous-source" c6a670dba590c6f2ecd6e428316f73bfa572b7bf
@@ -69,6 +70,7 @@ jobs:
           name: portable-runtime-proof-${{ matrix.os }}
           path: |
             ${{ runner.temp }}/artifact-proof.json
+            ${{ runner.temp }}/skill-proof.json
             ${{ runner.temp }}/reproduction.json
             ${{ runner.temp }}/trace-a/release.json
             ${{ runner.temp }}/installer-proof.txt
