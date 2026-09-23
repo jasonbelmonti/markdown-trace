@@ -93,7 +93,7 @@ Record relevant code, tests, fixture, configuration and environment identities a
 
 | Execution status | Current proving slice | Evidence admitted | Next action | Blockers / stop condition |
 | --- | --- | --- | --- | --- |
-| active | TD-SC-5 platform proof and review handoff. | TD-SC-1, TD-SC-2, TD-SC-3 and TD-SC-4: `.codefactory/execution-plans/portable-runtime-installer/evidence/EP-GATE-1.txt` and `EP-GATE-2.txt` record passing real-candidate and installed-command checks on macOS Node 22.20.0, with input hashes; the first enforcement timing failure remains in `EP-GATE-2-attempt1.txt` and the current rerun passes. TD-SC-5 platform proof remains pending. | Push the implementation for Linux Node 20.19.0 and macOS CI, then reconcile exact run evidence before review readiness. | Do not claim done until both platform jobs and current source checks pass. |
+| review-ready | Independent review of the completed local installer and binding slice. | TD-SC-1, TD-SC-2, TD-SC-3, TD-SC-4 and TD-SC-5: `.codefactory/execution-plans/portable-runtime-installer/evidence/EP-GATE-1.txt` and `EP-GATE-2.txt` record passing local proof and CI run 35893767655 on Linux Node 20.19.0 and macOS Node 22.20.0. The run tested PR head `8e00f8a2c07a44f32340a7787f9295c8850017f6` via merge checkout `411d1775044421a87ce76515b0af5a14d7a075b8`; current code/test/config input hashes match the local proof. Earlier failed and superseded attempts remain historical. | Review the task and plan against PR #91, then accept or request focused remediation. | None. |
 
 ## Follow-up / Non-blocking Work
 

@@ -78,5 +78,35 @@
     "examples/preview-design/profile.json": "49820acec3551db131e9a357cb035ee601414cc3a3938e3f66c8ebc15e1dfe83"
   },
   "inputs_unchanged": true,
-  "platform_ci": "pending"
+  "platform_ci": {
+    "run": "https://github.com/jasonbelmonti/markdown-trace/actions/runs/35893767655",
+    "pr_head": "8e00f8a2c07a44f32340a7787f9295c8850017f6",
+    "checkout_merge_commit": "411d1775044421a87ce76515b0af5a14d7a075b8",
+    "conclusion": "success",
+    "platforms": {
+      "darwin": {
+        "job": "https://github.com/jasonbelmonti/markdown-trace/actions/runs/35893767655/job/107292457293",
+        "node": "v22.20.0",
+        "artifact_source": "411d1775044421a87ce76515b0af5a14d7a075b8",
+        "previous_source": "c6a670dba590c6f2ecd6e428316f73bfa572b7bf",
+        "installer_tests_passed": 2,
+        "installer_tests_failed": 0,
+        "installer_proof_sha256": "cf5ce179fb195de80d8e877972dab979e2b8f2a94912820b9c8c8496fad5f09c",
+        "artifact_proof_sha256": "bef41e71f727232bb97319ca02c495063456d1d33666ed9b7d4ee34c47e8a870"
+      },
+      "linux": {
+        "job": "https://github.com/jasonbelmonti/markdown-trace/actions/runs/35893767655/job/107292457543",
+        "node": "v20.19.0",
+        "artifact_source": "411d1775044421a87ce76515b0af5a14d7a075b8",
+        "previous_source": "c6a670dba590c6f2ecd6e428316f73bfa572b7bf",
+        "installer_tests_passed": 2,
+        "installer_tests_failed": 0,
+        "installer_proof_sha256": "395a0e2856bde8927db74582bc18682c662c72c5635e905968c740afc5576341",
+        "artifact_proof_sha256": "adda2d32a094f21d397d018764baa6edc3812bbe34f222d1662b4386e1bae7ae"
+      }
+    },
+    "enforcement_job": "https://github.com/jasonbelmonti/markdown-trace/actions/runs/35893767655/job/107292457789"
+  },
+  "current_branch_head": "8e00f8a2c07a44f32340a7787f9295c8850017f6",
+  "current_input_hashes_match_local": true
 }

@@ -5,7 +5,7 @@ plan_id: portable-runtime-installer
 artifact_version: "2.0"
 revision: "2"
 created_at: "2026-09-23T17:00:00Z"
-updated_at: "2026-09-23T17:25:00Z"
+updated_at: "2026-09-23T17:12:30Z"
 target_repo: /Users/jasonbelmonti/Documents/Development/markdown-trace
 target_worktree: /Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/portable-runtime-installer
 target_branch: codex/portable-runtime-installer
@@ -132,11 +132,11 @@ EP-ACT-1 treats candidate payload bytes as untrusted until independent inventory
 
 | Decision | Reviewed at | Evidence / rationale | Required revision or blocker |
 | --- | --- | --- | --- |
-| PASS | 2026-09-23T17:00:00Z by Codex | Every TD-SC anchor maps to actions and gates; phase 1 keeps active state inert; selection follows verification; failure preserves prior active; scope and CI proof are bounded. | None. |
+| PASS | 2026-09-23T17:12:30Z by Codex | Every TD-SC anchor maps to actions and gates; phase 1 keeps active state inert; selection follows verification; failure preserves prior active; scope and CI proof are bounded. | None. |
 
 ## Revision Log
 
 | Revision | Timestamp | Actor | Material change | Reason / source | Checksum reference |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 2026-09-23T17:00:00Z | Codex | Authored verified staging, selection and proof route. | Task definition revision 1 and inspected baseline. | execution-plan.sha256 |
-| 2 | 2026-09-23T17:25:00Z | Codex | Put candidate-dependent Node proof outside Vitest discovery. | Enforcement run exposed `*.test.mjs` collection conflict. | execution-plan.sha256 |
+| 2 | 2026-09-23T17:12:30Z | Codex | Put candidate-dependent Node proof outside Vitest discovery. | Enforcement run exposed `*.test.mjs` collection conflict. | execution-plan.sha256 |
