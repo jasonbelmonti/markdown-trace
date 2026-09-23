@@ -44,6 +44,8 @@ jobs:
             node: 22.20.0
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
@@ -55,10 +57,19 @@ jobs:
         run: |
           node scripts/runtime/reproduce.mjs --first "$RUNNER_TEMP/trace-a" --second "$RUNNER_TEMP/trace-b" > "$RUNNER_TEMP/reproduction.json"
           node scripts/runtime/check.mjs --artifact "$RUNNER_TEMP/trace-a" --report "$RUNNER_TEMP/artifact-proof.json"
+      - name: Build a distinct previous release and prove installed lifecycle
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/trace-previous-source" c6a670dba590c6f2ecd6e428316f73bfa572b7bf
+          node "$RUNNER_TEMP/trace-previous-source/scripts/runtime/build.mjs" --out "$RUNNER_TEMP/trace-previous"
+          TRACE_CANDIDATE_A="$RUNNER_TEMP/trace-previous" TRACE_CANDIDATE_B="$RUNNER_TEMP/trace-a" \
+            node --test scripts/runtime/install.proof.mjs > "$RUNNER_TEMP/installer-proof.txt"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: portable-runtime-proof-${{ matrix.os }}
           path: |
             ${{ runner.temp }}/artifact-proof.json
             ${{ runner.temp }}/reproduction.json
             ${{ runner.temp }}/trace-a/release.json
+            ${{ runner.temp }}/installer-proof.txt
+            ${{ runner.temp }}/trace-previous/release.json

@@ -1,0 +1,58 @@
+{
+  "gate": "EP-GATE-2",
+  "utc": "2026-09-23T17:03:09Z",
+  "head": "34be6d6b705397a2da465aaaf1a914c13aadb227",
+  "node": "v22.20.0",
+  "npm": "11.13.0",
+  "platform": "Darwin arm64",
+  "source_inputs_before": {
+    "scripts/runtime/install.mjs": "68f3951276746b94fc05e69ecb24ee424b2bf92e207de91a99702de29cd40c68",
+    "scripts/runtime/installed-release.mjs": "34bfc876ff4f3b3df7ec20bc5f2987147ed7d28aba841a6fa8016848373c527c",
+    "scripts/runtime/launcher.mjs": "9c65d07ab7dfeef02b7e4ce5c47d2c71019aa8564ec4e590c2098531f60b6ad3",
+    "scripts/runtime/resolve-binding.mjs": "d8baa94f9a07832933302e053864ac62e2514c75df0bdbbb224cb86e195eb94f",
+    "scripts/runtime/install.proof.mjs": "6c6253c4fd41ca688b63173299802c089587d5f77fa75337135ecfdb34897b7f",
+    "scripts/runtime/integrity.mjs": "96ac53502b7fa91bfbc977680d28916f5face195a523d7d9e68fb6167d8500c3",
+    "package.json": "775da0e7d7752d5325c66f9303877fbc3c036eba6086c24eeb353a573642dadd",
+    "package-lock.json": "c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c",
+    ".github/workflows/ci.yml": "280933db44921541ba1531add68e353f6a193d799450d63cb87e6ceb2264508d",
+    "examples/preview-design/document.md": "fa211c82e7cef9a485442969aacd764c8d7bc32fdcf205cb49cc6814b4e8edb3",
+    "examples/preview-design/profile.json": "49820acec3551db131e9a357cb035ee601414cc3a3938e3f66c8ebc15e1dfe83"
+  },
+  "results": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "scripts/runtime/install.proof.mjs"
+      ],
+      "exit": 0,
+      "stdout_tail": "TAP version 13\n# Subtest: versioned installation verifies before switching and restores a prior release\nok 1 - versioned installation verifies before switching and restores a prior release\n  ---\n  duration_ms: 7080.485208\n  type: 'test'\n  ...\n# Subtest: binding resolves exact executable and never falls back from an explicit value\nok 2 - binding resolves exact executable and never falls back from an explicit value\n  ---\n  duration_ms: 168.31925\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 7296.538\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "ci:enforcement"
+      ],
+      "exit": 1,
+      "stdout_tail": "\n> @jasonbelmonti/markdown-trace@0.1.0 ci:enforcement\n> bash scripts/ci-enforcement.sh\n\n\n> @jasonbelmonti/markdown-trace@0.1.0 typecheck\n> tsc --noEmit\n\n\n> @jasonbelmonti/markdown-trace@0.1.0 test\n> vitest run \"--exclude=.worktrees/**\"\n\n\n RUN  v4.1.5 /Users/jasonbelmonti/Documents/Development/markdown-trace/.worktrees/portable-runtime-installer\n\n \u276f tests/test_wp4_evidence.test.ts (10 tests | 1 failed) 2894ms\n     \u00d7 detects transient unapproved local writes under monitored roots 233ms\n\n Test Files  1 failed | 38 passed (39)\n      Tests  1 failed | 295 passed (296)\n   Start at  12:03:19\n   Duration  5.26s (transform 2.41s, setup 0ms, import 9.87s, tests 13.32s, environment 2ms)\n\n",
+      "stderr_tail": "\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  tests/test_wp4_evidence.test.ts > WP-4 evidence > detects transient unapproved local writes under monitored roots\nAssertionError: expected [] to deep equally contain StringContaining{\u2026}\n\n- Expected:\nStringContaining \"transient-unapproved.txt\"\n\n+ Received:\n[]\n\n \u276f tests/test_wp4_evidence.test.ts:149:39\n    147|\n    148|     expect(evidence.observedWrites).toEqual([\"<tempdir>/approved-outpu\u2026\n    149|     expect(evidence.unapprovedWrites).toContainEqual(\n       |                                       ^\n    150|       expect.stringContaining(\"transient-unapproved.txt\"),\n    151|     );\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n"
+    }
+  ],
+  "source_inputs_after": {
+    "scripts/runtime/install.mjs": "68f3951276746b94fc05e69ecb24ee424b2bf92e207de91a99702de29cd40c68",
+    "scripts/runtime/installed-release.mjs": "34bfc876ff4f3b3df7ec20bc5f2987147ed7d28aba841a6fa8016848373c527c",
+    "scripts/runtime/launcher.mjs": "9c65d07ab7dfeef02b7e4ce5c47d2c71019aa8564ec4e590c2098531f60b6ad3",
+    "scripts/runtime/resolve-binding.mjs": "d8baa94f9a07832933302e053864ac62e2514c75df0bdbbb224cb86e195eb94f",
+    "scripts/runtime/install.proof.mjs": "6c6253c4fd41ca688b63173299802c089587d5f77fa75337135ecfdb34897b7f",
+    "scripts/runtime/integrity.mjs": "96ac53502b7fa91bfbc977680d28916f5face195a523d7d9e68fb6167d8500c3",
+    "package.json": "775da0e7d7752d5325c66f9303877fbc3c036eba6086c24eeb353a573642dadd",
+    "package-lock.json": "c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c",
+    ".github/workflows/ci.yml": "280933db44921541ba1531add68e353f6a193d799450d63cb87e6ceb2264508d",
+    "examples/preview-design/document.md": "fa211c82e7cef9a485442969aacd764c8d7bc32fdcf205cb49cc6814b4e8edb3",
+    "examples/preview-design/profile.json": "49820acec3551db131e9a357cb035ee601414cc3a3938e3f66c8ebc15e1dfe83"
+  },
+  "inputs_unchanged": true,
+  "platform_ci": "pending"
+}

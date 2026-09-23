@@ -1,0 +1,78 @@
+{
+  "gate": "EP-GATE-2",
+  "utc": "2026-09-23T17:03:48Z",
+  "head": "34be6d6b705397a2da465aaaf1a914c13aadb227",
+  "node": "v22.20.0",
+  "npm": "11.13.0",
+  "platform": "Darwin arm64",
+  "source_inputs_before": {
+    "scripts/runtime/install.mjs": "68f3951276746b94fc05e69ecb24ee424b2bf92e207de91a99702de29cd40c68",
+    "scripts/runtime/installed-release.mjs": "34bfc876ff4f3b3df7ec20bc5f2987147ed7d28aba841a6fa8016848373c527c",
+    "scripts/runtime/launcher.mjs": "9c65d07ab7dfeef02b7e4ce5c47d2c71019aa8564ec4e590c2098531f60b6ad3",
+    "scripts/runtime/resolve-binding.mjs": "d8baa94f9a07832933302e053864ac62e2514c75df0bdbbb224cb86e195eb94f",
+    "scripts/runtime/install.proof.mjs": "6c6253c4fd41ca688b63173299802c089587d5f77fa75337135ecfdb34897b7f",
+    "scripts/runtime/integrity.mjs": "96ac53502b7fa91bfbc977680d28916f5face195a523d7d9e68fb6167d8500c3",
+    "package.json": "775da0e7d7752d5325c66f9303877fbc3c036eba6086c24eeb353a573642dadd",
+    "package-lock.json": "c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c",
+    ".github/workflows/ci.yml": "280933db44921541ba1531add68e353f6a193d799450d63cb87e6ceb2264508d",
+    "examples/preview-design/document.md": "fa211c82e7cef9a485442969aacd764c8d7bc32fdcf205cb49cc6814b4e8edb3",
+    "examples/preview-design/profile.json": "49820acec3551db131e9a357cb035ee601414cc3a3938e3f66c8ebc15e1dfe83"
+  },
+  "results": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "scripts/runtime/install.proof.mjs"
+      ],
+      "exit": 0,
+      "stdout_tail": "TAP version 13\n# Subtest: versioned installation verifies before switching and restores a prior release\nok 1 - versioned installation verifies before switching and restores a prior release\n  ---\n  duration_ms: 6994.634959\n  type: 'test'\n  ...\n# Subtest: binding resolves exact executable and never falls back from an explicit value\nok 2 - binding resolves exact executable and never falls back from an explicit value\n  ---\n  duration_ms: 179.311958\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 7222.088208\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "ci:enforcement"
+      ],
+      "exit": 0,
+      "stdout_tail": "itable` | `<missing>` | `false` | Manual YAML has no generated metadata while the fixture remains yaml-authoritative; generated sidecar metadata is checked evidence under the R2 contract. |\n| `intentional` | `generated.present` | `false` | `true` | Manual YAML has no generated metadata while the fixture remains yaml-authoritative; generated sidecar metadata is checked evidence under the R2 contract. |\n| `intentional` | `generated.reviewMarker` | `<missing>` | `\"generated-by-markdown-trace\"` | Manual YAML has no generated metadata while the fixture remains yaml-authoritative; generated sidecar metadata is checked evidence under the R2 contract. |\n| `intentional` | `generated.source.documentPath` | `<missing>` | `\"fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md\"` | Manual YAML has no generated metadata while the fixture remains yaml-authoritative; generated sidecar metadata is checked evidence under the R2 contract. |\n| `intentional` | `generated.source.documentSha256` | `<missing>` | `\"2267eb29c01d32cfddeaf5041301bddffad7f7c75d933add89d30046ef43cf0d\"` | Manual YAML has no generated metadata while the fixture remains yaml-authoritative; generated sidecar metadata is checked evidence under the R2 contract. |\n| `intentional` | `generated.typeProfile.contentSha256` | `<missing>` | `\"7fd1c2f4830ecedb081a0c93b2fe2a2b26134192de062afbb6c4396a9248c25f\"` | Manual YAML has no generated metadata while the fixture remains yaml-authoritative; generated sidecar metadata is checked evidence under the R2 contract. |\n| `intentional` | `generated.typeProfile.path` | `<missing>` | `\"fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml\"` | Manual YAML has no generated metadata while the fixture remains yaml-authoritative; generated sidecar metadata is checked evidence under the R2 contract. |\n| `intentional` | `generated.typeProfile.pathSha256` | `<missing>` | `\"378211c9d112f8c57bee85aa9490887a5ebe253aadea196909b5511c58d52c1c\"` | Manual YAML has no generated metadata while the fixture remains yaml-authoritative; generated sidecar metadata is checked evidence under the R2 contract. |\n| `intentional` | `generated.typeProfile.present` | `<missing>` | `true` | Manual YAML has no generated metadata while the fixture remains yaml-authoritative; generated sidecar metadata is checked evidence under the R2 contract. |\n| `intentional` | `generated.typeProfile.profileVersion` | `<missing>` | `\"markdown-trace.type-profile.v1\"` | Manual YAML has no generated metadata while the fixture remains yaml-authoritative; generated sidecar metadata is checked evidence under the R2 contract. |\n\n### Validation\n\nStatus: `equivalent`\n\nNo deltas.\nfixtures/r1-link-backed-entity-syntax/.markdown-trace/generated/minimal-link-backed-execution-spec--profile-minimal-type-profile-378211c9.entity-registry.yaml\nfixtures/r1-link-backed-entity-syntax/.markdown-trace/generated/codefactory-link-backed-spec--profile-codefactory-type-profile-1d87b2e3.entity-registry.yaml\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "check:package-exports"
+      ],
+      "exit": 0,
+      "stdout_tail": "\n> @jasonbelmonti/markdown-trace@0.1.0 check:package-exports\n> node scripts/check-package-exports.mjs\n\npackage: @jasonbelmonti/markdown-trace@0.1.0\ntarball entries: 218\ndeclaration closure: self-contained\nroot API: pass\nexperimental graph API: pass\ndeep imports: rejected\npackage exports contract: PASS\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "node",
+        "experiments/task-definition-trace/verify.mjs"
+      ],
+      "exit": 0,
+      "stdout_tail": "8798f6e0e95256e4fa1d7d469380b7781bdeb4a039186d0da45ff6bdb959b2\",\n  \"lockfileSha256\": \"c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c\",\n  \"graphRuntimeSha256\": \"1b191878c20b4531b9366268512daac56f795150431842b8a8d9017dbc4174f0\",\n  \"structuralEngine\": \"3.6.0\",\n  \"graphEngine\": \"3.6.0\",\n  \"results\": [\n    {\n      \"case\": \"valid authored task\",\n      \"structuralValid\": true,\n      \"traceValid\": true\n    },\n    {\n      \"case\": \"aliased outputs\",\n      \"runtimeExit\": 2,\n      \"outputsPreserved\": true\n    },\n    {\n      \"case\": \"dangling output alias\",\n      \"runtimeExit\": 2,\n      \"outputsPreserved\": true\n    },\n    {\n      \"case\": \"missing-definition\",\n      \"structuralValid\": true,\n      \"traceValid\": false,\n      \"diagnostic\": {\n        \"ruleId\": \"validation-definitions\",\n        \"code\": \"trace-validation.annotation-count\",\n        \"line\": 79,\n        \"column\": 54,\n        \"message\": \"Expected 1..1 declarations; found 0.\"\n      },\n      \"repairedValid\": true\n    },\n    {\n      \"case\": \"missing-slice-link\",\n      \"structuralValid\": true,\n      \"traceValid\": false,\n      \"diagnostic\": {\n        \"ruleId\": \"validation-has-slice\",\n        \"code\": \"trace-validation.relation-count\",\n        \"line\": 79,\n        \"column\": 56,\n        \"message\": \"Expected 1..unbounded distinct incoming verified-by neighbors; found 0.\"\n      },\n      \"repairedValid\": true\n    },\n    {\n      \"case\": \"wrong-existing-criterion\",\n      \"structuralValid\": true,\n      \"traceValid\": false,\n      \"diagnostic\": {\n        \"ruleId\": \"validation-criterion-reference\",\n        \"code\": \"trace-validation.text-mismatch\",\n        \"line\": 79,\n        \"column\": 1,\n        \"message\": \"Annotation identifier must equal the selected source text: TD-SC-2.\"\n      },\n      \"repairedValid\": true\n    },\n    {\n      \"case\": \"wholly-unannotated-check\",\n      \"structuralValid\": true,\n      \"traceValid\": false,\n      \"diagnostic\": {\n        \"ruleId\": \"validation-definitions\",\n        \"code\": \"trace-validation.annotation-count\",\n        \"line\": 79,\n        \"column\": 11,\n        \"message\": \"Expected 1..1 declarations; found 0.\"\n      },\n      \"repairedValid\": true\n    }\n  ],\n  \"profileProof\": {\n    \"strictStatus\": \"fail\",\n    \"relaxedStatus\": \"pass\",\n    \"strictValidationHash\": \"caa6e5a04642187bed41894aea551ce3f7d398732080038544ae3c83caa241d2\",\n    \"relaxedValidationHash\": \"8999120e633407b7773e46c10f207d556dab1b7392d6bfedd1668b1cdeec2db4\",\n    \"analysisId\": \"7947f84d8f756d98330982a5274c8f5054c30de8cf520994414d7e6cdb33e209\",\n    \"graphUnchanged\": true,\n    \"repeatable\": true,\n    \"changedSelectorRejected\": true,\n    \"renamedSectionsPassed\": true,\n    \"prosePassed\": true,\n    \"listAndQuotePassed\": true,\n    \"missingProseReferenceRejected\": true,\n    \"unsupportedProfilesRejected\": true,\n    \"interpretationMismatchRejected\": true,\n    \"partialAnalysisStatus\": \"indeterminate\"\n  },\n  \"backlink\": {\n    \"identifier\": \"VAL-2\",\n    \"source\": \"SLICE-1\",\n    \"relation\": \"verified-by\",\n    \"line\": 65\n  }\n}\n",
+      "stderr_tail": ""
+    }
+  ],
+  "prior_attempt": ".codefactory/execution-plans/portable-runtime-installer/evidence/EP-GATE-2-attempt1.txt",
+  "source_inputs_after": {
+    "scripts/runtime/install.mjs": "68f3951276746b94fc05e69ecb24ee424b2bf92e207de91a99702de29cd40c68",
+    "scripts/runtime/installed-release.mjs": "34bfc876ff4f3b3df7ec20bc5f2987147ed7d28aba841a6fa8016848373c527c",
+    "scripts/runtime/launcher.mjs": "9c65d07ab7dfeef02b7e4ce5c47d2c71019aa8564ec4e590c2098531f60b6ad3",
+    "scripts/runtime/resolve-binding.mjs": "d8baa94f9a07832933302e053864ac62e2514c75df0bdbbb224cb86e195eb94f",
+    "scripts/runtime/install.proof.mjs": "6c6253c4fd41ca688b63173299802c089587d5f77fa75337135ecfdb34897b7f",
+    "scripts/runtime/integrity.mjs": "96ac53502b7fa91bfbc977680d28916f5face195a523d7d9e68fb6167d8500c3",
+    "package.json": "775da0e7d7752d5325c66f9303877fbc3c036eba6086c24eeb353a573642dadd",
+    "package-lock.json": "c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c",
+    ".github/workflows/ci.yml": "280933db44921541ba1531add68e353f6a193d799450d63cb87e6ceb2264508d",
+    "examples/preview-design/document.md": "fa211c82e7cef9a485442969aacd764c8d7bc32fdcf205cb49cc6814b4e8edb3",
+    "examples/preview-design/profile.json": "49820acec3551db131e9a357cb035ee601414cc3a3938e3f66c8ebc15e1dfe83"
+  },
+  "inputs_unchanged": true,
+  "platform_ci": "pending"
+}

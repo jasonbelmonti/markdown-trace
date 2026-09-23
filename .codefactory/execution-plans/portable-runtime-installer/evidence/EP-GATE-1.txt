@@ -1,0 +1,62 @@
+{
+  "gate": "EP-GATE-1",
+  "utc": "2026-09-23T17:02:50Z",
+  "head": "34be6d6b705397a2da465aaaf1a914c13aadb227",
+  "node": "v22.20.0",
+  "candidate": "/tmp/trace-installer-baseline-34be6d6",
+  "descriptor_sha256": "85616eed8afa16292148e37d8ca6d87335f93f2072e12c68072aa005c7f1a1f6",
+  "active_before": false,
+  "stage": {
+    "command": [
+      "node",
+      "scripts/runtime/install.mjs",
+      "stage",
+      "--root",
+      "/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-gate1-xyd4q8jj/install with spaces",
+      "--candidate",
+      "/tmp/trace-installer-baseline-34be6d6"
+    ],
+    "exit": 0,
+    "stdout": "{\"id\":\"34be6d6b705397a2da465aaaf1a914c13aadb227-b4a937e7eb7ae2032e2b054fa09488d052d37873ae81e73e05a27239d6967b3b\",\"root\":\"/private/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-gate1-xyd4q8jj/install with spaces\",\"launcher\":\"/private/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-gate1-xyd4q8jj/install with spaces/releases/34be6d6b705397a2da465aaaf1a914c13aadb227-b4a937e7eb7ae2032e2b054fa09488d052d37873ae81e73e05a27239d6967b3b/markdown-trace-document\"}",
+    "stderr": ""
+  },
+  "active_after_stage": false,
+  "verify": {
+    "command": [
+      "node",
+      "scripts/runtime/install.mjs",
+      "verify",
+      "--root",
+      "/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-gate1-xyd4q8jj/install with spaces",
+      "--release",
+      "34be6d6b705397a2da465aaaf1a914c13aadb227-b4a937e7eb7ae2032e2b054fa09488d052d37873ae81e73e05a27239d6967b3b"
+    ],
+    "exit": 0,
+    "stdout": "{\"id\":\"34be6d6b705397a2da465aaaf1a914c13aadb227-b4a937e7eb7ae2032e2b054fa09488d052d37873ae81e73e05a27239d6967b3b\",\"launcher\":\"/private/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-gate1-xyd4q8jj/install with spaces/releases/34be6d6b705397a2da465aaaf1a914c13aadb227-b4a937e7eb7ae2032e2b054fa09488d052d37873ae81e73e05a27239d6967b3b/markdown-trace-document\",\"identity\":{\"schemaVersion\":\"markdown-trace.runtime-info.v1\",\"package\":\"@jasonbelmonti/markdown-trace\",\"packageVersion\":\"0.1.0\",\"sourceCommit\":\"34be6d6b705397a2da465aaaf1a914c13aadb227\",\"markdownEngineVersion\":\"3.6.0\",\"analyzerVersion\":\"0.1.0-experimental.2\",\"languageVersion\":\"markdown-trace.identity.draft2\",\"validationProfileVersion\":\"markdown-trace.validation-profile.experimental.v1\",\"graphVersion\":\"markdown-trace.document-graph.v1\",\"validationResultVersion\":\"markdown-trace.validation-result.experimental.v1\"}}",
+    "stderr": ""
+  },
+  "malformed_rejection": {
+    "command": [
+      "node",
+      "scripts/runtime/install.mjs",
+      "stage",
+      "--root",
+      "/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-gate1-xyd4q8jj/install with spaces",
+      "--candidate",
+      "/var/folders/kn/9rbvvyj940l5pk9x37rqn4lr0000gn/T/trace-gate1-xyd4q8jj/bad descriptor"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "Runtime installation failed: Cannot read properties of undefined (reading 'sourceCommit')"
+  },
+  "active_after_rejection": false,
+  "source_input_hashes": {
+    "scripts/runtime/install.mjs": "68f3951276746b94fc05e69ecb24ee424b2bf92e207de91a99702de29cd40c68",
+    "scripts/runtime/installed-release.mjs": "34bfc876ff4f3b3df7ec20bc5f2987147ed7d28aba841a6fa8016848373c527c",
+    "scripts/runtime/launcher.mjs": "9c65d07ab7dfeef02b7e4ce5c47d2c71019aa8564ec4e590c2098531f60b6ad3",
+    "scripts/runtime/integrity.mjs": "96ac53502b7fa91bfbc977680d28916f5face195a523d7d9e68fb6167d8500c3",
+    "scripts/runtime/install.proof.mjs": "6c6253c4fd41ca688b63173299802c089587d5f77fa75337135ecfdb34897b7f",
+    "package.json": "775da0e7d7752d5325c66f9303877fbc3c036eba6086c24eeb353a573642dadd",
+    "package-lock.json": "c4e8d4ae04497e7770ce4bb30f05767db367a7c502cb820be72c34c8e196d46c"
+  }
+}

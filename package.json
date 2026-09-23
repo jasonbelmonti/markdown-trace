@@ -40,7 +40,9 @@
     "demo:graph": "npm run build --silent && node scripts/demo-document-graph.mjs",
     "build:runtime": "node scripts/runtime/build.mjs",
     "verify:runtime": "node scripts/runtime/verify.mjs",
-    "check:runtime": "node scripts/runtime/check.mjs"
+    "check:runtime": "node scripts/runtime/check.mjs",
+    "install:runtime": "node scripts/runtime/install.mjs",
+    "resolve:runtime": "node scripts/runtime/resolve-binding.mjs"
   },
   "dependencies": {
     "@jasonbelmonti/markdown-engine": "3.6.0",
