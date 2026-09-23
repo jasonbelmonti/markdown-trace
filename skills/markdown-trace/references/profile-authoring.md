@@ -1,7 +1,7 @@
 # Author a Trace validation profile
 
 Use this workflow when creating or revising a document-owned Trace profile.
-Read the [supported profile contract](../../../docs/experimental-graph-validation.md#supported-profile-contract)
+Read the [supported profile contract](profile-contract.md)
 for exact fields and operators. Profiles configure the existing runtime; they do
 not introduce Markdown syntax or custom parsing code.
 
@@ -22,10 +22,10 @@ unresolved policy that materially changes validity; do not infer policy merely
 from whatever makes the sample pass.
 
 Reuse an existing suitable profile. For a new one, adapt the complete
-[paragraph/list example](../../../examples/preview-design/profile.json) or
-[table example](../../../experiments/task-definition-trace/profile.json), reading
-the accompanying [preview guide](../../../examples/preview-design/authoring.md)
-or [TaskDefinition guide](../../../experiments/task-definition-trace/authoring.md).
+[paragraph/list example](../examples/preview-design/profile.json) or
+[table example](../examples/task-definition/profile.json), reading
+the accompanying [preview guide](../examples/preview-design/authoring.md)
+or [TaskDefinition guide](../examples/task-definition/authoring.md).
 Replace their domain vocabulary and requirements; example counts and layouts
 are not universal defaults. Use `markdown-trace.validation-profile.experimental.v1`
 with `markdown-trace.identity.draft2`, a meaningful `profileId`, and unique rule IDs.
@@ -71,17 +71,19 @@ relationship is semantically justified.
 
 ## Prove the profile against documents
 
-Use the shared command from a built checkout (or its installed equivalent):
+Use the installed skill's shared command, with SKILL_DIR resolved as described
+in [the skill](../SKILL.md#select-the-inputs):
 
 ```sh
-node dist/markdowntrace/document-graph/cli.js --file document.md --profile profile.json
-node dist/markdowntrace/document-graph/cli.js --file document.md --profile profile.json --format graph
+node "$SKILL_DIR/scripts/run.mjs" --file document.md --profile profile.json
+node "$SKILL_DIR/scripts/run.mjs" --file document.md --profile profile.json --format graph
 ```
 
 The command compiles the profile before analysis. Exit 2 and an `invalid-profile`
 or `unsupported-version` error are configuration failures, not evidence that a
-document rule caught a defect. Use `compileValidationProfile(jsonText)` from the
-existing API if a compile-only check is useful.
+document rule caught a defect. A separate installed library consumer may use
+`compileValidationProfile(jsonText)` for a compile-only check; the skill helper
+does not require an importable library package.
 
 Check one representative valid document: expect exit 0, the intended identities
 and edges, and meaningful per-rule selection/evaluation counts. A required rule

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "requiredFiles": [
+    "SKILL.md",
+    "contracts/runtime.json",
+    "examples/preview-design/authoring.md",
+    "examples/preview-design/document.md",
+    "examples/preview-design/profile.json",
+    "examples/task-definition/authoring.md",
+    "examples/task-definition/profile.json",
+    "references/link-language.md",
+    "references/profile-authoring.md",
+    "references/profile-contract.md",
+    "scripts/resolve-runtime.mjs",
+    "scripts/run.mjs"
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "sourceCommit": "dde0960b10c0a5c927d605286370b3682766dce8",
+  "node": "v22.20.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "nativeInstall": true,
+  "packageFingerprints": [
+    [
+      "contracts/runtime.json",
+      "4de008bbf25945bcf1a0f6186a79425ae955f0a01a3d26cceb8fb0ea9105ac31"
+    ],
+    [
+      "examples/preview-design/authoring.md",
+      "a27353fb1ab7807950d671fc0965f3de6a81096d7668c02ad05a70a2ecf2a9a3"
+    ],
+    [
+      "examples/preview-design/document.md",
+      "fa211c82e7cef9a485442969aacd764c8d7bc32fdcf205cb49cc6814b4e8edb3"
+    ],
+    [
+      "examples/preview-design/profile.json",
+      "49820acec3551db131e9a357cb035ee601414cc3a3938e3f66c8ebc15e1dfe83"
+    ],
+    [
+      "examples/task-definition/authoring.md",
+      "9ea61591a04978c7ccd2ed0fde08f50b6626d37057135303ddf84027fc7555c3"
+    ],
+    [
+      "examples/task-definition/profile.json",
+      "374a153be64021904504117441a077f7279549e2d438b28467c74a81fac19808"
+    ],
+    [
+      "references/link-language.md",
+      "c3a06f93a4bfd089ddebb337e397659720d094f3c275e75874a6f6d74acd90dd"
+    ],
+    [
+      "references/profile-authoring.md",
+      "e5570c1bdb6577c7010672a1a481c33cba0ada3a8a1f62af8ace703b36015a24"
+    ],
+    [
+      "references/profile-contract.md",
+      "5f0000d54c014312d8ea6232691730ee4723ee50b5b54499724156686cea2252"
+    ],
+    [
+      "scripts/resolve-runtime.mjs",
+      "66d6567561cd9d2990079f69b233d1ae43019b2f4d4045960be537b11d22a069"
+    ],
+    [
+      "scripts/run.mjs",
+      "96f78f08bbb444b91c04c182752828495246627e8dec9c9fd72938ef352c8c4e"
+    ],
+    [
+      "skill-package.json",
+      "e0d87803c041af7f4b6384c8cc478c088e69cde4804decb9bb76f58893fb06ef"
+    ],
+    [
+      "SKILL.md",
+      "1edf228e1c8c64222db9972ae4f603737d7e79e09bf8e8ca278bf1f7516b345d"
+    ]
+  ],
+  "independentCwd": "/tmp/trace-pr-coordination.ZO0tAS/independent caller",
+  "launcher": "/private/tmp/trace-pr-coordination.ZO0tAS/runtime/releases/dde0960b10c0a5c927d605286370b3682766dce8-95e1891e7cfe7af37720a0e784b498fc0466fe5cba609e338b7e4da50dada4d9/markdown-trace-document",
+  "runtimeInfo": {
+    "schemaVersion": "markdown-trace.runtime-info.v1",
+    "package": "@jasonbelmonti/markdown-trace",
+    "packageVersion": "0.1.0",
+    "sourceCommit": "dde0960b10c0a5c927d605286370b3682766dce8",
+    "markdownEngineVersion": "3.6.0",
+    "analyzerVersion": "0.1.0-experimental.2",
+    "languageVersion": "markdown-trace.identity.draft2",
+    "validationProfileVersion": "markdown-trace.validation-profile.experimental.v1",
+    "graphVersion": "markdown-trace.document-graph.v1",
+    "validationResultVersion": "markdown-trace.validation-result.experimental.v1",
+    "nodeVersion": "v22.20.0"
+  },
+  "checks": {
+    "valid": true,
+    "allRulesPassed": true,
+    "backlinks": [
+      [
+        "DES-1",
+        "implements"
+      ],
+      [
+        "CHECK-1",
+        "verifies"
+      ]
+    ],
+    "locatedDefect": {
+      "code": "trace-validation.relation-count",
+      "ruleId": "design-implements-requirement",
+      "line": 9
+    },
+    "repairEqual": true,
+    "invalidExplicitBindingNoFallback": true,
+    "packageAndProfileUnchanged": true
+  },
+  "fixtureSha256": "fa211c82e7cef9a485442969aacd764c8d7bc32fdcf205cb49cc6814b4e8edb3",
+  "profileSha256": "49820acec3551db131e9a357cb035ee601414cc3a3938e3f66c8ebc15e1dfe83"
+}

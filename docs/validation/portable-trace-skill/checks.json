@@ -1,0 +1,60 @@
+{
+  "sourceCommit": "dde0960b10c0a5c927d605286370b3682766dce8",
+  "engineVersion": "3.6.0",
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "descriptorSha256": "f203fd171f331671157c67cb2e5abd6878669251d7e8a3ea5a18c019213798d3",
+  "payloadSha256": "95e1891e7cfe7af37720a0e784b498fc0466fe5cba609e338b7e4da50dada4d9",
+  "checks": [
+    {
+      "command": "npm run ci:enforcement",
+      "exit": 0,
+      "testFiles": 40,
+      "tests": 298,
+      "repositoryUnchanged": true
+    },
+    {
+      "command": "npm run check:package-exports",
+      "exit": 0,
+      "rootApi": "pass",
+      "experimentalGraphApi": "pass",
+      "declarationClosure": "self-contained"
+    },
+    {
+      "command": "node scripts/skill/check.mjs --artifact dist/portable-skill-runtime",
+      "exit": 0,
+      "evidence": "installed-copy.json"
+    },
+    {
+      "command": "node scripts/runtime/check.mjs --artifact dist/portable-skill-runtime",
+      "exit": 0,
+      "evidence": "runtime.json"
+    },
+    {
+      "command": "TRACE_CANDIDATE_A=<prior artifact> TRACE_CANDIDATE_B=dist/portable-skill-runtime node --test scripts/runtime/install.proof.mjs",
+      "exit": 0,
+      "tests": 2,
+      "evidence": "installer.txt"
+    },
+    {
+      "command": "Independent coordinator follows natively installed SKILL.md and guides",
+      "passed": true,
+      "evidence": "independent-agent.json"
+    }
+  ],
+  "applicability": "Enforcement and packed consumer ran on the exact files committed in sourceCommit; release, installed-copy, runtime and installer proofs ran after the clean commit. Subsequent task/checkpoint/evidence-only changes do not alter skill, runtime, fixtures, profiles, tests, dependencies or CI inputs.",
+  "nativeInstallNote": "The independent agent proof uses gh skill install at the pinned source. Its SKILL.md contains installer-injected GitHub metadata and reordered frontmatter; the instruction body and all other package resources match the source. The copied-package proof records original source file hashes.",
+  "ci": {
+    "url": "https://github.com/jasonbelmonti/markdown-trace/actions/runs/35912087657",
+    "sourceCommit": "dde0960b10c0a5c927d605286370b3682766dce8",
+    "conclusion": "success",
+    "jobs": [
+      "CI enforcement",
+      "Portable runtime (macos-latest, Node 22.20.0)",
+      "Portable runtime (ubuntu-latest, Node 20.19.0)"
+    ]
+  }
+}

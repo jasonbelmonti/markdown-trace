@@ -99,9 +99,11 @@ Two explicit compositions are available:
 
 Load the chosen domain guide and profile when invoking the shared skill. This
 does not automatically enable annotations in other installed authoring skills.
-For local Codex use, the repository skill directory can be symlinked into the
-configured skills directory; retain this checkout so its runtime and references
-remain available. The npm package ships the command, not the skill or examples.
+For local use, copy `skills/markdown-trace` into the configured skills directory.
+Its references, profile examples and invocation helper are self-contained. Supply
+a verified installed runtime through `MARKDOWN_TRACE_BIN`; see
+[portable runtime usage](portable-runtime.md#portable-skill). The npm package ships
+the command; the separate skill directory ships the authoring resources.
 
 ## API
 

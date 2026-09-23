@@ -92,8 +92,9 @@ structural checks.
 The [shared runtime contract](design/shared-trace-runtime-contract.md) defines the
 next distribution boundary. Its C-3 runtime-info command and locally produced portable payload are implemented;
 [portable runtime usage](portable-runtime.md) describes building, independently
-verifying and invoking a candidate. Executable binding, installation and Fleet
-admission remain future work. The [selected task](tasks/portable-trace-runtime.md)
+verifying and invoking a candidate. Versioned installation and executable binding are implemented. The skill package
+is portable and includes source-owned consumer probes; Fleet admission remains
+a separate integration. The [selected task](tasks/portable-trace-runtime.md)
 owns artifact production and its required evidence; the earlier shared-runtime
 task records the completed contract and dependency upgrade.
 

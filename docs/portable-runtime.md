@@ -193,3 +193,39 @@ node scripts/runtime/resolve-binding.mjs
 
 Fleet admission, installed-skill migration, remote distribution and publishing
 are later work. No host-wide PATH or skill environment is changed by staging.
+
+## Portable skill
+
+Copy `skills/markdown-trace/` as a complete directory. Its `skill-package.json`
+records required references, examples, helper scripts and the declarative
+`contracts/runtime.json` consumer probe. No checkout or npm dependencies are
+needed by the skill helper; Node and an installed Trace runtime are prerequisites.
+
+Set `MARKDOWN_TRACE_BIN` to the absolute verified installed launcher, and set
+`SKILL_DIR` to the absolute copied skill directory. From the document directory:
+
+```sh
+node "$SKILL_DIR/scripts/run.mjs" --file document.md --profile profile.json
+```
+
+The helper preserves cwd and argument boundaries. A nonempty invalid binding
+fails; only an unset/empty binding permits exact `markdown-trace-document` PATH
+discovery. The helper does not verify releases or activate them. Fleet verifies
+the complete runtime and selected skill source before emitting a binding.
+
+The bundled preview fixture has three entities and two relationships. Its
+consumer contract supplies a single literal relationship removal and requires
+`design-implements-requirement` / `trace-validation.relation-count` at line 9,
+then restoration to pass. Consumers mutate disposable copies and preserve
+source/profile bytes. Example profiles are explicit opt-in examples; document
+owners retain their structural and semantic gates.
+
+Maintainers verify the copied package and real installed runtime together with:
+
+```sh
+node scripts/skill/check.mjs --artifact /absolute/path/to/candidate
+```
+
+Packaged language/profile reference sections mirror the authoritative documents;
+the package tests detect drift. Update both copies deliberately when those
+contracts change.

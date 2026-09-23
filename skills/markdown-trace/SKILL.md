@@ -23,11 +23,21 @@ profile. The command accepts
 the entity kinds and prefixes; validation specifies permitted relationships,
 source selectors and required counts. Read those requirements before annotating.
 
-The runtime is experimental. Use the matching built Markdown Trace checkout or
-installed package. Resolve a symlinked skill directory to its real location
-before following repository-relative links. The repository root for this skill
-is two directories above its real directory. If the runtime is unavailable,
-report that gap rather than claiming validation passed.
+The runtime is experimental and uses Markdown Engine 3.6.0. The host supplies
+`MARKDOWN_TRACE_BIN` as one absolute path to a verified installed executable.
+This is a path, never a shell command or argument string. A nonempty binding is
+authoritative: report a missing, unreadable, non-executable or relative binding
+and stop. Do not fall back to a checkout or another command. When the binding is
+unset or empty, interactive use may discover exactly `markdown-trace-document`
+on PATH and resolve it to an absolute path. Fleet processes receive the explicit
+verified binding. Discovery alone does not verify a release.
+
+Use the bundled [invocation helper](scripts/run.mjs), which applies those rules
+through its local [resolver](scripts/resolve-runtime.mjs), preserves the caller's
+working directory and forwards arguments without a shell. Resolve `SKILL_DIR`
+to the absolute directory containing this SKILL.md. The package is self-contained;
+its runtime is installed separately. Report runtime unavailability rather than
+claiming validation passed. Do not install or activate a runtime automatically.
 
 ## Author identities and relationships
 
@@ -60,22 +70,22 @@ requires exact identifier text.
   entity, connection or evidence claim merely to satisfy a validator.
 
 For uncommon syntax or ownership questions, consult the
-[authoring contract](../../docs/experimental-document-graph.md#link-identity-language).
-The [validation guide](../../docs/experimental-graph-validation.md) defines the
+[authoring contract](references/link-language.md).
+The [validation guide](references/profile-contract.md) defines the
 finite profile operators. Do not add a separate Markdown parser in a skill.
 
 ## Validate and inspect
 
-From a built checkout, use the shared command below. An installed package exposes
-the same entry point as `markdown-trace-document`. Keep document/profile paths
-explicit; resolve relative paths against the command's working directory.
+Use the shared command through the copied or installed skill's helper. Keep
+document/profile paths explicit; relative paths resolve against the caller's
+working directory. Node must satisfy `^20.19.0 || >=22.12.0`.
 
 ```sh
-node dist/markdowntrace/document-graph/cli.js --file document.md --profile profile.json
-node dist/markdowntrace/document-graph/cli.js --file document.md --profile profile.json --format graph
-node dist/markdowntrace/document-graph/cli.js --file document.md --profile profile.json --format query --identifier REQ-1
-node dist/markdowntrace/document-graph/cli.js --file document.md --profile profile.json --format mermaid
-node dist/markdowntrace/document-graph/cli.js --file document.md --profile profile.json --format html > trace-report.html
+node "$SKILL_DIR/scripts/run.mjs" --file document.md --profile profile.json
+node "$SKILL_DIR/scripts/run.mjs" --file document.md --profile profile.json --format graph
+node "$SKILL_DIR/scripts/run.mjs" --file document.md --profile profile.json --format query --identifier REQ-1
+node "$SKILL_DIR/scripts/run.mjs" --file document.md --profile profile.json --format mermaid
+node "$SKILL_DIR/scripts/run.mjs" --file document.md --profile profile.json --format html > trace-report.html
 ```
 
 Graph JSON contains `validation` and `graph`. Query JSON contains `validation`,
@@ -107,3 +117,15 @@ only the configured coverage and graph requirements. An unannotated selected
 source target can fail; an unstated requirement, missing unselected content or
 semantically wrong relationship needs the owner's review. Report which gates
 actually ran. Passing Trace alone does not establish document readiness.
+
+## Consumer admission evidence
+
+[The declarative contract](contracts/runtime.json) selects the bundled preview
+profile and fixture for Fleet's valid, located-defect and repaired-pass probes.
+Paths are relative to this skill directory. Runners copy inputs to temporary
+storage, replace the designated literal exactly once, require the stated rule
+diagnostic at its line, restore the original bytes and require a pass again.
+They keep source inputs unchanged and never execute commands from the contract.
+These probes establish runtime behavior; the example is not an implicit profile
+for the user's document. [Package inventory](skill-package.json) lists required
+resources, including references loaded only during profile authoring.
