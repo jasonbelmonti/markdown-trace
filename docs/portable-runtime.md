@@ -39,9 +39,10 @@ The output is:
 Dependency licenses remain with their package contents. npm's hidden installation
 lock is excluded because it is build bookkeeping, with platform-specific optional
 development entries; the root package lock and actual production files are
-included. No launcher or archive is produced. File paths and raw bytes are
-covered; directory timestamps, filesystem ownership and permission bits are not
-part of the reproducibility identity. Invocation is through Node, so payload
+included. No launcher or archive is produced by the candidate builder. File paths
+and raw bytes are covered; directory timestamps, filesystem ownership and
+permission bits are not part of the reproducibility identity. Invocation is
+through Node, so payload
 files need read permission and directories need traversal permission.
 
 `release.json` contains source identity, protocol versions, Node range, source
@@ -70,8 +71,8 @@ result, or the `payloadDirectory` recorded in the trusted descriptor. Verificati
 returns JSON with `valid: true` and exit 0, or an error on stderr and nonzero exit.
 Missing, changed, extra and symbolic-link content is rejected. This verifier is
 an artifact integrity check; it does not implement Fleet policy or activation.
-Use a stable candidate directory during verification and execution. A later
-installer owns immutable staging and race protection across admission/activation.
+Use a stable candidate directory during verification and execution. The local
+installer below copies and re-verifies the payload before making it selectable.
 
 ## Invoke from any working directory
 
@@ -86,8 +87,7 @@ node "$payload/dist/markdowntrace/document-graph/cli.js" \
 ```
 
 Execution needs no Git, npm, global package, checkout, dependency installation or
-network fetch. The Node entry point is a staging interface for later installers;
-this task does not install `markdown-trace-document` or set `MARKDOWN_TRACE_BIN`.
+network fetch. The direct Node entry point remains available for candidate checks.
 The identity mode emits one C-3 JSON object on stdout, empty stderr and exit 0.
 It accepts no other arguments, and never reads document/profile inputs. Checkout
 builds report `sourceCommit: null`; release candidates report the snapshot commit.
@@ -137,5 +137,59 @@ profile. CI includes artifact execution on Linux Node 20.19.0 and macOS Node
 execution results support a platform claim. See the implementation evidence in
 `docs/validation/portable-trace-runtime/` for completed and unavailable gates.
 
-Versioned installation, active launchers, rollback, Fleet admission, installed
-skill migration, remote distribution and publishing remain separate work.
+## Install and select a local release
+
+Use the trusted installer from this repository with an explicit root. Candidate
+staging checks the descriptor and every payload byte, copies into a versioned
+release, checks the copied bytes, and generates an installer-owned launcher that
+targets that release's absolute entry point. It does not change the active command.
+Keep the producer's `release.json` as the trusted descriptor; neither this local
+integrity check nor the reported identity authenticates an untrusted publisher.
+
+```sh
+root=/absolute/path/to/trace-install
+node scripts/runtime/install.mjs stage --root "$root" \
+  --candidate /tmp/trace-candidate-a --descriptor /trusted/path/release.json
+node scripts/runtime/install.mjs status --root "$root"
+```
+
+The `stage` result includes a release ID of `<source-commit>-<payload-digest>`.
+Use that exact ID to verify and activate the installed release. Activation checks
+the installed descriptor, full payload, approved launcher, selected PATH Node,
+and runtime-info before atomically replacing the active symlink. An invalid
+selection leaves the prior active command unchanged.
+
+```sh
+release='<release-id-from-stage>'
+node scripts/runtime/install.mjs verify --root "$root" --release "$release"
+node scripts/runtime/install.mjs activate --root "$root" --release "$release"
+"$root/bin/markdown-trace-document" --runtime-info
+```
+
+Stage a second candidate to the same root without changing the active command.
+To return to the earlier installed release, explicitly name its ID; rollback
+re-verifies it before switching. Installed releases remain present until an
+operator manages that root; this installer provides no automatic update or
+pruning operation.
+
+```sh
+node scripts/runtime/install.mjs rollback --root "$root" --release "$release"
+```
+
+The launcher uses a supported `node` from PATH (`^20.19.0 || >=22.12.0`) and
+passes arguments and caller cwd through unchanged. It has no payload override.
+If the selected Node is missing or unsupported, it fails before document work.
+Set `MARKDOWN_TRACE_BIN` to the absolute installed command path when binding a
+consumer. The resolver below treats a nonempty explicit value as authoritative:
+an invalid, relative or non-executable value fails with no PATH fallback. If
+the variable is empty or unset, it discovers only `markdown-trace-document` on
+PATH and returns an absolute executable path. Consumers invoke the returned path
+with an argument array, without shell interpretation.
+
+```sh
+export MARKDOWN_TRACE_BIN="$root/bin/markdown-trace-document"
+node scripts/runtime/resolve-binding.mjs
+```
+
+Fleet admission, installed-skill migration, remote distribution and publishing
+are later work. No host-wide PATH or skill environment is changed by staging.
