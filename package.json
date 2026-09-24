@@ -5,11 +5,11 @@
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
-  "types": "./dist/markdowntrace/public.d.ts",
+  "types": "./dist/markdowntrace/document-graph/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/markdowntrace/public.d.ts",
-      "import": "./dist/markdowntrace/public.js"
+      "types": "./dist/markdowntrace/document-graph/index.d.ts",
+      "import": "./dist/markdowntrace/document-graph/index.js"
     },
     "./experimental/graph": {
       "types": "./dist/markdowntrace/document-graph/index.d.ts",
@@ -20,23 +20,19 @@
     "dist"
   ],
   "bin": {
-    "markdown-trace": "./dist/markdowntrace/cli.js",
     "markdown-trace-document": "./dist/markdowntrace/document-graph/cli.js"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "build": "npm run generate:release-metadata --silent && tsc -p tsconfig.build.json",
+    "build": "npm run generate:release-metadata --silent && node scripts/clean-dist.mjs && tsc -p tsconfig.build.json",
     "check:package-exports": "node scripts/check-package-exports.mjs",
     "generate:release-metadata": "node scripts/generate-release-metadata.mjs",
     "check:release-metadata": "node scripts/generate-release-metadata.mjs --check",
     "test": "vitest run \"--exclude=.worktrees/**\"",
     "typecheck": "tsc --noEmit",
     "ci:enforcement": "bash scripts/ci-enforcement.sh",
-    "derive:fixture": "npm run build --silent && node dist/markdowntrace/cli.js derive --document fixtures/r0-document-local-registry/execution-spec.md --namespace exec",
-    "validate:fixture": "npm run build --silent && node dist/markdowntrace/cli.js validate --registry fixtures/r0-document-local-registry/entity-registry.yaml --document fixtures/r0-document-local-registry/execution-spec.md --report docs/evidence/valid-fixture-report.md",
-    "migration:check": "npm run build --silent && node dist/markdowntrace/cli.js migration-check --document fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md --manual-registry fixtures/r1-link-backed-entity-syntax/minimal-link-backed-manual-registry.yaml --type-profile fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml",
     "demo:graph": "npm run build --silent && node scripts/demo-document-graph.mjs",
     "build:runtime": "node scripts/runtime/build.mjs",
     "verify:runtime": "node scripts/runtime/verify.mjs",
@@ -45,8 +41,7 @@
     "resolve:runtime": "node scripts/runtime/resolve-binding.mjs"
   },
   "dependencies": {
-    "@jasonbelmonti/markdown-engine": "3.6.0",
-    "yaml": "^2.8.3"
+    "@jasonbelmonti/markdown-engine": "3.6.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.39",

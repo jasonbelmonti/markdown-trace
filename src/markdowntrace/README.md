@@ -1,17 +1,14 @@
 # Source map
 
-Read the [direction](../../docs/design/markdown-trace-document-graph-overview.md) and [implemented boundary](../../docs/current-implementation.md) before extending these modules.
+Read the [direction](../../docs/design/markdown-trace-document-graph-overview.md) and [implemented boundary](../../docs/current-implementation.md) before extending the runtime.
 
-| Modules | Existing responsibility | Directional boundary |
-| --- | --- | --- |
-| `document-graph/` | Experimental document-wide extraction, immutable graph, validation, direct query indexes and document command | Context projection is follow-up work over these facts. |
-| `markdown/` | Markdown Engine adapter, headings/sections, labels, trace links, source slicing | Reuse parser/source integration; current ownership is compatibility behavior. |
-| `trace-evidence/` | Table-only graph evidence/hashing | Retained compatibility model; new document-wide facts live in document-graph/. |
-| `graph-profile/` | Closed v1 schema/vocabulary and examples | Retained legacy profiles; document-graph/ owns the extensible new profile contract. |
-| `graph-validation/` | File-backed operation and path evaluation | Retained table/path checks; new profile validation lives under document-graph/. |
-| `registry/`, `profiles/`, `validation/`, `migration/`, `graph/` | Registry, type-profile, link, sidecar, and migration compatibility | Retain behavior until explicitly migrated; this graph is a registry projection. |
-| `public.ts`, `cli.ts`, `cli/` | Public types and transport | Preserve/version existing contracts; do not expose unimplemented target APIs. |
-| `reporting/` | Registry-validation and migration reports | These are not graph repair plans or context results. |
-| `runtime-metadata.ts`, `generated/` | Runtime/package identity | Retain deterministic metadata generation. |
+| Modules | Responsibility |
+| --- | --- |
+| `document-graph/contracts/` | Versioned inputs, graph snapshot, query, and validation result types. |
+| `document-graph/` | Markdown Engine capture, draft2 interpretation, ownership, immutable graph and direct query indexes. |
+| `document-graph/validation/` | Profile compilation and evaluation over the captured graph and source. |
+| `document-graph/export/` | Mermaid and HTML presentation of captured facts and findings. |
+| `document-graph/command.ts`, `cli.ts` | Local file and process adapters for the document command. |
+| `runtime-metadata.ts`, `generated/` | Deterministic package, parser and source identity. |
 
-The target responsibilities are language/interpretation, shared graph/indexes, validation, query, context projection, and thin public adapters. The experimental graph implements interpretation, validation and direct queries. Its `command.ts` adapts those APIs to local files and output streams; `cli.ts` is the process entry point. Context projection remains to be added.
+The package root and `experimental/graph` export the same document-graph API. Context projection is the next boundary over the existing immutable snapshot. Use Markdown Engine's public API; do not add a second Markdown parser. The retired registry, sidecar and table-profile modules are available only in Git history and must not be reintroduced as dependencies.

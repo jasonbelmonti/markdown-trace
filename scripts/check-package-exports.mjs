@@ -9,25 +9,14 @@ import { assert, run } from "./package-exports/process.mjs";
 const PACKAGE_NAME = "@jasonbelmonti/markdown-trace";
 const PACKAGE_VERSION = "0.1.0";
 const ENGINE_VERSION = "3.6.0";
-const YAML_VERSION = "^2.8.3";
 const NODE_RANGE = "^20.19.0 || >=22.12.0";
-const CLI_IMPORT = "./dist/markdowntrace/cli.js";
-const LOCK_CLI_IMPORT = "dist/markdowntrace/cli.js";
-const PUBLIC_TYPES = "./dist/markdowntrace/public.d.ts";
-const PUBLIC_IMPORT = "./dist/markdowntrace/public.js";
+const GRAPH_TYPES = "./dist/markdowntrace/document-graph/index.d.ts";
+const GRAPH_IMPORT = "./dist/markdowntrace/document-graph/index.js";
 const scriptPath = fileURLToPath(import.meta.url);
 const repositoryRoot = path.resolve(path.dirname(scriptPath), "..");
 const consumerFixture = path.join(
   repositoryRoot,
   "tests/fixtures/public-package/consumer.ts.fixture",
-);
-const passingDocument = path.join(
-  repositoryRoot,
-  "fixtures/profile-aware-graph-validation/first-slice/positive-execution-spec.md",
-);
-const passingProfile = path.join(
-  repositoryRoot,
-  "fixtures/profile-aware-graph-validation/profiles/valid-execution-spec.yaml",
 );
 
 async function main() {
@@ -60,8 +49,6 @@ async function main() {
       consumerDirectory,
       consumerFixture,
       packageName: PACKAGE_NAME,
-      passingDocument,
-      passingProfile,
       repositoryRoot,
       tarballPath,
     });
@@ -71,7 +58,7 @@ async function main() {
         `package: ${PACKAGE_NAME}@${PACKAGE_VERSION}`,
         `tarball entries: ${members.length}`,
         "declaration closure: self-contained",
-        "root API: pass",
+        "root graph API: pass",
         "experimental graph API: pass",
         "deep imports: rejected",
         "package exports contract: PASS",
@@ -120,14 +107,14 @@ function assertManifest(manifest, lockfile) {
   assert(manifest.license === "MIT", "package license must be MIT");
   assert(manifest.type === "module", "package type must be module");
   assert(manifest.sideEffects === false, "package sideEffects must be false");
-  assert(manifest.types === PUBLIC_TYPES, `package types must target ${PUBLIC_TYPES}`);
+  assert(manifest.types === GRAPH_TYPES, `package types must target ${GRAPH_TYPES}`);
   assert(
     JSON.stringify(manifest.exports) ===
       JSON.stringify({
-        ".": { types: PUBLIC_TYPES, import: PUBLIC_IMPORT },
+        ".": { types: GRAPH_TYPES, import: GRAPH_IMPORT },
         "./experimental/graph": {
-          types: "./dist/markdowntrace/document-graph/index.d.ts",
-          import: "./dist/markdowntrace/document-graph/index.js",
+          types: GRAPH_TYPES,
+          import: GRAPH_IMPORT,
         },
       }),
     "package exports must contain the root and experimental graph entries",
@@ -140,25 +127,19 @@ function assertManifest(manifest, lockfile) {
   assert(manifest.engines?.node === NODE_RANGE, `Node range must remain ${NODE_RANGE}`);
   assert(
     JSON.stringify(manifest.bin) ===
-      JSON.stringify({ "markdown-trace": CLI_IMPORT,
-        "markdown-trace-document": "./dist/markdowntrace/document-graph/cli.js" }),
-    "package bins must retain the legacy command and expose the document command",
+      JSON.stringify({ "markdown-trace-document": "./dist/markdowntrace/document-graph/cli.js" }),
+    "package bin must expose only the document command",
   );
   assert(
     manifest.dependencies?.["@jasonbelmonti/markdown-engine"] === ENGINE_VERSION,
     `Markdown Engine must remain ${ENGINE_VERSION}`,
-  );
-  assert(
-    manifest.dependencies?.yaml === YAML_VERSION,
-    `YAML must remain ${YAML_VERSION}`,
   );
   assert(rootLock?.name === PACKAGE_NAME, "lockfile root package name must match");
   assert(rootLock?.version === PACKAGE_VERSION, "lockfile root version must match");
   assert(rootLock?.license === "MIT", "lockfile root license must be MIT");
   assert(
     JSON.stringify(rootLock?.bin) ===
-      JSON.stringify({ "markdown-trace": LOCK_CLI_IMPORT,
-        "markdown-trace-document": "dist/markdowntrace/document-graph/cli.js" }),
+      JSON.stringify({ "markdown-trace-document": "dist/markdowntrace/document-graph/cli.js" }),
     "lockfile root bin metadata must match",
   );
   assert(
@@ -170,16 +151,13 @@ function assertManifest(manifest, lockfile) {
     "lockfile resolved Markdown Engine version must match",
   );
   assert(rootLock?.engines?.node === NODE_RANGE, "lockfile Node range must match");
-  assert(
-    rootLock?.dependencies?.yaml === YAML_VERSION,
-    "lockfile YAML dependency must match",
-  );
+  assert(!Object.hasOwn(manifest.dependencies, "yaml"), "retired YAML dependency must be absent");
 }
 
 async function assertPublicDeclaration(stageDirectory) {
   const declarationPath = path.join(
     stageDirectory,
-    "dist/markdowntrace/public.d.ts",
+    "dist/markdowntrace/document-graph/index.d.ts",
   );
   const declaration = await readFile(declarationPath, "utf8");
 
@@ -229,14 +207,17 @@ function assertTarballMembers(members) {
 
   assert(unexpected.length === 0, `unexpected tarball members: ${unexpected.join(", ")}`);
   for (const required of [
-    "package/dist/markdowntrace/public.js",
-    "package/dist/markdowntrace/public.d.ts",
-    "package/dist/markdowntrace/cli.js",
     "package/dist/markdowntrace/document-graph/index.js",
     "package/dist/markdowntrace/document-graph/index.d.ts",
     "package/dist/markdowntrace/document-graph/cli.js",
   ]) {
     assert(members.includes(required), `tarball must contain ${required}`);
+  }
+  for (const retired of ["public.js", "cli.js", "graph-validation/", "registry/", "migration/"]) {
+    assert(
+      !members.some((member) => member.startsWith(`package/dist/markdowntrace/${retired}`)),
+      `tarball must omit retired path ${retired}`,
+    );
   }
 }
 

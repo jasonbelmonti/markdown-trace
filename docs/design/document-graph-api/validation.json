@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-09-23T16:04:34.369Z",
-  "packetRevision": 9,
-  "scope": "Current packet structure, proposed declaration/consumer compilation and artifact hashes. The experimental graph and supported validation rules have separate runtime tests and package checks; this record does not prove the full C-2/C-4 design or traversal/context APIs.",
+  "validatedAt": "2026-09-24T12:06:26Z",
+  "packetRevision": 10,
+  "scope": "Revision 10 packet structure, proposed declaration compilation and artifact hashes after owner-directed retirement. Current graph runtime has separate tests; proposed traversal/context APIs remain unimplemented.",
   "profile": {
     "skill": "interface-design",
     "resource": "references/interface-design-validation-profile.yaml",
@@ -11,7 +11,7 @@
     "structure": {
       "status": "pass",
       "engineVersion": "3.6.0",
-      "inputHash": "12bcf2932daef85c48cbcb62135229efb0801917f0855ca76fbff71dae7010fb",
+      "inputHash": "00be03ff75c4eb965d55a02517bfd76e1d9532711499005ff60644b6b55ed745",
       "profileHash": "20e664060a8b483398cd055ba7f26259cbbf5eb99986ba2c7d6d2a521a6b777b",
       "diagnostics": []
     },
@@ -68,11 +68,11 @@
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.md",
-      "sha256": "9edad87f63511d91d9e540f02807f2707e8c007adb6b3f4dbe8aaed4e47a7b09"
+      "sha256": "192a7f915e09f30fcb2284a55ed196a554799db07fa06d9908d424e8d26b8efe"
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.sha256",
-      "sha256": "8770026963f149833fb34dd27b7395fb743aa8a85f5a5cfe90a5d0fae0d89a67"
+      "sha256": "e670a696fbf81469a64db90ac28f3b47ce7f637930aff386b11e064ba1b7066e"
     }
   ],
   "remainingCapabilities": [

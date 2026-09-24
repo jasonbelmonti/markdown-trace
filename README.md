@@ -2,7 +2,7 @@
 
 Markdown Trace is being developed into a document graph engine for complex Markdown specifications: discover identities and relationships throughout a document under a constrained syntax, validate relationships against developer-owned profiles, and query the graph for relevant source context.
 
-**Document-wide graphs, backlinks and profile-driven validation are runnable.** The APIs are experimental; traversal and context assembly remain to be implemented. The repository also retains the table-based validator and registry/trace-link compatibility tools. The package is version `0.1.0`, guarded by `private: true`, and in development.
+**Document-wide graphs, backlinks and profile-driven validation are runnable.** The APIs are experimental; traversal and context assembly remain to be implemented. The table-profile validator and registry/sidecar workflows have been retired. The package is version `0.1.0`, guarded by `private: true`, and in development.
 
 ## Start here
 
@@ -11,7 +11,7 @@ Markdown Trace is being developed into a document graph engine for complex Markd
 3. [Runnable graph API and demo](docs/experimental-document-graph.md)
 4. [Shared validation command and authoring skill](docs/experimental-graph-validation.md#shared-command)
 
-The [documentation map](docs/README.md) identifies current guidance and retained test data. Superseded plans were removed; Git history retains them. Earlier YAML migration, automated-authoring, and release-only plans do not define the current objective.
+The [documentation map](docs/README.md) identifies current guidance. Git history retains superseded code and plans; they do not define the current objective.
 
 ## Intended product
 
@@ -25,18 +25,7 @@ Markdown Engine supplies Markdown structure and source locations. Markdown Trace
 
 ## What runs today
 
-| Surface | Implemented boundary |
-| --- | --- |
-| `graph-validate` / `validateGraphDocument` | YAML profile loading, table-based relationship extraction, required-path checks, and JSON results. |
-| `validate` | Registry-driven document validation. |
-| `derive` | Registry/graph derivation using existing heading and `ctx://trace` conventions. |
-| `derive-sidecar` | Generated registry writing and read-only stale/missing checks. |
-| `migration-check` | Manual-versus-generated registry comparison. |
-| `experimental/graph` | Document-wide analysis, direct queries, Mermaid export and [profile-driven validation](docs/experimental-graph-validation.md). |
-| `markdown-trace-document` | Experimental command for profile validation, graph export and direct queries; used by the shared Trace skill. |
-| Traversal and context projection | Follow-up work over the shared graph. |
-
-The legacy table validator covers only its implemented checks. Empty/unrecognized documents can pass; duplicate definitions, dangling references, and ranges are not comprehensively validated. This is not a complete spec-validity verdict.
+The package root and `experimental/graph` entry points both expose document-wide analysis, direct queries, Mermaid export and [profile-driven validation](docs/experimental-graph-validation.md). `markdown-trace-document` is the local command for validation reports, graph JSON, incoming/outgoing queries, Mermaid and HTML. The [shared Trace skill](skills/markdown-trace/SKILL.md) invokes that command with a document-owned profile. Bounded traversal and context projection are follow-up work.
 
 ## Development setup
 
@@ -45,7 +34,7 @@ Requires Node.js `^20.19.0 || >=22.12.0` and npm. Install from the lockfile in t
 ```sh
 npm ci
 npm run build
-node dist/markdowntrace/cli.js --help
+node dist/markdowntrace/document-graph/cli.js --help
 ```
 
 Run the document-wide graph and backlinks demonstration:
@@ -58,15 +47,14 @@ node scripts/demo-document-graph.mjs "/absolute/path/to/spec.md" --graph > /tmp/
 
 See the [experimental API guide](docs/experimental-document-graph.md) for link syntax, profile configuration and query examples.
 
-Run the existing table-profile demonstration:
+Validate the bundled preview document:
 
 ```sh
-node dist/markdowntrace/cli.js graph-validate \
-  --file fixtures/profile-aware-graph-validation/first-slice/positive-execution-spec.md \
-  --profile fixtures/profile-aware-graph-validation/profiles/valid-execution-spec.yaml
+node dist/markdowntrace/document-graph/cli.js \
+  --file examples/preview-design/document.md \
+  --profile examples/preview-design/profile.json \
+  --format report
 ```
-
-The package-root export is `validateGraphDocument({ documentPath, profilePath, cwd? })`. A built checkout can import it from `./dist/markdowntrace/public.js`. It returns the existing `pass`, `fail`, or `operational-error` result; it is not the proposed graph/query API.
 
 ## Validation and contribution
 
@@ -74,6 +62,6 @@ The package-root export is `validateGraphDocument({ documentPath, profilePath, c
 npm run ci:enforcement
 ```
 
-This gate checks types, tests, build, registry/migration behavior, generated sidecars, and unintended repository changes. Use `npm run check:package-exports` when changing the package boundary. Passing existing tests does not prove the planned product is implemented.
+This gate checks types, document-graph tests, build, packed-package consumers, the preview command and unintended repository changes. Use `npm run check:package-exports` when changing the package boundary. Passing existing tests does not prove traversal or context projection is implemented.
 
-Read [AGENTS.md](AGENTS.md) and the [source map](src/markdowntrace/README.md) before implementation. Keep modules focused, work under `.worktrees/`, and never hand-edit generated sidecars. See [current implementation](docs/current-implementation.md) for compatibility command examples.
+Read [AGENTS.md](AGENTS.md) and the [source map](src/markdowntrace/README.md) before implementation. Keep modules focused and work under `.worktrees/`. See [current implementation](docs/current-implementation.md) for the runnable boundary.

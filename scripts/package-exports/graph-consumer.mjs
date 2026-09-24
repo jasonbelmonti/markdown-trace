@@ -1,9 +1,9 @@
 import { run } from "./process.mjs";
 
-export function runGraphApiSmoke(consumerDirectory, packageName) {
+export function runGraphApiSmoke(consumerDirectory, specifier) {
   const program = `
     import assert from 'node:assert/strict';
-    import * as graph from ${JSON.stringify(`${packageName}/experimental/graph`)};
+    import * as graph from ${JSON.stringify(specifier)};
     assert.deepEqual(Object.keys(graph).sort(), [
       'analyzeDocument', 'compileProfile', 'compileValidationProfile', 'exportMermaid', 'findIncoming', 'findOutgoing', 'lookupIdentifier', 'validateGraph'
     ]);

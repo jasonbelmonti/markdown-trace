@@ -1,9 +1,5 @@
 # Fixture scope
 
-These files are inputs for existing registry/link and table-graph behavior. They do not prescribe the final language, artifact families, or relationship vocabulary. Read the [direction](../docs/design/markdown-trace-document-graph-overview.md) and [test guidance](../tests/README.md).
+`document-graph/` contains current draft2 mixed-layout Markdown and an explicit JSON interpretation profile. The preview example under `examples/preview-design/` supplies a document and validation profile for the command and skill.
 
-- `r0-document-local-registry/`: registry compatibility.
-- `r1-link-backed-entity-syntax/`: trace-link/type-profile compatibility and generated sidecars.
-- `profile-aware-graph-validation/`: table extraction, profiles, path checks, and CLI/API examples.
-
-Use generated-sidecar check mode in CI. Historical source-path strings remain fixture data even when old guidance is removed. New document-wide fixtures follow the resolved contract/corpus task.
+The retired registry/link and table-profile fixture families are available in Git history. They do not define current syntax, vocabulary or validation behavior. Read the [authoring guide](../docs/experimental-document-graph.md) before adding fixtures.

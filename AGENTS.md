@@ -6,13 +6,13 @@ Read before planning or implementation:
 
 1. [Document graph direction](docs/design/markdown-trace-document-graph-overview.md)
 2. [Current implementation](docs/current-implementation.md)
-3. The active task: [portable runtime artifact](docs/tasks/portable-trace-runtime.md).
+3. The selected task definition under [delegation-context](docs/tasks/delegation-context/README.md), when implementing that capability.
 
-The latest explicit user instruction takes precedence. The overview defines direction; source/tests describe implemented behavior. The active task owns completion and review boundaries. The earlier runnable-graph task records the delivered graph/query slice. Future tasks must cite current contracts rather than resurrecting removed plans.
+The latest explicit user instruction takes precedence. The overview defines direction; source/tests describe implemented behavior. A selected task owns its own completion and review boundaries. The earlier runnable-graph and portable-runtime tasks record delivered work; they are not active authority for new changes.
 
 The target is a document-wide identity/relationship graph with validation and query/context APIs. The experimental graph uses standard Markdown links under draft2; docs/experimental-document-graph.md owns the current authoring convention. Graph analysis, direct queries and profile-based validation are implemented; traversal and context projection remain proposed. Continue from this runtime. Old brace-syntax corpus and contract-only execution plans are removed and must not be restored as implementation prerequisites.
 
-Legacy table roles, closed relationship enums, YAML registries and registry-specific link conventions remain compatibility behavior, not constraints on the new graph. The experimental link grammar is distinct from the legacy registry URI fields despite sharing ctx://trace. Stable API/CLI migration and publication remain separate decisions.
+The table-profile validator and registry/sidecar workflow were retired by owner instruction. Do not restore their code, fixtures, CLI commands, package exports, or CI gates. Older task and evidence records describe completed historical work; they are not current implementation instructions. Stable API/CLI approval and publication remain separate decisions.
 
 ## Tasks and durable artifacts
 
@@ -26,6 +26,6 @@ Legacy table roles, closed relationship enums, YAML registries and registry-spec
 - Work in a Git worktree under the project's `.worktrees/` directory.
 - Keep modules focused; separate contracts, extraction, graph logic, validation, queries, context projection, and adapters as those boundaries are introduced.
 - Use Markdown Engine's public API for Markdown structure/source access. Do not build a second Markdown parser.
-- Preserve runtime and schema/CLI compatibility unless the active task explicitly changes it. Do not weaken tests to conceal missing target functionality.
+- Preserve document-graph runtime and schema/CLI behavior unless the active task explicitly changes it. Do not weaken tests to conceal missing target functionality.
 - Use the worktree's installed environment: `npm ci`, relevant focused checks, then `npm run ci:enforcement` for changes affecting repository compatibility.
 - Remove superseded guidance instead of keeping archives or redirect stubs. Git history remains available when the current task needs historical evidence.

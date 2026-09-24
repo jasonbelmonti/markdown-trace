@@ -65,7 +65,7 @@ node scripts/demo-document-graph.mjs "/absolute/path/to/your-spec.md" \
   --profile "/absolute/path/to/your-profile.json" --graph > /tmp/markdown-trace-graph.json
 ```
 
-Any Markdown file can be analyzed, but meaningful declarations and typed edges require the link convention below. Bare IDs alone create mentions, not definitions; unowned references produce partial coverage. Arbitrary prose is not interpreted as a relationship. This draft2 URI convention is separate from the legacy registry links with dotted IDs and `type=` fields; those are not automatically migrated.
+Any Markdown file can be analyzed, but meaningful declarations and typed edges require the link convention below. Bare IDs alone create mentions, not definitions; unowned references produce partial coverage. Arbitrary prose is not interpreted as a relationship. Retired registry links with dotted IDs and `type=` fields have no meaning under draft2; existing documents require explicit author review before conversion.
 
 ## API example
 
@@ -104,7 +104,7 @@ const outgoing = unwrap(findOutgoing(analysis, 'WP-1', {
 }));
 ```
 
-`compileProfile` checks and captures the original document-profile.v1 configuration. Its `validation` section remains compile-only for compatibility. Use [`compileValidationProfile` and `validateGraph`](experimental-graph-validation.md) with the separate validation profile schema to evaluate graph and source-coverage rules. Neither compiler removes relationships or turns analysis into a validity verdict. Changing only that section leaves the graph and analysis identity unchanged.
+`compileProfile` checks and captures the document-profile.v1 configuration. Its `validation` section is compile-only. Use [`compileValidationProfile` and `validateGraph`](experimental-graph-validation.md) with the separate validation profile schema to evaluate graph and source-coverage rules. Neither compiler removes relationships or turns analysis into a validity verdict. Changing only that section leaves the graph and analysis identity unchanged.
 
 ## Link identity language
 
@@ -146,4 +146,4 @@ Ranges use zero-based UTF-16 offsets, one-based lines/columns, and exclusive end
 
 Reference pages are ordered by source occurrence. Defaults are offset 0 and limit 100, with a maximum page size of 1,000. Follow `nextOffset` until it is null. Omitted relation filters select all kinds; an empty filter selects none. An absent identifier yields a null record and empty results.
 
-Profile-driven validation is available over this same analysis. Next capabilities are bounded traversal and source-context projection. The existing package-root validator and CLI retain their compatibility behavior.
+Profile-driven validation is available over this same analysis. Next capabilities are bounded traversal and source-context projection. The package root exports this graph API; `markdown-trace-document` is its command.

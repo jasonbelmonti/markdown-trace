@@ -1,53 +1,4 @@
-import {
-  validateGraphDocument,
-  type GraphArtifactFamily,
-  type GraphDiagnostic,
-  type GraphValidationEvidenceAnchor,
-  type GraphValidationHashes,
-  type GraphValidationNode,
-  type GraphValidationOperationalDiagnostic,
-  type GraphValidationOperationalResult,
-  type GraphValidationOperationalStage,
-  type GraphValidationProfileDescriptor,
-  type GraphValidationRelationship,
-  type GraphValidationRelationshipClass,
-  type GraphValidationResult,
-  type GraphValidationRunResult,
-  type GraphValidationRuntimeMetadata,
-  type GraphValidationSourceDescriptor,
-  type GraphValidationSourcePosition,
-  type GraphValidationSourceRange,
-  type GraphValidationSummary,
-  type RequiredPathResult,
-  type ValidateGraphDocumentOptions,
-} from "@jasonbelmonti/markdown-trace";
-
-export interface PublicContractClosure {
-  readonly artifactFamily: GraphArtifactFamily;
-  readonly diagnostic: GraphDiagnostic;
-  readonly evidenceAnchor: GraphValidationEvidenceAnchor;
-  readonly hashes: GraphValidationHashes;
-  readonly node: GraphValidationNode;
-  readonly operationalDiagnostic: GraphValidationOperationalDiagnostic;
-  readonly operationalResult: GraphValidationOperationalResult;
-  readonly operationalStage: GraphValidationOperationalStage;
-  readonly options: ValidateGraphDocumentOptions;
-  readonly profile: GraphValidationProfileDescriptor;
-  readonly relationship: GraphValidationRelationship;
-  readonly relationshipClass: GraphValidationRelationshipClass;
-  readonly requiredPath: RequiredPathResult;
-  readonly result: GraphValidationResult;
-  readonly runResult: GraphValidationRunResult;
-  readonly runtime: GraphValidationRuntimeMetadata;
-  readonly source: GraphValidationSourceDescriptor;
-  readonly sourcePosition: GraphValidationSourcePosition;
-  readonly sourceRange: GraphValidationSourceRange;
-  readonly summary: GraphValidationSummary;
-}
-
-export const validate: (
-  options: ValidateGraphDocumentOptions,
-) => Promise<GraphValidationRunResult> = validateGraphDocument;
+import * as rootGraph from "@jasonbelmonti/markdown-trace";
 
 import {
   analyzeDocument, compileProfile, exportMermaid, findIncoming, findOutgoing, lookupIdentifier,
@@ -58,6 +9,7 @@ import {
 } from "@jasonbelmonti/markdown-trace/experimental/graph";
 
 export const compile: (input: unknown) => Outcome<TraceProfile> = compileProfile;
+export const rootCompile: typeof compileProfile = rootGraph.compileProfile;
 export const analyze: (source: DocumentSource, profile: TraceProfile, limits: AnalysisLimits) => Outcome<DocumentAnalysis> = analyzeDocument;
 export const lookup: (analysis: DocumentAnalysis, identifier: string) => Outcome<LookupResult> = lookupIdentifier;
 export const incoming: (analysis: DocumentAnalysis, identifier: string, query?: ReferenceQuery) => Outcome<ReferencePage> = findIncoming;

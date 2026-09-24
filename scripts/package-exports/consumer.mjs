@@ -9,21 +9,14 @@ export async function checkPackedConsumer({
   consumerDirectory,
   consumerFixture,
   packageName,
-  passingDocument,
-  passingProfile,
   repositoryRoot,
   tarballPath,
 }) {
   await prepareConsumer(consumerDirectory, consumerFixture);
   installTarball(consumerDirectory, tarballPath);
   compileConsumer(consumerDirectory, repositoryRoot);
-  runRootApiSmoke({
-    consumerDirectory,
-    packageName,
-    passingDocument,
-    passingProfile,
-  });
   runGraphApiSmoke(consumerDirectory, packageName);
+  runGraphApiSmoke(consumerDirectory, `${packageName}/experimental/graph`);
   await runGraphDemoSmoke(consumerDirectory, repositoryRoot);
   runDeepImportNegatives(consumerDirectory, packageName);
 }
@@ -76,39 +69,13 @@ function compileConsumer(consumerDirectory, repositoryRoot) {
   );
 }
 
-function runRootApiSmoke({
-  consumerDirectory,
-  packageName,
-  passingDocument,
-  passingProfile,
-}) {
-  const program = [
-    `import { validateGraphDocument } from ${JSON.stringify(packageName)};`,
-    "const result = await validateGraphDocument({",
-    "  documentPath: process.env.MARKDOWN_TRACE_TEST_DOCUMENT,",
-    "  profilePath: process.env.MARKDOWN_TRACE_TEST_PROFILE,",
-    "});",
-    "if (result.status !== 'pass') {",
-    "  throw new Error(`expected pass result, received ${result.status}`);",
-    "}",
-  ].join("\n");
-
-  run(process.execPath, ["--input-type=module", "--eval", program], {
-    cwd: consumerDirectory,
-    env: {
-      ...process.env,
-      MARKDOWN_TRACE_TEST_DOCUMENT: passingDocument,
-      MARKDOWN_TRACE_TEST_PROFILE: passingProfile,
-    },
-  });
-}
-
 function runDeepImportNegatives(consumerDirectory, packageName) {
   for (const specifier of [
+    `${packageName}/public`,
     `${packageName}/graph-validation`,
     `${packageName}/graph`,
     `${packageName}/experimental/graph/analyze`,
-    `${packageName}/dist/markdowntrace/public.js`,
+    `${packageName}/dist/markdowntrace/cli.js`,
   ]) {
     const program = [
       `const specifier = ${JSON.stringify(specifier)};`,
