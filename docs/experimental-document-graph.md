@@ -72,6 +72,7 @@ Any Markdown file can be analyzed, but meaningful declarations and typed edges r
 ```js
 import {
   compileProfile, analyzeDocument, lookupIdentifier, findIncoming, findOutgoing,
+  traverseGraph,
 } from '@jasonbelmonti/markdown-trace/experimental/graph';
 
 const unwrap = result => {
@@ -102,9 +103,17 @@ const backlinks = unwrap(findIncoming(analysis, 'REQ-1'));
 const outgoing = unwrap(findOutgoing(analysis, 'WP-1', {
   relations: ['implements'], offset: 0, limit: 100,
 }));
+const selection = unwrap(traverseGraph(analysis, {
+  roots: ['WP-1'], direction: 'outgoing', relations: ['implements'],
+  maxDepth: 1, maxNodes: 2,
+}));
+// WP-1 at depth 0, then REQ-1 at depth 1 with the explaining relationship.
+console.log(selection.nodes, selection.boundary);
 ```
 
 `compileProfile` checks and captures the document-profile.v1 configuration. Its `validation` section is compile-only. Use [`compileValidationProfile` and `validateGraph`](experimental-graph-validation.md) with the separate validation profile schema to evaluate graph and source-coverage rules. Neither compiler removes relationships or turns analysis into a validity verdict. Changing only that section leaves the graph and analysis identity unchanged.
+
+`traverseGraph` selects uniquely defined, known-kind identifiers over that same issued analysis. Supply nonempty roots, `incoming`, `outgoing` or `both`, a nonnegative safe-integer `maxDepth`, and a safe-integer `maxNodes` at least as large as the number of distinct roots. Roots are sorted and deduplicated; the result is breadth-first, with one shortest predecessor relationship per non-root identifier. Omit `relations` for every kind, or pass an empty array to select none. The immutable selection includes the normalized query and analysis ID. `depthLimited` and `nodeLimited` report resolved nodes omitted at examined boundaries; `unresolvedRelationships` counts distinct incident relationships that could not be traversed in the selected direction. These indicators do not describe unseen parts of the document. Missing or duplicate root definitions fail with `unresolved-root`; use direct queries to inspect their evidence. Validation policy does not remove resolved relationships from traversal.
 
 ## Link identity language
 
@@ -146,4 +155,4 @@ Ranges use zero-based UTF-16 offsets, one-based lines/columns, and exclusive end
 
 Reference pages are ordered by source occurrence. Defaults are offset 0 and limit 100, with a maximum page size of 1,000. Follow `nextOffset` until it is null. Omitted relation filters select all kinds; an empty filter selects none. An absent identifier yields a null record and empty results.
 
-Profile-driven validation is available over this same analysis. Next capabilities are bounded traversal and source-context projection. The package root exports this graph API; `markdown-trace-document` is its command.
+Profile-driven validation and bounded traversal are available over this same analysis. Source-context projection remains proposed. The package root exports this graph API; `markdown-trace-document` is its command.

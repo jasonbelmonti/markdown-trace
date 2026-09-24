@@ -5,7 +5,7 @@ export function runGraphApiSmoke(consumerDirectory, specifier) {
     import assert from 'node:assert/strict';
     import * as graph from ${JSON.stringify(specifier)};
     assert.deepEqual(Object.keys(graph).sort(), [
-      'analyzeDocument', 'compileProfile', 'compileValidationProfile', 'exportMermaid', 'findIncoming', 'findOutgoing', 'lookupIdentifier', 'validateGraph'
+      'analyzeDocument', 'compileProfile', 'compileValidationProfile', 'exportMermaid', 'findIncoming', 'findOutgoing', 'lookupIdentifier', 'traverseGraph', 'validateGraph'
     ]);
     const unwrap = result => { assert.equal(result.ok, true); return result.value; };
     const profile = unwrap(graph.compileProfile({
@@ -27,6 +27,16 @@ export function runGraphApiSmoke(consumerDirectory, specifier) {
     const match = incoming.items[0];
     assert.equal(match.relationship.source.identifier, 'WP-1');
     assert.equal(match.relationship.kind, 'implements');
+    const selection = unwrap(graph.traverseGraph(analysis, {
+      roots: ['WP-1'], direction: 'outgoing', relations: ['implements'],
+      maxDepth: 1, maxNodes: 2,
+    }));
+    assert.deepEqual(selection.nodes.map(node => [node.identifier, node.depth, node.via?.relationshipId ?? null]),
+      [['WP-1', 0, null], ['REQ-1', 1, match.relationship.id]]);
+    assert.deepEqual(selection.boundary,
+      {depthLimited: false, nodeLimited: false, unresolvedRelationships: 0});
+    assert.equal(selection.analysisId, analysis.snapshot.analysisId);
+    assert.equal(Object.isFrozen(selection.nodes), true);
     const mermaid = graph.exportMermaid(analysis.snapshot);
     assert.ok(mermaid.includes('n0["REQ-1"]'));
     assert.ok(mermaid.includes('n1["WP-1"]'));

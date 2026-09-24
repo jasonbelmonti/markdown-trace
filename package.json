@@ -30,7 +30,7 @@
     "check:package-exports": "node scripts/check-package-exports.mjs",
     "generate:release-metadata": "node scripts/generate-release-metadata.mjs",
     "check:release-metadata": "node scripts/generate-release-metadata.mjs --check",
-    "test": "vitest run \"--exclude=.worktrees/**\"",
+    "test": "vitest run \"--exclude=.worktrees/**\" \"--exclude=.context-capsule/**\"",
     "typecheck": "tsc --noEmit",
     "ci:enforcement": "bash scripts/ci-enforcement.sh",
     "demo:graph": "npm run build --silent && node scripts/demo-document-graph.mjs",
