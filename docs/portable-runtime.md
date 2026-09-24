@@ -3,8 +3,9 @@
 The local producer creates a versioned, relocatable directory containing Trace's
 compiled JavaScript and all locked production dependencies, including Engine
 3.6.0. Node remains an external prerequisite: `^20.19.0 || >=22.12.0`, on Linux
-or macOS. The package remains private at 0.1.0. The document command and both
-package APIs retain their existing meanings.
+or macOS. The package remains private at 0.1.0. The document command and
+document-graph API retain their existing meanings; the package root now exports
+that same graph API after retirement of the no-consumer table/registry workflows.
 
 ## Produce a candidate
 
@@ -122,8 +123,7 @@ No fallback to a checkout command or missing-dependency install is possible.
 Temporary mutations are confined to the disposable copy; the original candidate
 is verified again afterward.
 
-Run repository compatibility and owner checks separately, sequentially (the
-existing local-safety tests watch repository writes):
+Run repository and owner checks separately, sequentially:
 
 ```sh
 npm run ci:enforcement

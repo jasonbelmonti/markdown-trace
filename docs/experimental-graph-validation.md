@@ -53,7 +53,7 @@ node dist/markdowntrace/document-graph/cli.js \
 Limits are 2,000,000 UTF-8 source bytes and 50,000 occurrences. The command uses
 the packaged API and performs no domain-specific structural or semantic checks.
 Keep the validation report beside the diagram; Mermaid itself does not carry
-the evaluated profile verdict. The legacy `markdown-trace` commands are unchanged.
+the evaluated profile verdict.
 
 ### Visual report
 
@@ -92,7 +92,7 @@ A short domain guide supplies the meaning of its kinds and connections.
 Two explicit compositions are available:
 
 - [TaskDefinition mapping](../experiments/task-definition-trace/authoring.md)
-  selects the shared skill and its table profile, alongside the installed
+  selects the shared skill and its document-graph profile, alongside the installed
   task-definition skill and its existing gates.
 - [Preview design guidance](../examples/preview-design/authoring.md) selects the
   same skill with a paragraph/list profile and explains the intended connections.
@@ -154,7 +154,7 @@ limits and unavailable source ranges retain their existing operation error codes
 
 The original `compileProfile` and document-profile.v1 rules retain their current
 compile-only behavior. Use the validation profile schema below to evaluate rules;
-the two formats are not interchangeable. No legacy CLI behavior changes.
+the two formats are not interchangeable.
 
 ## Supported profile contract
 

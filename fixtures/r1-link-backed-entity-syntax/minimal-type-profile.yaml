@@ -1,8 +1,0 @@
-profileVersion: markdown-trace.type-profile.v1
-entityTypes:
-  constraint:
-    labelPrefixes: [CON]
-    canonicalPattern: "^exec\\.con\\.\\d+$"
-  work_package:
-    labelPrefixes: [WP]
-    canonicalPattern: "^exec\\.wp\\.\\d+$"

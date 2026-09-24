@@ -6,10 +6,10 @@
 | --- | --- |
 | Title | Markdown Trace Document Graph Direction |
 | Status | Experimental graph, direct queries and profile validation implemented; traversal/context next |
-| Revision | 5 |
+| Revision | 6 |
 | Decision owner | Jason Belmonti |
-| Last updated | 2026-09-23 |
-| Source material | Owner's document-wide validation/context vision, standard-link decision and baseline-cleanup request; current source, tests and Engine 3.6.0 dependency |
+| Last updated | 2026-09-24 |
+| Source material | Owner's document-wide validation/context vision, standard-link decision and explicit instruction to retire both no-consumer legacy workflows; current source, tests and Engine 3.6.0 dependency |
 | Related docs | [Current implementation](../current-implementation.md); [authoring/API guide](../experimental-document-graph.md); [validation guide](../experimental-graph-validation.md); [API design](markdown-trace-document-graph-interfaces.md); [shared runtime task](../tasks/shared-runtime-contract.md) |
 
 ## 0. Orientation
@@ -24,7 +24,7 @@ Section status: Complete.
 
 Authors and implementer agents need dependable relationships among entities distributed across large specifications. Table-only validation leaves prose, lists and nested scopes outside its model, while manual context assembly can miss dependencies.
 
-The experimental runtime at `src/markdowntrace/document-graph/` now uses Markdown Engine 3.6.0 across headings, paragraphs, lists, blockquotes and tables. It preserves declarations, mentions, typed edges, unresolved/duplicate identities, ownership uncertainty and exact source locations. The [authoring guide](../experimental-document-graph.md) and [validation guide](../experimental-graph-validation.md) describe the runnable contract; [current implementation](../current-implementation.md) distinguishes it from retained table/registry compatibility tools.
+The runtime at `src/markdowntrace/document-graph/` uses Markdown Engine 3.6.0 across headings, paragraphs, lists, blockquotes and tables. It preserves declarations, mentions, typed edges, unresolved/duplicate identities, ownership uncertainty and exact source locations. The [authoring guide](../experimental-document-graph.md) and [validation guide](../experimental-graph-validation.md) describe the runnable contract. The former table validator and registry/sidecar workflow were retired after the owner confirmed they have no consumers.
 
 Section status: Complete.
 
@@ -49,7 +49,7 @@ Section status: Complete.
 - CON-4: Validation inspects the full graph, including unresolved and prohibited references; it never removes evidence.
 - CON-5: Source, language, interpretation and validation identities are explicit. Policy changes do not alter discovered facts.
 - CON-6: Validation and queries consume one immutable snapshot; source offsets refer to the captured source/hash.
-- CON-7: Core operation is local, deterministic and read-only. Preserve existing root API and CLI meanings unless a later migration explicitly changes them.
+- CON-7: Core operation is local, deterministic and read-only. The package root exports the current graph API; the document command preserves its report, graph, query and export behavior. Retired commands and schemas do not remain compatibility requirements.
 
 ASM-1: One caller-supplied document is the analysis boundary. ASM-2: Definitions and typed edges use standard links; bare canonical identifiers remain generic references within structural ownership scopes. ASM-3: Profiles own entity/relationship vocabulary; the runtime owns finite grammar and rule operators.
 
@@ -59,7 +59,7 @@ Section status: Complete.
 
 Selected direction: use `markdown-trace.identity.draft2`, with declarations such as `[REQ-1](ctx://trace/entity/REQ-1?role=definition)` and typed references such as `[requirement](ctx://trace/entity/REQ-1?rel=implements)`. The URI establishes identity; link labels are presentation text. Unqualified entity links and bare IDs create generic references. See the guide for canonical grammar and exclusions.
 
-The owner selected link protocols to use ordinary Markdown syntax. Brace annotations are superseded. Restricting the product to tables would leave document-wide retrieval unsolved; probabilistic prose inference would undermine deterministic verification. Requiring links for every generic mention would add unnecessary annotation, so bare references remain supported.
+The owner selected link protocols to use ordinary Markdown syntax. Brace annotations and both no-consumer legacy workflows are superseded. Restricting the product to tables would leave document-wide retrieval unsolved; probabilistic prose inference would undermine deterministic verification. Requiring links for every generic mention would add unnecessary annotation, so bare references remain supported.
 
 Accepted tradeoffs: authors explicitly declare identities and typed edges; ambiguous ownership stays visible; storing occurrences and fragments consumes memory that still needs representative scale measurement.
 
@@ -81,7 +81,7 @@ Markdown Engine parsing and source maps feed Trace's constrained URI/bare-ID int
 
 The host supplies text, reads files and handles process/output transport. Trace never fetches `ctx:` destinations. Consumer repositories supply domain profiles; agents decide which queries to run. Extracted text is source data, not agent instructions.
 
-The experimental package entry point is `@jasonbelmonti/markdown-trace/experimental/graph`. The legacy root validator and registry tools remain isolated compatibility surfaces. No persistent graph store, automatic registry conversion or service layer is required.
+The package root and `@jasonbelmonti/markdown-trace/experimental/graph` expose the same current graph API. The only package binary is `markdown-trace-document`. The legacy root validator and registry tools are removed, not reimplemented as graph adapters. No persistent graph store, automatic registry conversion or service layer is required.
 
 Section status: Complete.
 
@@ -94,7 +94,7 @@ Section status: Complete.
 | Bounded traversal and context projection | Proposed; C-6/C-7 | Retrieve selected source with relationship explanations, budgets and omissions. |
 | Adoption and release | Later | Demonstrate usefulness on an owner-selected spec, measure scale, decide stable API/CLI compatibility and publication. |
 
-Each capability should deliver runnable behavior with focused independent examples. Do not restore exhaustive pre-implementation oracle generation as a gate. Retain existing compatibility tests; no automatic spec rewrite, YAML authority flip, publication or fleet activation is included.
+Each capability should deliver runnable behavior with focused independent examples. Do not restore exhaustive pre-implementation oracle generation as a gate. Retired fixtures and compatibility tests do not define the new graph. The existing installed runtime and Fleet pin remain versioned historical releases until an independently verified rollout; no automatic spec rewrite or publication is included.
 
 Section status: Complete.
 
@@ -106,7 +106,7 @@ Section status: Complete.
 - VAL-4: When implementing context, compare verbatim excerpts, supporting structure, overlap/budget omissions and stale-selection handling against source expectations.
 - VAL-5: Measure representative document size, latency and memory and audit consuming-agent context before release claims. Current limits are caller budgets, not measured capacity guarantees.
 
-Run `npm run ci:enforcement` for runtime and compatibility changes. Structural document validation and declaration compilation check artifact consistency; they do not prove proposed APIs work.
+Run `npm run ci:enforcement` for runtime and package-boundary changes. Packed-consumer checks must prove the root and experimental graph entry points while excluding retired commands and files. Structural document validation and declaration compilation check artifact consistency; they do not prove proposed APIs work.
 
 Section status: Complete.
 
@@ -119,7 +119,7 @@ Section status: Complete.
 | RISK-3: Missing or excessive context | Projection remains unimplemented; exact fragment partitioning is provisional. | Maintainer and owner, context pilot |
 | Q-1: Authoring syntax | Resolved for the experiment: standard links under draft2. | Owner selected 2026-09-16; stable-release compatibility later |
 | Q-2: Ownership and literal handling | Implemented and documented for analysis/direct queries; future context must prove its projection semantics. | Maintainer, context implementation |
-| Q-3: Package and compatibility | Experimental subpath and `markdown-trace-document` command are implemented; root API/CLI preserved. Stable publication remains a later decision. | Maintainer and owner, release |
+| Q-3: Package and compatibility | Root and experimental subpath expose the document graph; `markdown-trace-document` remains the sole command. Retired root/table and registry interfaces have no consumers by owner decision. Stable publication remains a later decision. | Maintainer and owner, release |
 | Q-4: Real spec, required context and scale | Owner-selected pilot and measured budgets remain open; do not claim production scale or complete agent context. | Owner supplies target; maintainer measures before release |
 
 The language and runtime decisions required to continue from this baseline are recorded. The experimental validator supports a bounded rule set; additional C-4 design semantics, traversal and context remain proposals to implement and verify incrementally.
@@ -133,13 +133,13 @@ Section status: Complete.
 | Direction and current authoring convention agree | Yes; standard Markdown links, constrained URI semantics and structural ownership. |
 | Implemented and proposed capabilities are distinct | Yes; graph, direct queries and supported validation rules run; traversal/context remain proposed. |
 | Next implementation target is clear | Yes; bounded traversal and context projection over the shared graph, with real-spec validation evidence before release claims. |
-| Compatibility and release boundaries are explicit | Yes; legacy APIs retained, stable publication and adoption still separate. |
+| Compatibility and release boundaries are explicit | Yes; no-consumer legacy APIs retired, current document command retained, stable publication and adoption still separate. |
 | Superseded guidance remains active | No; old execution plans, contract-only task and brace corpus removed, recoverable in Git history. |
 
 Overview status: Experimental graph and validation implemented; proceed with bounded traversal/context design and proof.
 
 ## Internal Review Record
 
-Revision 5 reconciles the capability sequence with implemented profile validation, the document command and Engine 3.6.0. The R2 direction remains appropriate for the durable library and CLI; the remaining context and release risks are explicit. Internal review found and corrected stale validation status and parser-version claims. Earlier revisions are available in Git history.
+Revision 6 records the owner's retirement decision. The direction remains one document-wide graph, with no compatibility obligation to preserve table-profile or registry/sidecar execution. Review checked that the root export and package binary now point only to current behavior, while the previously installed release remains explicitly pinned and unaffected. Revision 5 and earlier review history remain in Git.
 
-Markdown Engine 3.6.0 structural validation passed all 13 configured rules with zero diagnostics. The evidence is recorded in `docs/validation/artifacts.json`, and the adjacent SHA-256 identifies these bytes. No blocking directional finding remains; context usefulness and release scale still require the owner-selected pilot. Structural checks are not semantic or runtime acceptance.
+Markdown Engine 3.6.0 structural validation and the adjacent SHA-256 identify this revision; the result is recorded in `docs/validation/artifacts.json`. No blocking directional finding remains; context usefulness and release scale still require the owner-selected pilot. Structural checks are not semantic or runtime acceptance.

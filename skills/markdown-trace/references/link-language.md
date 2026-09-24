@@ -38,4 +38,4 @@ Ranges use zero-based UTF-16 offsets, one-based lines/columns, and exclusive end
 
 Reference pages are ordered by source occurrence. Defaults are offset 0 and limit 100, with a maximum page size of 1,000. Follow `nextOffset` until it is null. Omitted relation filters select all kinds; an empty filter selects none. An absent identifier yields a null record and empty results.
 
-Profile-driven validation is available over this same analysis. Next capabilities are bounded traversal and source-context projection. The existing package-root validator and CLI retain their compatibility behavior.
+Profile-driven validation is available over this same analysis. Next capabilities are bounded traversal and source-context projection. The package root exports this graph API; `markdown-trace-document` is its command.

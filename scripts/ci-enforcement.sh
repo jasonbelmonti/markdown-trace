@@ -29,19 +29,15 @@ fi
 npm run typecheck
 npm test
 npm run build
-npm run validate:fixture
-npm run derive:fixture
-npm run migration:check
-
-node dist/markdowntrace/cli.js derive-sidecar \
-  --document fixtures/r1-link-backed-entity-syntax/minimal-link-backed-execution-spec.md \
-  --type-profile fixtures/r1-link-backed-entity-syntax/minimal-type-profile.yaml \
-  --check
-
-node dist/markdowntrace/cli.js derive-sidecar \
-  --document fixtures/r1-link-backed-entity-syntax/codefactory-link-backed-spec.md \
-  --type-profile fixtures/r1-link-backed-entity-syntax/codefactory-type-profile.yaml \
-  --check
+if [[ -e dist/markdowntrace/cli.js || -e dist/markdowntrace/public.js || -d dist/markdowntrace/registry || -d dist/markdowntrace/graph-validation ]]; then
+  echo "Retired compiled workflows remain in dist after build." >&2
+  exit 1
+fi
+npm run check:package-exports
+node dist/markdowntrace/document-graph/cli.js \
+  --file examples/preview-design/document.md \
+  --profile examples/preview-design/profile.json \
+  --format report > /dev/null
 
 capture_repository_state > "$after_state"
 
