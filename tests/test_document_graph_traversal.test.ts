@@ -78,7 +78,12 @@ describe("bounded graph traversal", () => {
     ]);
     const roots = selected(analysis, query({ roots: ["WP-D", "WP-A", "WP-D"] }));
     expect(roots.query.roots).toEqual(["WP-A", "WP-D"]);
-    expect(roots.nodes.slice(0, 2).map((node) => node.identifier)).toEqual(["WP-A", "WP-D"]);
+    expect(roots.nodes.map((node) => [
+      node.identifier, node.depth, node.via?.from ?? null, node.via?.relationshipId ?? null,
+    ])).toEqual([
+      ["WP-A", 0, null, null], ["WP-D", 0, null, null],
+      ["WP-B", 1, "WP-A", "R1"], ["WP-C", 1, "WP-A", "R2"],
+    ]);
     expect(roots.boundary).toEqual({
       depthLimited: false, nodeLimited: false, unresolvedRelationships: 0,
     });
