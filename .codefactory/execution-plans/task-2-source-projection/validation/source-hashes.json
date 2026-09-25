@@ -1,0 +1,11 @@
+{
+  "docs/tasks/delegation-context/02-source-projection.md": "5bb45b3b71aa9cf1523cc0f2cf89063c6071ca12b5807f89a874e8a01ad9d714",
+  "AGENTS.md": "6400c9bc9e598a3beb485806cdd6a58e848144a2b73ee641623728f7f73436e0",
+  "docs/tasks/delegation-context/README.md": "835688562be6f6f8ccf3d40085f2706538d0db161701ab308bc386643cf465a5",
+  "docs/design/markdown-trace-document-graph-overview.md": "bfa0cdbba260204b8f9e7a8b4ecc35c26184ea36b85ad1bb2a7f58c9a13fab34",
+  "docs/current-implementation.md": "2500f2820c3b96795bab11caddc950549355b1674ab179ec085f3a934e566568",
+  "docs/design/markdown-trace-document-graph-interfaces.md": "192a7f915e09f30fcb2284a55ed196a554799db07fa06d9908d424e8d26b8efe",
+  "docs/tasks/delegation-context/01-bounded-traversal.md": "6be0510eeb9cc99b14ae9862012de47bf1357ebb1867bb6097b733697f80bb39",
+  "docs/experimental-document-graph.md": "f21b6199363c806f52776f6f3b7ba74204c653572856e04a795b01831575ca26",
+  "docs/design/document-graph-api/contracts/context.d.ts": "3a4e94e011451e25974c47f0fe05f029b0247370bd643c1d58be2565706bbbf3"
+}
