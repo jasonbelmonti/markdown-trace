@@ -19,6 +19,7 @@ The table-profile validator and registry/sidecar workflow were retired by owner 
 - Use the `task-definition` skill for task authoring, revision, and review. Evaluate changes within the task's scope and review boundary.
 - Read durable source artifacts before relying on them; verify checksums when provided. Update affected artifacts, revision records, validation evidence, and checksums when scope changes.
 - Include exact repository-relative artifact paths and a read-first instruction in handoffs. Do not depend on machine-specific worktree paths or chat memory.
+- Keep per-run execution plans, delegation bundles and verbose validation transcripts in ignored local storage. Do not force-add them to implementation commits; repository publication of these artifacts requires an explicit request.
 - Evidence payloads, experimental fixtures, and older local agent/worktree artifacts are not current execution authority. Follow directory guidance and the active task.
 
 ## Implementation discipline

@@ -3,5 +3,6 @@ coverage/
 .vitest/
 dist/
 .codex/
+/.codefactory/
 __pycache__/
 *.py[cod]
