@@ -18,7 +18,7 @@ describe("standalone document runtime identity", () => {
       schemaVersion: "markdown-trace.runtime-info.v1",
       package: "@jasonbelmonti/markdown-trace", packageVersion: "0.1.0",
       sourceCommit: null, markdownEngineVersion: "3.6.0",
-      analyzerVersion: "0.1.0-experimental.2", languageVersion: "markdown-trace.identity.draft2",
+      analyzerVersion: "0.1.0-experimental.3", languageVersion: "markdown-trace.identity.draft2",
       validationProfileVersion: "markdown-trace.validation-profile.experimental.v1",
       graphVersion: "markdown-trace.document-graph.v1",
       validationResultVersion: "markdown-trace.validation-result.experimental.v1",

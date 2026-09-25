@@ -27,11 +27,15 @@ export function attachSupport(
     }));
   const tableSupport = new Map<Block["parent"], string[]>(),
     delimiters: SourceFragment[] = [];
+  const lineStart = (block: Block): number =>
+    block.container
+      ? block.range.start.offset - block.range.start.column + 1
+      : block.range.start.offset;
   for (const header of blocks.filter((b) => b.header)) {
     const table = header.parent!;
     const next = blocks.find((b) => b.parent === table && b !== header);
     let start = header.range.end.offset,
-      end = next?.range.start.offset ?? table.range.end.offset;
+      end = next ? lineStart(next) : table.range.end.offset;
     while (start < end && /[\r\n]/.test(text[start])) start++;
     while (end > start && /[\r\n]/.test(text[end - 1])) end--;
     const ids = [header.id];
@@ -65,12 +69,7 @@ export function attachSupport(
             (id) => id !== block.id,
           ),
         );
-      let start = fragment.range.start.offset;
-      if (
-        block.parent &&
-        ["listItem", "blockquote"].includes(block.parent.node.type)
-      )
-        start = text.lastIndexOf("\n", Math.max(0, start - 1)) + 1;
+      const start = lineStart(block);
       return {
         ...fragment,
         range:

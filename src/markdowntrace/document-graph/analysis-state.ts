@@ -6,6 +6,7 @@ import type { ReferenceMatch } from "./contracts/query.js";
 import type { Extraction } from "./extraction-model.js";
 
 export interface AnalysisState {
+  text: string;
   document: Extraction["document"];
   identifiers: Map<string, IdentifierRecord>;
   incoming: Map<string, ReferenceMatch[]>;

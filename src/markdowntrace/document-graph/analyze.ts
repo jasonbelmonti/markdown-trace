@@ -197,6 +197,7 @@ export function analyzeDocument(
     };
     const analysis = freeze({ snapshot }) as DocumentAnalysis;
     registerAnalysis(analysis, {
+      text,
       document: freeze(extracted.document),
       identifiers: new Map(identifiers.map((i) => [i.identifier, i])),
       incoming,
