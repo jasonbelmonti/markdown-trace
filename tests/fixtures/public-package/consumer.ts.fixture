@@ -6,6 +6,7 @@ import {
   type GraphSnapshot, type LookupResult, type ReferencePage, type ReferenceQuery, type TraceProfile,
   compileValidationProfile, validateGraph, type TraceValidationProfile, type GraphValidationReport,
   type ValidationProfileInput, type GraphValidationRule, type SourceSelector, type ValidationRuleResult, type ValidationDiagnostic,
+  traverseGraph, type GraphSelection, type TraversalQuery,
 } from "@jasonbelmonti/markdown-trace/experimental/graph";
 
 export const compile: (input: unknown) => Outcome<TraceProfile> = compileProfile;
@@ -17,6 +18,8 @@ export const outgoing: typeof incoming = findOutgoing;
 export const mermaid: (snapshot: GraphSnapshot) => string = exportMermaid;
 export const compileValidation: (json: string) => Outcome<TraceValidationProfile> = compileValidationProfile;
 export const validateAnalysis: (analysis: DocumentAnalysis, profile: TraceValidationProfile) => Outcome<GraphValidationReport> = validateGraph;
+export const traverse: (analysis: DocumentAnalysis, query: TraversalQuery) => Outcome<GraphSelection> = traverseGraph;
+export const rootTraverse: typeof traverseGraph = rootGraph.traverseGraph;
 export interface ValidationContractClosure {
   readonly profile: ValidationProfileInput;
   readonly rule: GraphValidationRule;

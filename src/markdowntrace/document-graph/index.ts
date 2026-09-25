@@ -2,6 +2,7 @@
 export { compileProfile } from "./profile.js";
 export { analyzeDocument } from "./analyze.js";
 export { lookupIdentifier, findIncoming, findOutgoing } from "./queries.js";
+export { traverseGraph } from "./traverse.js";
 export { exportMermaid } from "./export/mermaid.js";
 export { compileValidationProfile } from "./validation/profile.js";
 export { validateGraph } from "./validation/validate.js";

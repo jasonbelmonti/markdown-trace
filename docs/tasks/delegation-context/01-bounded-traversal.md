@@ -98,7 +98,7 @@ Keep existing parsing, graph interpretation, query, projection, policy and trans
 
 | Execution status | Current proving slice | Evidence admitted | Next action | Blockers / stop condition |
 | --- | --- | --- | --- | --- |
-| not-started | Prepare the selected route for the first proving slice; implementation of TD-SC-1 has not begun. | None admitted. | Read the task and sources, then create and validate the bounded traversal execution plan. | Stop dependent execution if source authority conflicts, prerequisite runtime behavior is unavailable, or the required downstream artifact is not executable. Resume after reconciliation and the affected route gates pass. |
+| review-ready | Review the completed bounded traversal slice against TD-SC-1 through TD-SC-5. | TD-SC-1 and TD-SC-2: seven hand-audited traversal cases pass for directions, multiple roots, path order, limits and unseen regions. TD-SC-3 and TD-SC-4: the same suite proves unresolved evidence, policy separation, immutable issued selections and source/profile identity. TD-SC-5: packed root and experimental consumers, the guide example and `npm run ci:enforcement` pass with 93 tests. Tested inputs match aggregate SHA-256 e62f9d952fc7a7ae6ac334f6e418548e0e9582608da3f5e6f71f246fb16280cd, committed as 55eab2e0c57dd7c7e083d7774ff4a20a419d08fd; Node v22.20.0 and package-lock.json are recorded in `.context-capsule/execution/focused-proof.json`, `package-proof.json`, `enforcement-proof.json` and `guide-example-proof.json`. | Independently review the implementation and current proof against TD-SC-1 through TD-SC-5. | None. |
 
 ## Follow-up / Non-blocking Work
 
