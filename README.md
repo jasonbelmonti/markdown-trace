@@ -2,7 +2,7 @@
 
 Markdown Trace is being developed into a document graph engine for complex Markdown specifications: discover identities and relationships throughout a document under a constrained syntax, validate relationships against developer-owned profiles, and query the graph for relevant source context.
 
-**Document-wide graphs, backlinks and profile-driven validation are runnable.** The APIs are experimental; traversal and context assembly remain to be implemented. The table-profile validator and registry/sidecar workflows have been retired. The package is version `0.1.0`, guarded by `private: true`, and in development.
+**Document-wide graphs, backlinks, profile-driven validation, bounded traversal and source-context projection are runnable.** The APIs are experimental; stable API approval and publication remain separate decisions. The table-profile validator and registry/sidecar workflows have been retired. The package is version `0.1.0`, guarded by `private: true`, and in development.
 
 ## Start here
 
@@ -25,7 +25,7 @@ Markdown Engine supplies Markdown structure and source locations. Markdown Trace
 
 ## What runs today
 
-The package root and `experimental/graph` entry points both expose document-wide analysis, direct queries, Mermaid export and [profile-driven validation](docs/experimental-graph-validation.md). `markdown-trace-document` is the local command for validation reports, graph JSON, incoming/outgoing queries, Mermaid and HTML. The [shared Trace skill](skills/markdown-trace/SKILL.md) invokes that command with a document-owned profile. Bounded traversal and context projection are follow-up work.
+The package root and `experimental/graph` entry points both expose document-wide analysis, direct queries, Mermaid export, [profile-driven validation](docs/experimental-graph-validation.md), bounded traversal and context projection. The [experimental API guide](docs/experimental-document-graph.md#api-example) shows how to traverse a graph and retrieve exact source parts with explicit budgets. `markdown-trace-document` is the local command for validation reports, graph JSON, incoming/outgoing queries, Mermaid and HTML. The [shared Trace skill](skills/markdown-trace/SKILL.md) invokes that command with a document-owned profile.
 
 ## Development setup
 
@@ -62,6 +62,6 @@ node dist/markdowntrace/document-graph/cli.js \
 npm run ci:enforcement
 ```
 
-This gate checks types, document-graph tests, build, packed-package consumers, the preview command and unintended repository changes. Use `npm run check:package-exports` when changing the package boundary. Passing existing tests does not prove traversal or context projection is implemented.
+This gate checks types, document-graph tests, build, packed-package consumers, the preview command and unintended repository changes. Use `npm run check:package-exports` when changing the package boundary. Packed consumers exercise the root and experimental APIs, including traversal and context projection.
 
 Read [AGENTS.md](AGENTS.md) and the [source map](src/markdowntrace/README.md) before implementation. Keep modules focused and work under `.worktrees/`. See [current implementation](docs/current-implementation.md) for the runnable boundary.

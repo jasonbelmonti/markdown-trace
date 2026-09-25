@@ -5,7 +5,7 @@ export function runGraphApiSmoke(consumerDirectory, specifier) {
     import assert from 'node:assert/strict';
     import * as graph from ${JSON.stringify(specifier)};
     assert.deepEqual(Object.keys(graph).sort(), [
-      'analyzeDocument', 'compileProfile', 'compileValidationProfile', 'exportMermaid', 'findIncoming', 'findOutgoing', 'lookupIdentifier', 'traverseGraph', 'validateGraph'
+      'analyzeDocument', 'compileProfile', 'compileValidationProfile', 'exportMermaid', 'extractContext', 'findIncoming', 'findOutgoing', 'lookupIdentifier', 'traverseGraph', 'validateGraph'
     ]);
     const unwrap = result => { assert.equal(result.ok, true); return result.value; };
     const profile = unwrap(graph.compileProfile({
