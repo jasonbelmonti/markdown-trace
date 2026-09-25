@@ -1,4 +1,12 @@
 import * as rootGraph from "@jasonbelmonti/markdown-trace";
+import {
+  extractContext as rootExtractContext,
+  type ContextBudget as RootContextBudget,
+  type ContextPart as RootContextPart,
+  type ContextOmission as RootContextOmission,
+  type ContextBundle as RootContextBundle,
+  type ContextRequest as RootContextRequest,
+} from "@jasonbelmonti/markdown-trace";
 
 import {
   analyzeDocument, compileProfile, exportMermaid, findIncoming, findOutgoing, lookupIdentifier,
@@ -7,6 +15,8 @@ import {
   compileValidationProfile, validateGraph, type TraceValidationProfile, type GraphValidationReport,
   type ValidationProfileInput, type GraphValidationRule, type SourceSelector, type ValidationRuleResult, type ValidationDiagnostic,
   traverseGraph, type GraphSelection, type TraversalQuery,
+  extractContext, type ContextBudget, type ContextPart, type ContextOmission,
+  type ContextBundle, type ContextRequest,
 } from "@jasonbelmonti/markdown-trace/experimental/graph";
 
 export const compile: (input: unknown) => Outcome<TraceProfile> = compileProfile;
@@ -20,10 +30,28 @@ export const compileValidation: (json: string) => Outcome<TraceValidationProfile
 export const validateAnalysis: (analysis: DocumentAnalysis, profile: TraceValidationProfile) => Outcome<GraphValidationReport> = validateGraph;
 export const traverse: (analysis: DocumentAnalysis, query: TraversalQuery) => Outcome<GraphSelection> = traverseGraph;
 export const rootTraverse: typeof traverseGraph = rootGraph.traverseGraph;
+export const context: typeof extractContext = extractContext;
+export const rootContext: typeof extractContext = rootExtractContext;
 export interface ValidationContractClosure {
   readonly profile: ValidationProfileInput;
   readonly rule: GraphValidationRule;
   readonly selector: SourceSelector;
   readonly result: ValidationRuleResult;
   readonly diagnostic: ValidationDiagnostic;
+}
+
+export interface ExperimentalContextContractClosure {
+  readonly budget: ContextBudget;
+  readonly part: ContextPart;
+  readonly omission: ContextOmission;
+  readonly bundle: ContextBundle;
+  readonly request: ContextRequest;
+}
+
+export interface RootContextContractClosure {
+  readonly budget: RootContextBudget;
+  readonly part: RootContextPart;
+  readonly omission: RootContextOmission;
+  readonly bundle: RootContextBundle;
+  readonly request: RootContextRequest;
 }

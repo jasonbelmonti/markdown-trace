@@ -72,7 +72,7 @@ Any Markdown file can be analyzed, but meaningful declarations and typed edges r
 ```js
 import {
   compileProfile, analyzeDocument, lookupIdentifier, findIncoming, findOutgoing,
-  traverseGraph,
+  traverseGraph, extractContext,
 } from '@jasonbelmonti/markdown-trace/experimental/graph';
 
 const unwrap = result => {
@@ -108,12 +108,18 @@ const selection = unwrap(traverseGraph(analysis, {
   maxDepth: 1, maxNodes: 2,
 }));
 // WP-1 at depth 0, then REQ-1 at depth 1 with the explaining relationship.
-console.log(selection.nodes, selection.boundary);
+const context = unwrap(extractContext(analysis, {
+  selection,
+  budget: { maxUtf8Bytes: 2_000, maxFragments: 20 },
+}));
+console.log(context.parts, context.includedIdentifiers, context.omittedIdentifiers);
 ```
 
 `compileProfile` checks and captures the document-profile.v1 configuration. Its `validation` section is compile-only. Use [`compileValidationProfile` and `validateGraph`](experimental-graph-validation.md) with the separate validation profile schema to evaluate graph and source-coverage rules. Neither compiler removes relationships or turns analysis into a validity verdict. Changing only that section leaves the graph and analysis identity unchanged.
 
 `traverseGraph` selects uniquely defined, known-kind identifiers over that same issued analysis. Supply nonempty roots, `incoming`, `outgoing` or `both`, a nonnegative safe-integer `maxDepth`, and a safe-integer `maxNodes` at least as large as the number of distinct roots. Roots are sorted and deduplicated; the result is breadth-first, with one shortest predecessor relationship per non-root identifier. Omit `relations` for every kind, or pass an empty array to select none. The immutable selection includes the normalized query and analysis ID. `depthLimited` and `nodeLimited` report resolved nodes omitted at examined boundaries; `unresolvedRelationships` counts distinct incident relationships that could not be traversed in the selected direction. These indicators do not describe unseen parts of the document. Missing or duplicate root definitions fail with `unresolved-root`; use direct queries to inspect their evidence. Validation policy does not remove resolved relationships from traversal.
+
+`extractContext` accepts an issued selection whose analysis identity matches the supplied analysis; an equivalent repeat analysis with the same identity is compatible. A selection from another source identity fails with `stale-selection`, while a copied or fabricated selection fails with `invalid-selection`. The request also requires nonnegative safe-integer UTF-8-byte and fragment budgets. It returns captured-source slices in document order. Each part names the selected identifiers that use it and whether it is owned content, a required heading or a table header. Entity bundles are admitted atomically in selection order; overlaps count once, gaps remain separate, and omitted identifiers include a budget or ambiguous-ownership reason. `usedUtf8Bytes` counts only the returned part text, excluding metadata, caller-added separators and model-token estimates. The result retains the source identity and serialized selection path. This API does not read files: callers load explicit source and profile inputs, then pass the captured text and compiled profile to `analyzeDocument`. A projected bundle is source-selection evidence; it does not certify that a worker has all context needed to act.
 
 ## Link identity language
 
@@ -141,7 +147,7 @@ The typed edge is `WP-1 -> REQ-1`, with kind `implements`. The second link adds 
 
 This guide is the current authoring contract. It replaces draft1's brace-marker grammar. Former brace markers have no declaration or typed-reference meaning; an eligible bare ID within ordinary text can still be a generic mention. A draft1 profile is rejected as an unsupported language version rather than silently reinterpreted.
 
-The graph/query contracts remain unchanged. Runtime source fragments follow Engine blocks and capture supporting headings/table structure. Context projection is not implemented, and exact fragment partitioning is provisional. Custom-scheme links use ordinary Markdown syntax; whether a renderer makes their destinations clickable depends on that renderer.
+Runtime source fragments follow Engine blocks and capture supporting headings/table structure. Projection returns verbatim ranges and preserves required Markdown syntax; exact fragment partitioning follows the current experimental runtime. Custom-scheme links use ordinary Markdown syntax; whether a renderer makes their destinations clickable depends on that renderer.
 
 ## Results and limits
 
@@ -155,4 +161,4 @@ Ranges use zero-based UTF-16 offsets, one-based lines/columns, and exclusive end
 
 Reference pages are ordered by source occurrence. Defaults are offset 0 and limit 100, with a maximum page size of 1,000. Follow `nextOffset` until it is null. Omitted relation filters select all kinds; an empty filter selects none. An absent identifier yields a null record and empty results.
 
-Profile-driven validation and bounded traversal are available over this same analysis. Source-context projection remains proposed. The package root exports this graph API; `markdown-trace-document` is its command.
+Profile-driven validation, bounded traversal and source-context projection are available over this same analysis. Both the package root and `experimental/graph` export the graph API; `markdown-trace-document` remains the document command.

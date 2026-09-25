@@ -24,7 +24,7 @@ The typed edge is `WP-1 -> REQ-1`, with kind `implements`. The second link adds 
 
 This guide is the current authoring contract. It replaces draft1's brace-marker grammar. Former brace markers have no declaration or typed-reference meaning; an eligible bare ID within ordinary text can still be a generic mention. A draft1 profile is rejected as an unsupported language version rather than silently reinterpreted.
 
-The graph/query contracts remain unchanged. Runtime source fragments follow Engine blocks and capture supporting headings/table structure. Context projection is not implemented, and exact fragment partitioning is provisional. Custom-scheme links use ordinary Markdown syntax; whether a renderer makes their destinations clickable depends on that renderer.
+Runtime source fragments follow Engine blocks and capture supporting headings/table structure. Projection returns verbatim ranges and preserves required Markdown syntax; exact fragment partitioning follows the current experimental runtime. Custom-scheme links use ordinary Markdown syntax; whether a renderer makes their destinations clickable depends on that renderer.
 
 ## Results and limits
 
@@ -38,4 +38,4 @@ Ranges use zero-based UTF-16 offsets, one-based lines/columns, and exclusive end
 
 Reference pages are ordered by source occurrence. Defaults are offset 0 and limit 100, with a maximum page size of 1,000. Follow `nextOffset` until it is null. Omitted relation filters select all kinds; an empty filter selects none. An absent identifier yields a null record and empty results.
 
-Profile-driven validation and bounded traversal are available over this same analysis. Source-context projection remains proposed. The package root exports this graph API; `markdown-trace-document` is its command.
+Profile-driven validation, bounded traversal and source-context projection are available over this same analysis. Both the package root and `experimental/graph` export the graph API; `markdown-trace-document` remains the document command.
