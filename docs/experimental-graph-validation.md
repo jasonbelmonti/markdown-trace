@@ -29,6 +29,7 @@ the command. An installed package exposes the entry point as
 | `--format report` (default) | Validation report JSON, including source/profile hashes and located diagnostics. |
 | `--format graph` | `{ validation, graph }` JSON; graph is the complete snapshot. |
 | `--format query --identifier REQ-1` | `{ validation, lookup, references }` JSON; incoming references by default. |
+| `--format context --root REQ-1` (plus required limits below) | `{ validation, context }` JSON; exact source parts, selection provenance, boundaries and omissions. |
 | `--format mermaid` | Mermaid on stdout and validation JSON on stderr, including on pass. |
 | `--format html` | Visual HTML report on stdout, combining the graph, definition context and validation findings. |
 
@@ -39,7 +40,7 @@ does not change the document's validation verdict. All formats analyze
 once and reuse the captured graph for validation and inspection.
 
 Every format exits 0 for pass, 1 for fail/indeterminate, or 2 for an invocation or
-runtime failure. Failure does not suppress an available graph, query or HTML report.
+runtime failure. Failure does not suppress an available graph, query, context or HTML report.
 Runtime failures emit JSON on stderr without a graph. The command reads inputs
 and writes only stdout/stderr; use distinct artifact paths when redirecting:
 
@@ -54,6 +55,48 @@ Limits are 2,000,000 UTF-8 source bytes and 50,000 occurrences. The command uses
 the packaged API and performs no domain-specific structural or semantic checks.
 Keep the validation report beside the diagram; Mermaid itself does not carry
 the evaluated profile verdict.
+
+### Source context projection
+
+Select context from explicit `ctx://trace/entity/ID?role=definition` annotations
+using the same document-owned validation profile:
+
+```sh
+node dist/markdowntrace/document-graph/cli.js \
+  --file examples/preview-design/document.md \
+  --profile examples/preview-design/profile.json \
+  --format context --root REQ-1 --direction incoming --relation implements \
+  --max-depth 1 --max-nodes 10 --max-utf8-bytes 8192 --max-fragments 50
+```
+
+This returns the requirement and its implementing design, with supporting headings;
+it excludes the check because the edge filter selects only `implements`.
+An installed package uses `markdown-trace-document` with the same arguments.
+
+Repeat `--root ID` for multiple roots and `--relation KIND` for multiple allowed
+edge kinds. Without a relation filter, traversal follows all observed relations.
+`--direction` accepts `incoming`, `outgoing` (default for context), or `both`.
+All four limits are required nonnegative safe integers; `--max-nodes` must cover
+the number of distinct roots. `--max-depth 0` selects just the roots. Roots must
+have unique definitions with kinds recognized by the profile. Missing, bare-only
+or duplicate definitions produce an `unresolved-root` error (exit 2, JSON stderr).
+Query-only identifier and pagination options cannot be used for context.
+
+`context.parts` contains verbatim source text, exact ranges, roles and owning
+identifiers. `context.source` and `analysisId` identify the capture;
+`context.selection` carries the normalized query, traversal predecessors and
+boundary flags. Inspect `omittedIdentifiers` for byte, fragment or ownership
+omissions. Admission is atomic per entity, including its supporting structure.
+Zero byte or fragment budgets may return no parts and explicit omissions.
+
+The byte budget measures returned source text in UTF-8 and the fragment budget
+counts final source parts. Neither bounds the full JSON output nor model tokens.
+Validation status remains separate: exit 0 can accompany omitted context or a
+limited traversal, and exit 1 still returns available context when validation
+fails or is indeterminate. Consumers must inspect validation, coverage,
+`selection.boundary` and omissions before accepting a packet. Projection does not
+infer relevance from arbitrary prose or certify that every required instruction
+has been included. It does not change full-read obligations.
 
 ### Visual report
 

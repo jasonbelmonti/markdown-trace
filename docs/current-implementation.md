@@ -12,7 +12,7 @@ The immutable snapshot preserves declaration/mention distinctions, duplicate and
 
 ## Document command and skill
 
-`markdown-trace-document` requires an explicit JSON validation profile. It supports validation reports, full graph JSON, incoming/outgoing queries, Mermaid, visual HTML and standalone runtime identity. The [shared Trace skill](../skills/markdown-trace/SKILL.md) invokes it with a document-owned profile and optional domain guide. The package root exports the same graph API as the experimental subpath; the retired `validateGraphDocument` API and `markdown-trace` binary are absent.
+`markdown-trace-document` requires an explicit JSON validation profile. It supports validation reports, full graph JSON, incoming/outgoing queries, bounded source context JSON, Mermaid, visual HTML and standalone runtime identity. The [shared Trace skill](../skills/markdown-trace/SKILL.md) invokes it with a document-owned profile and optional domain guide. The package root exports the same graph API as the experimental subpath; the retired `validateGraphDocument` API and `markdown-trace` binary are absent.
 
 ```sh
 node dist/markdowntrace/document-graph/cli.js \
@@ -21,7 +21,7 @@ node dist/markdowntrace/document-graph/cli.js \
   --format query --identifier REQ-1
 ```
 
-The command reads local inputs and emits results to stdout/stderr. Report, graph, query, Mermaid and HTML formats have documented channels and exit codes in the [command guide](experimental-graph-validation.md#shared-command). HTML shows the graph, Engine-captured labels and definition context, and validation findings; diagram rendering loads Mermaid from a pinned CDN. Trace validation cannot prove that prose is factually correct or that a claimed check ran. Document-owner structural and semantic gates remain separate.
+The command reads local inputs and emits results to stdout/stderr. Report, graph, query, context, Mermaid and HTML formats have documented channels and exit codes in the [command guide](experimental-graph-validation.md#shared-command). HTML shows the graph, Engine-captured labels and definition context, and validation findings; diagram rendering loads Mermaid from a pinned CDN. Trace validation cannot prove that prose is factually correct or that a claimed check ran. Document-owner structural and semantic gates remain separate.
 
 ## Portable runtime and next work
 
