@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { inventory, sha256 } from "../runtime/integrity.mjs";
 import { stage } from "../runtime/installed-release.mjs";
+import { proveContext } from "./context-proof.mjs";
 
 const sourceSkill = fileURLToPath(new URL("../../skills/markdown-trace", import.meta.url));
 
@@ -61,7 +62,7 @@ async function check(artifact) {
     await symlink(process.execPath, join(bin, "node"));
     const env = { HOME: root, PATH: bin, MARKDOWN_TRACE_BIN: installed.launcher };
     const contract = JSON.parse(await readFile(join(skill, "contracts/runtime.json"), "utf8"));
-    assert.equal(contract.schemaVersion, "markdown-trace.consumer-contract.v1");
+    assert.equal(contract.schemaVersion, "markdown-trace.consumer-contract.v2");
     const document = await readFile(join(skill, contract.document), "utf8");
     const profile = await readFile(join(skill, contract.profile));
     const documentPath = join(work, "document with spaces.md");
@@ -93,6 +94,7 @@ async function check(artifact) {
     await writeFile(documentPath, document);
     const repaired = run();
     assert.deepEqual(repaired, valid);
+    const context = proveContext(run, contract, document);
     const bindings = await proveBindings(helper, root, work, env, installed.launcher);
     assert.deepEqual(await inventory(skill), before, "Copied package changed");
     assert.deepEqual(await inventory(sourceSkill), before, "Source package changed");
@@ -101,7 +103,7 @@ async function check(artifact) {
     return { passed: true, runtime: info, skillFiles: before,
       environment: { node: process.version, platform: process.platform, arch: process.arch },
       isolatedCopy: { cwd: work, skill, launcher: installed.launcher, nodeOnlyPath: true, externalDependencies: false },
-      bindings, valid: { status: valid.status, identifiers: valid.identifiers, relationships: valid.relationships },
+      bindings, context, valid: { status: valid.status, identifiers: valid.identifiers, relationships: valid.relationships },
       defect: { status: defect.status, diagnostic }, repaired: { status: repaired.status },
       fixtureSha256: sha256(Buffer.from(document)), profileSha256: sha256(profile), inputsUnchanged: true };
   } finally { await rm(root, { recursive: true, force: true }); }

@@ -1,6 +1,6 @@
 ---
 name: markdown-trace
-description: Author Markdown Trace annotations and validation profiles, validate coverage and relationships, query backlinks, and export document graphs. Use with a document's explicit Trace profile or when creating or revising that profile.
+description: Author Trace annotations and profiles, validate relationships, retrieve bounded source context, and inspect explicitly bound cross-document dependencies. Use for Markdown graph validation, backlinks, traversal or context extraction with an explicit profile.
 ---
 
 # Markdown Trace
@@ -38,6 +38,23 @@ working directory and forwards arguments without a shell. Resolve `SKILL_DIR`
 to the absolute directory containing this SKILL.md. The package is self-contained;
 its runtime is installed separately. Report runtime unavailability rather than
 claiming validation passed. Do not install or activate a runtime automatically.
+
+## Discover the available capability
+
+Before selecting an operation, invoke the bound runtime through the helper with
+`--runtime-info` and `--help`. Record its source commit and inspect supported
+formats/options; the package version alone does not identify an experimental
+capability. A runtime lacking `context` is an older installation, not evidence
+that Trace lacks projection. Report the mismatch and use the owner-authorized
+runtime rollout workflow; preserve the explicit binding rather than silently
+substituting a checkout executable.
+
+For bounded source extraction, read [Context and corpus](references/context-and-corpus.md).
+Local traversal/projection are implemented in the API and `--format context` CLI.
+Cross-document queries and traversal are implemented in the corpus API with
+explicit capture pins and bindings; they have no corpus CLI format. Inspect these
+existing interfaces before implementing equivalent graph or extraction logic.
+Context retrieval does not grant an exemption from a controlling full-read rule.
 
 ## Author identities and relationships
 
@@ -121,7 +138,8 @@ actually ran. Passing Trace alone does not establish document readiness.
 ## Consumer admission evidence
 
 [The declarative contract](contracts/runtime.json) selects the bundled preview
-profile and fixture for Fleet's valid, located-defect and repaired-pass probes.
+profile and fixture for Fleet's valid, located-defect and repaired-pass probes, plus exact context and zero-byte
+omission probes through the installed helper.
 Paths are relative to this skill directory. Runners copy inputs to temporary
 storage, replace the designated literal exactly once, require the stated rule
 diagnostic at its line, restore the original bytes and require a pass again.

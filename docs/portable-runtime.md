@@ -93,7 +93,7 @@ The identity mode emits one C-3 JSON object on stdout, empty stderr and exit 0.
 It accepts no other arguments, and never reads document/profile inputs. Checkout
 builds report `sourceCommit: null`; release candidates report the snapshot commit.
 `nodeVersion` always reports the executing Node. Existing `--help`, report,
-graph, query, Mermaid, HTML, exit codes and channels are preserved. HTML generation
+graph, query, context, Mermaid, HTML, exit codes and channels are preserved. HTML generation
 is local; opening its diagram retains the pinned Mermaid CDN behavior.
 
 Profiles stay explicit. Trace imports its own Engine JavaScript library; the
@@ -191,8 +191,11 @@ export MARKDOWN_TRACE_BIN="$root/bin/markdown-trace-document"
 node scripts/runtime/resolve-binding.mjs
 ```
 
-Fleet admission, installed-skill migration, remote distribution and publishing
-are later work. No host-wide PATH or skill environment is changed by staging.
+Fleet admission uses an exact source pin, descriptor/payload digests and the
+source-owned skill consumer contract. Run Fleet runtime-verify against the staged
+launcher and installed skill before authorized activation, then runtime-env to
+obtain the immutable MARKDOWN_TRACE_BIN binding. Staging alone changes no host
+PATH or skill environment.
 
 ## Portable skill
 
@@ -216,7 +219,9 @@ the complete runtime and selected skill source before emitting a binding.
 The bundled preview fixture has three entities and two relationships. Its
 consumer contract supplies a single literal relationship removal and requires
 `design-implements-requirement` / `trace-validation.relation-count` at line 9,
-then restoration to pass. Consumers mutate disposable copies and preserve
+then restoration to pass. Contract v2 additionally requires exact selected source
+parts and explicit zero-byte omissions through the installed skill helper. Fleet
+pins that helper and its resolver before executing them. Consumers mutate disposable copies and preserve
 source/profile bytes. Example profiles are explicit opt-in examples; document
 owners retain their structural and semantic gates.
 
