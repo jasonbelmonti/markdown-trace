@@ -7,7 +7,7 @@ import { checkPackedConsumer } from "./package-exports/consumer.mjs";
 import { assert, run } from "./package-exports/process.mjs";
 
 const PACKAGE_NAME = "@jasonbelmonti/markdown-trace";
-const PACKAGE_VERSION = "0.1.0";
+const PACKAGE_VERSION = "0.1.1";
 const ENGINE_VERSION = "3.6.0";
 const NODE_RANGE = "^20.19.0 || >=22.12.0";
 const GRAPH_TYPES = "./dist/markdowntrace/document-graph/index.d.ts";
@@ -37,7 +37,7 @@ async function main() {
     await mkdir(packDirectory, { recursive: true });
     const packResult = run(
       "npm",
-      ["pack", stageDirectory, "--json", "--pack-destination", packDirectory],
+      ["pack", stageDirectory, "--ignore-scripts", "--json", "--pack-destination", packDirectory],
       { cwd: repositoryRoot },
     );
     const tarballPath = packageTarballPath(packResult.stdout, packDirectory);
@@ -72,6 +72,7 @@ async function main() {
 async function preparePackageStage(stageDirectory) {
   await mkdir(stageDirectory, { recursive: true });
   await Promise.all([
+    copyFile(path.join(repositoryRoot, "LICENSE"), path.join(stageDirectory, "LICENSE")),
     copyFile(
       path.join(repositoryRoot, "package.json"),
       path.join(stageDirectory, "package.json"),
@@ -103,7 +104,7 @@ function assertManifest(manifest, lockfile) {
 
   assert(manifest.name === PACKAGE_NAME, `package name must be ${PACKAGE_NAME}`);
   assert(manifest.version === PACKAGE_VERSION, `package version must be ${PACKAGE_VERSION}`);
-  assert(manifest.private === true, "package manifest must retain private: true");
+  assert(!Object.hasOwn(manifest, "private"), "public package must omit private");
   assert(manifest.license === "MIT", "package license must be MIT");
   assert(manifest.type === "module", "package type must be module");
   assert(manifest.sideEffects === false, "package sideEffects must be false");
@@ -123,7 +124,10 @@ function assertManifest(manifest, lockfile) {
     JSON.stringify(manifest.files) === JSON.stringify(["dist"]),
     "package files must contain only dist in this slice",
   );
-  assert(!Object.hasOwn(manifest, "publishConfig"), "package manifest must omit publishConfig");
+  assert(
+    JSON.stringify(manifest.publishConfig) === JSON.stringify({ access: "public", registry: "https://registry.npmjs.org/", tag: "latest" }),
+    "package must publish publicly to npm under latest",
+  );
   assert(manifest.engines?.node === NODE_RANGE, `Node range must remain ${NODE_RANGE}`);
   assert(
     JSON.stringify(manifest.bin) ===
@@ -200,13 +204,14 @@ function tarballMembers(tarballPath) {
 }
 
 function assertTarballMembers(members) {
-  const allowedExact = new Set(["package/README.md", "package/package.json"]);
+  const allowedExact = new Set(["package/README.md", "package/package.json", "package/LICENSE"]);
   const unexpected = members.filter(
     (member) => !allowedExact.has(member) && !member.startsWith("package/dist/"),
   );
 
   assert(unexpected.length === 0, `unexpected tarball members: ${unexpected.join(", ")}`);
   for (const required of [
+    "package/LICENSE",
     "package/dist/markdowntrace/document-graph/index.js",
     "package/dist/markdowntrace/document-graph/index.d.ts",
     "package/dist/markdowntrace/document-graph/cli.js",

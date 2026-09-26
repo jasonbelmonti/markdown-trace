@@ -3,7 +3,7 @@
 The local producer creates a versioned, relocatable directory containing Trace's
 compiled JavaScript and all locked production dependencies, including Engine
 3.6.0. Node remains an external prerequisite: `^20.19.0 || >=22.12.0`, on Linux
-or macOS. The package remains private at 0.1.0. The document command and
+or macOS. The current package version is 0.1.1 and is configured for public npm publication. The existing portable v0.1.0 release and Fleet pins retain their original identities. The document command and
 document-graph API retain their existing meanings; the package root now exports
 that same graph API after retirement of the no-consumer table/registry workflows.
 
@@ -30,7 +30,7 @@ The output is:
 ```text
 /tmp/trace-candidate-a/
   release.json
-  markdown-trace-0.1.0-<full-source-commit>/
+  markdown-trace-0.1.1-<full-source-commit>/
     package.json
     package-lock.json
     dist/
@@ -63,7 +63,7 @@ code. It uses only Node built-ins and does not import or execute the payload:
 
 ```sh
 stage=/tmp/trace-candidate-a
-payload="$stage/markdown-trace-0.1.0-<full-source-commit>"
+payload="$stage/markdown-trace-0.1.1-<full-source-commit>"
 node scripts/runtime/verify.mjs --descriptor "$stage/release.json" --payload "$payload"
 ```
 

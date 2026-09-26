@@ -37,7 +37,7 @@ export async function verifyPayload(descriptorPath, payload) {
   assert.equal(identity.schemaVersion, "markdown-trace.runtime-info.v1");
   assert.equal(identity.package, "@jasonbelmonti/markdown-trace");
   assert.match(identity.sourceCommit, /^[a-f0-9]{40}$/);
-  assert.equal(identity.packageVersion, "0.1.0");
+  assert.ok(["0.1.0", "0.1.1"].includes(identity.packageVersion), `Unsupported package version: ${identity.packageVersion}`);
   assert.equal(identity.markdownEngineVersion, "3.6.0");
   assert.ok(
     ["0.1.0-experimental.2", "0.1.0-experimental.3"].includes(identity.analyzerVersion),

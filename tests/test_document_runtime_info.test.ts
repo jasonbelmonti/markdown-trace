@@ -16,7 +16,7 @@ describe("standalone document runtime identity", () => {
     expect(result.stderr).toBe("");
     expect(JSON.parse(result.stdout)).toEqual({
       schemaVersion: "markdown-trace.runtime-info.v1",
-      package: "@jasonbelmonti/markdown-trace", packageVersion: "0.1.0",
+      package: "@jasonbelmonti/markdown-trace", packageVersion: "0.1.1",
       sourceCommit: null, markdownEngineVersion: "3.6.0",
       analyzerVersion: "0.1.0-experimental.3", languageVersion: "markdown-trace.identity.draft2",
       validationProfileVersion: "markdown-trace.validation-profile.experimental.v1",

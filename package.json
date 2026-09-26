@@ -1,7 +1,6 @@
 {
   "name": "@jasonbelmonti/markdown-trace",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.1",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -38,7 +37,8 @@
     "verify:runtime": "node scripts/runtime/verify.mjs",
     "check:runtime": "node scripts/runtime/check.mjs",
     "install:runtime": "node scripts/runtime/install.mjs",
-    "resolve:runtime": "node scripts/runtime/resolve-binding.mjs"
+    "resolve:runtime": "node scripts/runtime/resolve-binding.mjs",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@jasonbelmonti/markdown-engine": "3.6.0"
@@ -47,5 +47,19 @@
     "@types/node": "^20.19.39",
     "typescript": "^6.0.3",
     "vitest": "^4.1.5"
+  },
+  "description": "Validate Markdown identity graphs and retrieve bounded source context across explicitly bound documents.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasonbelmonti/markdown-trace.git"
+  },
+  "homepage": "https://github.com/jasonbelmonti/markdown-trace#readme",
+  "bugs": {
+    "url": "https://github.com/jasonbelmonti/markdown-trace/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest"
   }
 }
