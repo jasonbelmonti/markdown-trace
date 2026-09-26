@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "markdown-trace.consumer-contract.v1",
+  "schemaVersion": "markdown-trace.consumer-contract.v2",
   "profile": "examples/preview-design/profile.json",
   "document": "examples/preview-design/document.md",
   "valid": {
@@ -18,5 +18,23 @@
       "code": "trace-validation.relation-count",
       "startLine": 9
     }
+  },
+  "context": {
+    "root": "DES-1",
+    "maxDepth": 1,
+    "maxNodes": 2,
+    "maxUtf8Bytes": 4096,
+    "maxFragments": 10,
+    "expectedIdentifiers": [
+      "DES-1",
+      "REQ-1"
+    ],
+    "expectedParts": [
+      "# Local file preview",
+      "## Requirements",
+      "[Selection controls the preview](ctx://trace/entity/REQ-1?role=definition): update the local preview only after the user explicitly selects a file.",
+      "## Design",
+      "- [Selection handler](ctx://trace/entity/DES-1?role=definition): load the selected file from the picker's selection handler to implement [the preview requirement](ctx://trace/entity/REQ-1?rel=implements)."
+    ]
   }
 }
