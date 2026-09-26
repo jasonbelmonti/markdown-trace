@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "markdown-trace.document-profile.v1",
+  "profileId": "cross-document-task-example",
+  "interpretation": {
+    "language": "markdown-trace.identity.draft2",
+    "entityKinds": [
+      { "name": "task", "prefixes": ["TASK"] },
+      { "name": "criterion", "prefixes": ["TD"] },
+      { "name": "constraint", "prefixes": ["CON"] },
+      { "name": "plan", "prefixes": ["EP"] }
+    ]
+  },
+  "validation": { "minEntities": 0, "allowedRelations": [], "rules": [] }
+}

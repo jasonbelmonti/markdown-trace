@@ -1,6 +1,6 @@
 # Markdown Trace tasks for context projections
 
-These four Task Definitions were authored on 2026-09-23 from the user's request and the inspected Markdown Trace baseline. This index supplies navigation and authoring provenance; each task's body owns its scope, lifecycle, route and proof obligations. No runtime implementation was performed by this authoring session.
+These four Task Definitions were authored on 2026-09-23 from the user's request and the inspected Markdown Trace baseline. This index supplies navigation and authoring provenance; each task's body owns its scope, lifecycle, route and proof obligations. Task 03's experimental corpus implementation was later delivered through its supervised execution route.
 
 ## User source excerpt
 
@@ -8,7 +8,7 @@ The user asked whether Markdown Trace could help create a worker-facing packet c
 
 > Can you help me generate [$task-definition](/Users/jasonbelmonti/.codex/skills/task-definition/SKILL.md) s for the work we needed executed in markdown-trace?
 
-The task set turns that request into bounded proposed capability contracts. It does not modify the installed TaskDefinition or ExecutionPlan full-read rules. Cross-document resolution is an explicit next-delivery extension beyond the existing overview's document-local delivery; task 03 requires specification and documentation reconciliation before implementation.
+The task set turns that request into bounded capability contracts. It does not modify the installed TaskDefinition or ExecutionPlan full-read rules. Task 03 extended the experimental graph with explicit cross-document corpus resolution; policy verification and worker-wide context completeness remain separate work.
 
 ## Task index
 
@@ -16,7 +16,7 @@ The task set turns that request into bounded proposed capability contracts. It d
 | --- | --- | --- | --- |
 | [01 — Bounded traversal](01-bounded-traversal.md) | Explain a bounded dependency selection from one document. | PLAN_REQUIRED | Existing graph. |
 | [02 — Source projection](02-source-projection.md) | Return exact excerpts, support, provenance and omissions. | PLAN_REQUIRED | Implemented traversal from 01. |
-| [03 — Cross-document resolution](03-cross-document-resolution.md) | Resolve qualified entities and revisions across explicit sources. | SPEC_REQUIRED | Existing analyses; 01 before cross-document traversal implementation. |
+| [03 — Cross-document resolution](03-cross-document-resolution.md) | Resolve qualified entities and revisions across explicit sources; implemented experimentally, with stable API approval separate. | PLAN_REQUIRED | Corpus API and packed host workflow are available; see the [first workflow design](../../design/cross-document-workflow-design-brief.md) and [authoring guide](../../../examples/cross-document/authoring.md). |
 | [04 — Projection policy and verification](04-projection-policy-verification.md) | Prove declared mandatory content is present and current. | SPEC_REQUIRED | 01/02 for single-document runtime; 03 for corpus runtime. |
 
 This is a capability dependency summary, not an execution plan or permission to fan out edits. Task Control in each file is authoritative. Planning/specification can address declared predecessor contracts before runtime implementation, but dependent execution requires actual verified predecessor capabilities and reconciliation of their interfaces.
@@ -27,7 +27,7 @@ This is a capability dependency summary, not an execution plan or permission to 
 - Inspected commit: 24d33c1061101c1065fb511921f7ddce4f285717
 - Authoring branch: codex/delegation-projection-tasks
 - Repository artifact directory: `docs/tasks/delegation-context/`
-- Artifact revisions: 1; exact bytes are identified by adjacent `.sha256` records.
+- Read each artifact’s frontmatter for its current revision; exact bytes are identified by adjacent `.sha256` records. Task 03 revision 3 authorizes supervised corpus implementation and links its first workflow design.
 - Read each complete task and its controlling sources first. Resolve repository-relative paths in a Markdown Trace checkout; historical source bytes can be retrieved at the inspected commit. Read and verify adjacent checksums before reliance. Compare current source state before execution.
 - `source-fingerprints.json` records inspected baseline sources. `validation/` records final structural checks and their artifact/profile identities. These records do not establish implementation acceptance.
 

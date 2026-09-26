@@ -5,10 +5,10 @@
 | Field | Value |
 | --- | --- |
 | Title | Markdown Trace Document Graph Direction |
-| Status | Experimental graph, direct queries and profile validation implemented; traversal/context next |
-| Revision | 6 |
+| Status | Experimental graph, profile validation, local traversal/context and explicit corpus APIs implemented |
+| Revision | 7 |
 | Decision owner | Jason Belmonti |
-| Last updated | 2026-09-24 |
+| Last updated | 2026-09-26 |
 | Source material | Owner's document-wide validation/context vision, standard-link decision and explicit instruction to retire both no-consumer legacy workflows; current source, tests and Engine 3.6.0 dependency |
 | Related docs | [Current implementation](../current-implementation.md); [authoring/API guide](../experimental-document-graph.md); [validation guide](../experimental-graph-validation.md); [API design](markdown-trace-document-graph-interfaces.md); [shared runtime task](../tasks/shared-runtime-contract.md) |
 
@@ -16,7 +16,7 @@
 
 Markdown Trace builds a document-wide identity and relationship graph over Markdown Engine. The product has two outcomes: validate a spec's relationships against a developer-owned profile, and retrieve related source context for an implementer agent.
 
-The experimental runtime analyzes a document once, supports identifier and direct-reference queries, and evaluates an explicit validation profile over the captured graph and Engine source structure. Standard Markdown links carry declarations and typed relationships. Bounded traversal and context assembly remain to be implemented. Continue from the runnable graph and validator; there is no prerequisite to finish the removed brace-language corpus or old execution plans.
+The experimental runtime analyzes documents once, supports identifier and direct-reference queries, evaluates an explicit validation profile, and provides bounded local traversal and source extraction. A separate explicit-corpus API resolves caller-pinned captures and bindings and selects qualified paths across them. Hosts can compose checked corpus selections from genuine local excerpts while preserving per-document budgets and omissions. Corpus-wide context completeness remains separate. Continue from the runnable graph and validator; there is no prerequisite to finish the removed brace-language corpus or old execution plans.
 
 Section status: Complete.
 
@@ -32,10 +32,10 @@ Section status: Complete.
 
 - OBJ-1: Discover identities and references across document structures with deterministic lexical and ownership rules. Implemented experimentally.
 - OBJ-2: Validate observed relationships against developer-owned rules without dropping invalid evidence. An experimental validation profile now evaluates source annotations, allowed relations, entity counts and required relationships; the full C-4 design is not a stable API commitment.
-- OBJ-3: Query lookup, incoming/outgoing references and bounded traversal from the same graph. Direct queries implemented; traversal proposed.
-- OBJ-4: Return bounded source excerpts with provenance and inclusion reasons for an implementer agent. Proposed.
+- OBJ-3: Query lookup, incoming/outgoing references and bounded traversal from the same graph. Local and explicitly bound corpus queries are implemented experimentally.
+- OBJ-4: Return bounded source excerpts with provenance and inclusion reasons for an implementer agent. Local extraction is implemented experimentally; hosts can compose per-document bundles from a checked corpus selection. Corpus-wide completeness and mandatory-content policy remain separate work.
 
-Non-goals are natural-language inference, automatic source repair, a graph database/service, an agent framework, and multi-document resolution in this delivery. Relationship validity cannot establish that prose is factually correct or that a cited validation activity ran.
+Non-goals are natural-language inference, automatic source repair, a graph database/service, an agent framework, automatic multi-document discovery, and corpus-wide completeness policy. Explicit multi-document resolution is available through caller-supplied captures and trusted bindings. Relationship validity cannot establish that prose is factually correct or that a cited validation activity ran.
 
 Success means a mixed-layout spec yields explainable graph facts; invalid relationships fail applicable rules while remaining queryable; selected context contains relevant source with exact locations and explicit omissions. Stop expansion when a feature requires unrestricted prose parsing, erases evidence, invents ownership or hides incomplete analysis.
 
@@ -49,9 +49,9 @@ Section status: Complete.
 - CON-4: Validation inspects the full graph, including unresolved and prohibited references; it never removes evidence.
 - CON-5: Source, language, interpretation and validation identities are explicit. Policy changes do not alter discovered facts.
 - CON-6: Validation and queries consume one immutable snapshot; source offsets refer to the captured source/hash.
-- CON-7: Core operation is local, deterministic and read-only. The package root exports the current graph API; the document command preserves its report, graph, query and export behavior. Retired commands and schemas do not remain compatibility requirements.
+- CON-7: Core operation is local, deterministic and read-only. The package root exports the current graph and explicit corpus APIs; the document command preserves its report, graph, query and export behavior. Retired commands and schemas do not remain compatibility requirements.
 
-ASM-1: One caller-supplied document is the analysis boundary. ASM-2: Definitions and typed edges use standard links; bare canonical identifiers remain generic references within structural ownership scopes. ASM-3: Profiles own entity/relationship vocabulary; the runtime owns finite grammar and rule operators.
+ASM-1: Each analysis uses one caller-supplied document; a corpus is a finite set of those issued analyses and explicit trusted bindings. ASM-2: Definitions and typed edges use standard links; bare canonical identifiers remain generic references within structural ownership scopes. ASM-3: Profiles own entity/relationship vocabulary; the runtime owns finite grammar and rule operators.
 
 Section status: Complete.
 
@@ -69,7 +69,7 @@ Section status: Complete.
 
 - FLOW-1: Analyze once, then evaluate graph integrity and supported profile rules. The experimental validator returns located findings and a pass/fail/indeterminate report while leaving graph facts available for queries.
 - FLOW-2: Look up an identifier and list its incoming/outgoing occurrences, with owners and exact locations. Implemented; unknown or ambiguous owners remain explicit.
-- FLOW-3: Select related identifiers through bounded traversal, then project their owned source with supporting headings/table structure. Proposed; budgets and omissions must remain visible.
+- FLOW-3: Select related identifiers through bounded local or qualified corpus traversal, then project source with genuine local selections and per-document budgets. Corpus composition is host-owned; budgets and omissions remain visible.
 
 Analysis coverage is separate from validity. Complete coverage is not a validity verdict. Missing or duplicate definitions remain graph facts; malformed links and uncertain ownership can yield partial coverage. Invalid inputs or exceeded admission limits return operation errors. A profile requiring entities fails an empty document.
 
@@ -77,7 +77,7 @@ Section status: Complete.
 
 ## 6. Architecture Sketch
 
-Markdown Engine parsing and source maps feed Trace's constrained URI/bare-ID interpretation, structural ownership, immutable graph and direct-reference indexes. Profile validation consumes the same capture and graph; future traversal and context operations will reuse those facts. Keep contracts, extraction, graph state, validation, queries and adapters in focused modules.
+Markdown Engine parsing and source maps feed Trace's constrained URI/bare-ID interpretation, structural ownership, immutable graph and direct-reference indexes. Profile validation, local traversal/context, and explicitly bound corpus queries consume captured facts. The host composes corpus selections through depth-zero local selections. Keep contracts, extraction, graph state, validation, queries and adapters in focused modules.
 
 The host supplies text, reads files and handles process/output transport. Trace never fetches `ctx:` destinations. Consumer repositories supply domain profiles; agents decide which queries to run. Extracted text is source data, not agent instructions.
 
@@ -91,7 +91,8 @@ Section status: Complete.
 | --- | --- | --- |
 | Link interpretation, graph and direct queries | Implemented experimentally | Run the demo against a real spec; inspect full snapshot JSON and located backlinks. |
 | Profile-based graph validation | Implemented experimentally for the supported validation-profile operators; broader C-4 design remains a proposal | Exercise source-annotation, integrity, allowed-relation and required-relation checks against a real spec while retaining query access. |
-| Bounded traversal and context projection | Proposed; C-6/C-7 | Retrieve selected source with relationship explanations, budgets and omissions. |
+| Local and qualified corpus traversal; local excerpt projection | Implemented experimentally | Retrieve selected identities with relationship explanations, then use genuine local depth-zero selections and explicit per-document budgets. |
+| Corpus-wide context completeness policy | Proposed follow-up | Define mandatory content and completeness separately from relationship resolution. |
 | Adoption and release | Later | Demonstrate usefulness on an owner-selected spec, measure scale, decide stable API/CLI compatibility and publication. |
 
 Each capability should deliver runnable behavior with focused independent examples. Do not restore exhaustive pre-implementation oracle generation as a gate. Retired fixtures and compatibility tests do not define the new graph. The existing installed runtime and Fleet pin remain versioned historical releases until an independently verified rollout; no automatic spec rewrite or publication is included.
@@ -102,11 +103,11 @@ Section status: Complete.
 
 - VAL-1: Link/API tests verify cross-layout facts, ownership and exact ranges against hand-authored expectations, including nested scopes and malformed links.
 - VAL-2: Retain focused validation proof for duplicate, dangling, unknown, forbidden, missing-relationship and empty-document cases. Verify rule evidence and that invalid facts remain queryable; extend proof if additional C-4 operators are adopted.
-- VAL-3: Direct-query tests verify shared relationships, pagination and source order. Add bounded traversal proof when that capability is implemented.
-- VAL-4: When implementing context, compare verbatim excerpts, supporting structure, overlap/budget omissions and stale-selection handling against source expectations.
+- VAL-3: Direct-query and corpus tests verify shared relationships, pagination, source order, cycles, canonical predecessors and boundaries.
+- VAL-4: Context tests and the explicit packed corpus consumer compare verbatim excerpts, source ranges, budget omissions, stale pins and selection handling against independent expectations.
 - VAL-5: Measure representative document size, latency and memory and audit consuming-agent context before release claims. Current limits are caller budgets, not measured capacity guarantees.
 
-Run `npm run ci:enforcement` for runtime and package-boundary changes. Packed-consumer checks must prove the root and experimental graph entry points while excluding retired commands and files. Structural document validation and declaration compilation check artifact consistency; they do not prove proposed APIs work.
+Run `npm run ci:enforcement` for runtime and package-boundary changes. Packed-consumer checks prove the root and experimental graph entry points while excluding retired commands and files. Corpus consumers use explicit copied sources and pinned manifests; structural document validation and declaration compilation do not replace runtime proof.
 
 Section status: Complete.
 
@@ -116,13 +117,13 @@ Section status: Complete.
 | --- | --- | --- |
 | RISK-1: Incorrect declaration or owner | Focused runtime checks exist; retain explicit missing/duplicate/ambiguous states as capabilities grow. | Maintainer, every extraction or ownership change |
 | RISK-2: Policy changes graph facts | Experimental validation reuses immutable analysis; retain the no-mutation invariant when adding policy operators. | Maintainer, every validation extension |
-| RISK-3: Missing or excessive context | Projection remains unimplemented; exact fragment partitioning is provisional. | Maintainer and owner, context pilot |
+| RISK-3: Missing or excessive context | Local projection exposes bounded omissions; corpus-wide mandatory-content policy remains unimplemented. | Maintainer and owner, context pilot |
 | Q-1: Authoring syntax | Resolved for the experiment: standard links under draft2. | Owner selected 2026-09-16; stable-release compatibility later |
-| Q-2: Ownership and literal handling | Implemented and documented for analysis/direct queries; future context must prove its projection semantics. | Maintainer, context implementation |
+| Q-2: Ownership and literal handling | Ownership, traversal and local extraction are implemented; corpus-wide context policy is host-owned. | Maintainer, before claiming complete worker context |
 | Q-3: Package and compatibility | Root and experimental subpath expose the document graph; `markdown-trace-document` remains the sole command. Retired root/table and registry interfaces have no consumers by owner decision. Stable publication remains a later decision. | Maintainer and owner, release |
 | Q-4: Real spec, required context and scale | Owner-selected pilot and measured budgets remain open; do not claim production scale or complete agent context. | Owner supplies target; maintainer measures before release |
 
-The language and runtime decisions required to continue from this baseline are recorded. The experimental validator supports a bounded rule set; additional C-4 design semantics, traversal and context remain proposals to implement and verify incrementally.
+The language and runtime decisions required to continue from this baseline are recorded. The experimental validator supports a bounded rule set; broader C-4 semantics and corpus-wide context completeness remain proposals.
 
 Section status: Complete.
 
@@ -131,12 +132,12 @@ Section status: Complete.
 | Gate | Result |
 | --- | --- |
 | Direction and current authoring convention agree | Yes; standard Markdown links, constrained URI semantics and structural ownership. |
-| Implemented and proposed capabilities are distinct | Yes; graph, direct queries and supported validation rules run; traversal/context remain proposed. |
-| Next implementation target is clear | Yes; bounded traversal and context projection over the shared graph, with real-spec validation evidence before release claims. |
+| Implemented and proposed capabilities are distinct | Yes; graph, direct queries, local/corpus traversal, local extraction and supported validation rules run experimentally; corpus-wide completeness policy remains proposed. |
+| Next implementation target is clear | Yes; a real-spec consumer pilot, scale measurements and a separate corpus completeness policy before release claims. |
 | Compatibility and release boundaries are explicit | Yes; no-consumer legacy APIs retired, current document command retained, stable publication and adoption still separate. |
 | Superseded guidance remains active | No; old execution plans, contract-only task and brace corpus removed, recoverable in Git history. |
 
-Overview status: Experimental graph and validation implemented; proceed with bounded traversal/context design and proof.
+Overview status: Experimental graph, validation, corpus queries/traversal and local context extraction implemented; stable API approval, corpus-wide context policy and release remain separate decisions.
 
 ## Internal Review Record
 
