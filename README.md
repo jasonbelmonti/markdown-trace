@@ -25,7 +25,7 @@ Markdown Engine supplies Markdown structure and source locations. Markdown Trace
 
 ## What runs today
 
-The package root and `experimental/graph` entry points both expose document-wide analysis, direct queries, Mermaid export, [profile-driven validation](docs/experimental-graph-validation.md), bounded traversal and context projection. The [experimental API guide](docs/experimental-document-graph.md#api-example) shows how to traverse a graph and retrieve exact source parts with explicit budgets. `markdown-trace-document` is the local command for validation reports, graph JSON, incoming/outgoing queries, Mermaid and HTML. The [shared Trace skill](skills/markdown-trace/SKILL.md) invokes that command with a document-owned profile.
+The package root and `experimental/graph` entry points both expose document-wide analysis, direct queries, Mermaid export, [profile-driven validation](docs/experimental-graph-validation.md), bounded traversal and context projection. The [experimental API guide](docs/experimental-document-graph.md#api-example) shows how to traverse a graph and retrieve exact source parts with explicit budgets. `markdown-trace-document` is the local command for validation reports, graph JSON, incoming/outgoing queries, [bounded context JSON](docs/experimental-graph-validation.md#source-context-projection), Mermaid and HTML. The [shared Trace skill](skills/markdown-trace/SKILL.md) invokes that command with a document-owned profile.
 
 ## Development setup
 
