@@ -115,6 +115,19 @@ const context = unwrap(extractContext(analysis, {
 console.log(context.parts, context.includedIdentifiers, context.omittedIdentifiers);
 ```
 
+## Explicit cross-document corpus
+
+The package also supports a finite corpus of issued analyses with caller-trusted pins and explicit occurrence bindings. The API exports `createCorpus`, `lookupCorpusIdentifier`, `findCorpusIncoming`, `findCorpusOutgoing`, `traverseCorpus`, and `checkCorpusSelection` from both documented package entry points. Corpus selection preserves qualified identities, original reference evidence, unresolved boundaries, and each document's local validation result.
+
+Run the host-owned task/plan example from a built checkout:
+
+```sh
+npm run build
+node scripts/demo-document-corpus.mjs examples/cross-document/manifest.json --verify-example --exercise-edits
+```
+
+The explicit manifest pins each source hash and analysis ID, each binding source occurrence and target analysis ID, the qualified traversal root, and per-document excerpt budgets. A changed source fails as stale until an author deliberately updates its pins and affected bindings. The runner does not refresh the manifest. See the example's [authoring and rebinding guide](../examples/cross-document/authoring.md). The host composes separate depth-zero local excerpt bundles and displays omissions; no corpus API establishes complete worker context.
+
 `compileProfile` checks and captures the document-profile.v1 configuration. Its `validation` section is compile-only. Use [`compileValidationProfile` and `validateGraph`](experimental-graph-validation.md) with the separate validation profile schema to evaluate graph and source-coverage rules. Neither compiler removes relationships or turns analysis into a validity verdict. Changing only that section leaves the graph and analysis identity unchanged.
 
 `traverseGraph` selects uniquely defined, known-kind identifiers over that same issued analysis. Supply nonempty roots, `incoming`, `outgoing` or `both`, a nonnegative safe-integer `maxDepth`, and a safe-integer `maxNodes` at least as large as the number of distinct roots. Roots are sorted and deduplicated; the result is breadth-first, with one shortest predecessor relationship per non-root identifier. Omit `relations` for every kind, or pass an empty array to select none. The immutable selection includes the normalized query and analysis ID. `depthLimited` and `nodeLimited` report resolved nodes omitted at examined boundaries; `unresolvedRelationships` counts distinct incident relationships that could not be traversed in the selected direction. These indicators do not describe unseen parts of the document. Missing or duplicate root definitions fail with `unresolved-root`; use direct queries to inspect their evidence. Validation policy does not remove resolved relationships from traversal.

@@ -1,11 +1,11 @@
 {
-  "scope": "Revision 6 overview structural validation after owner-directed retirement; not runtime or semantic proof.",
-  "validatedAt": "2026-09-24T12:06:25Z",
+  "scope": "Revision 7 overview structural validation after Task 3 status reconciliation; not runtime or semantic proof.",
+  "validatedAt": "2026-09-26T13:39:08Z",
   "reproduction": "markdown-engine validate --file <file> --profile <skill-directory>/<profile.resource> --format json (Markdown Engine 3.6.0)",
   "artifacts": [
     {
       "file": "docs/design/markdown-trace-document-graph-overview.md",
-      "sourceSha256": "bfa0cdbba260204b8f9e7a8b4ecc35c26184ea36b85ad1bb2a7f58c9a13fab34",
+      "sourceSha256": "91b1e513e0fccd6687fa2840b8590b7c2f309bee0b68bcc9b37f551222c77984",
       "profile": {
         "skill": "design-overview",
         "resource": "references/design-overview-validation-profile.yaml",
@@ -14,7 +14,7 @@
       "evidence": {
         "engineVersion": "3.6.0",
         "runtimeVersion": "v22.20.0",
-        "inputHash": "73a3b9631e4ca7dfa1ea234fa418d03d9483f9a673224eddd5ec7b815fb77aaa",
+        "inputHash": "6affd5d9e391dc3a694329d298c2d336582f73faa531b1479c7d9a1f6bac311b",
         "profileHash": "c86430c8c07d316ba61425b6f32b4241d212b071c09b72773fe6d8006a0c4932"
       },
       "valid": true,

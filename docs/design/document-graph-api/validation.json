@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-09-24T12:06:26Z",
-  "packetRevision": 10,
-  "scope": "Revision 10 packet structure, proposed declaration compilation and artifact hashes after owner-directed retirement. Current graph runtime has separate tests; proposed traversal/context APIs remain unimplemented.",
+  "validatedAt": "2026-09-26T13:39:08Z",
+  "packetRevision": 11,
+  "scope": "Revision 11 interface structure revalidated after Task 3 runtime-status reconciliation. The declaration proof is unchanged and remains applicable because all declaration inputs listed below are byte-identical to its recorded successful check; current root/experimental packed consumer proof is recorded by the Task 3 attempt evidence.",
   "profile": {
     "skill": "interface-design",
     "resource": "references/interface-design-validation-profile.yaml",
@@ -11,14 +11,16 @@
     "structure": {
       "status": "pass",
       "engineVersion": "3.6.0",
-      "inputHash": "00be03ff75c4eb965d55a02517bfd76e1d9532711499005ff60644b6b55ed745",
+      "inputHash": "6ff26d8ff589198f058728566df3436b9247ad39ab0e0d15c99d6479ef274705",
       "profileHash": "20e664060a8b483398cd055ba7f26259cbbf5eb99986ba2c7d6d2a521a6b777b",
-      "diagnostics": []
+      "diagnostics": [],
+      "validatedAt": "2026-09-26T13:39:08Z"
     },
     "declarations": {
       "status": "pass",
       "command": "./node_modules/.bin/tsc -p docs/design/document-graph-api/tsconfig.json",
-      "exitCode": 0
+      "exitCode": 0,
+      "applicability": "Retained from the successful revision 10 declaration check; all declaration, consumer, configuration and dependency inputs remain unchanged. This is historical declaration proof, separate from current packed-runtime proof."
     }
   },
   "artifacts": [
@@ -68,16 +70,16 @@
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.md",
-      "sha256": "192a7f915e09f30fcb2284a55ed196a554799db07fa06d9908d424e8d26b8efe"
+      "sha256": "b497229e0b0a31986a7fb7dc042287d89d44c58d7d62d2cdb5fcc90a90aa3327"
     },
     {
       "file": "docs/design/markdown-trace-document-graph-interfaces.sha256",
-      "sha256": "e670a696fbf81469a64db90ac28f3b47ce7f637930aff386b11e064ba1b7066e"
+      "sha256": "098a3565f82b5743f119de08eacee10e51a2139fb190721675d49480f0497fb7"
     }
   ],
   "remainingCapabilities": [
     "Reconcile additional full C-2/C-4 design semantics with the experimental validator if adopted.",
-    "Bounded traversal and source-context projection (C-6/C-7)."
+    "Define corpus-wide mandatory-content and completeness policy, if adopted."
   ],
   "releaseDecisions": [
     "Stable API/CLI compatibility and publication.",

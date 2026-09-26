@@ -5,6 +5,7 @@ import { run } from "./process.mjs";
 import { runGraphApiSmoke } from "./graph-consumer.mjs";
 import { runGraphDemoSmoke } from "./graph-demo.mjs";
 import { runContextApiSmoke } from "./context-consumer.mjs";
+import { runCorpusApiSmoke } from "./corpus-consumer.mjs";
 
 export async function checkPackedConsumer({
   consumerDirectory,
@@ -23,6 +24,11 @@ export async function checkPackedConsumer({
     await runContextApiSmoke(consumerDirectory, `${packageName}/experimental/graph`),
   ];
   process.stdout.write(`${contextResults.join("\n")}\n`);
+  const corpusResults = [
+    await runCorpusApiSmoke(consumerDirectory, packageName, repositoryRoot),
+    await runCorpusApiSmoke(consumerDirectory, `${packageName}/experimental/graph`, repositoryRoot),
+  ];
+  process.stdout.write(`${corpusResults.join("\n")}\n`);
   await runGraphDemoSmoke(consumerDirectory, repositoryRoot);
   runDeepImportNegatives(consumerDirectory, packageName);
 }

@@ -7,6 +7,16 @@ import {
   type ContextBundle as RootContextBundle,
   type ContextRequest as RootContextRequest,
 } from "@jasonbelmonti/markdown-trace";
+import {
+  createCorpus as createExperimentalCorpus,
+  lookupCorpusIdentifier as lookupExperimentalCorpusIdentifier,
+  findCorpusIncoming as findExperimentalCorpusIncoming,
+  findCorpusOutgoing as findExperimentalCorpusOutgoing,
+  traverseCorpus as traverseExperimentalCorpus,
+  checkCorpusSelection as checkExperimentalCorpusSelection,
+  type CorpusCapture as ExperimentalCorpusCapture,
+  type CorpusBinding as ExperimentalCorpusBinding,
+} from "@jasonbelmonti/markdown-trace/experimental/graph";
 
 import {
   analyzeDocument, compileProfile, exportMermaid, findIncoming, findOutgoing, lookupIdentifier,
@@ -18,6 +28,16 @@ import {
   extractContext, type ContextBudget, type ContextPart, type ContextOmission,
   type ContextBundle, type ContextRequest,
 } from "@jasonbelmonti/markdown-trace/experimental/graph";
+import {
+  createCorpus,
+  lookupCorpusIdentifier,
+  findCorpusIncoming,
+  findCorpusOutgoing,
+  traverseCorpus,
+  checkCorpusSelection,
+  type CorpusCapture,
+  type CorpusBinding,
+} from "@jasonbelmonti/markdown-trace";
 
 export const compile: (input: unknown) => Outcome<TraceProfile> = compileProfile;
 export const rootCompile: typeof compileProfile = rootGraph.compileProfile;
@@ -54,4 +74,30 @@ export interface RootContextContractClosure {
   readonly omission: RootContextOmission;
   readonly bundle: RootContextBundle;
   readonly request: RootContextRequest;
+}
+
+export function consumeCorpusApi(captures: readonly CorpusCapture[], bindings: readonly CorpusBinding[]) {
+  const corpus = createCorpus({ captures, bindings, limits: { maxCaptures: 4, maxBindings: 8, maxSourceUtf8Bytes: 100_000 } });
+  if (!corpus.ok) return corpus.error.code;
+  const entity = { analysisId: captures[0].expected.analysisId, identifier: "EP-ACT-1" };
+  const lookup = lookupCorpusIdentifier(corpus.value, entity);
+  const incoming = findCorpusIncoming(corpus.value, entity, { offset: 0, limit: 10 });
+  const outgoing = findCorpusOutgoing(corpus.value, entity, { relations: [] });
+  const selection = traverseCorpus(corpus.value, { roots: [entity], direction: "both", maxDepth: 1, maxNodes: 3 });
+  if (!selection.ok) return selection.error.code;
+  const checked = checkCorpusSelection(corpus.value, selection.value);
+  return [lookup.ok, incoming.ok, outgoing.ok, checked.ok];
+}
+
+export function consumeExperimentalCorpusApi(captures: readonly ExperimentalCorpusCapture[], bindings: readonly ExperimentalCorpusBinding[]) {
+  const corpus = createExperimentalCorpus({ captures, bindings, limits: { maxCaptures: 4, maxBindings: 8, maxSourceUtf8Bytes: 100_000 } });
+  if (!corpus.ok) return corpus.error.code;
+  const entity = { analysisId: captures[0].expected.analysisId, identifier: "EP-ACT-1" };
+  const lookup = lookupExperimentalCorpusIdentifier(corpus.value, entity);
+  const incoming = findExperimentalCorpusIncoming(corpus.value, entity, { offset: 0, limit: 10 });
+  const outgoing = findExperimentalCorpusOutgoing(corpus.value, entity, { relations: [] });
+  const selection = traverseExperimentalCorpus(corpus.value, { roots: [entity], direction: "both", maxDepth: 1, maxNodes: 3 });
+  if (!selection.ok) return selection.error.code;
+  const checked = checkExperimentalCorpusSelection(corpus.value, selection.value);
+  return [lookup.ok, incoming.ok, outgoing.ok, checked.ok];
 }

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "markdown-trace.corpus-manifest.example.v1",
+  "profile": "profile.json",
+  "captures": [
+    { "alias": "task-b", "path": "task-b.md", "documentId": "task-b.md", "expected": { "analysisId": "9c4c3aee2aebb32ccdb5f186e9d3b89189a5736998911c95a2116cb1cc0c11c5", "source": { "documentId": "task-b.md", "sha256": "a941d66e49f91a9fda33a9efe7b1d7d2e66f6c289c131ede9fb9740f8e1cdd5a", "utf8Bytes": 195, "utf16Length": 195 } } },
+    { "alias": "task-a", "path": "task-a.md", "documentId": "task-a.md", "expected": { "analysisId": "1dd70d785af3d589fc07959326cf4e46ff4c1bd3b88b71474479406f992557b2", "source": { "documentId": "task-a.md", "sha256": "bc8a26edf81d4de6e6f464769bb26133de42354b8ec9ae071f48de4a49e9a4d3", "utf8Bytes": 432, "utf16Length": 432 } } },
+    { "alias": "plan", "path": "plan.md", "documentId": "plan.md", "expected": { "analysisId": "2afc1b04a165871ce1ead5d07b1f8b7cfa952d31f22c883bc9fb86bc35c22483", "source": { "documentId": "plan.md", "sha256": "0bd9c255e4d17e48150141990610467280be911209fbffd0e0ddf490423a8204", "utf8Bytes": 227, "utf16Length": 227 } } }
+  ],
+  "bindings": [
+    { "source": { "analysisId": "2afc1b04a165871ce1ead5d07b1f8b7cfa952d31f22c883bc9fb86bc35c22483", "occurrenceId": "O3" }, "target": { "analysisId": "1dd70d785af3d589fc07959326cf4e46ff4c1bd3b88b71474479406f992557b2", "identifier": "TD-SC-1" } }
+  ],
+  "traversal": { "roots": [{ "analysisId": "2afc1b04a165871ce1ead5d07b1f8b7cfa952d31f22c883bc9fb86bc35c22483", "identifier": "EP-ACT-1" }], "direction": "outgoing", "maxDepth": 2, "maxNodes": 8 },
+  "inspectEntity": { "analysisId": "1dd70d785af3d589fc07959326cf4e46ff4c1bd3b88b71474479406f992557b2", "identifier": "TD-SC-1" },
+  "budgets": { "corpus": { "maxCaptures": 4, "maxBindings": 8, "maxSourceUtf8Bytes": 10000 }, "perDocument": { "task-a": { "maxUtf8Bytes": 156, "maxFragments": 3 }, "task-b": { "maxUtf8Bytes": 300, "maxFragments": 20 }, "plan": { "maxUtf8Bytes": 500, "maxFragments": 20 } } },
+  "expected": { "targetAlias": "task-a", "collidingAlias": "task-b", "targetIdentifier": "TD-SC-1", "fittingIdentifier": "CON-1", "sourceAlias": "plan", "sourceAnalysisId": "2afc1b04a165871ce1ead5d07b1f8b7cfa952d31f22c883bc9fb86bc35c22483", "sourceOccurrenceId": "O3", "sourceText": "[TD-SC-1](ctx://trace/entity/TD-SC-1?rel=implements)", "sourceRange": { "start": 172, "end": 224 }, "sourceSha256": "0bd9c255e4d17e48150141990610467280be911209fbffd0e0ddf490423a8204", "globalObligationIdentifier": "GLOBAL-OBLIGATION", "captureCount": 3 }
+}
