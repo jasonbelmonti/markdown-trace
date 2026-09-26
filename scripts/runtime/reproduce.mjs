@@ -12,7 +12,7 @@ try {
   for (const stage of stages) {
     const path = join(stage, "release.json");
     const descriptor = await readJson(path);
-    assert.match(descriptor.payloadDirectory, /^markdown-trace-0\.1\.0-[a-f0-9]{40}$/);
+    assert.match(descriptor.payloadDirectory, /^markdown-trace-0\.1\.[01]-[a-f0-9]{40}$/);
     await verifyPayload(path, join(stage, descriptor.payloadDirectory));
     descriptors.push(descriptor);
   }

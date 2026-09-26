@@ -25,7 +25,7 @@ async function check(artifact) {
   const descriptorPath = join(artifact, "release.json");
   const descriptorBytes = await readFile(descriptorPath);
   const descriptor = await readJson(descriptorPath);
-  assert.match(descriptor.payloadDirectory, /^markdown-trace-0\.1\.0-[a-f0-9]{40}$/);
+  assert.match(descriptor.payloadDirectory, /^markdown-trace-0\.1\.[01]-[a-f0-9]{40}$/);
   const inputPayload = join(artifact, descriptor.payloadDirectory);
   await verifyPayload(descriptorPath, inputPayload);
   const before = await fixtureHashes();

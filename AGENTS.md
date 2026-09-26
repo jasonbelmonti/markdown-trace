@@ -12,7 +12,7 @@ The latest explicit user instruction takes precedence. The overview defines dire
 
 The target is a document-wide identity/relationship graph with validation and query/context APIs. The experimental graph uses standard Markdown links under draft2; docs/experimental-document-graph.md owns the current authoring convention. Graph analysis, direct queries, profile-based validation, bounded traversal and local source-context projection are implemented. The document CLI exposes local context; explicitly bound cross-document queries and traversal are available through the corpus API. See docs/current-implementation.md for current capability and interface boundaries. Continue from this runtime. Old brace-syntax corpus and contract-only execution plans are removed and must not be restored as implementation prerequisites.
 
-The table-profile validator and registry/sidecar workflow were retired by owner instruction. Do not restore their code, fixtures, CLI commands, package exports, or CI gates. Older task and evidence records describe completed historical work; they are not current implementation instructions. Stable API/CLI approval and publication remain separate decisions.
+The table-profile validator and registry/sidecar workflow were retired by owner instruction. Do not restore their code, fixtures, CLI commands, package exports, or CI gates. Older task and evidence records describe completed historical work; they are not current implementation instructions. The owner approved a normal public npm release at 0.1.1. Preserve existing protocol identifiers and the experimental/graph compatibility alias; confirm registry publication separately from package preparation.
 
 ## Tasks and durable artifacts
 
