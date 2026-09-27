@@ -9,7 +9,7 @@ export async function proveTask(run, work) {
   const args = file => ["--file", file, "--profile", profile, "--format", "graph"];
   const good = JSON.parse(run(args("input with spaces/task.md")).stdout);
   assert.equal(good.validation.status, "pass");
-  assert.equal(good.graph.parserVersion, "3.6.0");
+  assert.equal(good.graph.parserVersion, "4.0.0");
   assert.deepEqual(good.graph.identifiers.map(record => record.identifier).sort(), ["SLICE-1", "TD-SC-1", "TD-SC-2", "TD-SC-3", "VAL-1", "VAL-2", "VAL-3"]);
   assert.deepEqual(good.graph.relationships.map(edge => `${edge.source.identifier} ${edge.kind} ${edge.target}`).sort(), [
     "SLICE-1 verified-by VAL-1", "SLICE-1 verified-by VAL-2", "SLICE-1 verified-by VAL-3",

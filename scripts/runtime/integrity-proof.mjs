@@ -4,6 +4,16 @@ import { join } from "node:path";
 import { verifyPayload } from "./integrity.mjs";
 
 export async function proveIntegrity(descriptorPath, payload, execute) {
+  const descriptor = JSON.parse(await readFile(descriptorPath, "utf8"));
+  const mismatchedDescriptor = join(payload, "..", "mismatched-engine.json");
+  try {
+    for (const version of [descriptor.identity.markdownEngineVersion === "4.0.0" ? "3.6.0" : "4.0.0", "99.0.0"]) {
+      await writeFile(mismatchedDescriptor, JSON.stringify({ ...descriptor,
+        identity: { ...descriptor.identity, markdownEngineVersion: version } }));
+      await assert.rejects(verifyPayload(mismatchedDescriptor, payload),
+        version === "99.0.0" ? /Unsupported Markdown Engine version/ : { code: "ERR_ASSERTION" });
+    }
+  } finally { await rm(mismatchedDescriptor, { force: true }); }
   const file = join(payload, "node_modules/@jasonbelmonti/markdown-engine/dist/index.js");
   const original = await readFile(file);
   await writeFile(file, Buffer.concat([original, Buffer.from("\nthrow new Error('altered payload executed');\n")]));
@@ -22,6 +32,6 @@ export async function proveIntegrity(descriptorPath, payload, execute) {
   await assert.rejects(verifyPayload(descriptorPath, payload), /link is forbidden/);
   await rm(extra);
   await verifyPayload(descriptorPath, payload);
-  return { alteredRejected: true, missingRejected: true, extraRejected: true, symlinkRejected: true,
+  return { mismatchedEngineRejected: true, unsupportedEngineRejected: true, alteredRejected: true, missingRejected: true, extraRejected: true, symlinkRejected: true,
     missingDependencyExecutionExit: missing.status, restoredVerified: true };
 }

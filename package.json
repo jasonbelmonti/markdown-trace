@@ -41,7 +41,7 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@jasonbelmonti/markdown-engine": "3.6.0"
+    "@jasonbelmonti/markdown-engine": "4.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.39",

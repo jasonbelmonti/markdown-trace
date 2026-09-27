@@ -38,7 +38,10 @@ export async function verifyPayload(descriptorPath, payload) {
   assert.equal(identity.package, "@jasonbelmonti/markdown-trace");
   assert.match(identity.sourceCommit, /^[a-f0-9]{40}$/);
   assert.ok(["0.1.0", "0.1.1", "0.1.2"].includes(identity.packageVersion), `Unsupported package version: ${identity.packageVersion}`);
-  assert.equal(identity.markdownEngineVersion, "3.6.0");
+  // Retain verification and rollback for already-produced Engine 3.6.0 releases.
+  // The manifest and installed Engine must still match this exact descriptor identity.
+  assert.ok(["3.6.0", "4.0.0"].includes(identity.markdownEngineVersion),
+    `Unsupported Markdown Engine version: ${identity.markdownEngineVersion}`);
   assert.ok(
     ["0.1.0-experimental.2", "0.1.0-experimental.3"].includes(identity.analyzerVersion),
     `Unsupported analyzer version: ${identity.analyzerVersion}`,
