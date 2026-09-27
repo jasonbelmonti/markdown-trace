@@ -51,6 +51,9 @@ substituting a checkout executable.
 
 For bounded source extraction, read [Context and corpus](references/context-and-corpus.md).
 Local traversal/projection are implemented in the API and `--format context` CLI.
+If runtime help lists `context-text`, use that view with a new `--report-file`
+to read exact excerpts and compact status while retaining the complete JSON.
+Read the retained report when omitted metadata is needed for a decision.
 Cross-document queries and traversal are implemented in the corpus API with
 explicit capture pins and bindings; they have no corpus CLI format. Inspect these
 existing interfaces before implementing equivalent graph or extraction logic.
