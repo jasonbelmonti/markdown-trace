@@ -25,6 +25,39 @@ that context is complete. Validation failure returns exit 1 with available
 context; invalid invocation or unusable roots return exit 2. Never treat omission
 as authorization to skip a controlling requirement or full read.
 
+## Exact-text view with retained evidence
+
+When the verified runtime's help lists `context-text`, prefer it for reading
+selected source without loading the complete JSON into model context:
+
+```sh
+node "$SKILL_DIR/scripts/run.mjs" --file document.md --profile profile.json \
+  --format context-text --report-file context-report.json \
+  --root REQ-1 --direction outgoing \
+  --max-depth 2 --max-nodes 20 --max-utf8-bytes 12000 --max-fragments 40
+```
+
+Use a new report path in an existing directory. This option is accepted only for
+`context-text`; existing files and aliases to inputs are refused. The complete
+`{ validation, context }` JSON is saved before any text is emitted. A write failure
+returns exit 2 with no text view; an incomplete report from a failed write is not
+evidence. Use a fresh path on retry. The view names the report path and its raw
+SHA-256 so detailed provenance can be retrieved when needed, without routinely
+reading the full report.
+
+Inspect validation, analysis coverage, traversal boundaries and omission counts
+in the text view. It displays up to ten omissions/diagnostics and identifiers per
+excerpt, with explicit overflow notices; long diagnostic messages are shortened.
+Read the retained report for omitted metadata needed for a decision. Source
+excerpts are unchanged, including whitespace and line endings, inside fences
+longer than their own backtick sequences. Ranges are end-exclusive; the newline
+before each closing fence is a view separator, not part of the source slice.
+
+The original `context` JSON mode, budgets and validation exit codes are unchanged.
+Neither view certifies required-context completeness or changes reading authority.
+An older installed runtime may lack this format; report the capability difference
+and keep using the authorized runtime rather than silently substituting a checkout.
+
 ## Explicit cross-document context
 
 The package root and `experimental/graph` expose `createCorpus`,

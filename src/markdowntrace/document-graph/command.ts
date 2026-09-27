@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { documentCommandHelp, parseDocumentOptions } from "./command-options.js";
 import { documentRuntimeInfo } from "./runtime-identity.js";
+import { publishContextText } from "./command-context-text.js";
 import { exportHtml } from "./export/html.js";
 import {
   analyzeDocument, compileValidationProfile, exportMermaid,
@@ -36,11 +37,15 @@ export async function runDocumentCommand(
     ));
     const validation = value(validateGraph(analysis, profile));
     switch (flags.format) {
-      case "context": {
+      case "context":
+      case "context-text": {
         const { query, budget } = flags.context!;
         const selection = value(traverseGraph(analysis, query));
         const context = value(extractContext(analysis, { selection, budget }));
-        io.stdout(json({ validation, context }));
+        const report = json({ validation, context });
+        io.stdout(flags.format === "context-text"
+          ? await publishContextText(flags["report-file"]!, report, validation, context, budget)
+          : report);
         break;
       }
       case "html":

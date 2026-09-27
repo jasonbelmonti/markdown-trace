@@ -33,6 +33,24 @@ export async function runContextCommandSmoke(consumerDirectory) {
   ]);
   for (const part of context.parts)
     assert.equal(part.text, source.slice(part.range.start.offset, part.range.end.offset));
+  const report = path.join(consumerDirectory, "retained context.json");
+  const textArgs = [...args, "--format", "context-text", "--report-file", report];
+  const text = run(command, textArgs, options);
+  const retained = await readFile(report, "utf8");
+  assert.equal(retained, result.stdout, "Text mode retains the unchanged JSON context report");
+  assert.equal(text.stderr, "");
+  assert.ok(text.stdout.includes("Validation: pass; analysis coverage: complete"));
+  assert.ok(text.stdout.includes("Required-context completeness: not evaluated"));
+  assert.ok(text.stdout.includes(createHash("sha256").update(retained).digest("hex")));
+  assert.deepEqual(Array.from(text.stdout.matchAll(/^(`{3,})text\n([\s\S]*?)\n\1\n/gm), match => match[2]), [
+    "# Sample", "## [Selected](ctx://trace/entity/REQ-1?role=definition)", "Keep café.\r\nPreserve this line.",
+  ]);
+  assert.ok(Buffer.byteLength(text.stdout) < Buffer.byteLength(retained));
+  const refused = spawnSync(command, textArgs, options);
+  assert.equal(refused.status, 2);
+  assert.equal(refused.stdout, "");
+  assert.equal(JSON.parse(refused.stderr).code, "EEXIST");
+  assert.equal(await readFile(report, "utf8"), retained);
   const limited = JSON.parse(run(command, [...args, "--max-utf8-bytes", "0"], options).stdout).context;
   assert.deepEqual(limited.parts, []);
   assert.deepEqual(limited.omittedIdentifiers, [{ identifier: "REQ-1", reason: "byte-budget" }]);
@@ -42,5 +60,5 @@ export async function runContextCommandSmoke(consumerDirectory) {
   assert.equal(JSON.parse(missing.stderr).code, "unresolved-root");
   assert.equal(await readFile(file, "utf8"), source);
   assert.equal(await readFile(profileFile, "utf8"), profile);
-  process.stdout.write("installed context command: exact Unicode/CRLF source, budgets, unresolved roots and unchanged inputs passed\n");
+  process.stdout.write("installed context command: JSON/text parity, retained report, exact Unicode/CRLF, budgets, unresolved roots and unchanged inputs passed\n");
 }

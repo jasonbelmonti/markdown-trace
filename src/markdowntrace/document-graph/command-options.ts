@@ -8,7 +8,8 @@ Experimental document-wide Trace validation and source context projection.
 The profile must use markdown-trace.validation-profile.experimental.v1.
 No default vocabulary. Context roots require unique ctx:// definitions.
 
---format report|graph|query|context|mermaid|html  Default: report
+--format report|graph|query|context|context-text|mermaid|html  Default: report
+--report-file PATH                 Required only for context-text; creates a new JSON file
 --identifier ID                     Required for query
 --direction incoming|outgoing|both  Query: incoming (both forbidden); context: outgoing
 --offset N --limit N                Query page; defaults: 0, 100; limit <= 1000
@@ -21,6 +22,9 @@ No default vocabulary. Context roots require unique ctx:// definitions.
 
 Report: validation JSON. Graph: { validation, graph } JSON.
 Query: { validation, lookup, references } JSON, including pagination and ranges.
+Context-text: exact excerpts and compact status on stdout; full context JSON at
+--report-file (must not exist; parent directory must exist). Report write failure
+exits 2 before emitting text. Existing files and input aliases are never overwritten.
 Context: { validation, context } JSON with exact source parts, provenance,
 selection boundaries and omissions. Limits are nonnegative safe integers;
 max-nodes must cover all distinct roots. Zero budgets may omit all context.
@@ -32,7 +36,8 @@ Exit 0: validation passed; 1: failed or indeterminate; 2: invocation/runtime err
 Invalid graphs remain available. An ID absent from a query returns a null record;
 an unresolved context root is an error. Validation failures retain available context.
 Limits: 2,000,000 UTF-8 source bytes and 50,000 occurrences.
-Reads local inputs; writes only stdout/stderr. Structural and semantic checks
+Reads local inputs; context-text also creates its explicit report file. Other
+formats write only stdout/stderr. Structural and semantic checks
 belong to the document authoring workflow. No source edits or URI fetching.
 `;
 
@@ -48,6 +53,7 @@ export function parseDocumentOptions(args: string[]) {
   const { values } = parseArgs({ args, options: {
     file: { type: "string" }, profile: { type: "string" },
     format: { type: "string", default: "report" },
+    "report-file": { type: "string" },
     identifier: { type: "string" }, direction: { type: "string" },
     offset: { type: "string" }, limit: { type: "string" },
     root: { type: "string", multiple: true }, relation: { type: "string", multiple: true },
@@ -59,11 +65,16 @@ export function parseDocumentOptions(args: string[]) {
   if (values.help) return { ...values, context };
   if (!values.file || !values.profile)
     throw new Error("Both --file and --profile are required; use --help.");
-  if (!["report", "graph", "query", "context", "mermaid", "html"].includes(values.format))
+  if (!["report", "graph", "query", "context", "context-text", "mermaid", "html"].includes(values.format))
     throw new Error("Unknown --format; use --help.");
-  if (values.format !== "context" &&
+  const isContext = values.format === "context" || values.format === "context-text";
+  if (values.format === "context-text" && !values["report-file"]?.trim())
+    throw new Error("Context-text requires --report-file with a new output path.");
+  if (values.format !== "context-text" && values["report-file"] !== undefined)
+    throw new Error("--report-file requires --format context-text.");
+  if (!isContext &&
       [values.root, values.relation, ...contextLimits.map(name => values[name])].some(v => v !== undefined))
-    throw new Error("Roots, relation filters and context limits require --format context.");
+    throw new Error("Roots, relation filters and context limits require --format context or context-text.");
   if (values.format !== "query" &&
       [values.identifier, values.offset, values.limit].some(v => v !== undefined))
     throw new Error("Identifier and pagination options require --format query.");
@@ -71,7 +82,7 @@ export function parseDocumentOptions(args: string[]) {
     if (!values.identifier) throw new Error("Query requires --identifier.");
     if (values.direction && !["incoming", "outgoing"].includes(values.direction))
       throw new Error("Query direction must be incoming or outgoing.");
-  } else if (values.format === "context") {
+  } else if (isContext) {
     if (!values.root?.length) throw new Error("Context requires at least one --root.");
     const direction = values.direction ?? "outgoing";
     if (direction !== "incoming" && direction !== "outgoing" && direction !== "both")
@@ -89,7 +100,7 @@ export function parseDocumentOptions(args: string[]) {
       },
     };
   } else if (values.direction !== undefined) {
-    throw new Error("Direction requires --format query or context.");
+    throw new Error("Direction requires --format query, context or context-text.");
   }
   return { ...values, context };
 }

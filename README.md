@@ -23,6 +23,15 @@ npx markdown-trace-document --file document.md --profile profile.json \
   --max-depth 2 --max-nodes 20 --max-utf8-bytes 12000 --max-fragments 40
 ```
 
+For a concise exact-text view, a runtime whose help lists `context-text` also
+accepts the same selection options with `--format context-text --report-file
+context-report.json`. It creates the full JSON report before displaying verbatim
+excerpts, source locations, validation status, limits and omissions. Choose a new
+report path in an existing directory; existing files are never overwritten.
+This format is available in this checkout after building; published or pinned
+runtimes require a release containing it. See the
+[context-text guide](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-graph-validation.md#exact-text-context-view).
+
 JavaScript and TypeScript consumers import from `@jasonbelmonti/markdown-trace`.
 The existing `experimental/graph` subpath remains a compatibility alias; protocol
 identifiers retain their existing version strings. Cross-document traversal uses
@@ -54,7 +63,7 @@ Markdown Engine supplies Markdown structure and source locations. Markdown Trace
 
 ## What runs today
 
-The package root and `experimental/graph` entry points both expose document-wide analysis, direct queries, Mermaid export, [profile-driven validation](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-graph-validation.md), bounded traversal and context projection. The [API guide](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-document-graph.md#api-example) shows how to traverse a graph and retrieve exact source parts with explicit budgets. `markdown-trace-document` is the local command for validation reports, graph JSON, incoming/outgoing queries, [bounded context JSON](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-graph-validation.md#source-context-projection), Mermaid and HTML. The [shared Trace skill](https://github.com/jasonbelmonti/markdown-trace/blob/main/skills/markdown-trace/SKILL.md) invokes that command with a document-owned profile.
+The package root and `experimental/graph` entry points both expose document-wide analysis, direct queries, Mermaid export, [profile-driven validation](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-graph-validation.md), bounded traversal and context projection. The [API guide](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-document-graph.md#api-example) shows how to traverse a graph and retrieve exact source parts with explicit budgets. `markdown-trace-document` is the local command for validation reports, graph JSON, incoming/outgoing queries, [bounded context JSON and exact-text views](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-graph-validation.md#source-context-projection), Mermaid and HTML. The [shared Trace skill](https://github.com/jasonbelmonti/markdown-trace/blob/main/skills/markdown-trace/SKILL.md) invokes that command with a document-owned profile.
 
 ## Development setup
 

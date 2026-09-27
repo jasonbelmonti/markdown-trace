@@ -30,6 +30,7 @@ the command. An installed package exposes the entry point as
 | `--format graph` | `{ validation, graph }` JSON; graph is the complete snapshot. |
 | `--format query --identifier REQ-1` | `{ validation, lookup, references }` JSON; incoming references by default. |
 | `--format context --root REQ-1` (plus required limits below) | `{ validation, context }` JSON; exact source parts, selection provenance, boundaries and omissions. |
+| `--format context-text --report-file PATH` (same context roots and limits) | Exact source excerpts and compact status on stdout; complete `{ validation, context }` JSON in a newly created file. |
 | `--format mermaid` | Mermaid on stdout and validation JSON on stderr, including on pass. |
 | `--format html` | Visual HTML report on stdout, combining the graph, definition context and validation findings. |
 
@@ -42,7 +43,8 @@ once and reuse the captured graph for validation and inspection.
 Every format exits 0 for pass, 1 for fail/indeterminate, or 2 for an invocation or
 runtime failure. Failure does not suppress an available graph, query, context or HTML report.
 Runtime failures emit JSON on stderr without a graph. The command reads inputs
-and writes only stdout/stderr; use distinct artifact paths when redirecting:
+and writes stdout/stderr; `context-text` additionally creates its explicit report
+file. Other formats do not write files. Use distinct artifact paths when redirecting:
 
 ```sh
 node dist/markdowntrace/document-graph/cli.js \
@@ -97,6 +99,53 @@ fails or is indeterminate. Consumers must inspect validation, coverage,
 `selection.boundary` and omissions before accepting a packet. Projection does not
 infer relevance from arbitrary prose or certify that every required instruction
 has been included. It does not change full-read obligations.
+
+### Exact-text context view
+
+Use `context-text` to keep the full machine report outside routine model context:
+
+```sh
+node dist/markdowntrace/document-graph/cli.js \
+  --file examples/preview-design/document.md \
+  --profile examples/preview-design/profile.json \
+  --format context-text --report-file /tmp/preview-context-report.json \
+  --root REQ-1 --direction incoming --relation implements \
+  --max-depth 1 --max-nodes 10 --max-utf8-bytes 8192 --max-fragments 50
+```
+
+The selection and source budgets are identical to `--format context`. The text
+view gives validation status, analysis coverage, source path/hash, report
+path/hash, selection counts, traversal boundaries, source budget use, omissions
+and located validation diagnostics. It then emits every selected part verbatim
+inside a fence longer than any backtick sequence in that part. Line/column and
+UTF-16 offset ranges are end-exclusive. The single newline immediately before
+each closing fence is a view separator, not part of the captured source slice;
+all original whitespace, Unicode, line endings and source syntax remain intact.
+
+The complete report is byte-identical to the JSON produced by `--format context`
+for the same inputs/options, including all provenance and diagnostic detail. The
+reported digest is SHA-256 over the report's UTF-8 file bytes. Text limits only
+metadata detail: at most ten omissions, ten diagnostics and ten identifiers per
+excerpt are listed, with explicit overflow notices. Diagnostic messages over
+240 characters are shortened with a notice. Excerpt text is never summarized or
+additionally truncated by the view. Source budgets exclude view metadata and
+separators and are not model-token limits; a text view is not guaranteed smaller
+for every possible document or budget.
+
+`--report-file` is required for `context-text` and rejected for other formats.
+The report path must not already exist and its parent directory must exist.
+Exclusive creation refuses existing files, including symbolic/hard links to an
+input or prior report. No inputs are modified. A report-write failure returns
+exit 2 with JSON stderr and no text view; a failed write may leave an incomplete
+report, which is not valid retained evidence. Select a fresh report path on retry.
+
+Exit 0/1 still reports graph validation, not completeness: zero excerpt budgets,
+depth/node limits, unresolved edges and ownership omissions remain visible.
+Validation failures retain both available excerpts and the full failure report.
+The view explicitly states that required-context completeness was not evaluated;
+it grants no exemption from source-owned reading obligations. Capability-check
+installed runtimes with `--help`; building this checkout does not activate it in
+Fleet or replace an installed runtime.
 
 ### Visual report
 
