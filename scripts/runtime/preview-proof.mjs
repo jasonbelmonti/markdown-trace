@@ -9,13 +9,13 @@ export async function provePreview(run, work) {
   const source = await readFile(join(work, document), "utf8");
   const report = JSON.parse(run(args).stdout);
   assert.equal(report.status, "pass");
-  assert.equal(report.parserVersion, "3.6.0");
+  assert.equal(report.parserVersion, "4.0.0");
   assert.equal(report.identifiers, 3);
   assert.equal(report.relationships, 2);
   const graphRun = run([...args, "--format", "graph"]);
   assert.equal(run([...args, "--format", "graph"]).stdout, graphRun.stdout);
   const { graph } = JSON.parse(graphRun.stdout);
-  assert.equal(graph.parserVersion, "3.6.0");
+  assert.equal(graph.parserVersion, "4.0.0");
   assert.equal(graph.source.sha256, report.sourceSha256);
   assert.deepEqual(graph.identifiers.map(item => item.identifier).sort(), ["CHECK-1", "DES-1", "REQ-1"]);
   assert.deepEqual(graph.relationships.map(edge => `${edge.source.identifier} ${edge.kind} ${edge.target}`).sort(),

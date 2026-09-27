@@ -19,7 +19,7 @@ export async function runGraphDemoSmoke(consumerDirectory, repositoryRoot) {
   assert.equal(mermaid.stderr, "");
   const json = JSON.parse(run(process.execPath, [...args, "--graph"], options).stdout);
   assert.equal(json.schemaVersion, "markdown-trace.document-graph.v1");
-  assert.equal(json.parserVersion, "3.6.0");
+  assert.equal(json.parserVersion, "4.0.0");
   assert.equal(json.identifiers.length, 6);
   const summary = JSON.parse(run(process.execPath, args, options).stdout);
   assert.equal(summary.totalBacklinks, 2);
@@ -36,7 +36,7 @@ export async function runGraphDemoSmoke(consumerDirectory, repositoryRoot) {
   ];
   const validated = JSON.parse(run(command, documentArgs, options).stdout);
   assert.equal(validated.status, "pass");
-  assert.equal(validated.parserVersion, "3.6.0");
+  assert.equal(validated.parserVersion, "4.0.0");
   assert.equal(validated.identifiers, 3);
   assert.equal(validated.relationships, 2);
   const queried = JSON.parse(run(command, [...documentArgs, "--format", "query", "--identifier", "REQ-1"], options).stdout);

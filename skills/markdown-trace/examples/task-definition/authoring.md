@@ -18,7 +18,7 @@ Keep evidence descriptions readable. Shared checks may serve multiple slices;
 the profile enforces annotation counts, coverage, label agreement and required
 connections. It cannot decide whether the evidence actually proves the claim.
 
-After authoring, run task-definition's Engine 3.6.0 structural check, followed by
+After authoring, run task-definition's Engine 4.0.0 structural check, followed by
 the shared command through the installed skill helper (SKILL_DIR is its absolute directory):
 
 ```sh

@@ -27,7 +27,7 @@ function run(path, out, expectedExit, profile = join(here, "profile.json")) {
 }
 const good = run(sourcePath, join(output, "valid"), 0);
 assert.equal(good.valid, true);
-assert.equal(good.structural.engineVersion, "3.6.0");
+assert.equal(good.structural.engineVersion, "4.0.0");
 assert.deepEqual(good.trace.rules.filter(rule => rule.id.endsWith("-definitions")).map(rule => rule.selected), [3, 3, 1]);
 const graph = JSON.parse(readFileSync(join(output, "valid/graph.json"), "utf8"));
 assert.deepEqual(graph.identifiers.map(record => record.identifier).sort(), ["SLICE-1", "TD-SC-1", "TD-SC-2", "TD-SC-3", "VAL-1", "VAL-2", "VAL-3"]);

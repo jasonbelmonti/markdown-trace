@@ -2,8 +2,8 @@
 
 The local producer creates a versioned, relocatable directory containing Trace's
 compiled JavaScript and all locked production dependencies, including Engine
-3.6.0. Node remains an external prerequisite: `^20.19.0 || >=22.12.0`, on Linux
-or macOS. The current package version is 0.1.2 and is configured for public npm publication. The existing portable v0.1.0 release and Fleet pins retain their original identities. The document command and
+4.0.0. Node remains an external prerequisite: `^20.19.0 || >=22.12.0`, on Linux
+or macOS. The current package version is 0.1.2 and is configured for public npm publication. Published 0.1.2 and earlier portable releases and Fleet pins retain their original Engine 3.6.0 identities. The verifier accepts both Engine versions and requires the descriptor, manifest and installed dependency to agree exactly; this preserves rollback. A new package version is required before publishing the Engine 4 migration. The document command and
 document-graph API retain their existing meanings; the package root now exports
 that same graph API after retirement of the no-consumer table/registry workflows.
 
@@ -131,7 +131,7 @@ npm run check:package-exports
 node experiments/task-definition-trace/verify.mjs
 ```
 
-The owner trial requires the separate Engine 3.6.0 CLI and installed task-definition
+The owner trial requires the separate Engine 4.0.0 CLI and installed task-definition
 profile. CI includes artifact execution on Linux Node 20.19.0 and macOS Node
 22.20.0. Configuring a CI job is not evidence that it has run: only retained
 execution results support a platform claim. See the implementation evidence in
