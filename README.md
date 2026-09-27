@@ -2,7 +2,7 @@
 
 Markdown Trace is being developed into a document graph engine for complex Markdown specifications: discover identities and relationships throughout a document under a constrained syntax, validate relationships against developer-owned profiles, and query the graph for relevant source context.
 
-**Document-wide graphs, backlinks, profile-driven validation, bounded traversal and source-context projection are runnable.** The public npm release is version `0.1.1`. The table-profile validator and registry/sidecar workflows have been retired.
+**Document-wide graphs, backlinks, profile-driven validation, bounded traversal and source-context projection are runnable.** The public npm release is version `0.1.2`. The table-profile validator and registry/sidecar workflows have been retired.
 
 ## Install and use
 
@@ -28,8 +28,8 @@ accepts the same selection options with `--format context-text --report-file
 context-report.json`. It creates the full JSON report before displaying verbatim
 excerpts, source locations, validation status, limits and omissions. Choose a new
 report path in an existing directory; existing files are never overwritten.
-This format is available in this checkout after building; published or pinned
-runtimes require a release containing it. See the
+This format is available starting with version 0.1.2; older pinned runtimes
+require an explicit update. See the
 [context-text guide](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-graph-validation.md#exact-text-context-view).
 
 JavaScript and TypeScript consumers import from `@jasonbelmonti/markdown-trace`.
