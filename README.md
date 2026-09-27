@@ -2,7 +2,7 @@
 
 Markdown Trace is being developed into a document graph engine for complex Markdown specifications: discover identities and relationships throughout a document under a constrained syntax, validate relationships against developer-owned profiles, and query the graph for relevant source context.
 
-**Document-wide graphs, backlinks, profile-driven validation, bounded traversal and source-context projection are runnable.** The public npm release is version `0.1.2`. The table-profile validator and registry/sidecar workflows have been retired.
+**Document-wide graphs, backlinks, profile-driven validation, bounded traversal and source-context projection are runnable.** Version `0.1.3` is prepared for release with Markdown Engine `4.0.0`. The table-profile validator and registry/sidecar workflows have been retired.
 
 ## Install and use
 
