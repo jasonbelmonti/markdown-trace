@@ -21,6 +21,8 @@ The task set turns that request into bounded capability contracts. It does not m
 
 This is a capability dependency summary, not an execution plan or permission to fan out edits. Task Control in each file is authoritative. Planning/specification can address declared predecessor contracts before runtime implementation, but dependent execution requires actual verified predecessor capabilities and reconciliation of their interfaces.
 
+Task 04's proposed [projection-policy specification](../../design/projection-policy-contract.md) now defines mandatory globals, explicit dependency closure, exact identities, atomic budget failure and independent packet verification, with typed consumer examples. It is a specification deliverable, not implemented runtime behavior or a change to Task 04's `SPEC_REQUIRED` route.
+
 ## Repository and handoff
 
 - Repository: https://github.com/jasonbelmonti/markdown-trace
