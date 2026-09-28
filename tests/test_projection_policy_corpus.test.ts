@@ -173,7 +173,7 @@ function microInput(text: string, root: string, direction: "incoming" | "outgoin
     sources: [{ alias: "micro", revision: "1", documentId: "micro.md", text, validationProfileJson: microProfileJson }],
     bindings: [], policy: compiledPolicy.value,
     expected: { policy: compiledPolicy.value.identity,
-      producer: { packageVersion: "0.1.4", analyzerVersion: "0.1.0-experimental.3", parserVersion: "5.0.0", algorithmVersion: "markdown-trace.projection-algorithm.v1" },
+      producer: { packageVersion: "0.1.5", analyzerVersion: "0.1.0-experimental.3", parserVersion: "5.0.0", algorithmVersion: "markdown-trace.projection-algorithm.v1" },
       sources: [{ alias: "micro", revision: "1", pin: { analysisId: analysis.value.snapshot.analysisId, source: analysis.value.snapshot.source },
         profileFileSha256: sha256(microProfileJson), interpretationHash: profile.value.interpretationHash,
         validationHash: profile.value.validationHash }] },

@@ -37,7 +37,7 @@ export async function verifyPayload(descriptorPath, payload) {
   assert.equal(identity.schemaVersion, "markdown-trace.runtime-info.v1");
   assert.equal(identity.package, "@jasonbelmonti/markdown-trace");
   assert.match(identity.sourceCommit, /^[a-f0-9]{40}$/);
-  assert.ok(["0.1.0", "0.1.1", "0.1.2", "0.1.3", "0.1.4"].includes(identity.packageVersion), `Unsupported package version: ${identity.packageVersion}`);
+  assert.ok(["0.1.0", "0.1.1", "0.1.2", "0.1.3", "0.1.4", "0.1.5"].includes(identity.packageVersion), `Unsupported package version: ${identity.packageVersion}`);
   // Retain verification and rollback for already-produced Engine 3.6.0 releases.
   // The manifest and installed Engine must still match this exact descriptor identity.
   assert.ok(["3.6.0", "4.0.0", "5.0.0"].includes(identity.markdownEngineVersion),
