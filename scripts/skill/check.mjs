@@ -31,7 +31,7 @@ async function proveBindings(helper, root, cwd, env, launcher) {
   for (const binding of [undefined, ""]) {
     const selected = { ...fallback };
     if (binding !== undefined) selected.MARKDOWN_TRACE_BIN = binding;
-    assert.equal(JSON.parse(invoke(helper, ["--runtime-info"], cwd, selected).stdout).markdownEngineVersion, "4.0.0");
+    assert.equal(JSON.parse(invoke(helper, ["--runtime-info"], cwd, selected).stdout).markdownEngineVersion, "5.0.0");
   }
   const nonExecutable = join(root, "not executable");
   await writeFile(nonExecutable, "not a command");
@@ -75,7 +75,7 @@ async function check(artifact) {
     assert.equal(valid.status, contract.valid.status);
     assert.equal(valid.identifiers, contract.valid.entityCount);
     assert.equal(valid.relationships, contract.valid.relationshipCount);
-    assert.equal(valid.parserVersion, "4.0.0");
+    assert.equal(valid.parserVersion, "5.0.0");
     assert.equal(valid.schemaVersion, "markdown-trace.validation-result.experimental.v1");
     const graph = run(["--format", "graph"]).graph;
     assert.deepEqual(graph.identifiers.map(item => item.identifier).sort(), ["CHECK-1", "DES-1", "REQ-1"]);

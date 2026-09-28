@@ -2,8 +2,8 @@
 
 The local producer creates a versioned, relocatable directory containing Trace's
 compiled JavaScript and all locked production dependencies, including Engine
-4.0.0. Node remains an external prerequisite: `^20.19.0 || >=22.12.0`, on Linux
-or macOS. The current package version is 0.1.3 and is configured for public npm publication. Published 0.1.2 and earlier portable releases and Fleet pins retain their original Engine 3.6.0 identities. The verifier accepts both Engine versions and requires the descriptor, manifest and installed dependency to agree exactly; this preserves rollback. Version 0.1.3 carries the Engine 4 migration. The document command and
+5.0.0. Node remains an external prerequisite: `^20.19.0 || >=22.12.0`, on Linux
+or macOS. The current package version is 0.1.4 and is configured for public npm publication. Previously produced portable releases and Fleet pins retain their original Engine identities. The verifier accepts Engine 3.6.0, 4.0.0, and 5.0.0 when the descriptor, manifest, and installed dependency agree exactly; this preserves rollback. Version 0.1.4 carries the Engine 5 migration. The document command and
 document-graph API retain their existing meanings; the package root now exports
 that same graph API after retirement of the no-consumer table/registry workflows.
 
@@ -30,7 +30,7 @@ The output is:
 ```text
 /tmp/trace-candidate-a/
   release.json
-  markdown-trace-0.1.3-<full-source-commit>/
+  markdown-trace-0.1.4-<full-source-commit>/
     package.json
     package-lock.json
     dist/
@@ -63,7 +63,7 @@ code. It uses only Node built-ins and does not import or execute the payload:
 
 ```sh
 stage=/tmp/trace-candidate-a
-payload="$stage/markdown-trace-0.1.3-<full-source-commit>"
+payload="$stage/markdown-trace-0.1.4-<full-source-commit>"
 node scripts/runtime/verify.mjs --descriptor "$stage/release.json" --payload "$payload"
 ```
 
@@ -131,7 +131,7 @@ npm run check:package-exports
 node experiments/task-definition-trace/verify.mjs
 ```
 
-The owner trial requires the separate Engine 4.0.0 CLI and installed task-definition
+The owner trial requires the separate Engine 5.0.0 CLI and installed task-definition
 profile. CI includes artifact execution on Linux Node 20.19.0 and macOS Node
 22.20.0. Configuring a CI job is not evidence that it has run: only retained
 execution results support a platform claim. See the implementation evidence in

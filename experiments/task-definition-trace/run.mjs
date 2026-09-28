@@ -16,7 +16,7 @@ try {
   if (values.help) {
     console.log("Usage: node experiments/task-definition-trace/run.mjs [task.md] [--profile profile.json] [--out directory]\n"
       + "Defaults to the trial task. Exits 0=pass, 1=validation failed, 2=runtime failure.\n"
-      + "Optional env: MARKDOWN_ENGINE_BIN, TASK_DEFINITION_SKILL_DIR. Engine CLI must be 4.0.0.\n"
+      + "Optional env: MARKDOWN_ENGINE_BIN, TASK_DEFINITION_SKILL_DIR. Engine CLI must be 5.0.0.\n"
       + "--out writes report.json and the observed graph.json / graph.mmd, including invalid graphs.\n"
       + "--profile supplies the experimental validation profile; defaults to the trial's profile.json.\n"
       + "The package API is experimental and does not establish semantic readiness.");
@@ -37,8 +37,8 @@ try {
   if (structuralRun.error || ![0, 1].includes(structuralRun.status))
     throw new Error("Engine validation could not run: " + (structuralRun.error?.message ?? structuralRun.stderr ?? structuralRun.status));
   const structural = JSON.parse(structuralRun.stdout);
-  if (structural.evidence?.engineVersion !== "4.0.0")
-    throw new Error("Task-definition requires Engine CLI 4.0.0; observed " + structural.evidence?.engineVersion);
+  if (structural.evidence?.engineVersion !== "5.0.0")
+    throw new Error("Task-definition requires Engine CLI 5.0.0; observed " + structural.evidence?.engineVersion);
   const structureValid = structuralRun.status === 0 && structural.valid === true && structural.diagnostics.length === 0;
   const checked = structureValid ? checkTask(text, path, profile) : null;
   if (readFileSync(path, "utf8") !== text) throw new Error("Task changed during validation; rerun against stable input.");
