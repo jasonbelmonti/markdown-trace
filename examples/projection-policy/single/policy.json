@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "markdown-trace.projection-policy.v1",
+  "policyId": "task-worker-context",
+  "revision": "1",
+  "sources": ["task"],
+  "validationGates": [{ "source": "task", "rules": "all" }],
+  "rules": [
+    { "id": "scope", "op": "source", "requirement": "required", "source": "task", "select": { "kind": "section", "path": ["Task", "Scope"] } },
+    { "id": "authority", "op": "source", "requirement": "required", "source": "task", "select": { "kind": "section", "path": ["Task", "Authority"] } },
+    { "id": "constraints", "op": "source", "requirement": "required", "source": "task", "select": { "kind": "section", "path": ["Task", "Constraints"] } },
+    { "id": "review", "op": "source", "requirement": "required", "source": "task", "select": { "kind": "section", "path": ["Task", "Review Boundary"] } },
+    { "id": "acceptance", "op": "expand", "requirement": "required", "from": "roots", "mode": "step", "direction": "outgoing", "relations": ["implements"], "subjectKinds": ["work"], "minSubjects": 1, "minNeighbors": 1, "maxDepth": 1, "maxNodes": 20 },
+    { "id": "dependencies", "op": "expand", "requirement": "required", "from": "acceptance", "mode": "closure", "direction": "outgoing", "relations": ["requires"], "subjectKinds": ["criterion"], "minSubjects": 1, "minNeighbors": 1, "maxDepth": 8, "maxNodes": 100 },
+    { "id": "background", "op": "source", "requirement": "optional", "source": "task", "select": { "kind": "section", "path": ["Task", "Optional Background"] } }
+  ]
+}
