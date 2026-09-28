@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "markdown-trace.projection-manifest.v1",
+  "assignmentId": "task-a-assignment",
+  "roots": [
+    {
+      "source": "plan",
+      "identifier": "WP-1"
+    }
+  ],
+  "sources": [
+    {
+      "alias": "task-b",
+      "revision": "r1",
+      "documentId": "task-b.md",
+      "file": "task-b.md",
+      "profileFile": "task-b.profile.json"
+    },
+    {
+      "alias": "plan",
+      "revision": "r1",
+      "documentId": "plan.md",
+      "file": "plan.md",
+      "profileFile": "plan.profile.json"
+    },
+    {
+      "alias": "task-a",
+      "revision": "r1",
+      "documentId": "task-a.md",
+      "file": "task-a.md",
+      "profileFile": "task-a.profile.json"
+    }
+  ],
+  "bindings": [
+    {
+      "source": {
+        "analysisId": "4d1c962746cb2bbd108fdeb8e54222d43d48d5fb5a26c6f1b4ed1d2ff5c9b091",
+        "occurrenceId": "O2"
+      },
+      "target": {
+        "analysisId": "63ca4e5664bfbbdd0365dd0d30faaf1a0ca8d5c5d092fce05015da40c6a26315",
+        "identifier": "REQ-1"
+      }
+    }
+  ],
+  "policyFile": "policy.json",
+  "expected": {
+    "policy": {
+      "schemaVersion": "markdown-trace.projection-policy.v1",
+      "policyId": "corpus-assignment",
+      "revision": "1",
+      "sha256": "cccc4e3ec9edcce6d1c8928ad4a551a235e321b202672fac9069982d5901b184"
+    },
+    "producer": {
+      "packageVersion": "0.1.1",
+      "analyzerVersion": "0.1.0-experimental.3",
+      "parserVersion": "3.6.0",
+      "algorithmVersion": "markdown-trace.projection-algorithm.v1"
+    },
+    "sources": [
+      {
+        "alias": "task-a",
+        "revision": "r1",
+        "pin": {
+          "analysisId": "63ca4e5664bfbbdd0365dd0d30faaf1a0ca8d5c5d092fce05015da40c6a26315",
+          "source": {
+            "documentId": "task-a.md",
+            "sha256": "6267e0854c3b3c1ee29fd0ab14b26aab1972f76ba72171877e35d2d42b0ab538",
+            "utf8Bytes": 423,
+            "utf16Length": 423
+          }
+        },
+        "profileFileSha256": "580675ee0f2bef5b88cae6b4cdbbb63a7b6481facd9a689b895410abc4896352",
+        "interpretationHash": "2671b80ba5795010896aef789d642eba070ceeaf7d611ece8d146385c3a395ab",
+        "validationHash": "ab1673073c1bec3e35617d3c25d92885d0ed0b0e54f042ad504bda5bdf9cffb6"
+      },
+      {
+        "alias": "task-b",
+        "revision": "r1",
+        "pin": {
+          "analysisId": "9c10ab14e79c2d7369d43d634acd2a6885250a9ce89e31e05dc42d13d8577244",
+          "source": {
+            "documentId": "task-b.md",
+            "sha256": "625003e7ce9e712c20f0aa653e0d9e426f8cd8d1c80b4193cfb9dae76732b7ee",
+            "utf8Bytes": 140,
+            "utf16Length": 140
+          }
+        },
+        "profileFileSha256": "e79eed69de2342e4b2a2cb4706b971d19c56216024e7e390ad77267a3d21c459",
+        "interpretationHash": "2671b80ba5795010896aef789d642eba070ceeaf7d611ece8d146385c3a395ab",
+        "validationHash": "fd5c3a2c2cc15a79845f9c63a337d6f1439eba2ab84c17c353394f9db6e5d4ca"
+      },
+      {
+        "alias": "plan",
+        "revision": "r1",
+        "pin": {
+          "analysisId": "4d1c962746cb2bbd108fdeb8e54222d43d48d5fb5a26c6f1b4ed1d2ff5c9b091",
+          "source": {
+            "documentId": "plan.md",
+            "sha256": "4c4534e5b353b972e2672e69eb627014a12360a56fdb2d66740b093fff108aa9",
+            "utf8Bytes": 130,
+            "utf16Length": 130
+          }
+        },
+        "profileFileSha256": "59648e555f43b33e9a73b9cb8997dab1544a31a0333f2a9af18bf46934b0e083",
+        "interpretationHash": "2671b80ba5795010896aef789d642eba070ceeaf7d611ece8d146385c3a395ab",
+        "validationHash": "a4772985d41741a745c7ed09846395a8c3fead1f6edb27fa9c7d51f00c7b7c40"
+      }
+    ]
+  },
+  "budget": {
+    "maxUtf8Bytes": 10000,
+    "maxFragments": 100
+  },
+  "limits": {
+    "analysis": {
+      "maxSourceUtf8Bytes": 10000,
+      "maxOccurrences": 100
+    },
+    "corpus": {
+      "maxCaptures": 3,
+      "maxBindings": 3,
+      "maxSourceUtf8Bytes": 30000
+    },
+    "maxRuleEntityVisits": 100,
+    "maxPacketUtf8Bytes": 200000
+  }
+}

@@ -12,6 +12,7 @@
     "references/link-language.md",
     "references/profile-authoring.md",
     "references/profile-contract.md",
+    "references/projection-policy.md",
     "scripts/resolve-runtime.mjs",
     "scripts/run.mjs"
   ]

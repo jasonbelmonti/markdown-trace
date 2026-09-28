@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "markdown-trace.validation-profile.experimental.v1",
+  "profileId": "projection-policy-fixture",
+  "interpretation": {
+    "language": "markdown-trace.identity.draft2",
+    "entityKinds": [
+      {
+        "name": "work",
+        "prefixes": [
+          "WP"
+        ]
+      },
+      {
+        "name": "criterion",
+        "prefixes": [
+          "REQ"
+        ]
+      },
+      {
+        "name": "constraint",
+        "prefixes": [
+          "CON"
+        ]
+      }
+    ]
+  },
+  "validation": {
+    "minEntities": 3,
+    "allowedRelations": [
+      {
+        "kind": "implements",
+        "from": [
+          "work"
+        ],
+        "to": [
+          "criterion"
+        ]
+      },
+      {
+        "kind": "requires",
+        "from": [
+          "criterion"
+        ],
+        "to": [
+          "constraint"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "fixture-work-declaration",
+        "op": "declarations",
+        "kinds": [
+          "work"
+        ],
+        "select": {
+          "target": "node",
+          "nodeType": "heading",
+          "section": "Work"
+        },
+        "minSelections": 1,
+        "min": 1,
+        "max": 1,
+        "matchText": false,
+        "exclusive": true
+      },
+      {
+        "id": "fixture-criterion-declaration",
+        "op": "declarations",
+        "kinds": [
+          "criterion"
+        ],
+        "select": {
+          "target": "node",
+          "nodeType": "heading",
+          "section": "Criterion"
+        },
+        "minSelections": 1,
+        "min": 1,
+        "max": 1,
+        "matchText": false,
+        "exclusive": true
+      },
+      {
+        "id": "fixture-constraint-declaration",
+        "op": "declarations",
+        "kinds": [
+          "constraint"
+        ],
+        "select": {
+          "target": "node",
+          "nodeType": "heading",
+          "section": "Constraint"
+        },
+        "minSelections": 1,
+        "min": 1,
+        "max": 1,
+        "matchText": false,
+        "exclusive": true
+      },
+      {
+        "id": "fixture-implementation-reference",
+        "op": "references",
+        "relation": "implements",
+        "select": {
+          "target": "node",
+          "nodeType": "paragraph",
+          "section": "Work"
+        },
+        "minSelections": 1,
+        "min": 1,
+        "max": 1,
+        "matchText": false,
+        "exclusive": true
+      },
+      {
+        "id": "fixture-constraint-reference",
+        "op": "references",
+        "relation": "requires",
+        "select": {
+          "target": "node",
+          "nodeType": "paragraph",
+          "section": "Criterion"
+        },
+        "minSelections": 1,
+        "min": 1,
+        "max": 1,
+        "matchText": false,
+        "exclusive": true
+      },
+      {
+        "id": "fixture-required-constraint",
+        "op": "require-relation",
+        "kinds": [
+          "criterion"
+        ],
+        "direction": "outgoing",
+        "relation": "requires",
+        "relatedKinds": [
+          "constraint"
+        ],
+        "min": 1,
+        "max": 1
+      }
+    ]
+  }
+}

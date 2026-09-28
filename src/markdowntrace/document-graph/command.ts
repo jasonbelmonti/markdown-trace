@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { documentCommandHelp, parseDocumentOptions } from "./command-options.js";
 import { documentRuntimeInfo } from "./runtime-identity.js";
 import { publishContextText } from "./command-context-text.js";
+import { runProjectionCommand } from "./command-projection/run.js";
 import { exportHtml } from "./export/html.js";
 import {
   analyzeDocument, compileValidationProfile, exportMermaid,
@@ -21,6 +22,9 @@ export async function runDocumentCommand(
   io: { stdout: (text: string) => void; stderr: (text: string) => void },
 ): Promise<number> {
   const json = (data: unknown) => JSON.stringify(data, null, 2) + "\n";
+  if (args.some(argument => argument === "--projection-manifest" || argument.startsWith("--projection-manifest=") ||
+      argument === "--verify-projection" || argument.startsWith("--verify-projection=")))
+    return runProjectionCommand(args, io);
   try {
     if (args.includes("--runtime-info")) {
       if (args.length !== 1) throw new Error("--runtime-info must be used alone.");

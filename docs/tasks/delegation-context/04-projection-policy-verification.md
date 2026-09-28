@@ -105,7 +105,7 @@ Keep existing parsing, graph interpretation, query, projection, policy and trans
 
 | Execution status | Current proving slice | Evidence admitted | Next action | Blockers / stop condition |
 | --- | --- | --- | --- | --- |
-| not-started | Prepare the selected route for the first proving slice; implementation of TD-SC-1 has not begun. | None admitted. | Read this task and its sources, then formalize the finite projection-policy and independent-verification contract. | Stop dependent execution if source authority conflicts, prerequisite runtime behavior is unavailable, or the required downstream artifact is not executable. Resume after reconciliation and the affected route gates pass. |
+| review-ready | Review the implemented single-source and explicit-corpus policy production, independent verification and packed delivery. | TD-SC-1, TD-SC-2, TD-SC-3, TD-SC-4, TD-SC-5 and TD-SC-6: `.context-capsule/execution/acceptance-map.json` maps current proof and tested input fingerprints; `EP-GATE-6.json` in that directory admits passing CI, packed examples and source-preservation checks. `final-evidence-reconciliation.json` there records affected rechecks and resolved findings. | Jason Belmonti performs the existing MS-2 review using `.context-capsule/execution/review-ready.md` and records the decision for the exact candidate. | Hold merge/completion pending MS-2; changed implementation inputs require affected proof reassessment. Runtime does not grant semantic sufficiency or full-read permission. |
 
 ## Follow-up / Non-blocking Work
 
