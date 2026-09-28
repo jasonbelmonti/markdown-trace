@@ -16,7 +16,7 @@ import { corpusOracle } from "./projection-policy/corpus/oracle.js";
 
 const sha256 = (text: string) => createHash("sha256").update(text, "utf8").digest("hex");
 const producer = {
-  packageVersion: "0.1.4",
+  packageVersion: "0.1.5",
   analyzerVersion: "0.1.0-experimental.3",
   parserVersion: "5.0.0",
   algorithmVersion: "markdown-trace.projection-algorithm.v1",

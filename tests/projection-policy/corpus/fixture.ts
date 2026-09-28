@@ -102,7 +102,7 @@ export function corpusInput(overrides: Partial<Record<"plan" | "task-a" | "task-
     bindings: [binding], policy: compiledPolicy.value,
     expected: {
       policy: compiledPolicy.value.identity,
-      producer: { packageVersion: "0.1.4", analyzerVersion: "0.1.0-experimental.3", parserVersion: "5.0.0", algorithmVersion: "markdown-trace.projection-algorithm.v1" },
+      producer: { packageVersion: "0.1.5", analyzerVersion: "0.1.0-experimental.3", parserVersion: "5.0.0", algorithmVersion: "markdown-trace.projection-algorithm.v1" },
       sources: [expectedSources[1], expectedSources[2], expectedSources[0]],
     },
     budget: { maxUtf8Bytes: 10_000, maxFragments: 100 },

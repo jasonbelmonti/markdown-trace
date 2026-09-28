@@ -26,7 +26,7 @@
       "sha256": "ff28490cf3e5b9853f131a1c03c75795a725e8be55eed22a2107d0fbbf576e58"
     },
     "producer": {
-      "packageVersion": "0.1.4",
+      "packageVersion": "0.1.5",
       "analyzerVersion": "0.1.0-experimental.3",
       "parserVersion": "5.0.0",
       "algorithmVersion": "markdown-trace.projection-algorithm.v1"

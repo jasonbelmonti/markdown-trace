@@ -15,7 +15,7 @@ export function fixtureInput(): ProjectionInput {
     bindings: [], policy: compiled.value,
     expected: {
       policy: compiled.value.identity,
-      producer: { packageVersion: "0.1.4", analyzerVersion: "0.1.0-experimental.3", parserVersion: "5.0.0", algorithmVersion: "markdown-trace.projection-algorithm.v1" },
+      producer: { packageVersion: "0.1.5", analyzerVersion: "0.1.0-experimental.3", parserVersion: "5.0.0", algorithmVersion: "markdown-trace.projection-algorithm.v1" },
       sources: [{ alias: "task", revision: "fixture-r1", pin: { analysisId: "7e3c85125261f33609ff459295b5a3a309d0d79cc070c6f004d1840e56223502", source: { documentId: "tests/projection-policy/single-task.md", sha256: "87884a414e1553c1be2191bd92aae00095422f70c86bb277143cbdab6b703eab", utf8Bytes: 697, utf16Length: 697 } }, profileFileSha256: "7e0d63d472c56de1eb7959b60d507da2d692261ab1549e53fdb3253868d4278a", interpretationHash: "2671b80ba5795010896aef789d642eba070ceeaf7d611ece8d146385c3a395ab", validationHash: "87559f43ba98e203f9adbd03cd02916acad6b289581936c3a01bdf93a0286532" }],
     },
     budget: { maxUtf8Bytes: 551, maxFragments: 11 },
