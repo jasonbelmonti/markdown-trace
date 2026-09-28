@@ -19,6 +19,8 @@ No default vocabulary. Context roots require unique ctx:// definitions.
 --max-utf8-bytes N --max-fragments N Context source budgets (both required)
 --runtime-info                     Standalone runtime identity (no other arguments)
 --help, -h                          Show this help
+--projection-manifest PATH         Produce a projection packet
+--verify-projection PATH           Verify packet JSON with the manifest
 
 Report: validation JSON. Graph: { validation, graph } JSON.
 Query: { validation, lookup, references } JSON, including pagination and ranges.
@@ -32,10 +34,16 @@ Byte/fragment budgets count source parts, not the serialized JSON or tokens.
 Exit 0 does not certify complete context: inspect boundaries and omissions.
 Mermaid: diagram on stdout, validation JSON on stderr (also on pass).
 HTML: one visual report on stdout; its diagram loads Mermaid from a pinned CDN.
-Exit 0: validation passed; 1: failed or indeterminate; 2: invocation/runtime error.
+Document exit 0: validation passed; 1: failed or indeterminate; 2: invocation/runtime error.
 Invalid graphs remain available. An ID absent from a query returns a null record;
 an unresolved context root is an error. Validation failures retain available context.
 Limits: 2,000,000 UTF-8 source bytes and 50,000 occurrences.
+Projection modes use markdown-trace.projection-manifest.v1 and emit compact
+markdown-trace.projection-packet.v1 or projection-verification.v1 JSON.
+Produce: markdown-trace-document --projection-manifest manifest.json
+Verify:  markdown-trace-document --verify-projection packet.json --projection-manifest manifest.json
+Projection exit 0: satisfied / verification pass; exit 1: unsatisfied / fail or stale;
+exit 2: operation or invocation error, structured JSON on stderr and empty stdout.
 Reads local inputs; context-text also creates its explicit report file. Other
 formats write only stdout/stderr. Structural and semantic checks
 belong to the document authoring workflow. No source edits or URI fetching.
