@@ -19,3 +19,5 @@ export type * from "./contracts/context.js";
 export type * from "./contracts/validation-profile.js";
 export type * from "./contracts/validation.js";
 export type * from "./corpus/contracts.js";
+export { compileProjectionPolicy, produceProjection, verifyProjection } from "./projection/index.js";
+export type * from "./projection/contracts.js";

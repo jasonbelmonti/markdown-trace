@@ -1,5 +1,13 @@
 import * as rootGraph from "@jasonbelmonti/markdown-trace";
 import {
+  compileProjectionPolicy as compileRootProjectionPolicy,
+  produceProjection as produceRootProjection,
+  verifyProjection as verifyRootProjection,
+  type ProjectionInput as RootProjectionInput,
+  type ProjectionPacket as RootProjectionPacket,
+  type ProjectionVerification as RootProjectionVerification,
+} from "@jasonbelmonti/markdown-trace";
+import {
   extractContext as rootExtractContext,
   type ContextBudget as RootContextBudget,
   type ContextPart as RootContextPart,
@@ -20,6 +28,8 @@ import {
 
 import {
   analyzeDocument, compileProfile, exportMermaid, findIncoming, findOutgoing, lookupIdentifier,
+  compileProjectionPolicy, produceProjection, verifyProjection,
+  type ProjectionInput, type ProjectionPacket, type ProjectionVerification,
   type AnalysisLimits, type DocumentAnalysis, type DocumentSource, type Outcome,
   type GraphSnapshot, type LookupResult, type ReferencePage, type ReferenceQuery, type TraceProfile,
   compileValidationProfile, validateGraph, type TraceValidationProfile, type GraphValidationReport,
@@ -28,6 +38,13 @@ import {
   extractContext, type ContextBudget, type ContextPart, type ContextOmission,
   type ContextBundle, type ContextRequest,
 } from "@jasonbelmonti/markdown-trace/experimental/graph";
+
+export const rootProjectionCompiler: typeof compileProjectionPolicy = compileRootProjectionPolicy;
+export const rootProjectionProducer: typeof produceProjection = produceRootProjection;
+export const rootProjectionVerifier: typeof verifyProjection = verifyRootProjection;
+export type ProjectionInputClosure = [ProjectionInput, RootProjectionInput];
+export type ProjectionPacketClosure = [ProjectionPacket, RootProjectionPacket];
+export type ProjectionVerificationClosure = [ProjectionVerification, RootProjectionVerification];
 import {
   createCorpus,
   lookupCorpusIdentifier,
