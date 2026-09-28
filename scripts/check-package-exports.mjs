@@ -7,8 +7,8 @@ import { checkPackedConsumer } from "./package-exports/consumer.mjs";
 import { assert, run } from "./package-exports/process.mjs";
 
 const PACKAGE_NAME = "@jasonbelmonti/markdown-trace";
-const PACKAGE_VERSION = "0.1.3";
-const ENGINE_VERSION = "4.0.0";
+const PACKAGE_VERSION = "0.1.4";
+const ENGINE_VERSION = "5.0.0";
 const NODE_RANGE = "^20.19.0 || >=22.12.0";
 const GRAPH_TYPES = "./dist/markdowntrace/document-graph/index.d.ts";
 const GRAPH_IMPORT = "./dist/markdowntrace/document-graph/index.js";

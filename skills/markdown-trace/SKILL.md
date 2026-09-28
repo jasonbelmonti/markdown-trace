@@ -23,7 +23,7 @@ profile. The command accepts
 the entity kinds and prefixes; validation specifies permitted relationships,
 source selectors and required counts. Read those requirements before annotating.
 
-The runtime is experimental and uses Markdown Engine 4.0.0. The host supplies
+The runtime is experimental and uses Markdown Engine 5.0.0. The host supplies
 `MARKDOWN_TRACE_BIN` as one absolute path to a verified installed executable.
 This is a path, never a shell command or argument string. A nonempty binding is
 authoritative: report a missing, unreadable, non-executable or relative binding

@@ -1,6 +1,6 @@
 {
   "name": "@jasonbelmonti/markdown-trace",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -41,7 +41,7 @@
     "prepack": "npm run build"
   },
   "dependencies": {
-    "@jasonbelmonti/markdown-engine": "4.0.0"
+    "@jasonbelmonti/markdown-engine": "5.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.39",

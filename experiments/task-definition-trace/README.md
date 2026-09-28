@@ -30,11 +30,11 @@ node experiments/task-definition-trace/run.mjs /absolute/path/task.md \
 ```
 
 The command runs the installed task-definition structural profile via Engine CLI
-4.0.0 with explicit `--output full` for machine-readable diagnostics, then applies the selected trace profile. It exits 0 on machine-validation
+5.0.0 with explicit `--output full` for machine-readable diagnostics, then applies the selected trace profile. It exits 0 on machine-validation
 success, 1 on failure or indeterminate validation, and 2 on runtime/configuration failure.
 It prints JSON with gate results and located diagnostics, preserving the input.
 Optional MARKDOWN_ENGINE_BIN and TASK_DEFINITION_SKILL_DIR environment variables
-select other local installations; the structural engine must still be 4.0.0.
+select other local installations; the structural engine must still be 5.0.0.
 
 The output directory contains report.json, graph.json and graph.mmd. Invalid
 graphs remain inspectable when structural validation passes. When structure
@@ -44,9 +44,9 @@ separately records the experimental validator's actual rule results.
 
 ## Scope and ownership
 
-- Engine 4.0.0 runs the existing skill's structural profile, including criterion
+- Engine 5.0.0 runs the existing skill's structural profile, including criterion
   and evidence ID coverage. Its semantic/readiness gates remain the author's job.
-- Engine 4.0.0, installed as Trace's JavaScript dependency, supplies structural queries and ranges.
+- Engine 5.0.0, installed as Trace's JavaScript dependency, supplies structural queries and ranges.
   The validator joins selected source targets to the existing graph occurrences;
   it does not parse Markdown syntax or decode Trace URIs itself.
 - Trace supplies identities, ownership and references through its graph API.

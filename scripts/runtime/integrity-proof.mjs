@@ -7,7 +7,7 @@ export async function proveIntegrity(descriptorPath, payload, execute) {
   const descriptor = JSON.parse(await readFile(descriptorPath, "utf8"));
   const mismatchedDescriptor = join(payload, "..", "mismatched-engine.json");
   try {
-    for (const version of [descriptor.identity.markdownEngineVersion === "4.0.0" ? "3.6.0" : "4.0.0", "99.0.0"]) {
+    for (const version of [descriptor.identity.markdownEngineVersion === "5.0.0" ? "4.0.0" : "5.0.0", "99.0.0"]) {
       await writeFile(mismatchedDescriptor, JSON.stringify({ ...descriptor,
         identity: { ...descriptor.identity, markdownEngineVersion: version } }));
       await assert.rejects(verifyPayload(mismatchedDescriptor, payload),

@@ -43,7 +43,7 @@ async function produce(destination) {
     const lockBytes = await readFile(join(snapshot, "package-lock.json"));
     const lock = JSON.parse(lockBytes);
     const manifest = await readJson(join(snapshot, "package.json"));
-    assert.equal(manifest.dependencies["@jasonbelmonti/markdown-engine"], "4.0.0");
+    assert.equal(manifest.dependencies["@jasonbelmonti/markdown-engine"], "5.0.0");
     const toolchain = await compile(snapshot, commit);
     const versionedName = `markdown-trace-${manifest.version}-${commit}`;
     const payload = join(pending, versionedName);
