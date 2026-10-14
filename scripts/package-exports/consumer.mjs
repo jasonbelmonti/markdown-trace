@@ -1,7 +1,7 @@
 import { copyFile, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { run } from "./process.mjs";
+import { assert, run } from "./process.mjs";
 import { runGraphApiSmoke } from "./graph-consumer.mjs";
 import { runGraphDemoSmoke } from "./graph-demo.mjs";
 import { runContextCommandSmoke } from "./context-command.mjs";
@@ -38,7 +38,24 @@ export async function checkPackedConsumer({
   process.stdout.write(`${projectionResults.join("\n")}\n`);
   await runGraphDemoSmoke(consumerDirectory, repositoryRoot);
   await runContextCommandSmoke(consumerDirectory);
+  runExplorerCommandSmoke(consumerDirectory, repositoryRoot, packageName);
   runDeepImportNegatives(consumerDirectory, packageName);
+}
+
+function runExplorerCommandSmoke(consumerDirectory, repositoryRoot, packageName) {
+  const command = path.join(consumerDirectory, "node_modules", packageName, "dist/markdowntrace/document-graph/cli.js");
+  const result = run(process.execPath, [command,
+    "--file", path.join(repositoryRoot, "examples/preview-design/document.md"),
+    "--profile", path.join(repositoryRoot, "examples/preview-design/profile.json"), "--format", "explorer"],
+  { cwd: consumerDirectory, maxBuffer: 8 * 1024 * 1024 });
+  assert(result.stderr === "", "installed explorer must not emit errors");
+  const payload = JSON.parse(result.stdout.match(/id="trace-payload">([^]*?)<\/script>/)?.[1] ?? "null");
+  assert(payload?.entities.some(entity => entity.id === "DES-1" && entity.label === "Selection handler"),
+    "installed explorer must capture the source through its installed Engine");
+  const worker = JSON.parse(result.stdout.match(/id="trace-worker">([^]*?)<\/script>/)?.[1] ?? '""');
+  assert(worker.length > 0, "installed explorer must include its offline layout worker");
+  assert(!/<script[^>]+src=/.test(result.stdout), "installed explorer must not request remote scripts");
+  process.stdout.write("packed explorer CLI: pass (bundled assets, no consumer dev dependencies)\n");
 }
 
 async function prepareConsumer(consumerDirectory, consumerFixture) {

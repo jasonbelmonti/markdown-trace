@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { sha256, inventory } from "./integrity.mjs";
 
-export const runtimePaths = ["src", "scripts", "package.json", "package-lock.json", "tsconfig.json", "tsconfig.build.json", ".npmrc"];
+export const runtimePaths = ["src", "scripts", "package.json", "package-lock.json", "tsconfig.json", "tsconfig.build.json", "tsconfig.viewer.json", ".npmrc"];
 export function git(root, args) {
   return execFileSync("git", args, { cwd: root, encoding: "utf8" }).trim();
 }
@@ -17,7 +17,7 @@ export async function sourceInputs(root) {
   const files = [];
   for (const directory of ["src", "scripts"])
     files.push(...(await inventory(join(root, directory))).map(file => ({ ...file, path: `${directory}/${file.path}` })));
-  for (const file of ["package.json", "package-lock.json", "tsconfig.json", "tsconfig.build.json"])
+  for (const file of ["package.json", "package-lock.json", "tsconfig.json", "tsconfig.build.json", "tsconfig.viewer.json"])
     files.push({ path: file, sha256: sha256(await readFile(join(root, file))) });
   return files.sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
 }

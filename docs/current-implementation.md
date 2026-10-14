@@ -29,6 +29,33 @@ node dist/markdowntrace/document-graph/cli.js \
 
 The command reads local inputs and emits results to stdout/stderr. The opt-in `context-text` format also creates the explicitly named full JSON report before emitting text; it refuses an existing report path. Report, graph, query, context, context-text, Mermaid and HTML formats have documented channels and exit codes in the [command guide](experimental-graph-validation.md#shared-command). HTML shows the graph, Engine-captured labels and definition context, and validation findings; diagram rendering loads Mermaid from a pinned CDN. Trace validation cannot prove that prose is factually correct or that a claimed check ran. Document-owner structural and semantic gates remain separate.
 
+### Interactive explorer
+
+This checkout adds `--format explorer`: standalone offline HTML with React Flow,
+an ELK worker, bounded focus and option/risk/delivery-check presets. The exporter
+reads the issued Engine capture once, preserves its graph and validation report,
+and stores captured source text once with range-based evidence references.
+Table-derived names are display labels (capped at 240 characters); full fields
+and literal excerpts remain inspectable. No public graph schema or export changes.
+
+View filters stop traversal through excluded entities, retain the focus despite
+heading/kind filters, and expose boundary references in the inspector. Depth is
+bounded to six hops; the graph has hard limits of 100 nodes and 240 grouped edges.
+Duplicate links retain their occurrence counts. All direct references remain
+available in paginated inspector lists. Unowned/ambiguous relationships retain
+their original ownership state and are not drawn with invented owners.
+
+Source selection requires one explicit `Status: Selected` table field on a
+uniquely defined `option`; multiple selected options do not establish a default.
+Risk and delivery presets use profile entity kinds described in the
+[README](../README.md#interactive-explorer), with no inferred mitigation,
+dependency, completion or scheduling semantics. The inspector is single-document
+and read-only. Browser dependencies are build-time dependencies bundled in `dist`;
+the packed CLI needs no React installation in the consumer. Worker cancellation,
+timeout and grid fallback bound layout work. Source/provenance and readable
+fallback evidence are embedded, so an export carries the document's content.
+Existing `html`, API exports and validation exit behavior remain unchanged.
+
 ## Portable runtime and next work
 
 Published version 0.1.2 pins Markdown Engine 3.6.0, and 0.1.3 pins Engine 4.0.0. Versions 0.1.4 and 0.1.5 pin Markdown Engine 5.0.0. Version 0.1.5 adds experimental projection-policy production and independent verification; existing 0.1.4 policy expectations require explicit producer-version revision before use with 0.1.5. The package root is the primary API; the `experimental/graph` alias and protocol identifiers remain unchanged for compatibility. Its Node range is `^20.19.0 || >=22.12.0`, and current builds pin Markdown Engine 5.0.0. Engine 5 stops creating validation report cache files automatically; the separate CLI requires `--report-file` to persist a report or `--output full` for complete stdout. Trace uses the unchanged library API, and the owner trial explicitly requests full JSON. The revision 7 design overview and historical validation records describe the pre-migration 3.6.0 baseline. The [portable runtime guide](portable-runtime.md) covers committed-source candidate production, independent integrity verification, versioned local installation, explicit activation/rollback and executable binding. The installed skill package has consumer probes for valid, located-defect and repaired-pass outcomes. Previously produced releases remain identified by their source commit; retiring source code does not silently replace an installed release or Fleet pin.

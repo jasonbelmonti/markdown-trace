@@ -17,6 +17,7 @@ async function compile(snapshot, commit) {
   await writeFile(join(snapshot, "src/markdowntrace/generated/build-source.ts"),
     `// Injected into this disposable snapshot by the portable producer.\nexport const SOURCE_COMMIT: string | null = ${JSON.stringify(commit)};\n`);
   command(process.execPath, ["node_modules/typescript/bin/tsc", "-p", "tsconfig.build.json"], snapshot);
+  command(process.execPath, ["scripts/build-viewer.mjs"], snapshot);
   command("npm", ["prune", "--omit=dev", "--ignore-scripts", "--bin-links=false", "--no-audit", "--no-fund"], snapshot);
   return toolchain;
 }

@@ -41,6 +41,13 @@ export async function provePreview(run, work) {
   for (const text of ["<!doctype html>", "Trace checks passed", "Selection handler",
     "This check is proposed and has not run against an implementation."])
     assert.ok(html.includes(text));
+  const explorer = run([...args, "--format", "explorer"]).stdout;
+  const explorerData = JSON.parse(explorer.match(/id="trace-payload">([^]*?)<\/script>/)[1]);
+  assert.deepEqual(explorerData.graph, graph);
+  assert.equal(explorerData.sourceText, source);
+  assert.ok(explorerData.entities.some(entity => entity.id === "DES-1" && entity.label === "Selection handler"));
+  assert.ok(JSON.parse(explorer.match(/id="trace-worker">([^]*?)<\/script>/)[1]).length > 0);
+  assert.ok(!/<script[^>]+src=/.test(explorer));
   const broken = "missing-reference.md";
   await writeFile(join(work, broken), source.replace("[the preview requirement](ctx://trace/entity/REQ-1?rel=verifies)", "the preview requirement"));
   const failed = run(["--file", broken, "--profile", profile, "--format", "mermaid"], 1, { stderr: true });
@@ -65,6 +72,6 @@ export async function provePreview(run, work) {
     assert.equal(JSON.parse(rejected.stderr).valid, false);
   }
   return { identifiers: ["CHECK-1", "DES-1", "REQ-1"], relationships: 2,
-    sourceRange: range, modes: ["report", "graph", "query", "mermaid", "html"],
+    sourceRange: range, modes: ["report", "graph", "query", "mermaid", "html", "explorer"],
     failedGraphVisible: true, indeterminateGraphVisible: true, operationalErrors: 4 };
 }
