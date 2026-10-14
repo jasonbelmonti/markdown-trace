@@ -22,12 +22,14 @@ section,aside{min-width:0}
 .eyebrow{font-size:10px;font-weight:700;letter-spacing:1.8px;color:var(--accent);margin-bottom:9px}
 .muted{color:var(--muted)}
 .small{font-size:12px}
-.masthead{padding:24px 30px 20px;border-bottom:1px solid var(--line);background:radial-gradient(ellipse at top right,#1c3545,transparent 60%)}
-.masthead>p{color:var(--muted)}
-.document-state,.tags{display:flex;flex-wrap:wrap;gap:8px}
-.document-state span,.tags span{font-size:11px;background:#172737;border:1px solid #354b5a;padding:4px 8px;border-radius:5px}
-.lenses{display:flex;gap:6px;padding:12px 30px;border-bottom:1px solid var(--line);overflow:auto}
-.lenses button{white-space:nowrap;border-color:transparent;background:transparent;color:var(--muted)}
+.masthead{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;padding:8px 18px;border-bottom:1px solid var(--line);background:#111c28}
+.masthead h1{margin:0;font-size:14px;line-height:20px;letter-spacing:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.document-state{display:flex;flex-wrap:wrap;gap:4px 14px;color:var(--muted);font-size:10px}
+.document-state span{white-space:nowrap}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags span{font-size:11px;background:#172737;border:1px solid #354b5a;padding:4px 8px;border-radius:5px}
+.lenses{display:flex;gap:6px;padding:4px 18px;border-bottom:1px solid var(--line);overflow:auto}
+.lenses button{padding:5px 10px;white-space:nowrap;border-color:transparent;background:transparent;color:var(--muted)}
 .lenses button[aria-pressed=true]{background:#203c41;color:#b5f5e8;border-color:#466d6c}
 .workspace{display:grid;grid-template-columns:240px minmax(350px,1fr) 330px;min-height:650px}
 .sidebar,.inspector{padding:22px 18px;background:#111c28}
@@ -103,9 +105,8 @@ section,aside{min-width:0}
 .canvas-wrap{height:540px}
 .inspector dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 }
-@media(max-width:650px){.masthead{padding:20px}
-h1{font-size:23px}
-.lenses{padding:10px 14px}
+@media(max-width:650px){.masthead{grid-template-columns:minmax(0,1fr);gap:2px;padding:8px 14px}
+.lenses{padding:4px 14px}
 .workspace{display:flex;flex-direction:column}
 .sidebar{border-right:0;border-bottom:1px solid var(--line)}
 .entity-list{max-height:180px}

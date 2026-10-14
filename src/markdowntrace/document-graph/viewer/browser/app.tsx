@@ -38,10 +38,8 @@ function App({ payload, workerSource }: { payload: ViewerPayload; workerSource: 
     && `${node.id} ${node.label}`.toLowerCase().includes(search.toLowerCase()));
   const displayedOccurrences = selection.edges.reduce((total, edge) => total + edge.occurrences.length, 0);
   return <>
-    <header className="masthead"><div className="eyebrow">MARKDOWN TRACE / EXPLORER</div><h1>{payload.title}</h1>
-      <p>Follow one question through the design.</p>
-      <div className="document-state"><span>Trace checks: {payload.validation.status}</span><span>Capture: {payload.graph.coverage}</span>
-        <span>{payload.entities.length} entities · {payload.relations.length} relationship occurrences</span></div>
+    <header className="masthead"><h1 title={payload.title}>{payload.title}</h1>
+      <div className="document-state"><span>Trace checks: {payload.validation.status}</span><span>Capture: {payload.graph.coverage}</span></div>
     </header>
     <nav className="lenses" aria-label="View presets">{lenses.map(item => <button key={item} aria-pressed={lens === item} onClick={() => switchLens(item)}>{item}</button>)}</nav>
     <main className="workspace">
