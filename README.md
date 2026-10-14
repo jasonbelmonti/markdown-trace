@@ -65,6 +65,39 @@ Markdown Engine supplies Markdown structure and source locations. Markdown Trace
 
 The package root and `experimental/graph` entry points both expose document-wide analysis, direct queries, Mermaid export, [profile-driven validation](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-graph-validation.md), bounded traversal and context projection. The [API guide](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-document-graph.md#api-example) shows how to traverse a graph and retrieve exact source parts with explicit budgets. `markdown-trace-document` is the local command for validation reports, graph JSON, incoming/outgoing queries, [bounded context JSON and exact-text views](https://github.com/jasonbelmonti/markdown-trace/blob/main/docs/experimental-graph-validation.md#source-context-projection), Mermaid and HTML. The [shared Trace skill](https://github.com/jasonbelmonti/markdown-trace/blob/main/skills/markdown-trace/SKILL.md) invokes that command with a document-owned profile.
 
+## Interactive explorer
+
+Build this checkout, then export a self-contained HTML document:
+
+```sh
+node dist/markdowntrace/document-graph/cli.js \
+  --file document.md --profile profile.json --format explorer > design-explorer.html
+```
+
+Open the file in a browser. React Flow and ELK layout are bundled, so it works
+offline. Choose an entity, then explore its incoming/outgoing neighborhood with
+depth, relationship-kind and entity-kind filters. Heading nodes start hidden.
+The graph draws at most 100 nodes and 240 grouped edges; repeated relationships
+show occurrence counts. The inspector retains direct references and source
+evidence even when the referenced entity is outside the view. Exports contain
+the captured source and its path, so share them as you would the source document.
+
+**Options** focuses one `option` and can exclude the others from traversal.
+An option is labeled source-selected only when its unique definition has one
+table column named `Status` whose value is exactly `Selected` (case insensitive).
+A unique selected option becomes the initial focus. Manual focus does not change
+source status. **Risks** uses `risk` entities. **Delivery checks** lists
+`validation`, `check`, `question` and `open-question` entities; it does not infer
+a schedule, successful verification or readiness. Other profile vocabularies
+remain available through **Explore**. Generic `references` remain generic links.
+
+The explorer is a read-only view of one analysis, with literal source inspection,
+Trace findings, a grid fallback when layout fails, and readable evidence when
+JavaScript is disabled. It does not edit Markdown or infer missing domain
+relationships. Existing `--format html` keeps its Mermaid report behavior.
+This checkout adds `explorer`; use `--help` to check whether an installed or
+Fleet-pinned runtime includes it. Building here does not activate or publish it.
+
 ## Development setup
 
 Requires Node.js `^20.19.0 || >=22.12.0` and npm. Install from the lockfile in the worktree where checks will run:

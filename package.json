@@ -25,12 +25,12 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "build": "npm run generate:release-metadata --silent && node scripts/clean-dist.mjs && tsc -p tsconfig.build.json",
+    "build": "npm run generate:release-metadata --silent && node scripts/clean-dist.mjs && tsc -p tsconfig.build.json && node scripts/build-viewer.mjs",
     "check:package-exports": "node scripts/check-package-exports.mjs",
     "generate:release-metadata": "node scripts/generate-release-metadata.mjs",
     "check:release-metadata": "node scripts/generate-release-metadata.mjs --check",
     "test": "vitest run \"--exclude=.worktrees/**\" \"--exclude=.context-capsule/**\"",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.viewer.json",
     "ci:enforcement": "bash scripts/ci-enforcement.sh",
     "demo:graph": "npm run build --silent && node scripts/demo-document-graph.mjs",
     "build:runtime": "node scripts/runtime/build.mjs",
@@ -45,6 +45,13 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.39",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@xyflow/react": "12.12.0",
+    "elkjs": "0.12.0",
+    "esbuild": "0.28.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.5"
   },

@@ -5,6 +5,9 @@ import { documentRuntimeInfo } from "./runtime-identity.js";
 import { publishContextText } from "./command-context-text.js";
 import { runProjectionCommand } from "./command-projection/run.js";
 import { exportHtml } from "./export/html.js";
+import { exportExplorer } from "./viewer/export.js";
+import { viewerPayload } from "./viewer/payload.js";
+import { loadExplorerAssets } from "./viewer/assets.js";
 import {
   analyzeDocument, compileValidationProfile, exportMermaid,
   findIncoming, findOutgoing, lookupIdentifier, validateGraph, traverseGraph, extractContext,
@@ -54,6 +57,9 @@ export async function runDocumentCommand(
       }
       case "html":
         io.stdout(exportHtml(analysis, validation));
+        break;
+      case "explorer":
+        io.stdout(exportExplorer(viewerPayload(analysis, validation), await loadExplorerAssets()));
         break;
       case "graph":
         io.stdout(json({ validation, graph: analysis.snapshot }));

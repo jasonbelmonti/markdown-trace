@@ -97,6 +97,8 @@ async function preparePackageStage(stageDirectory) {
     ],
     { cwd: repositoryRoot },
   );
+  run(process.execPath, [path.join(repositoryRoot, "scripts/build-viewer.mjs"),
+    path.join(stageDirectory, "dist/markdowntrace/document-graph/viewer/assets")], { cwd: repositoryRoot });
 }
 
 function assertManifest(manifest, lockfile) {
@@ -215,6 +217,10 @@ function assertTarballMembers(members) {
     "package/dist/markdowntrace/document-graph/index.js",
     "package/dist/markdowntrace/document-graph/index.d.ts",
     "package/dist/markdowntrace/document-graph/cli.js",
+    "package/dist/markdowntrace/document-graph/viewer/assets/app.js",
+    "package/dist/markdowntrace/document-graph/viewer/assets/app.css",
+    "package/dist/markdowntrace/document-graph/viewer/assets/worker.js",
+    "package/dist/markdowntrace/document-graph/viewer/assets/THIRD-PARTY-NOTICES.txt",
   ]) {
     assert(members.includes(required), `tarball must contain ${required}`);
   }

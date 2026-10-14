@@ -8,7 +8,7 @@ Experimental document-wide Trace validation and source context projection.
 The profile must use markdown-trace.validation-profile.experimental.v1.
 No default vocabulary. Context roots require unique ctx:// definitions.
 
---format report|graph|query|context|context-text|mermaid|html  Default: report
+--format report|graph|query|context|context-text|mermaid|html|explorer  Default: report
 --report-file PATH                 Required only for context-text; creates a new JSON file
 --identifier ID                     Required for query
 --direction incoming|outgoing|both  Query: incoming (both forbidden); context: outgoing
@@ -34,6 +34,9 @@ Byte/fragment budgets count source parts, not the serialized JSON or tokens.
 Exit 0 does not certify complete context: inspect boundaries and omissions.
 Mermaid: diagram on stdout, validation JSON on stderr (also on pass).
 HTML: one visual report on stdout; its diagram loads Mermaid from a pinned CDN.
+Explorer: self-contained interactive HTML on stdout, with bundled offline assets,
+focus filters, option/risk/delivery-check presets and captured source evidence.
+Its browser filters change presentation only; generic references imply no domain semantics.
 Document exit 0: validation passed; 1: failed or indeterminate; 2: invocation/runtime error.
 Invalid graphs remain available. An ID absent from a query returns a null record;
 an unresolved context root is an error. Validation failures retain available context.
@@ -73,7 +76,7 @@ export function parseDocumentOptions(args: string[]) {
   if (values.help) return { ...values, context };
   if (!values.file || !values.profile)
     throw new Error("Both --file and --profile are required; use --help.");
-  if (!["report", "graph", "query", "context", "context-text", "mermaid", "html"].includes(values.format))
+  if (!["report", "graph", "query", "context", "context-text", "mermaid", "html", "explorer"].includes(values.format))
     throw new Error("Unknown --format; use --help.");
   const isContext = values.format === "context" || values.format === "context-text";
   if (values.format === "context-text" && !values["report-file"]?.trim())
